@@ -13,13 +13,13 @@ inline constexpr T_to convert_fundamental(const T_from& val)
   using namespace std;
   if_constexpr_named(cond1, !is_fundamental_v<T_from>)
   {
-    rlbox_detail_static_fail(!cond1,
-                             "Conversion source should be fundamental type");
+    rlbox_detail_static_fail_because(
+      cond1, "Conversion source should be fundamental type");
   }
   else if_constexpr_named(cond2, !is_fundamental_v<T_to>)
   {
-    rlbox_detail_static_fail(!cond2,
-                             "Conversion target should be fundamental type");
+    rlbox_detail_static_fail_because(
+      cond2, "Conversion target should be fundamental type");
   }
   else if_constexpr_named(
     cond3, is_floating_point_v<T_from> && is_floating_point_v<T_to>)
@@ -36,8 +36,8 @@ inline constexpr T_to convert_fundamental(const T_from& val)
   else if_constexpr_named(
     cond5, is_integral_v<T_from> && is_signed_v<T_from> != is_signed_v<T_to>)
   {
-    rlbox_detail_static_fail(
-      !cond5, "Conversion should not go between signed and unsigned");
+    rlbox_detail_static_fail_because(
+      cond5, "Conversion should not go between signed and unsigned");
   }
   else if_constexpr_named(cond6, is_integral_v<T_from>)
   {
@@ -61,7 +61,8 @@ inline constexpr T_to convert_fundamental(const T_from& val)
   {
     constexpr auto unknownCase =
       !(cond1 || cond2 || cond3 || cond4 || cond5 || cond6);
-    rlbox_detail_static_fail(unknownCase, "Unexpected case for safe_convert");
+    rlbox_detail_static_fail_because(unknownCase,
+                                     "Unexpected case for safe_convert");
   }
 }
 
