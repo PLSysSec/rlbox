@@ -6,7 +6,7 @@ add_library(rlbox-cpp17-lib INTERFACE)
 target_include_directories(rlbox-cpp17-lib INTERFACE include)
 target_compile_features(rlbox-cpp17-lib INTERFACE cxx_std_17)
 
-
+######## Dependencies ########
 include(FetchContent)
 FetchContent_Declare(catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
@@ -19,6 +19,14 @@ if (NOT catch2_POLULATED)
 endif()
 
 add_subdirectory("${catch2_SOURCE_DIR}")
+
+########## Dev Tools ##########
+
+# Configs in .clang-tidy
+set(CMAKE_CXX_CLANG_TIDY clang-tidy;)
+
+
+##############################
 
 add_executable(rlbox-cpp17-tests
     tests/test_main.cpp

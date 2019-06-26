@@ -13,29 +13,28 @@ struct Foo {
     int a;
 };
 
-using namespace rlbox;
-using namespace std;
-
 TEST_CASE("Type Convert function operates correctly", "[convert]" ) {
-    auto a = convert_fundamental<long, int>(5);
-    REQUIRE(is_same_v<decltype(a), long>);
-    REQUIRE(a == 5);
+    const int32_t randValue = 5;
+    auto a = rlbox::convert_fundamental<int64_t, int32_t>(randValue);
+    REQUIRE(std::is_same_v<decltype(a), int64_t>);
+    REQUIRE(a == randValue);
 }
 
 TEST_CASE("Type Convert function compile time checks operate correctly", "[convert]" ) {
     //Have configured rlbox to convert compile time checks to runtime throws
-    REQUIRE_THROWS(convert_fundamental<unsigned long, int>(5));
-    REQUIRE_THROWS(convert_fundamental<long, unsigned int>(5));
-    Foo a;
-    REQUIRE_THROWS(convert_fundamental<Foo, Foo>(a));
-    REQUIRE_THROWS(convert_fundamental<Foo, int>(5));
-    REQUIRE_THROWS(convert_fundamental<int, Foo>(a));
+    const int32_t randValue = 5;
+    REQUIRE_THROWS(rlbox::convert_fundamental<uint64_t, int32_t>(randValue));
+    REQUIRE_THROWS(rlbox::convert_fundamental<int64_t, uint32_t>(randValue));
+    // Foo a;
+    // REQUIRE_THROWS(rlbox::convert_fundamental<Foo, Foo>(a));
+    // REQUIRE_THROWS(rlbox::convert_fundamental<Foo, int>(randValue));
+    // REQUIRE_THROWS(rlbox::convert_fundamental<int, Foo>(a));
 }
 
 TEST_CASE("Type Convert function dynamic bounds checks operate correctly", "[convert]" ) {
-    uint64_t u32Max = numeric_limits<uint32_t>::max();
-    REQUIRE(convert_fundamental<uint32_t, uint64_t>(5) == 5);
-    REQUIRE_THROWS(convert_fundamental<uint32_t, uint64_t>(u32Max + 1));
+    uint64_t u32Max = std::numeric_limits<uint32_t>::max();
+    REQUIRE(rlbox::convert_fundamental<uint32_t, uint64_t>(5) == 5);
+    REQUIRE_THROWS(rlbox::convert_fundamental<uint32_t, uint64_t>(u32Max + 1));
 }
 
 
