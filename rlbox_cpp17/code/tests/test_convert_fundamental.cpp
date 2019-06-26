@@ -1,20 +1,19 @@
 #include <limits>
 #include <type_traits>
 
+#define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
 #define RLBOX_NO_COMPILE_CHECKS
 #define RLBOX_USE_EXCEPTIONS
 #include "rlbox.hpp"
-#undef RLBOX_NO_COMPILE_CHECKS
-#undef RLBOX_USE_EXCEPTIONS
 
 struct Foo
 {
   int a;
 };
 
-// NOLINTNEXTLINE(fuchsia-statically-constructed-objects)
+// NOLINTNEXTLINE
 TEST_CASE("Type Convert function operates correctly", "[convert]")
 {
   const int32_t randValue = 5;
@@ -23,7 +22,7 @@ TEST_CASE("Type Convert function operates correctly", "[convert]")
   REQUIRE(a == randValue);
 }
 
-// NOLINTNEXTLINE(fuchsia-statically-constructed-objects)
+// NOLINTNEXTLINE
 TEST_CASE("Type Convert function compile time checks operate correctly",
           "[convert]")
 {
@@ -37,11 +36,11 @@ TEST_CASE("Type Convert function compile time checks operate correctly",
   // REQUIRE_THROWS(rlbox::convert_fundamental<int, Foo>(a));
 }
 
-// NOLINTNEXTLINE(fuchsia-statically-constructed-objects)
+// NOLINTNEXTLINE
 TEST_CASE("Type Convert function dynamic bounds checks operate correctly",
           "[convert]")
 {
   uint64_t u32Max = std::numeric_limits<uint32_t>::max();
-  REQUIRE(rlbox::convert_fundamental<uint32_t, uint64_t>(5) == 5);
+  REQUIRE(rlbox::convert_fundamental<uint32_t, uint64_t>(5) == 5); // NOLINT
   REQUIRE_THROWS(rlbox::convert_fundamental<uint32_t, uint64_t>(u32Max + 1));
 }

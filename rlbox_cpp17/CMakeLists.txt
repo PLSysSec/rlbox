@@ -60,8 +60,11 @@ add_subdirectory("${catch2_SOURCE_DIR}")
 add_library(rlbox-cpp17-lib INTERFACE)
 target_include_directories(rlbox-cpp17-lib INTERFACE code/include)
 
-add_executable(rlbox-cpp17-tests
-    code/tests/test_main.cpp
-    code/tests/test_convert_fundamental.cpp
-)
-target_link_libraries(rlbox-cpp17-tests Catch2::Catch2 rlbox-cpp17-lib)
+########## Tests ##########
+
+enable_testing()
+
+add_executable(test_convert_fundamental code/tests/test_convert_fundamental.cpp)
+target_link_libraries(test_convert_fundamental Catch2::Catch2 rlbox-cpp17-lib)
+
+add_test(NAME cmake-test_convert_fundamental COMMAND test_convert_fundamental)
