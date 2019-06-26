@@ -30,10 +30,10 @@ TEST_CASE("Type Convert function compile time checks operate correctly",
   const int32_t randValue = 5;
   REQUIRE_THROWS(rlbox::convert_fundamental<uint64_t, int32_t>(randValue));
   REQUIRE_THROWS(rlbox::convert_fundamental<int64_t, uint32_t>(randValue));
-  // Foo a;
-  // REQUIRE_THROWS(rlbox::convert_fundamental<Foo, Foo>(a));
-  // REQUIRE_THROWS(rlbox::convert_fundamental<Foo, int>(randValue));
-  // REQUIRE_THROWS(rlbox::convert_fundamental<int, Foo>(a));
+  Foo a{ randValue };
+  REQUIRE_THROWS(rlbox::convert_fundamental<Foo, Foo>(a));
+  REQUIRE_THROWS(rlbox::convert_fundamental<Foo, int>(randValue));
+  REQUIRE_THROWS(rlbox::convert_fundamental<int, Foo>(a));
 }
 
 // NOLINTNEXTLINE
