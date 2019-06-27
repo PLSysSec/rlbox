@@ -41,7 +41,6 @@ inline constexpr T_to convert_fundamental(const T_from& val)
   }
   else if_constexpr_named(cond6, is_integral_v<T_from>)
   {
-
     if constexpr (sizeof(T_to) >= sizeof(T_from)) {
       return val;
     } else {

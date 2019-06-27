@@ -54,6 +54,7 @@ if (NOT catch2_POLULATED)
 endif()
 
 add_subdirectory("${catch2_SOURCE_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
 
 ########## Targets ##########
 
@@ -62,9 +63,14 @@ target_include_directories(rlbox-cpp17-lib INTERFACE code/include)
 
 ########## Tests ##########
 
-enable_testing()
+add_executable(testing 
+    code/tests/test_main.cpp
+    code/tests/test_convert_fundamental.cpp
+    code/tests/test_tainted_sizes.cpp
+)
+target_link_libraries(testing Catch2::Catch2 rlbox-cpp17-lib)
 
-add_executable(test_convert_fundamental code/tests/test_convert_fundamental.cpp)
-target_link_libraries(test_convert_fundamental Catch2::Catch2 rlbox-cpp17-lib)
+include(CTest)
+include(Catch)
+catch_discover_tests(testing)
 
-add_test(NAME cmake-test_convert_fundamental COMMAND test_convert_fundamental)
