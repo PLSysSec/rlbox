@@ -62,6 +62,19 @@ class tainted_volatile : public tainted_base<T, TSandbox>
 
 private:
   T field;
+
+public:
+  tainted() = default;
+  tainted(const tainted<T, TSandbox>& p) = default;
+
+  tainted(const tainted_volatile<T, TSandbox>& p)
+  {
+    if constexpr (!std::is_array_v<T>) {
+      field = p.UNSAFE_Unverified();
+    } else {
+      memcpy(field, p.field, sizeof(T));
+    }
+  }
 };
 
 #undef KEEP_THINGS_FRIENDLY
