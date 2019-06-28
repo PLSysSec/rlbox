@@ -67,4 +67,4 @@ inline constexpr T_To adjust_type_size(const T_From& val)
   }
 }
 
-};
+}

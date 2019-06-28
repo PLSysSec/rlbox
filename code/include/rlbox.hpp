@@ -47,7 +47,7 @@ private:
     }
   };
 
-  //Initializing with a pointer is dangerous and permitted only internally
+  // Initializing with a pointer is dangerous and permitted only internally
   template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>
   tainted(T2 val)
     : data(val)

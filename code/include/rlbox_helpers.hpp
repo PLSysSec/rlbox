@@ -6,11 +6,11 @@
 
 namespace rlbox {
 namespace detail {
-const int CompileErrorCode = 42;
+  const int CompileErrorCode = 42;
 
-inline void dynamic_check(bool check, const char* const msg)
-{
-  // clang-format off
+  inline void dynamic_check(bool check, const char* const msg)
+  {
+    // clang-format off
   if (!check) {
     #if __cpp_exceptions && defined(RLBOX_USE_EXCEPTIONS)
       throw std::runtime_error(msg);
@@ -19,8 +19,8 @@ inline void dynamic_check(bool check, const char* const msg)
       abort();
     #endif
   }
-  // clang-format on
-}
+    // clang-format on
+  }
 
 #ifdef RLBOX_NO_COMPILE_CHECKS
 #  if __cpp_exceptions && defined(RLBOX_USE_EXCEPTIONS)
@@ -53,6 +53,6 @@ But C++ doesn't seem to allow the above
   template<typename U1, typename U2>                                           \
   friend class tainted_volatile;
 
-};
+}
 
 }
