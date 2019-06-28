@@ -4,7 +4,7 @@
 #include "rlbox_types.hpp"
 #include "rlbox_typetraits.hpp"
 
-namespace rlbox {
+namespace rlbox::detail {
 
 #define KEEP_ASSIGNMENT_FRIENDLY                                               \
   template<typename T_A_Lhs,                                                   \
@@ -14,7 +14,7 @@ namespace rlbox {
            typename T_A_Lhs_wrap,                                              \
            template<typename, typename>                                        \
            typename T_A_Rhs_wrap>                                              \
-  friend inline void assign_wrapped_value_primitive(                           \
+  friend inline void detail::assign_wrapped_value_primitive(                   \
     T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
     const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);                                \
                                                                                \
@@ -25,7 +25,7 @@ namespace rlbox {
            typename T_A_Lhs_wrap,                                              \
            template<typename, typename>                                        \
            typename T_A_Rhs_wrap>                                              \
-  friend inline void assign_wrapped_value(                                     \
+  friend inline void detail::assign_wrapped_value(                             \
     T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
     const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);
 

@@ -60,7 +60,7 @@ public:
   tainted(const tainted<T, T_Sbx>& p) = default;
   tainted(const tainted_volatile<T, T_Sbx>& p)
   {
-    assign_wrapped_value(*this, p);
+    detail::assign_wrapped_value(*this, p);
   }
 
   // We explicitly disable this constructor if it has one of the signatures
