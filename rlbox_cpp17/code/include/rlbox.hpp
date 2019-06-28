@@ -32,9 +32,9 @@ private:
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T data;
 
-  inline T get_raw_value() const noexcept { return data; }
+  inline valid_return_t<T> get_raw_value() const noexcept { return data; }
 
-  inline T_ConvertedType get_raw_sandbox_value() const
+  inline valid_return_t<T_ConvertedType> get_raw_sandbox_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
       // Since tainted<ptrs> can only be null or a pointer referring to a
@@ -46,6 +46,14 @@ private:
       return adjust_type_size<T_ConvertedType>(data);
     }
   };
+
+  //Initializing with a pointer is dangerous and permitted only internally
+  template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>
+  tainted(T2 val)
+    : data(val)
+  {
+    static_assert(std::is_pointer_v<T>);
+  }
 
 public:
   tainted() = default;
@@ -77,6 +85,40 @@ public:
   {
     return get_raw_sandbox_value();
   }
+
+private:
+  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
+
+public:
+  inline std::conditional_t<std::is_pointer_v<T>,
+                            tainted_volatile<T_OpDerefRet, T_Sbx>&,
+                            tainted<T_OpDerefRet, T_Sbx>* // is_array
+                            >
+  operator*() const
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      auto ret_ptr = reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+        get_raw_value());
+      return *ret_ptr;
+    }
+    else if_constexpr_named(cond2, std::is_array_v<T>)
+    {
+      // C arrays are value types
+      // Dereferencing an array in application memory returns a pointer to
+      // application memory
+      std::remove_extent_t<T>* decayed_arr = get_raw_value();
+      auto decayed_arr_wrapped =
+        reinterpret_cast<tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr);
+      return *decayed_arr_wrapped;
+    }
+    else
+    {
+      auto unknownCase = !(cond1 || cond2);
+      rlbox_detail_static_fail_because(
+        unknownCase, "Dereference only supported for pointers or arrays");
+    }
+  }
 };
 
 template<typename T, typename T_Sbx>
@@ -98,7 +140,7 @@ private:
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T_ConvertedType data;
 
-  inline T get_raw_value() const
+  inline valid_return_t<T> get_raw_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
       // Since tainted_volatile is the type of data in sandbox memory, the
@@ -111,10 +153,53 @@ private:
     }
   }
 
-  inline T_ConvertedType get_raw_sandbox_value() const noexcept
+  inline valid_return_t<T_ConvertedType> get_raw_sandbox_value() const noexcept
   {
     return data;
   };
+
+private:
+  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
+
+public:
+  inline valid_return_t<T> UNSAFE_Unverified() const { return get_raw_value(); }
+
+  inline valid_return_t<T> UNSAFE_Sandboxed() const noexcept
+  {
+    return get_raw_sandbox_value();
+  }
+
+  inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*() const
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      auto ret_ptr = reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+        get_raw_value());
+      return *ret_ptr;
+    }
+    else if_constexpr_named(cond2, std::is_array_v<T>)
+    {
+      // C arrays are value types.
+      // Dereferencing an array in sandbox memory returns a pointer to sandbox
+      // memory
+      std::remove_extent_t<T>* decayed_arr = get_raw_value();
+      auto decayed_arr_wrapped =
+        reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(decayed_arr);
+      return *decayed_arr_wrapped;
+    }
+    else
+    {
+      auto unknownCase = !(cond1 || cond2);
+      rlbox_detail_static_fail_because(
+        unknownCase, "Dereference only supported for pointers or arrays");
+    }
+  }
+
+  inline tainted<T*, T_Sbx> operator&() const noexcept
+  {
+    tainted<T*, T_Sbx> ret(&data);
+    return ret;
+  }
 };
 
 }
