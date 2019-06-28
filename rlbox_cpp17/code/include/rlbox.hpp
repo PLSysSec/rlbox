@@ -61,7 +61,11 @@ private:
   inline T_ConvertedType get_raw_sandbox_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
-      throw std::runtime_error("Not implemented");
+      // Since tainted<ptrs> can only be null or a pointer referring to a
+      // location in sandbox memory, data can thus be the
+      // example_unsandboxed_ptr
+      return T_Sandbox::get_sandboxed_pointer(
+        data, data /* example_unsandboxed_ptr */);
     } else {
       return adjust_type_size<T_ConvertedType>(data);
     }
@@ -155,7 +159,11 @@ private:
   inline T get_raw_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
-      throw std::runtime_error("Not implemented");
+      // Since tainted_volatile is the type of data in sandbox memory, the
+      // address of data (&data) refers to a location in sandbox memory and can
+      // thus be the example_unsandboxed_ptr
+      return T_Sandbox::get_unsandboxed_pointer(
+        data, &data /* example_unsandboxed_ptr */);
     } else {
       return adjust_type_size<T_ConvertedType>(data);
     }

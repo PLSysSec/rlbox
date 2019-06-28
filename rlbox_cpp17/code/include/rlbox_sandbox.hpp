@@ -66,6 +66,49 @@ private:
 
   template<typename T>
   using convert_sandbox_t = typename convert_sandbox_t_helper<T>::type;
+
+public:
+  template<typename T>
+  inline const void* get_unsandboxed_pointer(convert_sandbox_t<T*> p) const
+  {
+    if (p == 0) {
+      return nullptr;
+    }
+    return this->template impl_get_unsandboxed_pointer<T>(p);
+  }
+
+  template<typename T>
+  inline convert_sandbox_t<T*> get_sandboxed_pointer(const void* p) const
+  {
+    if (p == nullptr) {
+      return 0;
+    }
+    return this->template impl_get_sandboxed_pointer<T>(p);
+  }
+
+  template<typename T>
+  static inline const void* get_unsandboxed_pointer(
+    convert_sandbox_t<T*> p,
+    const void* example_unsandboxed_ptr)
+  {
+    if (p == 0) {
+      return nullptr;
+    }
+    return T_Sandbox::template impl_get_unsandboxed_pointer<T>(
+      p, example_unsandboxed_ptr);
+  }
+
+  template<typename T>
+  static inline convert_sandbox_t<T*> get_sandboxed_pointer(
+    const void* p,
+    const void* example_unsandboxed_ptr)
+  {
+    if (p == nullptr) {
+      return 0;
+    }
+    return T_Sandbox::template impl_get_sandboxed_pointer<T>(
+      p, example_unsandboxed_ptr);
+  }
 };
 
 }

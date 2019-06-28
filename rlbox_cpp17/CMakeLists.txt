@@ -68,6 +68,7 @@ add_executable(testing
     code/tests/test_conversion.cpp
     code/tests/test_tainted_sizes.cpp
     code/tests/test_tainted_assignment.cpp
+    code/tests/test_sandbox_ptr_conversion.cpp
 )
 target_link_libraries(testing Catch2::Catch2 rlbox-cpp17-lib)
 
