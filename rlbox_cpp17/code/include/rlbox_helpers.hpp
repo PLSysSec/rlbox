@@ -34,8 +34,8 @@ inline void dynamic_check(bool check, const char* const msg)
     static_assert(!(CondExpr), Message)
 #endif
 
-#define if_constexpr_named(varName, cond)                                      \
-  if constexpr (constexpr auto varName = cond; cond)
+#define if_constexpr_named(varName, ...)                                       \
+  if constexpr (constexpr auto varName = __VA_ARGS__; varName)
 
 /*
 Make sure classes can access the private memmbers of tainted<T1> and

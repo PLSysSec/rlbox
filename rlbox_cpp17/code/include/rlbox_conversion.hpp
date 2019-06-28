@@ -13,15 +13,15 @@ inline constexpr T_To adjust_type_size(const T_From& val)
 {
   using namespace std;
 
-  if_constexpr_named(cond1, !is_fundamental_or_ptr_like_v<T_From>)
+  if_constexpr_named(cond1, !is_basic_type_v<T_From>)
   {
     rlbox_detail_static_fail_because(
-      cond1, "Conversion source should be fundamental or pointer type");
+      cond1, "Conversion source should be fundamental, enum or pointer type");
   }
-  else if_constexpr_named(cond2, !is_fundamental_or_ptr_like_v<T_To>)
+  else if_constexpr_named(cond2, !is_basic_type_v<T_To>)
   {
     rlbox_detail_static_fail_because(
-      cond2, "Conversion target should be fundamental or pointer type");
+      cond2, "Conversion target should be fundamental, enum or pointer type");
   }
   else if_constexpr_named(
     cond3, is_floating_point_v<T_From> && is_floating_point_v<T_To>)

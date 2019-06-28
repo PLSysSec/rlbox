@@ -7,8 +7,8 @@
 
 namespace rlbox {
 
-template<typename T_Sandbox>
-class RLBoxSandbox : protected T_Sandbox
+template<typename T_Sbx>
+class RLBoxSandbox : protected T_Sbx
 {
   KEEP_CLASSES_FRIENDLY
 
@@ -26,37 +26,37 @@ private:
   template<>
   struct convert_sandbox_t_helper<int>
   {
-    using type = typename T_Sandbox::T_IntType;
+    using type = typename T_Sbx::T_IntType;
   };
   template<>
   struct convert_sandbox_t_helper<unsigned int>
   {
-    using type = std::make_unsigned_t<typename T_Sandbox::T_IntType>;
+    using type = std::make_unsigned_t<typename T_Sbx::T_IntType>;
   };
   template<>
   struct convert_sandbox_t_helper<long>
   {
-    using type = typename T_Sandbox::T_LongType;
+    using type = typename T_Sbx::T_LongType;
   };
   template<>
   struct convert_sandbox_t_helper<unsigned long>
   {
-    using type = std::make_unsigned_t<typename T_Sandbox::T_LongType>;
+    using type = std::make_unsigned_t<typename T_Sbx::T_LongType>;
   };
   template<>
   struct convert_sandbox_t_helper<long long>
   {
-    using type = typename T_Sandbox::T_LongLongType;
+    using type = typename T_Sbx::T_LongLongType;
   };
   template<>
   struct convert_sandbox_t_helper<unsigned long long>
   {
-    using type = std::make_unsigned_t<typename T_Sandbox::T_LongLongType>;
+    using type = std::make_unsigned_t<typename T_Sbx::T_LongLongType>;
   };
   template<class T>
   struct convert_sandbox_t_helper<T*>
   {
-    using type = typename T_Sandbox::T_PointerType;
+    using type = typename T_Sbx::T_PointerType;
   };
   template<class T, std::size_t N>
   struct convert_sandbox_t_helper<T[N]>
@@ -94,7 +94,7 @@ public:
     if (p == 0) {
       return nullptr;
     }
-    return T_Sandbox::template impl_get_unsandboxed_pointer<T>(
+    return T_Sbx::template impl_get_unsandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
   }
 
@@ -106,7 +106,7 @@ public:
     if (p == nullptr) {
       return 0;
     }
-    return T_Sandbox::template impl_get_sandboxed_pointer<T>(
+    return T_Sbx::template impl_get_sandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
   }
 };
