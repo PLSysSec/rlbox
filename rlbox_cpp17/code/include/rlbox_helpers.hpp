@@ -37,6 +37,22 @@ inline void dynamic_check(bool check, const char* const msg)
 #define if_constexpr_named(varName, cond)                                      \
   if constexpr (constexpr auto varName = cond; cond)
 
+/*
+Make sure classes can access the private memmbers of tainted<T1> and
+tainted_volatile. Ideally, this should be
+
+template <typename U1>
+friend class tainted<U1, T_Sandbox>;
+
+But C++ doesn't seem to allow the above
+*/
+#define KEEP_CLASSES_FRIENDLY                                                  \
+  template<typename U1, typename U2>                                           \
+  friend class tainted;                                                        \
+                                                                               \
+  template<typename U1, typename U2>                                           \
+  friend class tainted_volatile;
+
 };
 
 }

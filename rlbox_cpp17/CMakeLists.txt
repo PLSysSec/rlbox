@@ -63,10 +63,11 @@ target_include_directories(rlbox-cpp17-lib INTERFACE code/include)
 
 ########## Tests ##########
 
-add_executable(testing 
+add_executable(testing
     code/tests/test_main.cpp
-    code/tests/test_convert_fundamental.cpp
+    code/tests/test_conversion.cpp
     code/tests/test_tainted_sizes.cpp
+    code/tests/test_tainted_assignment.cpp
 )
 target_link_libraries(testing Catch2::Catch2 rlbox-cpp17-lib)
 
