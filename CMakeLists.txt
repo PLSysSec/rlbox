@@ -6,7 +6,7 @@ project(rlbox-cpp17
 
 # Project Settings ###################
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -58,8 +58,8 @@ if(IWYU)
       --transitive_includes_only
       -Xiwyu
       --check_also="*.hpp"
-      -Xiwyu
-      --verbose=4
+    #   -Xiwyu
+    #   --verbose=4
       -Xiwyu
       --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
 endif()

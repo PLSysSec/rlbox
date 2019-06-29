@@ -10,6 +10,9 @@ class tainted;
 template<typename T, typename T_Sbx>
 class tainted_volatile;
 
+template<typename T_Sbx>
+class RLBoxSandbox;
+
 /* Trait types */
 
 class sandbox_wrapper_base

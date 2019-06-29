@@ -9,8 +9,8 @@
 
 namespace rlbox {
 
-template<typename T_Sbx>
-class RLBoxSandbox : protected T_Sbx
+template<typename T_SbxImpl>
+class RLBoxSandbox : protected T_SbxImpl
 {
   KEEP_CLASSES_FRIENDLY
 
@@ -18,20 +18,32 @@ private:
   /***** Function to adjust for custom machine models *****/
 
   template<typename T>
-  using convert_sandbox_t = convert_base_types_t<T,
-                                                 typename T_Sbx::T_IntType,
-                                                 typename T_Sbx::T_LongType,
-                                                 typename T_Sbx::T_LongLongType,
-                                                 typename T_Sbx::T_PointerType>;
+  using convert_sandbox_t =
+    detail::convert_base_types_t<T,
+                                 typename T_SbxImpl::T_IntType,
+                                 typename T_SbxImpl::T_LongType,
+                                 typename T_SbxImpl::T_LongLongType,
+                                 typename T_SbxImpl::T_PointerType>;
 
 public:
+  T_SbxImpl* get_sandbox_impl() { return this; }
+
+  template<typename... T_Args>
+  inline auto create_sandbox(T_Args... args)
+  {
+    return this->impl_create_sandbox(std::forward<T_Args>(args)...);
+  }
+
+  inline auto destroy_sandbox() { return this->impl_destroy_sandbox(); }
+
   template<typename T>
-  inline const void* get_unsandboxed_pointer(convert_sandbox_t<T*> p) const
+  inline T* get_unsandboxed_pointer(convert_sandbox_t<T*> p) const
   {
     if (p == 0) {
       return nullptr;
     }
-    return this->template impl_get_unsandboxed_pointer<T>(p);
+    auto ret = this->template impl_get_unsandboxed_pointer<T>(p);
+    return reinterpret_cast<T*>(ret);
   }
 
   template<typename T>
@@ -44,15 +56,15 @@ public:
   }
 
   template<typename T>
-  static inline const void* get_unsandboxed_pointer(
-    convert_sandbox_t<T*> p,
-    const void* example_unsandboxed_ptr)
+  static inline T* get_unsandboxed_pointer(convert_sandbox_t<T*> p,
+                                           const void* example_unsandboxed_ptr)
   {
     if (p == 0) {
       return nullptr;
     }
-    return T_Sbx::template impl_get_unsandboxed_pointer<T>(
+    auto ret = T_SbxImpl::template impl_get_unsandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
+    return reinterpret_cast<T*>(ret);
   }
 
   template<typename T>
@@ -63,8 +75,29 @@ public:
     if (p == nullptr) {
       return 0;
     }
-    return T_Sbx::template impl_get_sandboxed_pointer<T>(
+    return T_SbxImpl::template impl_get_sandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
+  }
+
+  template<typename T>
+  inline tainted<T*, RLBoxSandbox<T_SbxImpl>> malloc_in_sandbox()
+  {
+    const uint32_t defaultCount = 1;
+    return malloc_in_sandbox<T>(defaultCount);
+  }
+  template<typename T>
+  inline tainted<T*, RLBoxSandbox<T_SbxImpl>> malloc_in_sandbox(uint32_t count)
+  {
+    auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
+    auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
+    auto cast_ptr = reinterpret_cast<T*>(ptr);
+    return tainted<T*, RLBoxSandbox<T_SbxImpl>>(cast_ptr);
+  }
+
+  template<typename T>
+  inline void free_in_sandbox(tainted<T*, RLBoxSandbox<T_SbxImpl>> ptr)
+  {
+    this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
   }
 };
 

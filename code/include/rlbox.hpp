@@ -32,9 +32,12 @@ private:
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T data;
 
-  inline valid_return_t<T> get_raw_value() const noexcept { return data; }
+  inline detail::valid_return_t<T> get_raw_value() const noexcept
+  {
+    return data;
+  }
 
-  inline valid_return_t<T_ConvertedType> get_raw_sandbox_value() const
+  inline detail::valid_return_t<T_ConvertedType> get_raw_sandbox_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
       // Since tainted<ptrs> can only be null or a pointer referring to a
@@ -71,23 +74,23 @@ public:
            typename... Args,
            RLBOX_ENABLE_IF(!std::is_base_of_v<tainted_base<T, T_Sbx>,
                                               std::remove_reference_t<Arg>> &&
-                           is_fundamental_or_enum_v<T>)>
+                           detail::is_fundamental_or_enum_v<T>)>
   tainted(Arg&& arg, Args&&... args)
     : data(std::forward<Arg>(arg), std::forward<Args>(args)...)
   {}
 
-  inline valid_return_t<T> UNSAFE_Unverified() const noexcept
+  inline detail::valid_return_t<T> UNSAFE_Unverified() const noexcept
   {
     return get_raw_value();
   }
 
-  inline valid_return_t<T> UNSAFE_Sandboxed() const
+  inline detail::valid_return_t<T> UNSAFE_Sandboxed() const
   {
     return get_raw_sandbox_value();
   }
 
 private:
-  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
+  using T_OpDerefRet = detail::dereference_result_t<T>;
 
 public:
   inline std::conditional_t<std::is_pointer_v<T>,
@@ -140,7 +143,7 @@ private:
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T_ConvertedType data;
 
-  inline valid_return_t<T> get_raw_value() const
+  inline detail::valid_return_t<T> get_raw_value() const
   {
     if constexpr (std::is_pointer_v<T>) {
       // Since tainted_volatile is the type of data in sandbox memory, the
@@ -153,21 +156,28 @@ private:
     }
   }
 
-  inline valid_return_t<T_ConvertedType> get_raw_sandbox_value() const noexcept
+  inline detail::valid_return_t<T_ConvertedType> get_raw_sandbox_value() const
+    noexcept
   {
     return data;
   };
 
-private:
-  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
+  tainted_volatile() = default;
+  tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;
 
 public:
-  inline valid_return_t<T> UNSAFE_Unverified() const { return get_raw_value(); }
+  inline detail::valid_return_t<T> UNSAFE_Unverified() const
+  {
+    return get_raw_value();
+  }
 
-  inline valid_return_t<T> UNSAFE_Sandboxed() const noexcept
+  inline detail::valid_return_t<T> UNSAFE_Sandboxed() const noexcept
   {
     return get_raw_sandbox_value();
   }
+
+private:
+  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
 
   inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*() const
   {
@@ -203,8 +213,3 @@ public:
 };
 
 }
-
-// Exports
-using rlbox::RLBoxSandbox;
-using rlbox::tainted;
-using rlbox::tainted_volatile;

@@ -4,12 +4,9 @@
 
 #include <type_traits>
 
-namespace rlbox {
+namespace rlbox::detail {
 
 #define RLBOX_ENABLE_IF(...) std::enable_if_t<__VA_ARGS__>* = nullptr
-
-template<typename T>
-using non_void_t = std::conditional_t<std::is_void_v<T>, int, T>;
 
 template<typename T>
 constexpr bool is_fundamental_or_enum_v =
@@ -23,8 +20,15 @@ constexpr bool is_basic_type_v =
 template<typename T>
 using valid_return_t = std::decay_t<T>;
 
+template<typename T>
+using dereference_result_t =
+  std::conditional_t<std::is_pointer_v<T>,
+                     std::remove_pointer_t<T>,
+                     std::remove_extent_t<T> // is_array
+                     >;
+
 // convert types
-namespace detail {
+namespace convert_detail {
   template<typename T,
            typename T_IntType,
            typename T_LongType,
@@ -163,10 +167,10 @@ template<typename T,
          typename T_LongLongType,
          typename T_PointerType>
 using convert_base_types_t =
-  typename detail::convert_base_types_t_helper<T,
-                                               T_IntType,
-                                               T_LongType,
-                                               T_LongLongType,
-                                               T_PointerType>::type;
+  typename convert_detail::convert_base_types_t_helper<T,
+                                                       T_IntType,
+                                                       T_LongType,
+                                                       T_LongLongType,
+                                                       T_PointerType>::type;
 
 }

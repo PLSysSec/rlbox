@@ -53,8 +53,10 @@ But C++ doesn't seem to allow the above
   friend class tainted;                                                        \
                                                                                \
   template<typename U1, typename U2>                                           \
-  friend class tainted_volatile;
-
+  friend class tainted_volatile;                                               \
+                                                                               \
+  template<typename U1>                                                        \
+  friend class RLBoxSandbox;
 }
 
 }

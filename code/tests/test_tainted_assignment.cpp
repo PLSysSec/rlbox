@@ -1,4 +1,9 @@
+#include <cstdint>
+
 #include "test_include.hpp"
+
+using rlbox::tainted;
+using rlbox::tainted_volatile;
 
 // NOLINTNEXTLINE
 TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
@@ -23,8 +28,12 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
 TEST_CASE("tainted tainted_volatile conversion operates correctly",
           "[tainted_assignment]")
 {
-  // Avoid warnings about uninitialized vars
-  tainted_volatile<int, T_Sbx> a; // NOLINT
-  tainted<int, T_Sbx> b = a;      // NOLINT
+  T_Sbx sandbox;
+  sandbox.create_sandbox();
+  tainted<uint32_t*, T_Sbx> ptr = sandbox.malloc_in_sandbox<uint32_t>();
+  tainted_volatile<uint32_t, T_Sbx>& a = *ptr;
+  tainted<uint32_t, T_Sbx> b = a;
   UNUSED(b);
+
+  sandbox.destroy_sandbox();
 }
