@@ -43,7 +43,7 @@ private:
       return T_Sbx::get_sandboxed_pointer(data,
                                           data /* example_unsandboxed_ptr */);
     } else {
-      return adjust_type_size<T_ConvertedType>(data);
+      return detail::adjust_type_size<T_ConvertedType>(data);
     }
   };
 
@@ -149,7 +149,7 @@ private:
       return T_Sbx::get_unsandboxed_pointer(
         data, &data /* example_unsandboxed_ptr */);
     } else {
-      return adjust_type_size<T>(data);
+      return detail::adjust_type_size<T>(data);
     }
   }
 
