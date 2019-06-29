@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include "test_include.hpp"
 
 // NOLINTNEXTLINE

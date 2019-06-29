@@ -1,12 +1,17 @@
+#pragma once
+
 #include <cstdint>
 #include <limits>
 #include <type_traits>
 
+// IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
 
 #define RLBOX_NO_COMPILE_CHECKS
 #define RLBOX_USE_EXCEPTIONS
 #include "rlbox.hpp"
+
+// IWYU pragma: end_exports
 
 #define UNUSED(varName) (void)varName
 

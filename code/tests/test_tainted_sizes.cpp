@@ -1,3 +1,6 @@
+#include <array>
+#include <cstdint>
+
 #include "test_include.hpp"
 
 using CallbackType = int (*)(uint32_t, const char*, std::array<uint32_t, 1>);

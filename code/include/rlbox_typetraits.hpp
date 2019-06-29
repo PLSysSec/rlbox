@@ -1,4 +1,6 @@
 #pragma once
+// IWYU pragma: private, include "rlbox.hpp"
+// IWYU pragma: friend "rlbox_.*\.hpp"
 
 #include <type_traits>
 

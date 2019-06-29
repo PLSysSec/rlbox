@@ -1,3 +1,7 @@
+#include <cstdint>
+#include <limits>
+#include <type_traits>
+
 #include "test_include.hpp"
 
 struct Foo
