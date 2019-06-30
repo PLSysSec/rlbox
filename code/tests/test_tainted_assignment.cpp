@@ -35,5 +35,11 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
   tainted<uint32_t, T_Sbx> b = a;
   UNUSED(b);
 
+  tainted<uint32_t*, T_Sbx> ptrCopy1 = &a;
+  UNUSED(ptrCopy1);
+
+  tainted<uint32_t*, T_Sbx> ptrCopy2 = &(*ptr);
+  UNUSED(ptrCopy2);
+
   sandbox.destroy_sandbox();
 }

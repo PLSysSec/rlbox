@@ -58,10 +58,9 @@ if(IWYU)
       --transitive_includes_only
       -Xiwyu
       --check_also="*.hpp"
-    #   -Xiwyu
-    #   --verbose=4
-      -Xiwyu
-      --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
+      # -Xiwyu
+      # --verbose=4
+      -Xiwyu --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
 endif()
 
 # Dependencies ###################
@@ -92,9 +91,9 @@ target_include_directories(testing-lib INTERFACE code/tests)
 add_executable(testing
                code/tests/test_main.cpp
                code/tests/test_conversion.cpp
-               code/tests/test_tainted_sizes.cpp
+               code/tests/test_sandbox_ptr_conversion.cpp
                code/tests/test_tainted_assignment.cpp
-               code/tests/test_sandbox_ptr_conversion.cpp)
+               code/tests/test_tainted_sizes.cpp)
 
 target_link_libraries(testing
                       Catch2::Catch2

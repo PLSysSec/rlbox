@@ -15,9 +15,30 @@ using rlbox::detail::adjust_type_size;
 TEST_CASE("Type Convert function operates correctly", "[convert]")
 {
   const int32_t randValue = 5;
-  auto a = adjust_type_size<int64_t, int32_t>(randValue);
-  REQUIRE(std::is_same_v<decltype(a), int64_t>);
-  REQUIRE(a == randValue);
+
+  {
+    auto a = adjust_type_size<int64_t, int32_t>(randValue);
+    REQUIRE(std::is_same_v<decltype(a), int64_t>);
+    REQUIRE(a == randValue);
+  }
+
+  {
+    auto a = adjust_type_size<int64_t, const int32_t>(randValue);
+    REQUIRE(std::is_same_v<decltype(a), int64_t>);
+    REQUIRE(a == randValue);
+  }
+
+  {
+    auto a = adjust_type_size<const int64_t, int32_t>(randValue);
+    REQUIRE(std::is_same_v<decltype(a), int64_t>);
+    REQUIRE(a == randValue);
+  }
+
+  {
+    auto a = adjust_type_size<const int64_t, const int32_t>(randValue);
+    REQUIRE(std::is_same_v<decltype(a), int64_t>);
+    REQUIRE(a == randValue);
+  }
 }
 
 // NOLINTNEXTLINE

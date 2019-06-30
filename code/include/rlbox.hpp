@@ -179,6 +179,7 @@ public:
 private:
   using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
 
+public:
   inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*() const
   {
     if_constexpr_named(cond1, std::is_pointer_v<T>)
@@ -205,7 +206,7 @@ private:
     }
   }
 
-  inline tainted<T*, T_Sbx> operator&() const noexcept
+  inline tainted<T*, T_Sbx> operator&() noexcept
   {
     tainted<T*, T_Sbx> ret(&data);
     return ret;
