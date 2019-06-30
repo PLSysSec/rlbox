@@ -60,8 +60,8 @@ private:
 
 public:
   tainted() = default;
-  tainted(const tainted<T, T_Sbx>& p) = default;
-  tainted(const tainted_volatile<T, T_Sbx>& p)
+  tainted(tainted<T, T_Sbx>& p) = default;
+  tainted(tainted_volatile<T, T_Sbx>& p)
   {
     detail::assign_wrapped_value(*this, p);
   }
@@ -149,7 +149,7 @@ private:
       // Since tainted_volatile is the type of data in sandbox memory, the
       // address of data (&data) refers to a location in sandbox memory and can
       // thus be the example_unsandboxed_ptr
-      return T_Sbx::get_unsandboxed_pointer(
+      return T_Sbx::template get_unsandboxed_pointer<std::remove_pointer_t<T>>(
         data, &data /* example_unsandboxed_ptr */);
     } else {
       return detail::adjust_type_size<T>(data);
@@ -163,7 +163,7 @@ private:
   };
 
   tainted_volatile() = default;
-  tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;
+  tainted_volatile(tainted_volatile<T, T_Sbx>& p) = default;
 
 public:
   inline detail::valid_return_t<T> UNSAFE_Unverified() const
@@ -177,7 +177,7 @@ public:
   }
 
 private:
-  using T_OpDerefRet = std::decay_t<std::remove_extent_t<T>>;
+  using T_OpDerefRet = detail::dereference_result_t<T>;
 
 public:
   inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*() const

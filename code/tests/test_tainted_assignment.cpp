@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <type_traits>
 
 #include "test_include.hpp"
 
@@ -30,16 +31,24 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 {
   T_Sbx sandbox;
   sandbox.create_sandbox();
-  tainted<uint32_t*, T_Sbx> ptr = sandbox.malloc_in_sandbox<uint32_t>();
-  tainted_volatile<uint32_t, T_Sbx>& a = *ptr;
-  tainted<uint32_t, T_Sbx> b = a;
-  UNUSED(b);
 
-  tainted<uint32_t*, T_Sbx> ptrCopy1 = &a;
-  UNUSED(ptrCopy1);
+  auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
+  REQUIRE(std::is_same_v<decltype(ptr), tainted<uint32_t*, T_Sbx>>);
+  REQUIRE(ptr.UNSAFE_Unverified() != nullptr);
 
-  tainted<uint32_t*, T_Sbx> ptrCopy2 = &(*ptr);
-  UNUSED(ptrCopy2);
+  auto& val = *ptr;
+  REQUIRE(std::is_same_v<decltype(val), tainted_volatile<uint32_t, T_Sbx>&>);
+  REQUIRE(std::is_same_v<decltype(tainted(val)), tainted<uint32_t, T_Sbx>>);
+
+  REQUIRE(std::is_same_v<decltype(tainted(&val)), tainted<uint32_t*, T_Sbx>>);
+  REQUIRE(std::is_same_v<decltype(tainted(&*ptr)), tainted<uint32_t*, T_Sbx>>);
+
+  tainted<uint32_t**, T_Sbx> ptr2 = sandbox.malloc_in_sandbox<uint32_t*>();
+  auto& deref = *ptr2;
+  REQUIRE(std::is_same_v<decltype(deref), tainted_volatile<uint32_t*, T_Sbx>&>);
+  REQUIRE(std::is_same_v<decltype(*deref), tainted_volatile<uint32_t, T_Sbx>&>);
+
+  REQUIRE(std::is_same_v<decltype(**ptr2), tainted_volatile<uint32_t, T_Sbx>&>);
 
   sandbox.destroy_sandbox();
 }

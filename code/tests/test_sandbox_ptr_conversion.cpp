@@ -42,7 +42,8 @@ TEST_CASE("Type get_[un]sandboxed_pointer", "[get_sandboxed]")
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("Type get_[un]sandboxed_pointer for const pointers", "[get_sandboxed]")
+TEST_CASE("Type get_[un]sandboxed_pointer for const pointers",
+          "[get_sandboxed]")
 {
   T_Sbx sandbox;
   sandbox.create_sandbox();
@@ -56,8 +57,8 @@ TEST_CASE("Type get_[un]sandboxed_pointer for const pointers", "[get_sandboxed]"
   // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
   auto testPointer2 = reinterpret_cast<const void*>(base + testPointerSboxRep2);
 
-  REQUIRE(T_Sbx::get_sandboxed_pointer<const void>(testPointer1, testPointer2) ==
-          testPointerSboxRep1); // NOLINT
+  REQUIRE(T_Sbx::get_sandboxed_pointer<const void>(
+            testPointer1, testPointer2) == testPointerSboxRep1); // NOLINT
   REQUIRE(T_Sbx::get_unsandboxed_pointer<const void>(
             testPointerSboxRep1, testPointer2) == testPointer1); // NOLINT
   REQUIRE(sandbox.get_sandboxed_pointer<const void>(testPointer1) ==

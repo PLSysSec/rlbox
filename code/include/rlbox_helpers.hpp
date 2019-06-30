@@ -39,6 +39,11 @@ namespace detail {
 #define if_constexpr_named(varName, ...)                                       \
   if constexpr (constexpr auto varName = __VA_ARGS__; varName)
 
+  template<typename... TArgs>
+  void printTypes()
+  {
+    std::cout << __PRETTY_FUNCTION__ << std::endl; // NOLINT
+  }
 /*
 Make sure classes can access the private memmbers of tainted<T1> and
 tainted_volatile. Ideally, this should be
