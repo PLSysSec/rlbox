@@ -24,6 +24,17 @@ struct test
 };
 
 // NOLINTNEXTLINE
+TEST_CASE("RLBox trait types do not introduce vtables", "[tainted_trait]")
+{
+  REQUIRE(sizeof(rlbox::sandbox_wrapper_base) < sizeof(uintptr_t)); // NOLINT
+  REQUIRE(sizeof(rlbox::sandbox_wrapper_base_of<int>) <
+          sizeof(uintptr_t));                                         // NOLINT
+  REQUIRE(sizeof(rlbox::tainted_base<int, int>) < sizeof(uintptr_t)); // NOLINT
+  REQUIRE(sizeof(rlbox::tainted_base_impl<tainted, int, int>) <
+          sizeof(uintptr_t)); // NOLINT
+}
+
+// NOLINTNEXTLINE
 TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
 {
   REQUIRE(sizeof(tainted<long long, T_Sbx>) == sizeof(long long)); // NOLINT

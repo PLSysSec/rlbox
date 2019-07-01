@@ -11,10 +11,31 @@
 
 namespace rlbox {
 
-////////////////
+template<template<typename, typename> typename T_Wrap,
+         typename T,
+         typename T_Sbx>
+class tainted_base_impl
+  : public sandbox_wrapper_base
+  , public sandbox_wrapper_base_of<T>
+{
+  KEEP_CLASSES_FRIENDLY
+
+private:
+  inline T_Wrap<T, T_Sbx>& impl()
+  {
+    return *static_cast<T_Wrap<T, T_Sbx>*>(this);
+  }
+
+protected:
+  using T_OpDerefRet = detail::dereference_result_t<T>;
+
+public:
+  inline auto UNSAFE_Unverified() { return impl().get_raw_value(); }
+  inline auto UNSAFE_Sandboxed() { return impl().get_raw_sandbox_value(); }
+};
 
 template<typename T, typename T_Sbx>
-class tainted : public tainted_base<T, T_Sbx>
+class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
@@ -79,16 +100,6 @@ public:
     : data(std::forward<Arg>(arg), std::forward<Args>(args)...)
   {}
 
-  inline detail::valid_return_t<T> UNSAFE_Unverified() const noexcept
-  {
-    return get_raw_value();
-  }
-
-  inline detail::valid_return_t<T> UNSAFE_Sandboxed() const
-  {
-    return get_raw_sandbox_value();
-  }
-
 private:
   using T_OpDerefRet = detail::dereference_result_t<T>;
 
@@ -122,10 +133,59 @@ public:
         unknownCase, "Dereference only supported for pointers or arrays");
     }
   }
+
+  // In general comparison operators are unsafe.
+  // However comparing tainted with nullptr is fine because
+  // 1) tainted values are in application memory and thus cannot change the
+  // value after comparision
+  // 2) Checking that a pointer is null doesn't "really" taint the result as the
+  // result is always safe
+  inline bool operator==(const std::nullptr_t& arg) const
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      return get_raw_value() == arg;
+    }
+    else
+    {
+      rlbox_detail_static_fail_because(
+        !cond1, "Comparisons to nullptr only permitted for pointer types");
+    }
+  }
+
+  inline bool operator!=(const std::nullptr_t& arg) const
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      return get_raw_value() != arg;
+    }
+    else
+    {
+      rlbox_detail_static_fail_because(
+        !cond1, "Comparisons to nullptr only permitted for pointer types");
+    }
+  }
+
+  inline bool operator!()
+  {
+    // Technically operator ! is permitted on static arrays as well, but until
+    // we figure out what that does, we do not support this as a precaution
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      // Checking for null pointer
+      return get_raw_value() == nullptr;
+    }
+    else
+    {
+      auto unknownCase = !(cond1);
+      rlbox_detail_static_fail_because(
+        unknownCase, "Operator ! only permitted for pointer types");
+    }
+  }
 };
 
 template<typename T, typename T_Sbx>
-class tainted_volatile : public tainted_base<T, T_Sbx>
+class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
@@ -165,18 +225,6 @@ private:
   tainted_volatile() = default;
   tainted_volatile(tainted_volatile<T, T_Sbx>& p) = default;
 
-public:
-  inline detail::valid_return_t<T> UNSAFE_Unverified() const
-  {
-    return get_raw_value();
-  }
-
-  inline detail::valid_return_t<T> UNSAFE_Sandboxed() const noexcept
-  {
-    return get_raw_sandbox_value();
-  }
-
-private:
   using T_OpDerefRet = detail::dereference_result_t<T>;
 
 public:

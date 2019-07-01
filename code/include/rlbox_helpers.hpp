@@ -54,6 +54,9 @@ friend class tainted<U1, T_Sandbox>;
 But C++ doesn't seem to allow the above
 */
 #define KEEP_CLASSES_FRIENDLY                                                  \
+  template<template<typename, typename> typename U1, typename U2, typename U3> \
+  friend class tainted_base_impl;                                              \
+                                                                               \
   template<typename U1, typename U2>                                           \
   friend class tainted;                                                        \
                                                                                \
@@ -62,6 +65,7 @@ But C++ doesn't seem to allow the above
                                                                                \
   template<typename U1>                                                        \
   friend class RLBoxSandbox;
+
 }
 
 }

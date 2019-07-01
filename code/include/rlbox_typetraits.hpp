@@ -53,6 +53,19 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
+  struct convert_base_types_t_helper<bool,
+                                     T_IntType,
+                                     T_LongType,
+                                     T_LongLongType,
+                                     T_PointerType>
+  {
+    using type = bool;
+  };
+
+  template<typename T_IntType,
+           typename T_LongType,
+           typename T_LongLongType,
+           typename T_PointerType>
   struct convert_base_types_t_helper<int,
                                      T_IntType,
                                      T_LongType,
