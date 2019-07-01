@@ -90,6 +90,8 @@ public:
   {
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
     auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
+    detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
+                          "Malloc returned pointer outside the sandbox memory");
     auto cast_ptr = reinterpret_cast<T*>(ptr);
     return tainted<T*, RLBoxSandbox<T_SbxImpl>>(cast_ptr);
   }
@@ -98,6 +100,16 @@ public:
   inline void free_in_sandbox(tainted<T*, RLBoxSandbox<T_SbxImpl>> ptr)
   {
     this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
+  }
+
+  static inline bool is_in_same_sandbox(const void* p1, const void* p2)
+  {
+    return T_SbxImpl::impl_is_in_same_sandbox(p1, p2);
+  }
+
+  inline bool is_pointer_in_sandbox_memory(const void* p)
+  {
+    return this->impl_is_pointer_in_sandbox_memory(p);
   }
 };
 

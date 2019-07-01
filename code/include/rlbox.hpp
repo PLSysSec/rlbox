@@ -8,6 +8,7 @@
 #include "rlbox_sandbox.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_typetraits.hpp"
+#include "rlbox_unwrap.hpp"
 
 namespace rlbox {
 
@@ -21,24 +22,53 @@ class tainted_base_impl
   KEEP_CLASSES_FRIENDLY
 
 private:
-  inline T_Wrap<T, T_Sbx>& impl()
+  inline auto& impl() { return *static_cast<T_Wrap<T, T_Sbx>*>(this); }
+
+  inline const auto& impl_c() const
   {
-    return *static_cast<T_Wrap<T, T_Sbx>*>(this);
+    return *static_cast<const T_Wrap<T, T_Sbx>*>(this);
   }
 
 protected:
   using T_OpDerefRet = detail::dereference_result_t<T>;
 
 public:
-  inline auto UNSAFE_Unverified() { return impl().get_raw_value(); }
-  inline auto UNSAFE_Sandboxed() { return impl().get_raw_sandbox_value(); }
+  inline auto UNSAFE_Unverified() const { return impl_c().get_raw_value(); }
+  inline auto UNSAFE_Sandboxed() const
+  {
+    return impl_c().get_raw_sandbox_value();
+  }
+
+  template<typename T_Rhs>
+  inline auto operator+(T_Rhs rhs)
+  {
+    static_assert(detail::is_basic_type_v<T>,
+                  "Operator + only supported for primitive and pointer types");
+
+    auto raw = impl().get_raw_value();
+    auto raw_rhs = detail::unwrap_value(rhs);
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,
+                  "Can only add numeric types");
+
+    auto ret = raw + raw_rhs;
+
+    if constexpr (std::is_pointer_v<T>) {
+      detail::dynamic_check(raw != nullptr,
+                            "Pointer arithmetic on a null pointer");
+      auto no_overflow = T_Sbx::is_in_same_sandbox(raw, ret);
+      detail::dynamic_check(
+        no_overflow,
+        "Pointer arithmetic overflowed a pointer beyond sandbox memory");
+    }
+
+    return tainted<decltype(ret), T_Sbx>(ret);
+  }
 };
 
 template<typename T, typename T_Sbx>
 class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
-  KEEP_ASSIGNMENT_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(!std::is_class_v<T>,
@@ -85,6 +115,11 @@ public:
   tainted(tainted_volatile<T, T_Sbx>& p)
   {
     detail::assign_wrapped_value(*this, p);
+  }
+  tainted(const std::nullptr_t& arg)
+    : data(arg)
+  {
+    static_assert(std::is_pointer_v<T>);
   }
 
   // We explicitly disable this constructor if it has one of the signatures
@@ -188,7 +223,6 @@ template<typename T, typename T_Sbx>
 class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
-  KEEP_ASSIGNMENT_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(!std::is_class_v<T>,
@@ -258,6 +292,16 @@ public:
   {
     tainted<T*, T_Sbx> ret(&data);
     return ret;
+  }
+
+  inline tainted_volatile<T, T_Sbx>& operator=(
+    const std::nullptr_t& arg) noexcept
+  {
+    static_assert(std::is_pointer_v<T>);
+    // assign using an integer instead of nullptr, as the pointer field may be
+    // represented as integer
+    data = 0;
+    return *this;
   }
 };
 

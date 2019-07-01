@@ -8,29 +8,6 @@
 
 namespace rlbox::detail {
 
-#define KEEP_ASSIGNMENT_FRIENDLY                                               \
-  template<typename T_A_Lhs,                                                   \
-           typename T_A_Rhs,                                                   \
-           typename T_A_Sbx,                                                   \
-           template<typename, typename>                                        \
-           typename T_A_Lhs_wrap,                                              \
-           template<typename, typename>                                        \
-           typename T_A_Rhs_wrap>                                              \
-  friend inline void detail::assign_wrapped_value_primitive(                   \
-    T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
-    const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);                                \
-                                                                               \
-  template<typename T_A_Lhs,                                                   \
-           typename T_A_Rhs,                                                   \
-           typename T_A_Sbx,                                                   \
-           template<typename, typename>                                        \
-           typename T_A_Lhs_wrap,                                              \
-           template<typename, typename>                                        \
-           typename T_A_Rhs_wrap>                                              \
-  friend inline void detail::assign_wrapped_value(                             \
-    T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
-    const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);
-
 template<typename T_Lhs,
          typename T_Rhs,
          typename T_Sbx,
@@ -47,13 +24,13 @@ inline void assign_wrapped_value_primitive(T_Lhs_wrap<T_Lhs, T_Sbx>& lhs,
   if_constexpr_named(
     cond1, std::is_base_of_v<tainted<T_Lhs, T_Sbx>, T_Lhs_wrap<T_Lhs, T_Sbx>>)
   {
-    lhs.data = rhs.get_raw_value();
+    lhs.data = rhs.UNSAFE_Unverified();
   }
   else if_constexpr_named(
     cond2,
     std::is_base_of_v<tainted_volatile<T_Lhs, T_Sbx>, T_Lhs_wrap<T_Lhs, T_Sbx>>)
   {
-    lhs.data = rhs.get_raw_sandbox_value();
+    lhs.data = rhs.UNSAFE_Sandboxed();
   }
   else
   {

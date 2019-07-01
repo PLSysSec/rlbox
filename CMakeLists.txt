@@ -92,6 +92,7 @@ add_executable(testing
                code/tests/test_main.cpp
                code/tests/test_comparison.cpp
                code/tests/test_conversion.cpp
+               code/tests/test_operators.cpp
                code/tests/test_sandbox_ptr_conversion.cpp
                code/tests/test_tainted_assignment.cpp
                code/tests/test_tainted_sizes.cpp)

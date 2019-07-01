@@ -106,6 +106,19 @@ protected:
   }
 
   inline void impl_free_in_sandbox(T_PointerType) {}
+
+  static inline bool impl_is_in_same_sandbox(const void* p1, const void* p2)
+  {
+    auto mask1 = SandboxMemoryBaseMask & reinterpret_cast<uintptr_t>(p1);
+    auto mask2 = SandboxMemoryBaseMask & reinterpret_cast<uintptr_t>(p2);
+    return mask1 == mask2;
+  }
+
+  inline bool impl_is_pointer_in_sandbox_memory(const void* p)
+  {
+    auto mask = SandboxMemoryBaseMask & reinterpret_cast<uintptr_t>(p);
+    return mask == SandboxMemoryBase;
+  }
 };
 
 using T_Sbx = rlbox::RLBoxSandbox<TestSandbox>;
