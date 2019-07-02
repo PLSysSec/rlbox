@@ -294,8 +294,7 @@ public:
     return ret;
   }
 
-  inline tainted_volatile<T, T_Sbx>& operator=(
-    const std::nullptr_t& arg) noexcept
+  inline tainted_volatile<T, T_Sbx>& operator=(const std::nullptr_t&) noexcept
   {
     static_assert(std::is_pointer_v<T>);
     // assign using an integer instead of nullptr, as the pointer field may be

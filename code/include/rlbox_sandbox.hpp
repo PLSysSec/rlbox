@@ -92,6 +92,10 @@ public:
     auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
     detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
                           "Malloc returned pointer outside the sandbox memory");
+    auto ptrEnd = reinterpret_cast<uintptr_t>(ptr) + (count - 1));
+    detail::dynamic_check(
+      is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptrEnd)),
+      "Malloc returned a pointer whose range goes beyond sandbox memory");
     auto cast_ptr = reinterpret_cast<T*>(ptr);
     return tainted<T*, RLBoxSandbox<T_SbxImpl>>(cast_ptr);
   }

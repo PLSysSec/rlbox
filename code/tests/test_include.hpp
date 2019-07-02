@@ -2,8 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <limits>
-#include <type_traits>
 #include <utility>
 
 // IWYU pragma: begin_exports
