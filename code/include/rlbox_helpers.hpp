@@ -44,6 +44,15 @@ namespace detail {
   {
     std::cout << __PRETTY_FUNCTION__ << std::endl; // NOLINT
   }
+
+#define rlbox_detail_forward_binop_to_base(opSymbol, ...)                      \
+  template<typename T_Rhs>                                                     \
+  inline auto operator opSymbol(T_Rhs rhs)                                     \
+  {                                                                            \
+    auto b = static_cast<__VA_ARGS__*>(this);                                  \
+    return (*b)opSymbol rhs;                                                   \
+  }
+
 /*
 Make sure classes can access the private memmbers of tainted<T1> and
 tainted_volatile. Ideally, this should be

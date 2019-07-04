@@ -115,6 +115,9 @@ Standard:        Cpp11
 StatementMacros: 
   - Q_UNUSED
   - QT_REQUIRE_VERSION
+  - BinaryOp
+  - UnaryOp
+  - rlbox_detail_forward_binop_to_base
 TabWidth:        8
 UseTab:          Never
 ...

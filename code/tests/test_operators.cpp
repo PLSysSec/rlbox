@@ -15,10 +15,33 @@ TEST_CASE("Test operator + for numerics", "[operator]")
   REQUIRE(b.UNSAFE_Unverified() == 7);
   REQUIRE(c.UNSAFE_Unverified() == 6);
   REQUIRE(d.UNSAFE_Unverified() == 10);
+
+  tainted<uint32_t, T_Sbx> ovWrap = std::numeric_limits<uint32_t>::max();
+  ovWrap = ovWrap + 1;
+  REQUIRE(ovWrap.UNSAFE_Unverified() == 0);
+}
+
+TEST_CASE("Test operators that produce new values for numerics", "[operator]")
+{
+  const uint32_t a = 11;
+  const uint32_t b = 17;
+  const uint32_t c = 13;
+  const uint32_t d = 17;
+  const uint32_t e = 2;
+  uint32_t r = -(((((a + b) - c) * d) / e));
+
+  tainted<uint32_t, T_Sbx> s_a = a;
+  tainted<uint32_t, T_Sbx> s_b = b;
+  tainted<uint32_t, T_Sbx> s_c = c;
+  tainted<uint32_t, T_Sbx> s_d = d;
+  tainted<uint32_t, T_Sbx> s_e = e;
+  tainted<uint32_t, T_Sbx> s_r = -(((((s_a + s_b) - s_c) * s_d) / s_e));
+
+  REQUIRE(s_r.UNSAFE_Unverified() == r);
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("Test operator + for pointers", "[operator]")
+TEST_CASE("Test operator +, - for pointers", "[operator]")
 {
   T_Sbx sandbox;
   sandbox.create_sandbox();
@@ -35,8 +58,8 @@ TEST_CASE("Test operator + for pointers", "[operator]")
 
   REQUIRE_THROWS(pc + TestSandbox::SandboxMemorySize);
 
-  //   tainted<int32_t*, T_Sbx> dec = inc - 1;
-  //   REQUIRE(pc.UNSAFE_Unverified() == dec.UNSAFE_Unverified());
+  tainted<int32_t*, T_Sbx> dec = inc - 1;
+  REQUIRE(pc.UNSAFE_Unverified() == dec.UNSAFE_Unverified());
 
   sandbox.destroy_sandbox();
 }

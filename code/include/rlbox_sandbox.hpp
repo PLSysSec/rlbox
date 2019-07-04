@@ -88,11 +88,12 @@ public:
   template<typename T>
   inline tainted<T*, RLBoxSandbox<T_SbxImpl>> malloc_in_sandbox(uint32_t count)
   {
+    detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
     auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
     detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
                           "Malloc returned pointer outside the sandbox memory");
-    auto ptrEnd = reinterpret_cast<uintptr_t>(ptr) + (count - 1));
+    auto ptrEnd = reinterpret_cast<uintptr_t>(ptr + (count - 1));
     detail::dynamic_check(
       is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptrEnd)),
       "Malloc returned a pointer whose range goes beyond sandbox memory");

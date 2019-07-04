@@ -39,29 +39,88 @@ public:
     return impl_c().get_raw_sandbox_value();
   }
 
-  template<typename T_Rhs>
-  inline auto operator+(T_Rhs rhs)
-  {
-    static_assert(detail::is_basic_type_v<T>,
-                  "Operator + only supported for primitive and pointer types");
+#define BinaryOp(opSymbol)                                                     \
+  template<typename T_Rhs>                                                     \
+  inline auto operator opSymbol(T_Rhs rhs)                                     \
+  {                                                                            \
+    static_assert(std::is_same_v<T_Wrap<T, T_Sbx>, tainted<T, T_Sbx>>,         \
+                  "Operator " #opSymbol                                        \
+                  " not yet implemented for tainted_volatile");                \
+                                                                               \
+    static_assert(detail::is_basic_type_v<T>,                                  \
+                  "Operator " #opSymbol                                        \
+                  " only supported for primitive and pointer types");          \
+                                                                               \
+    auto raw = impl().get_raw_value();                                         \
+    auto raw_rhs = detail::unwrap_value(rhs);                                  \
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,                       \
+                  "Can only add numeric types");                               \
+                                                                               \
+    auto ret = raw opSymbol raw_rhs;                                           \
+    using T_Ret = decltype(ret);                                               \
+                                                                               \
+    if constexpr (std::is_pointer_v<T_Ret>) {                                  \
+      detail::dynamic_check(raw != nullptr,                                    \
+                            "Pointer arithmetic on a null pointer");           \
+      auto no_overflow = T_Sbx::is_in_same_sandbox(raw, ret);                  \
+      detail::dynamic_check(                                                   \
+        no_overflow,                                                           \
+        "Pointer arithmetic overflowed a pointer beyond sandbox memory");      \
+    }                                                                          \
+                                                                               \
+    return tainted<T_Ret, T_Sbx>(ret);                                         \
+  }
 
-    auto raw = impl().get_raw_value();
+  BinaryOp(+)
+  BinaryOp(-)
+  BinaryOp(*)
+  BinaryOp(/)
+  BinaryOp(%)
+  BinaryOp(^)
+  BinaryOp(&)
+  BinaryOp(|)
+  BinaryOp(<<)
+  BinaryOp(>>)
+
+#undef BinaryOp
+
+#define UnaryOp(opSymbol)                                                      \
+  inline auto operator opSymbol()                                              \
+  {                                                                            \
+    static_assert(detail::is_fundamental_or_enum_v<T>,                         \
+                  "Operator " #opSymbol " only supported for primitive");      \
+                                                                               \
+    auto raw = impl().get_raw_value();                                         \
+    auto ret = opSymbol raw;                                                   \
+    using T_Ret = decltype(ret);                                               \
+    return tainted<T_Ret, T_Sbx>(ret);                                         \
+  }
+
+  UnaryOp(-)
+  UnaryOp(~)
+
+#undef UnaryOp
+
+  template<typename T_Rhs>
+  inline tainted_volatile<detail::dereference_result_t<T>, T_Sbx>& operator[](
+    T_Rhs rhs)
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Operator [] in tainted_base_impl only supports pointers");
+
+    auto ptr = impl().get_raw_value();
     auto raw_rhs = detail::unwrap_value(rhs);
     static_assert(std::is_integral_v<decltype(raw_rhs)>,
-                  "Can only add numeric types");
+                  "Can only index with numeric types");
 
-    auto ret = raw + raw_rhs;
+    auto target = &(ptr[raw_rhs]);
+    auto no_overflow = T_Sbx::is_in_same_sandbox(ptr, target);
+    detail::dynamic_check(
+      no_overflow,
+      "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
-    if constexpr (std::is_pointer_v<T>) {
-      detail::dynamic_check(raw != nullptr,
-                            "Pointer arithmetic on a null pointer");
-      auto no_overflow = T_Sbx::is_in_same_sandbox(raw, ret);
-      detail::dynamic_check(
-        no_overflow,
-        "Pointer arithmetic overflowed a pointer beyond sandbox memory");
-    }
-
-    return tainted<decltype(ret), T_Sbx>(ret);
+    auto target_wrap = tainted<detail::dereference_result_t<T>, T_Sbx>(target);
+    return *target_wrap;
   }
 };
 
@@ -80,8 +139,11 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
                 "all structs in use by your program.\n");
 
 private:
+  using T_BaseType = tainted_base_impl<tainted, T, T_Sbx>;
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T data;
+
+  inline T& get_raw_value_ref() const noexcept { return data; }
 
   inline detail::valid_return_t<T> get_raw_value() const noexcept
   {
@@ -169,12 +231,49 @@ public:
     }
   }
 
+  // Needed as the definition of unary * above shadows the base's binary *
+  rlbox_detail_forward_binop_to_base(*, T_BaseType)
+
+  // Operator [] is subtly different for tainted <static arrays> and
+  // tainted_volatile<static arrays>
+  template<typename T_Rhs>
+  inline std::conditional_t<
+    std::is_pointer_v<T>,
+    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&, // is_pointer
+    tainted<detail::dereference_result_t<T>, T_Sbx>&           // is_array
+    >
+  operator[](T_Rhs rhs)
+  {
+    static_assert(std::is_pointer_v<T> && std::is_array_v<T>,
+                  "Operator [] only supported for pointers and static arrays");
+
+    if constexpr (std::is_pointer_v<T>) {
+      // defer to base class
+      return (static_cast<T_BaseType*>(this))[rhs];
+    }
+
+    // array
+    auto raw_rhs = detail::unwrap_value(rhs);
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,
+                  "Can only index with numeric types");
+
+    detail::dynamic_check(raw_rhs >= 0 && raw_rhs < std::extent_v<T, 0>,
+                          "Static array indexing overflow");
+
+    auto& data_ref = get_raw_value_ref();
+    auto target_ptr = &(data_ref[raw_rhs]);
+    auto wrapped_target_ptr =
+      reinterpret_cast<tainted<detail::dereference_result_t<T>, T_Sbx>*>(target_ptr);
+
+    return *wrapped_target_ptr;
+  }
+
   // In general comparison operators are unsafe.
   // However comparing tainted with nullptr is fine because
   // 1) tainted values are in application memory and thus cannot change the
   // value after comparision
-  // 2) Checking that a pointer is null doesn't "really" taint the result as the
-  // result is always safe
+  // 2) Checking that a pointer is null doesn't "really" taint the result as
+  // the result is always safe
   inline bool operator==(const std::nullptr_t& arg) const
   {
     if_constexpr_named(cond1, std::is_pointer_v<T>)
@@ -234,8 +333,11 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
                 "all structs in use by your program.\n");
 
 private:
+  using T_BaseType = tainted_base_impl<tainted_volatile, T, T_Sbx>;
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T_ConvertedType data;
+
+  inline T& get_raw_value_ref() const noexcept { return data; }
 
   inline detail::valid_return_t<T> get_raw_value() const
   {
@@ -288,11 +390,41 @@ public:
     }
   }
 
+  // Needed as the definition of unary * above shadows the base's binary *
+  rlbox_detail_forward_binop_to_base(*, T_BaseType)
+
   inline tainted<T*, T_Sbx> operator&() noexcept
   {
     tainted<T*, T_Sbx> ret(&data);
     return ret;
   }
+
+  // Operator [] is subtly different for tainted <static arrays> and
+  // tainted_volatile<static arrays>
+  template<typename T_Rhs>
+  inline std::conditional_t<
+    std::is_pointer_v<T>,
+    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&, // is_pointer
+    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&  // is_array
+    >
+  operator[](T_Rhs rhs)
+  {
+    static_assert(std::is_pointer_v<T> && std::is_array_v<T>,
+                  "Operator [] only supported for pointers and static arrays");
+
+    if constexpr (std::is_pointer_v<T>) {
+      // defer to base class
+      return (static_cast<T_BaseType*>(this))[rhs];
+    }
+
+    // array
+    static_assert(std::is_array_v<T>,
+                  "Operator [] for tainted_volatile<static arrays> is not yet "
+                  "implemented. Please file a bug if this is required.");
+  }
+
+  // Needed as the definition of unary & above shadows the base's binary &
+  rlbox_detail_forward_binop_to_base(&, T_BaseType)
 
   inline tainted_volatile<T, T_Sbx>& operator=(const std::nullptr_t&) noexcept
   {
