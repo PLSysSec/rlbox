@@ -27,7 +27,7 @@ namespace detail {
 #ifdef RLBOX_NO_COMPILE_CHECKS
 #  if __cpp_exceptions && defined(RLBOX_USE_EXCEPTIONS)
 #    define rlbox_detail_static_fail_because(CondExpr, Message)                \
-      throw std::runtime_error(Message)
+      ((void)(CondExpr)), throw std::runtime_error(Message)
 #  else
 #    define rlbox_detail_static_fail_because(CondExpr, Message) abort()
 #  endif

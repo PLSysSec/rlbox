@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <limits>
 
 #include "test_include.hpp"
 
@@ -46,7 +47,7 @@ TEST_CASE("Test operator +, - for pointers", "[operator]")
   T_Sbx sandbox;
   sandbox.create_sandbox();
 
-  tainted<int32_t*, T_Sbx> pc = sandbox.malloc_in_sandbox<int>();
+  tainted<int32_t*, T_Sbx> pc = sandbox.malloc_in_sandbox<int32_t>();
   tainted<int32_t*, T_Sbx> inc = pc + 1;
 
   auto diff = reinterpret_cast<char*>(inc.UNSAFE_Unverified()) - // NOLINT
@@ -60,6 +61,37 @@ TEST_CASE("Test operator +, - for pointers", "[operator]")
 
   tainted<int32_t*, T_Sbx> dec = inc - 1;
   REQUIRE(pc.UNSAFE_Unverified() == dec.UNSAFE_Unverified());
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE(
+  "Test operators that produce new values for tainted_volatile numerics",
+  "[operator]")
+{
+  T_Sbx sandbox;
+  sandbox.create_sandbox();
+
+  // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
+  // but long is 32-bits in our test sandbox env
+  auto pc = sandbox.malloc_in_sandbox<uint64_t>();
+
+  uint64_t max32Val = std::numeric_limits<uint32_t>::max();
+  *pc = max32Val;
+
+  const int rhs = 1;
+  {
+    tainted<uint64_t, T_Sbx> result = (*pc) + rhs;
+    uint64_t expected_result = max32Val + rhs;
+    REQUIRE(result.UNSAFE_Unverified() == expected_result);
+  }
+
+  {
+    tainted<uint64_t, T_Sbx> result = (*pc) + (*pc);
+    uint64_t expected_result = max32Val + max32Val;
+    REQUIRE(result.UNSAFE_Unverified() == expected_result);
+  }
 
   sandbox.destroy_sandbox();
 }

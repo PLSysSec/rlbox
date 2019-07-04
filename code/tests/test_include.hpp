@@ -42,8 +42,8 @@ public:
   using T_IntType = int32_t;
   using T_PointerType = uint32_t;
 
-  static const uint32_t SandboxMemorySize = 0xFF;
-  static const uintptr_t SandboxMemoryBaseMask =
+  inline static const uint32_t SandboxMemorySize = 0xFF;
+  inline static const uintptr_t SandboxMemoryBaseMask =
     ~(static_cast<uintptr_t>(SandboxMemorySize));
   uintptr_t UnalignedSandboxMemory;
   uintptr_t SandboxMemoryBase;

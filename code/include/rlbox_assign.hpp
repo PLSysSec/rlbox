@@ -8,6 +8,29 @@
 
 namespace rlbox::detail {
 
+#define KEEP_ASSIGNMENT_FRIENDLY                                               \
+  template<typename T_A_Lhs,                                                   \
+           typename T_A_Rhs,                                                   \
+           typename T_A_Sbx,                                                   \
+           template<typename, typename>                                        \
+           typename T_A_Lhs_wrap,                                              \
+           template<typename, typename>                                        \
+           typename T_A_Rhs_wrap>                                              \
+  friend inline void detail::assign_wrapped_value_primitive(                   \
+    T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
+    const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);                                \
+                                                                               \
+  template<typename T_A_Lhs,                                                   \
+           typename T_A_Rhs,                                                   \
+           typename T_A_Sbx,                                                   \
+           template<typename, typename>                                        \
+           typename T_A_Lhs_wrap,                                              \
+           template<typename, typename>                                        \
+           typename T_A_Rhs_wrap>                                              \
+  friend inline void detail::assign_wrapped_value(                             \
+    T_A_Lhs_wrap<T_A_Lhs, T_A_Sbx>& lhs,                                       \
+    const T_A_Rhs_wrap<T_A_Rhs, T_A_Sbx>& rhs);
+
 template<typename T_Lhs,
          typename T_Rhs,
          typename T_Sbx,
@@ -24,13 +47,13 @@ inline void assign_wrapped_value_primitive(T_Lhs_wrap<T_Lhs, T_Sbx>& lhs,
   if_constexpr_named(
     cond1, std::is_base_of_v<tainted<T_Lhs, T_Sbx>, T_Lhs_wrap<T_Lhs, T_Sbx>>)
   {
-    lhs.data = rhs.UNSAFE_Unverified();
+    lhs.data = rhs.get_raw_value();
   }
   else if_constexpr_named(
     cond2,
     std::is_base_of_v<tainted_volatile<T_Lhs, T_Sbx>, T_Lhs_wrap<T_Lhs, T_Sbx>>)
   {
-    lhs.data = rhs.UNSAFE_Sandboxed();
+    lhs.data = rhs.get_raw_sandbox_value();
   }
   else
   {
@@ -53,9 +76,12 @@ inline void assign_wrapped_value(T_Lhs_wrap<T_Lhs, T_Sbx>& lhs,
   using namespace std;
   using T_Lhs_El = remove_all_extents_t<T_Lhs>;
   using T_Rhs_El = remove_all_extents_t<T_Rhs>;
+  using T_Lhs_Base = remove_all_extents_t<detail::remove_all_pointers_t<T_Lhs>>;
 
   static_assert(is_base_of_v<sandbox_wrapper_base, T_Lhs_wrap<T_Lhs, T_Sbx>>);
   static_assert(is_base_of_v<sandbox_wrapper_base, T_Rhs_wrap<T_Rhs, T_Sbx>>);
+  static_assert(!detail::is_func_or_member_func<T_Lhs_Base>,
+                "Assignment to function pointers not yet supported");
   static_assert(is_assignable_v<T_Lhs&, T_Rhs>);
 
   // TODO: remaining optimization exists. If the swizzling is a noop, also

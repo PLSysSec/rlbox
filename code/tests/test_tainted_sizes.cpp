@@ -1,4 +1,4 @@
-//#include <array>
+#include <array>
 #include <cstdint>
 
 #include "test_include.hpp"

@@ -20,6 +20,7 @@ class tainted_base_impl
   , public sandbox_wrapper_base_of<T>
 {
   KEEP_CLASSES_FRIENDLY
+  KEEP_ASSIGNMENT_FRIENDLY
 
 private:
   inline auto& impl() { return *static_cast<T_Wrap<T, T_Sbx>*>(this); }
@@ -41,12 +42,8 @@ public:
 
 #define BinaryOp(opSymbol)                                                     \
   template<typename T_Rhs>                                                     \
-  inline auto operator opSymbol(T_Rhs rhs)                                     \
+  inline auto operator opSymbol(T_Rhs&& rhs)                                   \
   {                                                                            \
-    static_assert(std::is_same_v<T_Wrap<T, T_Sbx>, tainted<T, T_Sbx>>,         \
-                  "Operator " #opSymbol                                        \
-                  " not yet implemented for tainted_volatile");                \
-                                                                               \
     static_assert(detail::is_basic_type_v<T>,                                  \
                   "Operator " #opSymbol                                        \
                   " only supported for primitive and pointer types");          \
@@ -103,7 +100,7 @@ public:
 
   template<typename T_Rhs>
   inline tainted_volatile<detail::dereference_result_t<T>, T_Sbx>& operator[](
-    T_Rhs rhs)
+    T_Rhs&& rhs)
   {
     static_assert(std::is_pointer_v<T>,
                   "Operator [] in tainted_base_impl only supports pointers");
@@ -122,12 +119,26 @@ public:
     auto target_wrap = tainted<detail::dereference_result_t<T>, T_Sbx>(target);
     return *target_wrap;
   }
+
+  // We need to implement the -> operator even though T is not a struct
+  // So that we can support code patterns such as the below
+  // tainted<T*> a;
+  // a->UNSAFE_Unverified();
+  inline tainted_volatile<std::remove_pointer_t<T>, T_Sbx>* operator->()
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Operator -> only supported for pointer types");
+    auto ret = impl().get_raw_value();
+    using T_Ret = std::remove_pointer_t<T>;
+    return reinterpret_cast<tainted_volatile<T_Ret, T_Sbx>*>(ret);
+  }
 };
 
 template<typename T, typename T_Sbx>
 class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
+  KEEP_ASSIGNMENT_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(!std::is_class_v<T>,
@@ -139,7 +150,7 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
                 "all structs in use by your program.\n");
 
 private:
-  using T_BaseType = tainted_base_impl<tainted, T, T_Sbx>;
+  using T_ClassBase = tainted_base_impl<tainted, T, T_Sbx>;
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T data;
 
@@ -232,7 +243,7 @@ public:
   }
 
   // Needed as the definition of unary * above shadows the base's binary *
-  rlbox_detail_forward_binop_to_base(*, T_BaseType)
+  rlbox_detail_forward_binop_to_base(*, T_ClassBase)
 
   // Operator [] is subtly different for tainted <static arrays> and
   // tainted_volatile<static arrays>
@@ -242,14 +253,14 @@ public:
     tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&, // is_pointer
     tainted<detail::dereference_result_t<T>, T_Sbx>&           // is_array
     >
-  operator[](T_Rhs rhs)
+  operator[](T_Rhs&& rhs)
   {
     static_assert(std::is_pointer_v<T> && std::is_array_v<T>,
                   "Operator [] only supported for pointers and static arrays");
 
     if constexpr (std::is_pointer_v<T>) {
       // defer to base class
-      return (static_cast<T_BaseType*>(this))[rhs];
+      return (static_cast<T_ClassBase*>(this))[rhs];
     }
 
     // array
@@ -263,7 +274,8 @@ public:
     auto& data_ref = get_raw_value_ref();
     auto target_ptr = &(data_ref[raw_rhs]);
     auto wrapped_target_ptr =
-      reinterpret_cast<tainted<detail::dereference_result_t<T>, T_Sbx>*>(target_ptr);
+      reinterpret_cast<tainted<detail::dereference_result_t<T>, T_Sbx>*>(
+        target_ptr);
 
     return *wrapped_target_ptr;
   }
@@ -322,6 +334,7 @@ template<typename T, typename T_Sbx>
 class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
+  KEEP_ASSIGNMENT_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(!std::is_class_v<T>,
@@ -333,7 +346,7 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
                 "all structs in use by your program.\n");
 
 private:
-  using T_BaseType = tainted_base_impl<tainted_volatile, T, T_Sbx>;
+  using T_ClassBase = tainted_base_impl<tainted_volatile, T, T_Sbx>;
   using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
   T_ConvertedType data;
 
@@ -391,7 +404,7 @@ public:
   }
 
   // Needed as the definition of unary * above shadows the base's binary *
-  rlbox_detail_forward_binop_to_base(*, T_BaseType)
+  rlbox_detail_forward_binop_to_base(*, T_ClassBase)
 
   inline tainted<T*, T_Sbx> operator&() noexcept
   {
@@ -407,31 +420,72 @@ public:
     tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&, // is_pointer
     tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&  // is_array
     >
-  operator[](T_Rhs rhs)
+  operator[](T_Rhs&& rhs)
   {
     static_assert(std::is_pointer_v<T> && std::is_array_v<T>,
                   "Operator [] only supported for pointers and static arrays");
 
     if constexpr (std::is_pointer_v<T>) {
       // defer to base class
-      return (static_cast<T_BaseType*>(this))[rhs];
+      return (static_cast<T_ClassBase*>(this))[rhs];
     }
 
     // array
-    static_assert(std::is_array_v<T>,
-                  "Operator [] for tainted_volatile<static arrays> is not yet "
-                  "implemented. Please file a bug if this is required.");
+    static_assert(
+      std::is_array_v<T>,
+      "TODO: Operator [] for tainted_volatile<static arrays> is not yet "
+      "implemented. Please file a bug if this is required.");
   }
 
   // Needed as the definition of unary & above shadows the base's binary &
-  rlbox_detail_forward_binop_to_base(&, T_BaseType)
+  rlbox_detail_forward_binop_to_base(&, T_ClassBase)
 
-  inline tainted_volatile<T, T_Sbx>& operator=(const std::nullptr_t&) noexcept
+  template<typename T_Rhs>
+  inline tainted_volatile<T, T_Sbx>& operator=(T_Rhs& val)
   {
-    static_assert(std::is_pointer_v<T>);
-    // assign using an integer instead of nullptr, as the pointer field may be
-    // represented as integer
-    data = 0;
+    if_constexpr_named(
+      cond1, std::is_same_v<std::remove_const_t<T_Rhs>, std::nullptr_t>)
+    {
+      static_assert(std::is_pointer_v<T>,
+                    "Null pointer can only be assigned to pointers");
+      // assign using an integer instead of nullptr, as the pointer field may be
+      // represented as integer
+      data = 0;
+    }
+    else if_constexpr_named(cond2,
+                            std::is_base_of_v<sandbox_wrapper_base, T_Rhs>)
+    {
+      detail::assign_wrapped_value(*this, val);
+    }
+    else if_constexpr_named(
+      cond3, detail::is_fundamental_or_enum_v<T> || std::is_array_v<T>)
+    {
+      auto wrapped = tainted<T_Rhs, T_Sbx>(val);
+      detail::assign_wrapped_value(*this, wrapped);
+    }
+    else if_constexpr_named(cond4, std::is_pointer_v<T_Rhs>)
+    {
+      rlbox_detail_static_fail_because(
+        cond4,
+        "Assignment of pointers is not safe as it could\n "
+        "1) Leak pointers from the appliction to the sandbox\n "
+        "2) Pass inaccessible pointers to the sandbox leading to crash\n "
+        "3) Break sandboxes that require pointers to be swizzled first\n "
+        "\n "
+        "Instead, if you want to pass in a pointer, do one of the following\n "
+        "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
+        "2) For function pointers, register with sandbox_callback, and pass in "
+        "the registered value\n "
+        "3) For raw pointers, use assign_pointer which performs required "
+        "safety checks\n ");
+    }
+    else
+    {
+      auto unknownCase = !(cond1 || cond2 || cond3 /* || cond4 */);
+      rlbox_detail_static_fail_because(
+        unknownCase, "Assignment of the given type of value is not supported");
+    }
+
     return *this;
   }
 };

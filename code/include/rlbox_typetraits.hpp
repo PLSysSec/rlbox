@@ -27,6 +27,29 @@ using dereference_result_t =
                      std::remove_extent_t<T> // is_array
                      >;
 
+template<typename T>
+constexpr bool is_func_or_member_func =
+  std::is_function_v<T> || std::is_member_function_pointer_v<T>;
+
+// remove all pointers types
+namespace remove_all_pointers_detail {
+  template<class T>
+  struct remove_all_pointers
+  {
+    typedef T type;
+  };
+
+  template<class T>
+  struct remove_all_pointers<T*>
+  {
+    typedef typename remove_all_pointers<T>::type type;
+  };
+}
+
+template<class T>
+using remove_all_pointers_t =
+  typename remove_all_pointers_detail::remove_all_pointers<T>::type;
+
 // convert types
 namespace convert_detail {
   template<typename T,

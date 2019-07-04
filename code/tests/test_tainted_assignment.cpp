@@ -1,5 +1,6 @@
 #include <cstdint>
-// #include <type_traits>
+#include <limits>
+#include <type_traits>
 
 #include "test_include.hpp"
 
@@ -23,6 +24,29 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
   REQUIRE(b.UNSAFE_Unverified() == RandomVal2); // NOLINT
   REQUIRE(c.UNSAFE_Unverified() == RandomVal2); // NOLINT
   REQUIRE(d.UNSAFE_Unverified() == RandomVal2); // NOLINT
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("tainted_volatile assignment operates correctly",
+          "[tainted_assignment]")
+{
+  T_Sbx sandbox;
+  sandbox.create_sandbox();
+
+  // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
+  // but long is 32-bits in our test sandbox env
+  auto pc = sandbox.malloc_in_sandbox<uint64_t>();
+
+  uint64_t max32Val = std::numeric_limits<uint32_t>::max();
+  *pc = max32Val;
+
+  REQUIRE((*pc).UNSAFE_Unverified() == max32Val);
+  REQUIRE(pc->UNSAFE_Unverified() == max32Val);
+
+  uint64_t max64Val = std::numeric_limits<uint64_t>::max();
+  REQUIRE_THROWS(*pc = max64Val);
+
+  sandbox.destroy_sandbox();
 }
 
 // NOLINTNEXTLINE
