@@ -95,7 +95,8 @@ add_executable(testing
                code/tests/test_operators.cpp
                code/tests/test_sandbox_ptr_conversion.cpp
                code/tests/test_tainted_assignment.cpp
-               code/tests/test_tainted_sizes.cpp)
+               code/tests/test_tainted_sizes.cpp
+               code/tests/test_verification.cpp)
 
 target_link_libraries(testing
                       Catch2::Catch2

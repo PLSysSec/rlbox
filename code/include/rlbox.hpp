@@ -132,6 +132,55 @@ public:
     using T_Ret = std::remove_pointer_t<T>;
     return reinterpret_cast<tainted_volatile<T_Ret, T_Sbx>*>(ret);
   }
+
+  template<typename T_Def>
+  inline T_Def copy_and_verify(
+    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
+    T_Def defaultValue) const
+  {
+    using T_Deref = std::remove_pointer_t<T>;
+
+    if_constexpr_named(cond1, detail::is_fundamental_or_enum_v<T>)
+    {
+      static_assert(std::is_same_v<T_Def, T>, "Incorrect default type");
+      auto val = impl_c().get_raw_value();
+      return verifier(val) == RLBox_Verify_Status::SAFE ? val : defaultValue;
+    }
+    else if_constexpr_named(
+      cond2, detail::is_one_level_ptr_v<T> && !std::is_class_v<T_Deref>)
+    {
+      static_assert(std::is_same_v<T_Def, std::remove_pointer_t<T>>,
+                    "Incorrect default type");
+      static_assert(!std::is_void_v<T_Deref>,
+                    "copy_and_verify does not work for void*. Cast it to a "
+                    "different tainted pointer with sandbox_reinterpret_cast");
+
+      auto val = impl_c().get_raw_value();
+      if (val == nullptr) {
+        return defaultValue;
+      } else {
+        // Important to assign to a local variable (i.e. make a copy)
+        // Else, for tainted_volatile, this will allow a
+        // time-of-check-time-of-use attack
+        auto val_deref = *val;
+        return verifier(&val_deref) == RLBox_Verify_Status::SAFE ? val_deref
+                                                                 : defaultValue;
+      }
+    }
+    else if_constexpr_named(
+      cond3, detail::is_one_level_ptr_v<T> && std::is_class_v<T_Deref>)
+    {
+      rlbox_detail_static_fail_because(
+        cond3, "TODO: copy_and_verify not yet implemented for class pointers");
+    }
+    else
+    {
+      auto unknownCase = !(cond1 || cond2 || cond3);
+      rlbox_detail_static_fail_because(
+        unknownCase,
+        "copy_and_verify not supported for this type as it may be unsafe");
+    }
+  }
 };
 
 template<typename T, typename T_Sbx>
@@ -347,7 +396,8 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 
 private:
   using T_ClassBase = tainted_base_impl<tainted_volatile, T, T_Sbx>;
-  using T_ConvertedType = typename T_Sbx::template convert_sandbox_t<T>;
+  using T_ConvertedType =
+    std::add_volatile_t<typename T_Sbx::template convert_sandbox_t<T>>;
   T_ConvertedType data;
 
   inline T& get_raw_value_ref() const noexcept { return data; }
