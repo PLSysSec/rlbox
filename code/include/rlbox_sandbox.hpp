@@ -14,7 +14,7 @@ class RLBoxSandbox : protected T_SbxImpl
 {
   KEEP_CLASSES_FRIENDLY
 
-private:
+public:
   /***** Function to adjust for custom machine models *****/
 
   template<typename T>
@@ -25,7 +25,6 @@ private:
                                  typename T_SbxImpl::T_LongLongType,
                                  typename T_SbxImpl::T_PointerType>;
 
-public:
   T_SbxImpl* get_sandbox_impl() { return this; }
 
   template<typename... T_Args>

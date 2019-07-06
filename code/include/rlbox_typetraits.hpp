@@ -39,6 +39,27 @@ template<typename T>
 constexpr bool is_one_level_ptr_v =
   std::is_pointer_v<T> && !std::is_pointer_v<std::remove_pointer_t<T>>;
 
+// https://stackoverflow.com/questions/34974844/check-if-a-type-is-from-a-particular-namespace
+namespace detail_is_member_of_rlbox_detail {
+  template<typename T, typename = void>
+  struct is_member_of_rlbox_detail_helper : std::false_type
+  {};
+
+  template<typename T>
+  struct is_member_of_rlbox_detail_helper<
+    T,
+    decltype(struct_is_member_of_rlbox_detail(std::declval<T>()))>
+    : std::true_type
+  {};
+}
+
+template<typename T>
+void struct_is_member_of_rlbox_detail(T&&);
+
+template<typename T>
+constexpr auto is_member_of_rlbox_detail =
+  detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper<T>::value;
+
 // remove all pointers/extent types
 namespace base_type_detail {
   template<typename T>

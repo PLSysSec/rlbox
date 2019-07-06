@@ -6,21 +6,19 @@
 using rlbox::tainted;
 using rlbox::tainted_volatile;
 
-using CallbackType = int (*)(uint32_t, const char*, std::array<uint32_t, 1>);
-using CallbackType2 =
-  int (*)(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
+// The point here is to use the C types as is, so turn off the links
+using CallbackType = int (*)(unsigned, const char*, unsigned[1]); // NOLINT
 
-const uint32_t RandomArrSize = 4;
 struct test
 {
-  uint64_t fieldLong;
-  const char* fieldString;
-  uint32_t fieldBool;
-  std::array<char, RandomArrSize> fieldFixedArr;
-  int (*fieldFnPtr)(uint32_t, const char*, std::array<uint32_t, 1>);
-  struct unknownClass* fieldUnknownPtr;
-  void* voidPtr;
-  std::array<CallbackType, RandomArrSize> fnArray;
+  unsigned long fieldLong;                               // NOLINT
+  const char* fieldString;                               // NOLINT
+  unsigned int fieldBool;                                // NOLINT
+  char fieldFixedArr[8];                                 // NOLINT
+  int (*fieldFnPtr)(unsigned, const char*, unsigned[1]); // NOLINT
+  struct unknownClass* fieldUnknownPtr;                  // NOLINT
+  void* voidPtr;                                         // NOLINT
+  CallbackType fnArray[8];                               // NOLINT
 };
 
 // NOLINTNEXTLINE

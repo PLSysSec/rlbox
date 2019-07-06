@@ -6,6 +6,7 @@
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox.hpp"
+#include "rlbox_struct_support.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_typetraits.hpp"
 #include "rlbox_unwrap.hpp"
@@ -234,7 +235,7 @@ private:
 public:
   tainted() = default;
   tainted(tainted<T, T_Sbx>& p) = default;
-  tainted(tainted_volatile<T, T_Sbx>& p)
+  tainted(const tainted_volatile<T, T_Sbx>& p)
   {
     detail::assign_wrapped_value(*this, p);
   }
