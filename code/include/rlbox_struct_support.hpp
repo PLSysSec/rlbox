@@ -1,27 +1,14 @@
 #pragma once
+// IWYU pragma: private, include "rlbox.hpp"
+// IWYU pragma: friend "rlbox_.*\.hpp"
 
 #include <cstring>
 #include <type_traits>
 
+#include "rlbox_assign.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox::detail {
-
-template<typename T_Lhs, typename T_Rhs>
-void assign_or_copy(T_Lhs& lhs, T_Rhs&& rhs)
-{
-  if constexpr (std::is_assignable_v<T_Lhs&, T_Rhs>) {
-    lhs = rhs;
-  } else {
-    // Use memcpy as types like static arrays are not assignable with =
-    static_assert(sizeof(T_Lhs) == sizeof(T_Rhs),
-                  "Unexpected size difference in tainted struct handling. "
-                  "Please file a bug.");
-    auto dest = reinterpret_cast<void*>(&lhs);
-    auto src = reinterpret_cast<const void*>(&rhs);
-    std::memcpy(dest, src, sizeof(lhs));
-  }
-}
 
 template<typename T, typename T_Sbx, typename T_Enable = void>
 struct convert_to_sandbox_equivalent_helper;
@@ -32,17 +19,18 @@ struct convert_to_sandbox_equivalent_helper<
   T_Sbx,
   std::enable_if_t<!std::is_class_v<T>>>
 {
-  using type = typename RLBoxSandbox<T_Sbx>::template convert_sandbox_t<T>;
+  using type = typename RLBoxSandbox<
+    T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>;
 };
 
 template<typename T, typename T_Sbx>
-using convert_to_sandbox_equivalent =
+using convert_to_sandbox_equivalent_t =
   typename convert_to_sandbox_equivalent_helper<T, T_Sbx>::type;
 
 }
 
 #define helper_create_converted_field(fieldType, fieldName, isFrozen, T_Sbx)   \
-  typename detail::convert_to_sandbox_equivalent<fieldType, T_Sbx> fieldName;
+  typename detail::convert_to_sandbox_equivalent_t<fieldType, T_Sbx> fieldName;
 
 #define helper_no_op()
 
@@ -55,7 +43,7 @@ using convert_to_sandbox_equivalent =
       T_Sbx)                                                                   \
   };                                                                           \
                                                                                \
-  /* add convert_to_sandbox_equivalent specialization for new struct */        \
+  /* add convert_to_sandbox_equivalent_t specialization for new struct */      \
   namespace detail {                                                           \
     template<typename T_Template, typename T_Sbx>                              \
     struct convert_to_sandbox_equivalent_helper<                               \
@@ -74,25 +62,17 @@ using convert_to_sandbox_equivalent =
   tainted_volatile<fieldType, T_Sbx> fieldName;
 
 #define helper_field_wrapper_to_struct(fieldType, fieldName, isFrozen, T_Sbx)  \
-  rlbox::detail::assign_or_copy(lhs.fieldName,                                 \
-                                rhs.fieldName.UNSAFE_Unverified());
+  rlbox::detail::assign_or_copy<fieldType>(lhs.fieldName,                      \
+                                           rhs.fieldName.UNSAFE_Unverified());
 
 #define helper_field_wrapper_to_sbx_struct(                                    \
   fieldType, fieldName, isFrozen, T_Sbx)                                       \
-  rlbox::detail::assign_or_copy(lhs.fieldName,                                 \
-                                rhs.fieldName.UNSAFE_Sandboxed());
+  rlbox::detail::assign_or_copy<                                               \
+    rlbox::detail::convert_to_sandbox_equivalent_t<fieldType, T_Sbx>>(         \
+    lhs.fieldName, rhs.fieldName.UNSAFE_Sandboxed());
 
 #define helper_field_wrapper_to_wrapper(fieldType, fieldName, isFrozen, T_Sbx) \
   lhs.fieldName = rhs.fieldName;
-
-#define helper_fieldCopyUnsandbox(fieldType, fieldName, isFrozen, T_Sbx)       \
-  {                                                                            \
-    auto temp = fieldName.get_raw_sandbox_value(sandbox);                      \
-    std::memcpy((void*)&(ret.fieldName), (void*)&temp, sizeof(ret.fieldName)); \
-  }
-
-#define helper_fieldUnsandbox(fieldType, fieldName, isFrozen, T_Sbx)           \
-  fieldName.unsandboxPointersOrNull(sandbox);
 
 #define tainted_data_specialization(T, libId, T_Sbx)                           \
                                                                                \
@@ -100,6 +80,11 @@ using convert_to_sandbox_equivalent =
   class tainted_volatile<T, T_Sbx>                                             \
   {                                                                            \
   private:                                                                     \
+    inline T_Sbx_##libId##_##T& get_sandbox_value_ref() noexcept               \
+    {                                                                          \
+      return *reinterpret_cast<T_Sbx_##libId##_##T*>(this);                    \
+    }                                                                          \
+                                                                               \
     inline T get_raw_value() const noexcept                                    \
     {                                                                          \
       T lhs;                                                                   \
@@ -112,15 +97,14 @@ using convert_to_sandbox_equivalent =
                                                                                \
     /* get_raw_sandbox_value has to return a custom struct to deal with the    \
      * adjusted machine model, to ensure */                                    \
-    inline T_Sbx_##libId##_##T get_raw_sandbox_value(                          \
-      RLBoxSandbox<T_Sbx>* sandbox) const noexcept                             \
+    inline T_Sbx_##libId##_##T get_raw_sandbox_value() const noexcept          \
     {                                                                          \
       auto ret_ptr = reinterpret_cast<const T_Sbx_##libId##_##T*>(this);       \
       return *ret_ptr;                                                         \
     }                                                                          \
                                                                                \
     tainted_volatile() = default;                                              \
-    tainted_volatile(tainted_volatile<T, T_Sbx>& p) = default;                 \
+    tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;           \
                                                                                \
   public:                                                                      \
     sandbox_fields_reflection_##libId##_class_##T(                             \
@@ -131,18 +115,15 @@ using convert_to_sandbox_equivalent =
       inline tainted<T*, T_Sbx>                                                \
       operator&() noexcept                                                     \
     {                                                                          \
-      tainted<T*, T_Sbx> ret(&data);                                           \
+      auto ref_cast = reinterpret_cast<T*>(&get_sandbox_value_ref());          \
+      tainted<T*, T_Sbx> ret(ref_cast);                                        \
       return ret;                                                              \
     }                                                                          \
                                                                                \
-    inline tainted_volatile<T, T_Sbx>& operator=(const tainted<T, T_Sbx>& rhs) \
-    {                                                                          \
-      auto& lhs = *this;                                                       \
-      sandbox_fields_reflection_##libId##_class_##T(                           \
-        helper_field_wrapper_to_wrapper, helper_no_op, T_Sbx)                  \
-                                                                               \
-        return *this;                                                          \
-    }                                                                          \
+    /* Can't define this yet due, to mutually dependent definition between     \
+    tainted and tainted_volatile for structs */                                \
+    inline tainted_volatile<T, T_Sbx>& operator=(                              \
+      const tainted<T, T_Sbx>& rhs);                                           \
   };                                                                           \
                                                                                \
   template<>                                                                   \
@@ -157,8 +138,7 @@ using convert_to_sandbox_equivalent =
                                                                                \
     /* get_raw_sandbox_value has to return a custom struct to deal with the    \
      * adjusted machine model, to ensure */                                    \
-    inline T_Sbx_##libId##_##T get_raw_sandbox_value(                          \
-      RLBoxSandbox<T_Sbx>* sandbox) const noexcept                             \
+    inline T_Sbx_##libId##_##T get_raw_sandbox_value() const noexcept          \
     {                                                                          \
       T_Sbx_##libId##_##T lhs;                                                 \
       auto& rhs = *this;                                                       \
@@ -183,7 +163,19 @@ using convert_to_sandbox_equivalent =
       sandbox_fields_reflection_##libId##_class_##T(                           \
         helper_field_wrapper_to_wrapper, helper_no_op, T_Sbx)                  \
     }                                                                          \
-  };
+  };                                                                           \
+                                                                               \
+  /* Had to delay the definition due, to mutually dependence between           \
+    tainted and tainted_volatile for structs */                                \
+  inline tainted_volatile<T, T_Sbx>& tainted_volatile<T, T_Sbx>::operator=(    \
+    const tainted<T, T_Sbx>& rhs)                                              \
+  {                                                                            \
+    auto& lhs = *this;                                                         \
+    sandbox_fields_reflection_##libId##_class_##T(                             \
+      helper_field_wrapper_to_wrapper, helper_no_op, T_Sbx)                    \
+                                                                               \
+      return *this;                                                            \
+  }
 
 // clang-format off
 #define rlbox_load_library_api(libId, T_Sbx)                                   \

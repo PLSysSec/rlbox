@@ -42,7 +42,13 @@ namespace detail {
   template<typename... TArgs>
   void printTypes()
   {
+#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
     std::cout << __PRETTY_FUNCTION__ << std::endl; // NOLINT
+#elif defined(_MSC_VER)
+    std::cout << __FUNCSIG__ << std::endl; // NOLINT
+#else
+    std::cout << "Unsupported" << std::endl;
+#endif
   }
 
 #define rlbox_detail_forward_binop_to_base(opSymbol, ...)                      \
@@ -51,6 +57,15 @@ namespace detail {
   {                                                                            \
     auto b = static_cast<__VA_ARGS__*>(this);                                  \
     return (*b)opSymbol rhs;                                                   \
+  }
+
+#define rlbox_detail_for_both(a, b, ...) a __VA_ARGS__ b __VA_ARGS__
+
+  template<typename T>
+  inline auto remove_volatile_from_ptr_cast(T* ptr)
+  {
+    using T_Result = std::add_pointer_t<std::remove_volatile_t<T>>;
+    return const_cast<T_Result>(ptr);
   }
 
 /*

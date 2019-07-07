@@ -1,25 +1,10 @@
-#include <array>
 #include <cstdint>
 
 #include "test_include.hpp"
+#include "test_tainted_structs.hpp"
 
 using rlbox::tainted;
 using rlbox::tainted_volatile;
-
-// The point here is to use the C types as is, so turn off the links
-using CallbackType = int (*)(unsigned, const char*, unsigned[1]); // NOLINT
-
-struct test
-{
-  unsigned long fieldLong;                               // NOLINT
-  const char* fieldString;                               // NOLINT
-  unsigned int fieldBool;                                // NOLINT
-  char fieldFixedArr[8];                                 // NOLINT
-  int (*fieldFnPtr)(unsigned, const char*, unsigned[1]); // NOLINT
-  struct unknownClass* fieldUnknownPtr;                  // NOLINT
-  void* voidPtr;                                         // NOLINT
-  CallbackType fnArray[8];                               // NOLINT
-};
 
 // NOLINTNEXTLINE
 TEST_CASE("RLBox trait types do not introduce vtables", "[tainted_trait]")
@@ -32,26 +17,34 @@ TEST_CASE("RLBox trait types do not introduce vtables", "[tainted_trait]")
           sizeof(uintptr_t)); // NOLINT
 }
 
+template<typename T>
+using T_Convert =
+  rlbox::detail::convert_to_sandbox_equivalent_t<T, TestSandbox>;
+
 // NOLINTNEXTLINE
 TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
 {
-  REQUIRE(sizeof(tainted<long long, T_Sbx>) == sizeof(long long)); // NOLINT
-  REQUIRE(sizeof(tainted<long, T_Sbx>) == sizeof(long));           // NOLINT
-  REQUIRE(sizeof(tainted<int, T_Sbx>) == sizeof(int));             // NOLINT
-  REQUIRE(sizeof(tainted<void*, T_Sbx>) == sizeof(void*));         // NOLINT
-  // REQUIRE(sizeof(tainted<test, T_Sbx>) == sizeof(test));           // NOLINT
-  // REQUIRE(sizeof(tainted<test*, T_Sbx>) == sizeof(test*));         // NOLINT
 
-  REQUIRE(sizeof(tainted_volatile<long long, T_Sbx>) ==
+  REQUIRE(sizeof(tainted<long long, TestSandbox>) ==
+          sizeof(long long));                                    // NOLINT
+  REQUIRE(sizeof(tainted<long, TestSandbox>) == sizeof(long));   // NOLINT
+  REQUIRE(sizeof(tainted<int, TestSandbox>) == sizeof(int));     // NOLINT
+  REQUIRE(sizeof(tainted<void*, TestSandbox>) == sizeof(void*)); // NOLINT
+  REQUIRE(sizeof(tainted<testStruct, TestSandbox>) ==
+          sizeof(testStruct)); // NOLINT
+  REQUIRE(sizeof(tainted<testStruct*, TestSandbox>) ==
+          sizeof(testStruct*)); // NOLINT
+
+  REQUIRE(sizeof(tainted_volatile<long long, TestSandbox>) ==
           sizeof(TestSandbox::T_LongLongType)); // NOLINT
-  REQUIRE(sizeof(tainted_volatile<long, T_Sbx>) ==
+  REQUIRE(sizeof(tainted_volatile<long, TestSandbox>) ==
           sizeof(TestSandbox::T_LongType)); // NOLINT
-  REQUIRE(sizeof(tainted_volatile<int, T_Sbx>) ==
+  REQUIRE(sizeof(tainted_volatile<int, TestSandbox>) ==
           sizeof(TestSandbox::T_IntType)); // NOLINT
-  REQUIRE(sizeof(tainted_volatile<void*, T_Sbx>) ==
+  REQUIRE(sizeof(tainted_volatile<void*, TestSandbox>) ==
           sizeof(TestSandbox::T_PointerType)); // NOLINT
-  // REQUIRE(sizeof(tainted_volatile<test, T_Sbx>) ==
-  // sizeof(T_Sbx::convert_sandbox_t<test>));   // NOLINT
-  // REQUIRE(sizeof(tainted_volatile<test*, T_Sbx>) ==
-  // sizeof(T_Sbx::convert_sandbox_t<test>*)); // NOLINT
+  REQUIRE(sizeof(tainted_volatile<testStruct, TestSandbox>) ==
+          sizeof(T_Convert<testStruct>)); // NOLINT
+  REQUIRE(sizeof(tainted_volatile<testStruct*, TestSandbox>) ==
+          sizeof(T_Convert<testStruct*>)); // NOLINT
 }

@@ -7,7 +7,7 @@ using rlbox::tainted;
 // NOLINTNEXTLINE
 TEST_CASE("Test comparisons to nullptr", "[compare_nullptr]")
 {
-  T_Sbx sandbox;
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
@@ -16,7 +16,7 @@ TEST_CASE("Test comparisons to nullptr", "[compare_nullptr]")
   REQUIRE(!!ptr);
 
   // Comparisons to nullptr not allowed for non pointers
-  tainted<uint32_t, T_Sbx> val; // NOLINT
+  tainted<uint32_t, TestSandbox> val; // NOLINT
   REQUIRE_THROWS(val != nullptr);
   REQUIRE_THROWS(!(val == nullptr));
 

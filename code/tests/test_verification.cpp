@@ -10,7 +10,7 @@ TEST_CASE("RLBox test basic verification", "[verification]")
   const auto lb = 0;
   const auto ub = 10;
 
-  tainted<int, T_Sbx> test = testVal;
+  tainted<int, TestSandbox> test = testVal;
   auto result = test.copy_and_verify(
     [](int val) {
       return val > lb && val < ub ? RLBox_Verify_Status::SAFE
@@ -30,7 +30,7 @@ TEST_CASE("RLBox test enum verification", "[verification]")
     ENUM_THIRD
   };
 
-  tainted<Example_Enum, T_Sbx> ref = ENUM_FIRST;
+  tainted<Example_Enum, TestSandbox> ref = ENUM_FIRST;
   auto enumVal = ref.copy_and_verify(
     [](Example_Enum val) {
       return val <= ENUM_THIRD ? RLBox_Verify_Status::SAFE
@@ -48,10 +48,10 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   const auto ub = 10;
   const auto def = -1;
 
-  T_Sbx sandbox;
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  tainted<int*, T_Sbx> pa = sandbox.malloc_in_sandbox<int>();
+  tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();
   *pa = testVal;
 
   auto result1 = pa.copy_and_verify(

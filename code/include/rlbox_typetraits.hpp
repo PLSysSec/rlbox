@@ -32,12 +32,19 @@ using dereference_result_t =
                      >;
 
 template<typename T>
-constexpr bool is_func_or_member_func =
-  std::is_function_v<T> || std::is_member_function_pointer_v<T>;
+constexpr bool is_func_or_func_ptr =
+  std::is_function_v<T> || std::is_function_v<std::remove_pointer_t<T>> ||
+  std::is_member_function_pointer_v<T>;
 
 template<typename T>
 constexpr bool is_one_level_ptr_v =
   std::is_pointer_v<T> && !std::is_pointer_v<std::remove_pointer_t<T>>;
+
+template<typename T_This, typename T_Target>
+using add_const_if_this_const_t =
+  std::conditional_t<std::is_const_v<std::remove_pointer_t<T_This>>,
+                     std::add_const_t<T_Target>,
+                     T_Target>;
 
 // https://stackoverflow.com/questions/34974844/check-if-a-type-is-from-a-particular-namespace
 namespace detail_is_member_of_rlbox_detail {
@@ -193,7 +200,7 @@ namespace convert_detail {
     T_LongLongType,
     T_PointerType,
     std::enable_if_t<std::is_same_v<bool, T> || std::is_same_v<void, T> ||
-                     std::is_enum_v<T>>>
+                     std::is_same_v<char, T> || std::is_enum_v<T>>>
   {
     using type = T;
   };

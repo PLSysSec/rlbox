@@ -14,11 +14,11 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
   const int RandomVal2 = 5;
 
   // Avoid warnings about uninitialized var
-  tainted<int, T_Sbx> a; // NOLINT
+  tainted<int, TestSandbox> a; // NOLINT
   a = RandomVal1;
-  tainted<int, T_Sbx> b = RandomVal2;
-  tainted<int, T_Sbx> c = b;
-  tainted<int, T_Sbx> d; // NOLINT
+  tainted<int, TestSandbox> b = RandomVal2;
+  tainted<int, TestSandbox> c = b;
+  tainted<int, TestSandbox> d; // NOLINT
   d = b;
   REQUIRE(a.UNSAFE_Unverified() == RandomVal1); // NOLINT
   REQUIRE(b.UNSAFE_Unverified() == RandomVal2); // NOLINT
@@ -30,7 +30,7 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
 TEST_CASE("tainted_volatile assignment operates correctly",
           "[tainted_assignment]")
 {
-  T_Sbx sandbox;
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
@@ -53,26 +53,34 @@ TEST_CASE("tainted_volatile assignment operates correctly",
 TEST_CASE("tainted tainted_volatile conversion operates correctly",
           "[tainted_assignment]")
 {
-  T_Sbx sandbox;
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
-  REQUIRE(std::is_same_v<decltype(ptr), tainted<uint32_t*, T_Sbx>>);
+  REQUIRE(std::is_same_v<decltype(ptr), tainted<uint32_t*, TestSandbox>>);
   REQUIRE(ptr.UNSAFE_Unverified() != nullptr);
 
   auto& val = *ptr;
-  REQUIRE(std::is_same_v<decltype(val), tainted_volatile<uint32_t, T_Sbx>&>);
-  REQUIRE(std::is_same_v<decltype(tainted(val)), tainted<uint32_t, T_Sbx>>);
+  REQUIRE(
+    std::is_same_v<decltype(val), tainted_volatile<uint32_t, TestSandbox>&>);
+  REQUIRE(
+    std::is_same_v<decltype(tainted(val)), tainted<uint32_t, TestSandbox>>);
 
-  REQUIRE(std::is_same_v<decltype(tainted(&val)), tainted<uint32_t*, T_Sbx>>);
-  REQUIRE(std::is_same_v<decltype(tainted(&*ptr)), tainted<uint32_t*, T_Sbx>>);
+  REQUIRE(
+    std::is_same_v<decltype(tainted(&val)), tainted<uint32_t*, TestSandbox>>);
+  REQUIRE(
+    std::is_same_v<decltype(tainted(&*ptr)), tainted<uint32_t*, TestSandbox>>);
 
-  tainted<uint32_t**, T_Sbx> ptr2 = sandbox.malloc_in_sandbox<uint32_t*>();
+  tainted<uint32_t**, TestSandbox> ptr2 =
+    sandbox.malloc_in_sandbox<uint32_t*>();
   auto& deref = *ptr2;
-  REQUIRE(std::is_same_v<decltype(deref), tainted_volatile<uint32_t*, T_Sbx>&>);
-  REQUIRE(std::is_same_v<decltype(*deref), tainted_volatile<uint32_t, T_Sbx>&>);
+  REQUIRE(
+    std::is_same_v<decltype(deref), tainted_volatile<uint32_t*, TestSandbox>&>);
+  REQUIRE(
+    std::is_same_v<decltype(*deref), tainted_volatile<uint32_t, TestSandbox>&>);
 
-  REQUIRE(std::is_same_v<decltype(**ptr2), tainted_volatile<uint32_t, T_Sbx>&>);
+  REQUIRE(
+    std::is_same_v<decltype(**ptr2), tainted_volatile<uint32_t, TestSandbox>&>);
 
   sandbox.destroy_sandbox();
 }

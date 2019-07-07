@@ -9,8 +9,8 @@
 
 namespace rlbox {
 
-template<typename T_SbxImpl>
-class RLBoxSandbox : protected T_SbxImpl
+template<typename T_Sbx>
+class RLBoxSandbox : protected T_Sbx
 {
   KEEP_CLASSES_FRIENDLY
 
@@ -18,14 +18,14 @@ public:
   /***** Function to adjust for custom machine models *****/
 
   template<typename T>
-  using convert_sandbox_t =
+  using convert_to_sandbox_equivalent_nonclass_t =
     detail::convert_base_types_t<T,
-                                 typename T_SbxImpl::T_IntType,
-                                 typename T_SbxImpl::T_LongType,
-                                 typename T_SbxImpl::T_LongLongType,
-                                 typename T_SbxImpl::T_PointerType>;
+                                 typename T_Sbx::T_IntType,
+                                 typename T_Sbx::T_LongType,
+                                 typename T_Sbx::T_LongLongType,
+                                 typename T_Sbx::T_PointerType>;
 
-  T_SbxImpl* get_sandbox_impl() { return this; }
+  T_Sbx* get_sandbox_impl() { return this; }
 
   template<typename... T_Args>
   inline auto create_sandbox(T_Args... args)
@@ -36,7 +36,8 @@ public:
   inline auto destroy_sandbox() { return this->impl_destroy_sandbox(); }
 
   template<typename T>
-  inline T* get_unsandboxed_pointer(convert_sandbox_t<T*> p) const
+  inline T* get_unsandboxed_pointer(
+    convert_to_sandbox_equivalent_nonclass_t<T*> p) const
   {
     if (p == 0) {
       return nullptr;
@@ -46,7 +47,8 @@ public:
   }
 
   template<typename T>
-  inline convert_sandbox_t<T*> get_sandboxed_pointer(const void* p) const
+  inline convert_to_sandbox_equivalent_nonclass_t<T*> get_sandboxed_pointer(
+    const void* p) const
   {
     if (p == nullptr) {
       return 0;
@@ -55,37 +57,37 @@ public:
   }
 
   template<typename T>
-  static inline T* get_unsandboxed_pointer(convert_sandbox_t<T*> p,
-                                           const void* example_unsandboxed_ptr)
+  static inline T* get_unsandboxed_pointer(
+    convert_to_sandbox_equivalent_nonclass_t<T*> p,
+    const void* example_unsandboxed_ptr)
   {
     if (p == 0) {
       return nullptr;
     }
-    auto ret = T_SbxImpl::template impl_get_unsandboxed_pointer<T>(
+    auto ret = T_Sbx::template impl_get_unsandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
     return reinterpret_cast<T*>(ret);
   }
 
   template<typename T>
-  static inline convert_sandbox_t<T*> get_sandboxed_pointer(
-    const void* p,
-    const void* example_unsandboxed_ptr)
+  static inline convert_to_sandbox_equivalent_nonclass_t<T*>
+  get_sandboxed_pointer(const void* p, const void* example_unsandboxed_ptr)
   {
     if (p == nullptr) {
       return 0;
     }
-    return T_SbxImpl::template impl_get_sandboxed_pointer<T>(
+    return T_Sbx::template impl_get_sandboxed_pointer<T>(
       p, example_unsandboxed_ptr);
   }
 
   template<typename T>
-  inline tainted<T*, RLBoxSandbox<T_SbxImpl>> malloc_in_sandbox()
+  inline tainted<T*, T_Sbx> malloc_in_sandbox()
   {
     const uint32_t defaultCount = 1;
     return malloc_in_sandbox<T>(defaultCount);
   }
   template<typename T>
-  inline tainted<T*, RLBoxSandbox<T_SbxImpl>> malloc_in_sandbox(uint32_t count)
+  inline tainted<T*, T_Sbx> malloc_in_sandbox(uint32_t count)
   {
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
@@ -97,18 +99,18 @@ public:
       is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptrEnd)),
       "Malloc returned a pointer whose range goes beyond sandbox memory");
     auto cast_ptr = reinterpret_cast<T*>(ptr);
-    return tainted<T*, RLBoxSandbox<T_SbxImpl>>(cast_ptr);
+    return tainted<T*, T_Sbx>(cast_ptr);
   }
 
   template<typename T>
-  inline void free_in_sandbox(tainted<T*, RLBoxSandbox<T_SbxImpl>> ptr)
+  inline void free_in_sandbox(tainted<T*, T_Sbx> ptr)
   {
     this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
   }
 
   static inline bool is_in_same_sandbox(const void* p1, const void* p2)
   {
-    return T_SbxImpl::impl_is_in_same_sandbox(p1, p2);
+    return T_Sbx::impl_is_in_same_sandbox(p1, p2);
   }
 
   inline bool is_pointer_in_sandbox_memory(const void* p)

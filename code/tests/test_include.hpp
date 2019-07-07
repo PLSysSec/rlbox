@@ -15,6 +15,21 @@
 
 #define UNUSED(varName) (void)varName
 
+// The point here is to use the C types as is, so turn off the links
+using CallbackType = int (*)(unsigned, const char*, unsigned[1]); // NOLINT
+
+struct testStruct
+{
+  unsigned long fieldLong;                               // NOLINT
+  const char* fieldString;                               // NOLINT
+  unsigned int fieldBool;                                // NOLINT
+  char fieldFixedArr[8];                                 // NOLINT
+  int (*fieldFnPtr)(unsigned, const char*, unsigned[1]); // NOLINT
+  struct unknownClass* fieldUnknownPtr;                  // NOLINT
+  void* voidPtr;                                         // NOLINT
+  CallbackType fnArray[8];                               // NOLINT
+};
+
 class TestSandbox
 {
 private:
@@ -118,5 +133,3 @@ protected:
     return mask == SandboxMemoryBase;
   }
 };
-
-using T_Sbx = rlbox::RLBoxSandbox<TestSandbox>;

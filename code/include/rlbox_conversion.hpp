@@ -11,7 +11,7 @@
 namespace rlbox::detail {
 
 template<typename T_To, typename T_From>
-inline constexpr T_To adjust_type_size(const T_From& val)
+inline constexpr valid_return_t<T_To> adjust_type_size(const T_From& val)
 {
   using namespace std;
 
