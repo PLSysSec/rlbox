@@ -3,7 +3,7 @@
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
 #include <functional>
-#include <numeric>
+#include <limits>
 
 #include "rlbox_helpers.hpp"
 #include "rlbox_typetraits.hpp"

@@ -5,6 +5,7 @@
 #include "rlbox_assign.hpp"
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_noop_sandbox.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
@@ -136,7 +137,7 @@ public:
   // So that we can support code patterns such as the below
   // tainted<T*> a;
   // a->UNSAFE_Unverified();
-  inline auto operator->()
+  inline auto operator-> ()
   {
     static_assert(std::is_pointer_v<T>,
                   "Operator -> only supported for pointer types");
