@@ -6,6 +6,7 @@
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox.hpp"
+#include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_typetraits.hpp"
@@ -22,6 +23,7 @@ class tainted_base_impl
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
+  KEEP_CAST_FRIENDLY
 
 private:
   inline auto& impl() { return *static_cast<T_Wrap<T, T_Sbx>*>(this); }
@@ -134,13 +136,16 @@ public:
   // So that we can support code patterns such as the below
   // tainted<T*> a;
   // a->UNSAFE_Unverified();
-  inline tainted_volatile<std::remove_pointer_t<T>, T_Sbx>* operator->()
+  inline auto operator->()
   {
     static_assert(std::is_pointer_v<T>,
                   "Operator -> only supported for pointer types");
     auto ret = impl().get_raw_value();
     using T_Ret = std::remove_pointer_t<T>;
-    return reinterpret_cast<tainted_volatile<T_Ret, T_Sbx>*>(ret);
+    using T_RetWrap =
+      detail::add_const_if_this_const_t<decltype(ret),
+                                        tainted_volatile<T_Ret, T_Sbx>>;
+    return reinterpret_cast<T_RetWrap*>(ret);
   }
 
   template<typename T_Def>
@@ -198,6 +203,7 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
+  KEEP_CAST_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(
@@ -410,6 +416,7 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
+  KEEP_CAST_FRIENDLY
 
   // Classes recieve their own specialization
   static_assert(
@@ -544,9 +551,11 @@ public:
   // Needed as the definition of unary & above shadows the base's binary &
   rlbox_detail_forward_binop_to_base(&, T_ClassBase)
 
-  template<typename T_Rhs>
-  inline tainted_volatile<T, T_Sbx>& operator=(T_Rhs& val)
+  template<typename T_RhsRef>
+  inline tainted_volatile<T, T_Sbx>& operator=(T_RhsRef&& val)
   {
+    using T_Rhs = std::remove_reference_t<T_RhsRef>;
+
     if_constexpr_named(
       cond1, std::is_same_v<std::remove_const_t<T_Rhs>, std::nullptr_t>)
     {

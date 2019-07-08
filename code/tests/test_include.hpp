@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <utility>
 
 // IWYU pragma: begin_exports
@@ -50,6 +51,8 @@ private:
     auto alignedMem = reinterpret_cast<std::byte*>(alignedMemU);
     return std::make_pair(mem, alignedMem);
   }
+
+  size_t CurrFreeAddress = 4; // NOLINT
 
 public:
   using T_LongLongType = int64_t;
@@ -112,10 +115,14 @@ protected:
     return static_cast<T_PointerType>(reinterpret_cast<uintptr_t>(p) - mask);
   }
 
-  inline T_PointerType impl_malloc_in_sandbox(size_t)
+  inline T_PointerType impl_malloc_in_sandbox(size_t size)
   {
-    const auto random_address = 4;
-    return static_cast<T_PointerType>(random_address);
+    auto ret = static_cast<T_PointerType>(CurrFreeAddress);
+    CurrFreeAddress += size;
+    if (CurrFreeAddress > SandboxMemorySize) {
+      std::abort();
+    }
+    return ret;
   }
 
   inline void impl_free_in_sandbox(T_PointerType) {}
@@ -132,4 +139,6 @@ protected:
     auto mask = SandboxMemoryBaseMask & reinterpret_cast<uintptr_t>(p);
     return mask == SandboxMemoryBase;
   }
+
+  inline size_t impl_get_total_memory() { return SandboxMemorySize; }
 };

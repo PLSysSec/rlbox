@@ -121,7 +121,7 @@ using convert_to_sandbox_equivalent_t =
     /* Can't define this yet due, to mutually dependent definition between     \
     tainted and tainted_volatile for structs */                                \
     inline tainted_volatile<T, T_Sbx>& operator=(                              \
-      const tainted<T, T_Sbx>& rhs);                                           \
+      const tainted<T, T_Sbx>&& rhs);                                          \
   };                                                                           \
                                                                                \
   template<typename T_Sbx>                                                     \
@@ -166,7 +166,7 @@ using convert_to_sandbox_equivalent_t =
     tainted and tainted_volatile for structs */                                \
   template<typename T_Sbx>                                                     \
   inline tainted_volatile<T, T_Sbx>& tainted_volatile<T, T_Sbx>::operator=(    \
-    const tainted<T, T_Sbx>& rhs)                                              \
+    const tainted<T, T_Sbx>&& rhs)                                             \
   {                                                                            \
     auto& lhs = *this;                                                         \
     sandbox_fields_reflection_##libId##_class_##T(                             \

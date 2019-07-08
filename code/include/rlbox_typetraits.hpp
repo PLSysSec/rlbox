@@ -173,12 +173,13 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
-  struct convert_base_types_t_helper<T,
-                                     T_IntType,
-                                     T_LongType,
-                                     T_LongLongType,
-                                     T_PointerType,
-                                     std::enable_if_t<std::is_unsigned_v<T>>>
+  struct convert_base_types_t_helper<
+    T,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_unsigned_v<T> && !std::is_const_v<T>>>
   {
     using type = std::make_unsigned_t<
       typename convert_base_types_t_helper<std::make_signed_t<T>,

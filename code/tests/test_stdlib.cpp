@@ -1,0 +1,169 @@
+#include <cstddef>
+#include <cstdint>
+#include <type_traits>
+
+#include "test_include.hpp"
+
+using rlbox::memset;
+using rlbox::tainted;
+
+// NOLINTNEXTLINE
+TEST_CASE("test sandbox_reinterpret_cast", "[stdlib]")
+{
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  const auto testVal = 0xAB;
+  auto ptr = sandbox.malloc_in_sandbox<uint64_t>();
+  *ptr = testVal;
+  auto ptr2 = rlbox::sandbox_reinterpret_cast<uint32_t*>(ptr);
+
+  REQUIRE(std::is_same_v<decltype(ptr), tainted<uint64_t*, TestSandbox>>);
+  REQUIRE(std::is_same_v<decltype(ptr2), tainted<uint32_t*, TestSandbox>>);
+  REQUIRE(ptr2->UNSAFE_Unverified() == testVal);
+
+  sandbox.free_in_sandbox(ptr);
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("test sandbox_const_cast", "[stdlib]")
+{
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  const auto testVal = 0xAB;
+  auto ptr = sandbox.malloc_in_sandbox<const uint64_t>();
+  auto ptr2 = rlbox::sandbox_const_cast<uint64_t*>(ptr);
+  *ptr2 = testVal;
+
+  REQUIRE(std::is_same_v<decltype(ptr), tainted<const uint64_t*, TestSandbox>>);
+  REQUIRE(std::is_same_v<decltype(ptr2), tainted<uint64_t*, TestSandbox>>);
+  REQUIRE(ptr->UNSAFE_Unverified() == testVal);
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("test memset", "[stdlib]")
+{
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  auto initVal = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
+  auto fifth = initVal + 4;
+
+  const uint32_t max32Val = 0xFFFFFFFF;
+
+  // Memset with untainted val and untainted size
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(initVal + i) = max32Val;
+  }
+  memset(sandbox, fifth, 0, sizeof(tainted<unsigned int, TestSandbox>) * 4);
+
+  for (int i = 0; i < 4; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+  for (int i = 4; i < 8; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == 0);
+  }
+  for (int i = 8; i < 12; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+
+  // Memset with tainted val and untainted size
+  tainted<int, TestSandbox> val = 0;
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(initVal + i) = max32Val;
+  }
+  memset(sandbox, fifth, val, sizeof(tainted<unsigned int, TestSandbox>) * 4);
+
+  for (int i = 0; i < 4; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+  for (int i = 4; i < 8; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == 0);
+  }
+  for (int i = 8; i < 12; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+
+  // Memset with tainted val and untainted size
+  tainted<size_t, TestSandbox> size =
+    sizeof(tainted<unsigned int, TestSandbox>) * 4;
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(initVal + i) = max32Val;
+  }
+  memset(sandbox, fifth, val, size);
+
+  for (int i = 0; i < 4; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+  for (int i = 4; i < 8; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == 0);
+  }
+  for (int i = 8; i < 12; i++) { // NOLINT
+    REQUIRE(*((initVal + i).UNSAFE_Unverified()) == max32Val);
+  }
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("test memcpy", "[stdlib]")
+{
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  const uint32_t max32Val = 0xFFFFFFFF;
+
+  auto dest = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
+  auto dest_fifth = dest + 4;
+
+  // tainted src
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(dest + i) = 0;
+  }
+  auto src = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
+  auto src_fifth = src + 4;
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(src + i) = max32Val;
+  }
+  memcpy(sandbox,
+         dest_fifth,
+         src_fifth,
+         sizeof(tainted<unsigned int, TestSandbox>) * 4);
+  for (int i = 0; i < 4; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == 0);
+  }
+  for (int i = 4; i < 8; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == max32Val);
+  }
+  for (int i = 8; i < 12; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == 0);
+  }
+
+  // untainted src
+  unsigned int* src2 = new unsigned int[12]; // NOLINT
+  auto src2_fifth = src2 + 4;                // NOLINT
+  for (int i = 0; i < 12; i++) {             // NOLINT
+    *(src2 + i) = max32Val;                  // NOLINT
+  }
+  memcpy(sandbox,
+         dest_fifth,
+         src2_fifth,
+         sizeof(tainted<unsigned int, TestSandbox>) * 4);
+  for (int i = 0; i < 4; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == 0);
+  }
+  for (int i = 4; i < 8; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == max32Val);
+  }
+  for (int i = 8; i < 12; i++) { // NOLINT
+    REQUIRE(*((dest + i).UNSAFE_Unverified()) == 0);
+  }
+
+  delete[] src2; // NOLINT
+  sandbox.free_in_sandbox(src);
+  sandbox.free_in_sandbox(dest);
+
+  sandbox.destroy_sandbox();
+}
