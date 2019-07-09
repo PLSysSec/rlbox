@@ -20,6 +20,32 @@ private:
   std::mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
 
+  template<typename T>
+  inline auto invoke_process_param(T&& param)
+  {
+    using T_NoRef = std::remove_reference_t<T>;
+
+    if_constexpr_named(cond1, std::is_base_of_v<sandbox_wrapper_base, T_NoRef>)
+    {
+      return param.UNSAFE_Sandboxed();
+    }
+    else if_constexpr_named(cond2, detail::is_fundamental_or_enum_v<T_NoRef>)
+    {
+      // For unwrapped primitives, assign to a tainted var and then unwrap so
+      // that we adjust for machine model
+      tainted<T_NoRef, T_Sbx> copy = param;
+      return copy.UNSAFE_Sandboxed();
+    }
+    else
+    {
+      constexpr auto unknownCase = !(cond1 || cond2);
+      rlbox_detail_static_fail_because(
+        unknownCase,
+        "Arguments to a sandbox function call should be primitives  or wrapped "
+        "types like tainted, callbacks etc.");
+    }
+  }
+
 public:
   /***** Function to adjust for custom machine models *****/
 
@@ -142,6 +168,27 @@ public:
 
     return func_ptr;
   }
+
+  template<typename T, typename... T_Args>
+  auto invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
+  {
+    static_assert(
+      std::is_invocable_v<T, detail::rlbox_remove_wrapper_t<T_Args>...>,
+      "Mismatched arguments types for function");
+
+    using T_Result = std::invoke_result_t<T, T_Args...>;
+
+    if constexpr (std::is_void_v<T_Result>) {
+      this->impl_invoke_with_func_ptr(reinterpret_cast<T*>(func_ptr),
+                                      invoke_process_param(params)...);
+      return;
+    } else {
+      auto raw_result = this->impl_invoke_with_func_ptr(reinterpret_cast<T*>(func_ptr), invoke_process_param(params)...);
+      auto cast_result = reinterpret_cast<tainted_volatile<T_Result, T_Sbx>*>(&raw_result);
+      tainted<T_Result, T_Sbx> wrapped_result = *cast_result;
+      return wrapped_result;
+    }
+  }
 };
 
 #if defined(__clang__)
@@ -157,12 +204,19 @@ public:
 #endif
 
 #if defined(RLBOX_USE_STATIC_CALLS)
-#  define sandbox_invoke(sandbox, func_name, ...)                              \
-    RLBOX_USE_STATIC_CALLS##_lookup_symbol(sandbox, func_name)
+#  define sandbox_lookup_symbol_helper(prefix, sandbox, func_name)             \
+    prefix(sandbox, func_name)
+
+#  define sandbox_lookup_symbol(sandbox, func_name)                            \
+    sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), sandbox, func_name)
 #else
-#  define sandbox_invoke(sandbox, func_name, ...)                              \
+#  define sandbox_lookup_symbol(sandbox, func_name)                            \
     sandbox.lookup_symbol(#func_name)
 #endif
+
+#define sandbox_invoke(sandbox, func_name, ...)                                                  \
+  sandbox.invoke_with_func_ptr<decltype(func_name)>(sandbox_lookup_symbol(sandbox, func_name),      \
+                               ##__VA_ARGS__)
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

@@ -5,7 +5,6 @@
 #include "rlbox_assign.hpp"
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
-#include "rlbox_noop_sandbox.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"

@@ -4,6 +4,8 @@
 
 #include <type_traits>
 
+#include "rlbox_types.hpp"
+
 namespace rlbox::detail {
 
 #define RLBOX_ENABLE_IF(...) std::enable_if_t<__VA_ARGS__>* = nullptr
@@ -45,6 +47,42 @@ using add_const_if_this_const_t =
   std::conditional_t<std::is_const_v<std::remove_pointer_t<T_This>>,
                      std::add_const_t<T_Target>,
                      T_Target>;
+
+namespace detail_rlbox_remove_wrapper {
+
+  template<class TData>
+  struct unwrapper
+  {
+    using type = TData;
+  };
+
+  template<typename T>
+  unwrapper<T> unwrap_helper(sandbox_wrapper_base_of<T>);
+
+  template<typename T, typename T_Enable = void>
+  struct rlbox_remove_wrapper_helper;
+
+  template<typename T>
+  struct rlbox_remove_wrapper_helper<
+    T,
+    std::enable_if_t<std::is_base_of_v<sandbox_wrapper_base, T>>>
+  {
+    using ret = decltype(unwrap_helper(std::declval<T>()));
+    using type = typename ret::type;
+  };
+
+  template<typename T>
+  struct rlbox_remove_wrapper_helper<
+    T,
+    std::enable_if_t<!std::is_base_of_v<sandbox_wrapper_base, T>>>
+  {
+    using type = T;
+  };
+}
+
+template<typename T>
+using rlbox_remove_wrapper_t =
+  typename detail_rlbox_remove_wrapper::rlbox_remove_wrapper_helper<T>::type;
 
 // https://stackoverflow.com/questions/34974844/check-if-a-type-is-from-a-particular-namespace
 namespace detail_is_member_of_rlbox_detail {
