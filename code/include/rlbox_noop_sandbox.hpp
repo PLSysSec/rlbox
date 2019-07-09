@@ -2,6 +2,10 @@
 
 #include <cstdlib>
 
+#include "rlbox_helpers.hpp"
+
+namespace rlbox {
+
 class rlbox_noop_sandbox
 {
 private:
@@ -64,4 +68,29 @@ protected:
   {
     return std::numeric_limits<size_t>::max();
   }
+
+  // adding a template so that we can use static_assert to fire only if this
+  // function is invoked
+  template<typename T = void>
+  void* impl_lookup_symbol(const char* /* func_name */)
+  {
+    // Will fire if this impl_lookup_symbol is ever called for the static
+    // sandbox
+    constexpr bool fail = std::is_same_v<T, void>;
+    rlbox_detail_static_fail_because(fail,
+      "The no_op_sandbox uses static calls and thus developers should add\n\n"
+      "#define RLBOX_USE_STATIC_CALLS rlbox_no_op_sandbox\n\n"
+      "to their code, to ensure that static calls are handled correctly.");
+
+    return nullptr;
+  }
+
+#define rlbox_no_op_sandbox_lookup_symbol(sandbox, func_name)                  \
+  static_assert(std::is_same_v<std::remove_reference_t<decltype(sandbox)>,     \
+                               RLBoxSandbox<rlbox_noop_sandbox>>,              \
+                "Forwarding another sandboxes calls to rlbox_no_op_sandbox. "  \
+                "Please check the use of RLBOX_USE_STATIC_CALLS."),            \
+    reinterpret_cast<void*>(&func_name);
 };
+
+}

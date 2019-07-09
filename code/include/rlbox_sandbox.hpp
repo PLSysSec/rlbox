@@ -2,6 +2,8 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
+#include <map>
+#include <mutex>
 #include <type_traits>
 
 #include "rlbox_helpers.hpp"
@@ -13,6 +15,10 @@ template<typename T_Sbx>
 class RLBoxSandbox : protected T_Sbx
 {
   KEEP_CLASSES_FRIENDLY
+
+private:
+  std::mutex func_ptr_cache_lock;
+  std::map<std::string, void*> func_ptr_map;
 
 public:
   /***** Function to adjust for custom machine models *****/
@@ -119,6 +125,48 @@ public:
   }
 
   inline size_t get_total_memory() { return this->impl_get_total_memory(); }
+
+  void* lookup_symbol(const char* func_name)
+  {
+    std::lock_guard<std::mutex> lock(func_ptr_cache_lock);
+
+    auto func_ptr_ref = func_ptr_map.find(func_name);
+
+    void* func_ptr;
+    if (func_ptr_ref == func_ptr_map.end()) {
+      func_ptr = this->impl_lookup_symbol(func_name);
+      func_ptr_map[func_name] = func_ptr;
+    } else {
+      func_ptr = func_ptr_ref->second;
+    }
+
+    return func_ptr;
+  }
 };
+
+#if defined(__clang__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#elif defined(__GNUC__) || defined(__GNUG__)
+// Can't turn off the variadic macro warning emitted from -pedantic
+#  pragma GCC system_header
+#elif defined(_MSC_VER)
+// Doesn't seem to emit the warning
+#else
+// Don't know the compiler... just let it go through
+#endif
+
+#if defined(RLBOX_USE_STATIC_CALLS)
+#  define sandbox_invoke(sandbox, func_name, ...)                              \
+    RLBOX_USE_STATIC_CALLS##_lookup_symbol(sandbox, func_name)
+#else
+#  define sandbox_invoke(sandbox, func_name, ...)                              \
+    sandbox.lookup_symbol(#func_name)
+#endif
+
+#if defined(__clang__)
+#  pragma clang diagnostic pop
+#else
+#endif
 
 }
