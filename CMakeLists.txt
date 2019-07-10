@@ -99,7 +99,8 @@ add_executable(testing
                code/tests/test_tainted_assignment.cpp
                code/tests/test_tainted_sizes.cpp
                code/tests/test_tainted_structs.cpp
-               code/tests/test_verification.cpp)
+               code/tests/test_verification.cpp
+               code/tests/test_verify_arrays.cpp)
 
 target_link_libraries(testing
                       Catch2::Catch2

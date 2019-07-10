@@ -115,6 +115,7 @@ Standard:        Cpp11
 StatementMacros: 
   - Q_UNUSED
   - QT_REQUIRE_VERSION
+  - BinaryOpValAndPtr
   - BinaryOp
   - UnaryOp
   - rlbox_detail_forward_binop_to_base

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <array>
+#include <cstring>
+#include <memory>
 #include <type_traits>
 
 #include "rlbox_assign.hpp"
@@ -42,6 +45,46 @@ public:
     return impl().get_raw_sandbox_value();
   }
 
+#define BinaryOpValAndPtr(opSymbol)                                            \
+  template<typename T_Rhs>                                                     \
+  inline auto operator opSymbol(T_Rhs&& rhs)                                   \
+  {                                                                            \
+    static_assert(detail::is_basic_type_v<T>,                                  \
+                  "Operator " #opSymbol                                        \
+                  " only supported for primitive and pointer types");          \
+                                                                               \
+    auto raw_rhs = detail::unwrap_value(rhs);                                  \
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,                       \
+                  "Can only operate on numeric types");                        \
+                                                                               \
+    if constexpr (std::is_pointer_v<T>) {                                      \
+      auto ptr = impl().get_raw_value();                                       \
+      detail::dynamic_check(ptr != nullptr,                                    \
+                            "Pointer arithmetic on a null pointer");           \
+      /* increment the target by size of the data structure */                 \
+      auto target =                                                            \
+        reinterpret_cast<uintptr_t>(ptr) opSymbol raw_rhs * sizeof(*impl());   \
+      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(              \
+        reinterpret_cast<const void*>(ptr),                                    \
+        reinterpret_cast<const void*>(target));                                \
+      detail::dynamic_check(                                                   \
+        no_overflow,                                                           \
+        "Pointer arithmetic overflowed a pointer beyond sandbox memory");      \
+                                                                               \
+      return tainted<T, T_Sbx>(reinterpret_cast<T>(target));                   \
+    } else {                                                                   \
+      auto raw = impl().get_raw_value();                                       \
+      auto ret = raw opSymbol raw_rhs;                                         \
+      using T_Ret = decltype(ret);                                             \
+      return tainted<T_Ret, T_Sbx>(ret);                                       \
+    }                                                                          \
+  }
+
+  BinaryOpValAndPtr(+)
+  BinaryOpValAndPtr(-)
+
+#undef BinaryOpValAndPtr
+
 #define BinaryOp(opSymbol)                                                     \
   template<typename T_Rhs>                                                     \
   inline auto operator opSymbol(T_Rhs&& rhs)                                   \
@@ -53,25 +96,13 @@ public:
     auto raw = impl().get_raw_value();                                         \
     auto raw_rhs = detail::unwrap_value(rhs);                                  \
     static_assert(std::is_integral_v<decltype(raw_rhs)>,                       \
-                  "Can only add numeric types");                               \
+                  "Can only operate on numeric types");                        \
                                                                                \
     auto ret = raw opSymbol raw_rhs;                                           \
     using T_Ret = decltype(ret);                                               \
-                                                                               \
-    if constexpr (std::is_pointer_v<T_Ret>) {                                  \
-      detail::dynamic_check(raw != nullptr,                                    \
-                            "Pointer arithmetic on a null pointer");           \
-      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(raw, ret);    \
-      detail::dynamic_check(                                                   \
-        no_overflow,                                                           \
-        "Pointer arithmetic overflowed a pointer beyond sandbox memory");      \
-    }                                                                          \
-                                                                               \
     return tainted<T_Ret, T_Sbx>(ret);                                         \
   }
 
-  BinaryOp(+)
-  BinaryOp(-)
   BinaryOp(*)
   BinaryOp(/)
   BinaryOp(%)
@@ -121,7 +152,9 @@ public:
       static_assert(std::is_integral_v<decltype(raw_rhs)>,
                     "Can only index with numeric types");
 
-      auto target = &(ptr[raw_rhs]);
+      // increment the target by size of the data structure
+      auto target =
+        reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*impl());
       auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(ptr, target);
       detail::dynamic_check(
         no_overflow,
@@ -151,7 +184,7 @@ public:
   template<typename T_Def>
   inline T_Def copy_and_verify(
     std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
-    T_Def defaultValue) const
+    T_Def default_val) const
   {
     using T_Deref = std::remove_pointer_t<T>;
 
@@ -159,7 +192,7 @@ public:
     {
       static_assert(std::is_same_v<T_Def, T>, "Incorrect default type");
       auto val = impl().get_raw_value();
-      return verifier(val) == RLBox_Verify_Status::SAFE ? val : defaultValue;
+      return verifier(val) == RLBox_Verify_Status::SAFE ? val : default_val;
     }
     else if_constexpr_named(
       cond2, detail::is_one_level_ptr_v<T> && !std::is_class_v<T_Deref>)
@@ -172,14 +205,14 @@ public:
 
       auto val = impl().get_raw_value();
       if (val == nullptr) {
-        return defaultValue;
+        return default_val;
       } else {
         // Important to assign to a local variable (i.e. make a copy)
         // Else, for tainted_volatile, this will allow a
         // time-of-check-time-of-use attack
         auto val_deref = *val;
         return verifier(&val_deref) == RLBox_Verify_Status::SAFE ? val_deref
-                                                                 : defaultValue;
+                                                                 : default_val;
       }
     }
     else if_constexpr_named(
@@ -195,6 +228,100 @@ public:
         unknownCase,
         "copy_and_verify not supported for this type as it may be unsafe");
     }
+  }
+
+  using T_copy_verify_arr_result =
+    std::array<std::remove_cv_t<std::remove_extent_t<T>>, std::extent_v<T>>;
+
+  inline T_copy_verify_arr_result copy_and_verify_array(
+    std::function<RLBox_Verify_Status(T_copy_verify_arr_result)> verifier,
+    T_copy_verify_arr_result default_val) const
+  {
+    static_assert(std::is_array_v<T>,
+                  "Can only call copy_and_verify_array on arrays");
+
+    tainted<T, T_Sbx>* tainted_ptr;
+
+    if constexpr (std::is_same_v<tainted<T, T_Sbx>, T_Wrap<T, T_Sbx>>) {
+      tainted_ptr = &impl();
+    } else {
+      tainted<std::remove_cv_t<T>, T_Sbx> copy;
+      detail::assign_wrapped_value_nonclass(copy, impl());
+      tainted_ptr = &copy;
+    }
+
+    // This is ok as...
+    // 1) tainted has the same layout as an unwrapped type
+    // 2) std::array has the same layout as a T[]
+    auto ret_ptr = reinterpret_cast<T_copy_verify_arr_result*>(tainted_ptr);
+    return verifier(*ret_ptr) == RLBox_Verify_Status::SAFE ? *ret_ptr
+                                                           : default_val;
+  }
+
+  inline detail::valid_return_t<T> copy_and_verify_range(
+    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
+    std::size_t count,
+    detail::valid_param_t<T> default_val) const
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Can only call copy_and_verify_range on pointers");
+    static_assert(
+      detail::is_fundamental_or_enum_v<
+        std::remove_cv_t<std::remove_pointer_t<T>>>,
+      "copy_and_verify_range only allows fundamental types or enums");
+
+    auto start = reinterpret_cast<const void*>(impl().get_raw_value());
+    if (start == nullptr) {
+      return default_val;
+    }
+
+    tainted<T, T_Sbx> end_exclusive_tainted = &(impl()[count + 1]);
+    auto end_exclusive =
+      reinterpret_cast<uintptr_t>(end_exclusive_tainted.get_raw_value());
+    auto end = reinterpret_cast<const void*>(end_exclusive - 1);
+
+    auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(start, end);
+    detail::dynamic_check(
+      no_overflow,
+      "Pointer arithmetic overflowed a pointer beyond sandbox memory");
+
+    using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
+    auto target = new T_El[count];
+
+    for (size_t i = 0; i < count; i++) {
+      auto tainted_ptr = reinterpret_cast<tainted<T_El, T_Sbx>*>(&(target[i]));
+      detail::assign_wrapped_value_nonclass(*tainted_ptr, impl()[i]);
+    }
+
+    return verifier(target) == RLBox_Verify_Status::SAFE ? target : default_val;
+  }
+
+  inline detail::valid_return_t<T> copy_and_verify_string(
+    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
+    detail::valid_param_t<T> default_val) const
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Can only call copy_and_verify_string on pointers");
+
+    static_assert(
+      std::is_same_v<char, std::remove_cv_t<std::remove_pointer_t<T>>>,
+      "copy_and_verify_string only allows char*");
+
+    auto start = impl().get_raw_value();
+    if (start == nullptr) {
+      return default_val;
+    }
+
+    // it is safe to run strlen on a tainted<string> as worst case, the string
+    // does not have a null and we try to copy all the memory out of the sandbox
+    // however, copy_and_verify_range ensures that we never copy memory outsider
+    // the range
+    auto str_len = std::strlen(start) + 1;
+    auto ret = copy_and_verify_range(verifier, str_len, default_val);
+
+    // ensure the string has a trailing null
+    ret[str_len - 1] = '\0';
+    return ret;
   }
 };
 
@@ -348,7 +475,9 @@ public:
       static_assert(std::is_integral_v<decltype(raw_rhs)>,
                     "Can only index with numeric types");
 
-      detail::dynamic_check(raw_rhs >= 0 && raw_rhs < std::extent_v<T, 0>,
+      using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
+      detail::dynamic_check(raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(
+                                              raw_rhs) < std::extent_v<T, 0>,
                             "Static array indexing overflow");
 
       auto& data_ref = get_raw_value_ref();
@@ -529,14 +658,15 @@ public:
       static_assert(std::is_integral_v<decltype(raw_rhs)>,
                     "Can only index with numeric types");
 
-      detail::dynamic_check(raw_rhs >= 0 && raw_rhs < std::extent_v<T, 0>,
+      using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
+      detail::dynamic_check(raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(
+                                              raw_rhs) < std::extent_v<T, 0>,
                             "Static array indexing overflow");
 
       auto& data_ref = get_sandbox_value_ref();
       auto target_ptr = &(data_ref[raw_rhs]);
       // target_ptr points to a volatile, remove this. Safe as we will
-      // ultimately
-      // return a tainted_volatile
+      // ultimately return a tainted_volatile
       auto target_ptr_non_vol =
         detail::remove_volatile_from_ptr_cast(target_ptr);
 

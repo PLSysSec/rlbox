@@ -77,7 +77,8 @@ inline void assign_wrapped_value_nonclass(T_Lhs_wrap<T_Lhs, T_Sbx>& lhs,
 {
   using namespace std;
   using T_Lhs_El = remove_all_extents_t<T_Lhs>;
-  using T_Rhs_El = remove_all_extents_t<T_Rhs>;
+  using T_Rhs_El =
+    remove_all_extents_t<typename T_Rhs_wrap<T_Rhs, T_Sbx>::T_ConvertedType>;
 
   static_assert(is_base_of_v<sandbox_wrapper_base, T_Lhs_wrap<T_Lhs, T_Sbx>>);
   static_assert(is_base_of_v<sandbox_wrapper_base, T_Rhs_wrap<T_Rhs, T_Sbx>>);

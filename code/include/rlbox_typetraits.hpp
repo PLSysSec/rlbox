@@ -106,6 +106,25 @@ constexpr auto is_member_of_rlbox_detail =
   detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper<T>::value;
 
 // remove all pointers/extent types
+namespace remove_all_pointers_detail {
+  template<typename T>
+  struct remove_all_pointers
+  {
+    typedef T type;
+  };
+
+  template<typename T>
+  struct remove_all_pointers<T*>
+  {
+    typedef typename remove_all_pointers<T>::type type;
+  };
+}
+
+template<typename T>
+using remove_all_pointers_t =
+  typename remove_all_pointers_detail::remove_all_pointers<T>::type;
+
+// remove all pointers/extent types
 namespace base_type_detail {
   template<typename T>
   struct base_type

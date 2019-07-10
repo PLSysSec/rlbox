@@ -28,10 +28,10 @@ TEST_CASE("sandbox_invoke on no_op sandbox", "[no_op_sandbox]")
 
   const int TestFuncVal = 3;
   sandbox_invoke(sandbox, test_func_void, TestFuncVal); // NOLINT
-  REQUIRE(GlobalVal == TestFuncVal); // NOLINT
+  REQUIRE(GlobalVal == TestFuncVal);                    // NOLINT
 
   auto result = sandbox_invoke(sandbox, test_func_int, TestFuncVal); // NOLINT
-  REQUIRE(result.UNSAFE_Unverified() == TestFuncVal); // NOLINT
+  REQUIRE(result.UNSAFE_Unverified() == TestFuncVal);                // NOLINT
 
   sandbox.destroy_sandbox();
 }

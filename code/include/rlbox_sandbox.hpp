@@ -183,8 +183,10 @@ public:
                                       invoke_process_param(params)...);
       return;
     } else {
-      auto raw_result = this->impl_invoke_with_func_ptr(reinterpret_cast<T*>(func_ptr), invoke_process_param(params)...);
-      auto cast_result = reinterpret_cast<tainted_volatile<T_Result, T_Sbx>*>(&raw_result);
+      auto raw_result = this->impl_invoke_with_func_ptr(
+        reinterpret_cast<T*>(func_ptr), invoke_process_param(params)...);
+      auto cast_result =
+        reinterpret_cast<tainted_volatile<T_Result, T_Sbx>*>(&raw_result);
       tainted<T_Result, T_Sbx> wrapped_result = *cast_result;
       return wrapped_result;
     }
@@ -214,9 +216,9 @@ public:
     sandbox.lookup_symbol(#func_name)
 #endif
 
-#define sandbox_invoke(sandbox, func_name, ...)                                                  \
-  sandbox.invoke_with_func_ptr<decltype(func_name)>(sandbox_lookup_symbol(sandbox, func_name),      \
-                               ##__VA_ARGS__)
+#define sandbox_invoke(sandbox, func_name, ...)                                \
+  sandbox.invoke_with_func_ptr<decltype(func_name)>(                           \
+    sandbox_lookup_symbol(sandbox, func_name), ##__VA_ARGS__)
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

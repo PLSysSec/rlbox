@@ -62,6 +62,20 @@ TEST_CASE("Test operator +, - for pointers", "[operator]")
   tainted<int32_t*, TestSandbox> dec = inc - 1;
   REQUIRE(pc.UNSAFE_Unverified() == dec.UNSAFE_Unverified());
 
+  auto pc2 = sandbox.malloc_in_sandbox<char>();
+  auto inc2 = pc2 + 1;
+
+  auto diff2 = reinterpret_cast<char*>(inc2.UNSAFE_Unverified()) - // NOLINT
+               reinterpret_cast<char*>(pc2.UNSAFE_Unverified());   // NOLINT
+  REQUIRE(diff2 == 1);
+
+  auto pc3 = sandbox.malloc_in_sandbox<int32_t*>();
+  auto inc3 = pc3 + 1;
+
+  auto diff3 = reinterpret_cast<char*>(inc3.UNSAFE_Unverified()) - // NOLINT
+               reinterpret_cast<char*>(pc3.UNSAFE_Unverified());   // NOLINT
+  REQUIRE(diff3 == sizeof(TestSandbox::T_PointerType));
+
   sandbox.destroy_sandbox();
 }
 
