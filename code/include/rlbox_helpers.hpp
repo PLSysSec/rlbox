@@ -59,8 +59,6 @@ namespace detail {
     return (*b)opSymbol rhs;                                                   \
   }
 
-#define rlbox_detail_for_both(a, b, ...) a __VA_ARGS__ b __VA_ARGS__
-
   template<typename T>
   inline auto remove_volatile_from_ptr_cast(T* ptr)
   {

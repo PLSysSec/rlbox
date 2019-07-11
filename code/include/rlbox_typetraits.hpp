@@ -169,12 +169,13 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
-  struct convert_base_types_t_helper<T,
-                                     T_IntType,
-                                     T_LongType,
-                                     T_LongLongType,
-                                     T_PointerType,
-                                     std::enable_if_t<std::is_same_v<int, T>>>
+  struct convert_base_types_t_helper<
+    T,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_same_v<int, T> && !std::is_const_v<T>>>
   {
     using type = T_IntType;
   };
@@ -184,12 +185,13 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
-  struct convert_base_types_t_helper<T,
-                                     T_IntType,
-                                     T_LongType,
-                                     T_LongLongType,
-                                     T_PointerType,
-                                     std::enable_if_t<std::is_same_v<long, T>>>
+  struct convert_base_types_t_helper<
+    T,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_same_v<long, T> && !std::is_const_v<T>>>
   {
     using type = T_LongType;
   };
@@ -205,7 +207,7 @@ namespace convert_detail {
     T_LongType,
     T_LongLongType,
     T_PointerType,
-    std::enable_if_t<std::is_same_v<long long, T>>>
+    std::enable_if_t<std::is_same_v<long long, T> && !std::is_const_v<T>>>
   {
     using type = T_LongLongType;
   };
@@ -215,12 +217,13 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
-  struct convert_base_types_t_helper<T,
-                                     T_IntType,
-                                     T_LongType,
-                                     T_LongLongType,
-                                     T_PointerType,
-                                     std::enable_if_t<std::is_pointer_v<T>>>
+  struct convert_base_types_t_helper<
+    T,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_pointer_v<T> && !std::is_const_v<T>>>
   {
     using type = T_PointerType;
   };
@@ -257,8 +260,9 @@ namespace convert_detail {
     T_LongType,
     T_LongLongType,
     T_PointerType,
-    std::enable_if_t<std::is_same_v<bool, T> || std::is_same_v<void, T> ||
-                     std::is_same_v<char, T> || std::is_enum_v<T>>>
+    std::enable_if_t<(std::is_same_v<bool, T> || std::is_same_v<void, T> ||
+                      std::is_same_v<char, T> ||
+                      std::is_enum_v<T>)&&!std::is_const_v<T>>>
   {
     using type = T;
   };
@@ -268,12 +272,13 @@ namespace convert_detail {
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
-  struct convert_base_types_t_helper<T,
-                                     T_IntType,
-                                     T_LongType,
-                                     T_LongLongType,
-                                     T_PointerType,
-                                     std::enable_if_t<std::is_array_v<T>>>
+  struct convert_base_types_t_helper<
+    T,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_array_v<T> && !std::is_const_v<T>>>
   {
     using type = typename convert_base_types_t_helper<
       std::remove_extent_t<T>,

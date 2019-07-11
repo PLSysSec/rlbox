@@ -4,6 +4,7 @@
 #include <cstring>
 #include <memory>
 #include <type_traits>
+#include <utility>
 
 #include "rlbox_assign.hpp"
 #include "rlbox_conversion.hpp"
@@ -132,38 +133,44 @@ public:
 #undef UnaryOp
 
   using T_OpSubscriptArrRet =
-    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>&;
+    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>;
 
-  rlbox_detail_for_both(
-    template<typename T_Rhs>
-    inline T_OpSubscriptArrRet
-    operator[](T_Rhs&& rhs),
+  template<typename T_This, typename T_Rhs>
+  static inline auto& operator_subscript_array(T_This this_val, T_Rhs&& rhs)
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Operator [] in tainted_base_impl only supports pointers");
 
-    template<typename T_Rhs>
-    inline T_OpSubscriptArrRet
-    operator[](T_Rhs&& rhs) const,
+    auto ptr = this_val->impl().get_raw_value();
+    auto raw_rhs = detail::unwrap_value(rhs);
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,
+                  "Can only index with numeric types");
 
-    {
-      static_assert(std::is_pointer_v<T>,
-                    "Operator [] in tainted_base_impl only supports pointers");
+    // increment the target by size of the data structure
+    auto target =
+      reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*this_val->impl());
+    auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(
+      ptr, reinterpret_cast<const void*>(target));
+    detail::dynamic_check(
+      no_overflow,
+      "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
-      auto ptr = impl().get_raw_value();
-      auto raw_rhs = detail::unwrap_value(rhs);
-      static_assert(std::is_integral_v<decltype(raw_rhs)>,
-                    "Can only index with numeric types");
+    using T_Const = detail::add_const_if_this_const_t<decltype(this_val), T>;
+    auto target_wrap = tainted<T_Const, T_Sbx>(reinterpret_cast<T_Const>(target));
+    return *target_wrap;
+  }
 
-      // increment the target by size of the data structure
-      auto target =
-        reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*impl());
-      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(ptr, target);
-      detail::dynamic_check(
-        no_overflow,
-        "Pointer arithmetic overflowed a pointer beyond sandbox memory");
+  template<typename T_Rhs>
+  inline T_OpSubscriptArrRet& operator[](T_Rhs&& rhs)
+  {
+    return operator_subscript_array(this, std::forward<T_Rhs>(rhs));
+  }
 
-      auto target_wrap =
-        tainted<detail::dereference_result_t<T>, T_Sbx>(target);
-      return *target_wrap;
-    })
+  template<typename T_Rhs>
+  inline const T_OpSubscriptArrRet& operator[](T_Rhs&& rhs) const
+  {
+    return operator_subscript_array(this, std::forward<T_Rhs>(rhs));
+  }
 
   // We need to implement the -> operator even though T is not a struct
   // So that we can support code patterns such as the below
@@ -275,7 +282,7 @@ public:
       return default_val;
     }
 
-    tainted<T, T_Sbx> end_exclusive_tainted = &(impl()[count + 1]);
+    auto end_exclusive_tainted = &(impl()[count + 1]);
     auto end_exclusive =
       reinterpret_cast<uintptr_t>(end_exclusive_tainted.get_raw_value());
     auto end = reinterpret_cast<const void*>(end_exclusive - 1);
@@ -451,25 +458,19 @@ public:
     tainted<detail::dereference_result_t<T>, T_Sbx>           // is_array
     >;
 
-  rlbox_detail_for_both(
-    template<typename T_Rhs>
-    inline const T_OpSubscriptRet&
-    operator[](T_Rhs&& rhs) const,
+  template<typename T_This, typename T_Rhs>
+  static inline auto& operator_subscript(T_This this_val, T_Rhs&& rhs)
+  {
+    static_assert(
+      std::is_pointer_v<T> || std::is_array_v<T>,
+      "Operator [] only supported for pointers and static arrays");
 
-    template<typename T_Rhs>
-    inline T_OpSubscriptRet&
-    operator[](T_Rhs&& rhs),
-
-    {
-      static_assert(
-        std::is_pointer_v<T> || std::is_array_v<T>,
-        "Operator [] only supported for pointers and static arrays");
-
-      if constexpr (std::is_pointer_v<T>) {
-        // defer to base class
-        return (static_cast<T_ClassBase*>(this))[rhs];
-      }
-
+    if constexpr (std::is_pointer_v<T>) {
+      // defer to base class
+      using T_Base =
+        detail::add_const_if_this_const_t<decltype(this_val), T_ClassBase>;
+      return this_val->T_Base::operator[](rhs);
+    } else {
       // array
       auto raw_rhs = detail::unwrap_value(rhs);
       static_assert(std::is_integral_v<decltype(raw_rhs)>,
@@ -480,15 +481,28 @@ public:
                                               raw_rhs) < std::extent_v<T, 0>,
                             "Static array indexing overflow");
 
-      auto& data_ref = get_raw_value_ref();
+      auto& data_ref = this_val->get_raw_value_ref();
       auto target_ptr = &(data_ref[raw_rhs]);
       using T_Target = detail::add_const_if_this_const_t<
-        decltype(this),
+        decltype(this_val),
         tainted<detail::dereference_result_t<T>, T_Sbx>>;
       auto wrapped_target_ptr = reinterpret_cast<T_Target*>(target_ptr);
 
       return *wrapped_target_ptr;
-    })
+    }
+  }
+
+  template<typename T_Rhs>
+  inline const T_OpSubscriptRet& operator[](T_Rhs&& rhs) const
+  {
+    return operator_subscript(this, std::forward<T_Rhs>(rhs));
+  }
+
+  template<typename T_Rhs>
+  inline T_OpSubscriptRet& operator[](T_Rhs&& rhs)
+  {
+    return operator_subscript(this, std::forward<T_Rhs>(rhs));
+  }
 
   // In general comparison operators are unsafe.
   // However comparing tainted with nullptr is fine because
@@ -622,11 +636,24 @@ public:
   // Needed as the definition of unary * above shadows the base's binary *
   rlbox_detail_forward_binop_to_base(*, T_ClassBase)
 
+  template<typename T_This>
+  static inline auto operator_address_of(T_This this_val)
+  {
+    auto ref = detail::remove_volatile_from_ptr_cast(&this_val->get_sandbox_value_ref());
+    using T_Const = detail::add_const_if_this_const_t<decltype(this_val), T>;
+    auto ref_cast = reinterpret_cast<T_Const*>(ref);
+    tainted<T_Const*, T_Sbx> ret(ref_cast);
+    return ret;
+  }
+
   inline tainted<T*, T_Sbx> operator&() noexcept
   {
-    auto ref_cast = reinterpret_cast<T*>(&get_sandbox_value_ref());
-    tainted<T*, T_Sbx> ret(ref_cast);
-    return ret;
+    return operator_address_of(this);
+  }
+
+  inline tainted<const T*, T_Sbx> operator&() const noexcept
+  {
+    return operator_address_of(this);
   }
 
   // Operator [] is subtly different for tainted <static arrays> and
@@ -634,25 +661,19 @@ public:
   using T_OpSubscriptRet =
     tainted_volatile<detail::dereference_result_t<T>, T_Sbx>;
 
-  rlbox_detail_for_both(
-    template<typename T_Rhs>
-    inline const T_OpSubscriptRet&
-    operator[](T_Rhs&& rhs) const,
+  template<typename T_This, typename T_Rhs>
+  static inline auto& operator_subscript(T_This this_val, T_Rhs&& rhs)
+  {
+    static_assert(
+      std::is_pointer_v<T> || std::is_array_v<T>,
+      "Operator [] only supported for pointers and static arrays");
 
-    template<typename T_Rhs>
-    inline T_OpSubscriptRet&
-    operator[](T_Rhs&& rhs),
-
-    {
-      static_assert(
-        std::is_pointer_v<T> || std::is_array_v<T>,
-        "Operator [] only supported for pointers and static arrays");
-
-      if constexpr (std::is_pointer_v<T>) {
-        // defer to base class
-        return (static_cast<T_ClassBase*>(this))[rhs];
-      }
-
+    if constexpr (std::is_pointer_v<T>) {
+      // defer to base class
+      using T_Base =
+        detail::add_const_if_this_const_t<decltype(this_val), T_ClassBase>;
+      return this_val->T_Base::operator[](rhs);
+    } else {
       // array
       auto raw_rhs = detail::unwrap_value(rhs);
       static_assert(std::is_integral_v<decltype(raw_rhs)>,
@@ -663,7 +684,7 @@ public:
                                               raw_rhs) < std::extent_v<T, 0>,
                             "Static array indexing overflow");
 
-      auto& data_ref = get_sandbox_value_ref();
+      auto& data_ref = this_val->get_sandbox_value_ref();
       auto target_ptr = &(data_ref[raw_rhs]);
       // target_ptr points to a volatile, remove this. Safe as we will
       // ultimately return a tainted_volatile
@@ -671,12 +692,26 @@ public:
         detail::remove_volatile_from_ptr_cast(target_ptr);
 
       using T_Target = detail::add_const_if_this_const_t<
-        decltype(this),
+        decltype(this_val),
         tainted_volatile<detail::dereference_result_t<T>, T_Sbx>>;
-      auto wrapped_target_ptr = reinterpret_cast<T_Target*>(target_ptr_non_vol);
+      auto wrapped_target_ptr =
+        reinterpret_cast<T_Target*>(target_ptr_non_vol);
 
       return *wrapped_target_ptr;
-    })
+    }
+  }
+
+  template<typename T_Rhs>
+  inline const T_OpSubscriptRet& operator[](T_Rhs&& rhs) const
+  {
+    return operator_subscript(this, std::forward<T_Rhs>(rhs));
+  }
+
+  template<typename T_Rhs>
+  inline T_OpSubscriptRet& operator[](T_Rhs&& rhs)
+  {
+    return operator_subscript(this, std::forward<T_Rhs>(rhs));
+  }
 
   // Needed as the definition of unary & above shadows the base's binary &
   rlbox_detail_forward_binop_to_base(&, T_ClassBase)

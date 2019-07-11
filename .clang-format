@@ -119,7 +119,6 @@ StatementMacros:
   - BinaryOp
   - UnaryOp
   - rlbox_detail_forward_binop_to_base
-  - rlbox_detail_for_both
 TabWidth:        8
 UseTab:          Never
 ...
