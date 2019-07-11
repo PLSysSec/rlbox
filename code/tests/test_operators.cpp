@@ -55,8 +55,10 @@ TEST_CASE("Test operator +, - for pointers", "[operator]")
   REQUIRE(diff == 4);
 
   tainted<int32_t*, TestSandbox> nullPtr = nullptr;
+  // operation on null pointer should throw
   REQUIRE_THROWS(nullPtr + 1);
 
+  // pointer addition overflow sandbox bounds should throw
   REQUIRE_THROWS(pc + TestSandbox::SandboxMemorySize);
 
   tainted<int32_t*, TestSandbox> dec = inc - 1;

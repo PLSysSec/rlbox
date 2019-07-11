@@ -14,7 +14,8 @@ TEST_CASE("sandbox_lookup_symbol on no_op sandbox without #define causes error",
   RL sandbox;
   sandbox.create_sandbox();
 
-  REQUIRE_THROWS(sandbox_lookup_symbol(sandbox, test_func)); // NOLINT
+  // Error due to the missing #define described above
+  REQUIRE_COMPILE_ERR(sandbox_lookup_symbol(sandbox, test_func)); // NOLINT
 
   sandbox.destroy_sandbox();
 }

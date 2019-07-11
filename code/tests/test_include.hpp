@@ -8,11 +8,15 @@
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
 
+// Convert rlbox's compile time errors to exceptions throws for easy testing
 #define RLBOX_NO_COMPILE_CHECKS
 #define RLBOX_USE_EXCEPTIONS
 #include "rlbox.hpp"
 
 // IWYU pragma: end_exports
+
+// Since we are convert static errors to exceptions, we can now test this easily
+#define REQUIRE_COMPILE_ERR REQUIRE_THROWS
 
 #define UNUSED(varName) (void)varName
 

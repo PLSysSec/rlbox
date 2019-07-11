@@ -105,7 +105,7 @@ TEST_CASE("RLBox test string verification", "[verification]")
     },
     nullptr);
 
-  REQUIRE(strcmp(checked_string, "Hello") == 0);                  // NOLINT
+  REQUIRE(strcmp(checked_string, "Hello") == 0); // NOLINT
   REQUIRE(!sandbox.is_pointer_in_sandbox_memory(checked_string));
 
   delete[] checked_string; // NOLINT

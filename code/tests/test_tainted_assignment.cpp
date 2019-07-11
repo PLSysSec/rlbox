@@ -84,3 +84,24 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("tainted pointer assignments", "[tainted_assignment]")
+{
+  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  tainted<int**, TestSandbox> pa = nullptr;
+  pa = nullptr;
+  tainted<int**, TestSandbox> pb = nullptr;
+  pb = nullptr;
+
+  tainted<int***, TestSandbox> pc = sandbox.malloc_in_sandbox<int**>();
+  *pc = nullptr;
+  pb = *pc;
+
+  tainted<void**, TestSandbox> pv = sandbox.malloc_in_sandbox<void*>();
+  *pv = nullptr;
+
+  sandbox.destroy_sandbox();
+}

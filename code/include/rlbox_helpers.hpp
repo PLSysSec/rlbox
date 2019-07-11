@@ -59,6 +59,26 @@ namespace detail {
     return (*b)opSymbol rhs;                                                   \
   }
 
+#define rlbox_detail_forward_to_const(func_name, result_type)                  \
+  using T_ConstClassPtr = std::add_pointer_t<                                  \
+    std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
+  if constexpr (std::is_fundamental_v<result_type>) {                          \
+    return const_cast<T_ConstClassPtr>(this)->func_name();                     \
+  } else {                                                                     \
+    return const_cast<result_type>(                                            \
+      const_cast<T_ConstClassPtr>(this)->func_name());                         \
+  }
+
+#define rlbox_detail_forward_to_const_a(func_name, result_type, ...)           \
+  using T_ConstClassPtr = std::add_pointer_t<                                  \
+    std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
+  if constexpr (std::is_fundamental_v<result_type>) {                          \
+    return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
+  } else {                                                                     \
+    return const_cast<result_type>(                                            \
+      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
+  }
+
   template<typename T>
   inline auto remove_volatile_from_ptr_cast(T* ptr)
   {

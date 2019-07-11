@@ -45,15 +45,14 @@ TEST_CASE("Type Convert function operates correctly", "[convert]")
 TEST_CASE("Type Convert function compile time checks operate correctly",
           "[convert]")
 {
-  // Have configured rlbox to convert compile time checks to runtime throws
   const int32_t randValue = 5;
-  REQUIRE_THROWS(adjust_type_size<uint64_t, int32_t>(randValue)); // NOLINT
-  REQUIRE_THROWS(adjust_type_size<int64_t, uint32_t>(randValue)); // NOLINT
+  REQUIRE_COMPILE_ERR(adjust_type_size<uint64_t, int32_t>(randValue)); // NOLINT
+  REQUIRE_COMPILE_ERR(adjust_type_size<int64_t, uint32_t>(randValue)); // NOLINT
 
   Foo a{ randValue };
-  REQUIRE_THROWS(adjust_type_size<Foo, Foo>(a));         // NOLINT
-  REQUIRE_THROWS(adjust_type_size<Foo, int>(randValue)); // NOLINT
-  REQUIRE_THROWS(adjust_type_size<int, Foo>(a));         // NOLINT
+  REQUIRE_COMPILE_ERR(adjust_type_size<Foo, Foo>(a));         // NOLINT
+  REQUIRE_COMPILE_ERR(adjust_type_size<Foo, int>(randValue)); // NOLINT
+  REQUIRE_COMPILE_ERR(adjust_type_size<int, Foo>(a));         // NOLINT
 }
 
 // NOLINTNEXTLINE

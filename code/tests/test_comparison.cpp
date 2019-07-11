@@ -17,8 +17,8 @@ TEST_CASE("Test comparisons to nullptr", "[compare_nullptr]")
 
   // Comparisons to nullptr not allowed for non pointers
   tainted<uint32_t, TestSandbox> val; // NOLINT
-  REQUIRE_THROWS(val != nullptr);
-  REQUIRE_THROWS(!(val == nullptr));
+  REQUIRE_COMPILE_ERR(val != nullptr);
+  REQUIRE_COMPILE_ERR(!(val == nullptr));
 
   sandbox.destroy_sandbox();
 }

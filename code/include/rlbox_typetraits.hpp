@@ -11,6 +11,9 @@ namespace rlbox::detail {
 #define RLBOX_ENABLE_IF(...) std::enable_if_t<__VA_ARGS__>* = nullptr
 
 template<typename T>
+constexpr bool true_v = true;
+
+template<typename T>
 constexpr bool is_fundamental_or_enum_v =
   std::is_fundamental_v<T> || std::is_enum_v<T>;
 
