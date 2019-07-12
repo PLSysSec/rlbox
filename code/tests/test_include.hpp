@@ -12,11 +12,13 @@
 #define RLBOX_NO_COMPILE_CHECKS
 #define RLBOX_USE_EXCEPTIONS
 #include "rlbox.hpp"
+#include "rlbox_noop_sandbox.hpp"
 
 // IWYU pragma: end_exports
 
 // Since we are convert static errors to exceptions, we can now test this easily
 #define REQUIRE_COMPILE_ERR REQUIRE_THROWS
+#define REQUIRE_NO_COMPILE_ERR REQUIRE_NOTHROW
 
 #define UNUSED(varName) (void)varName
 

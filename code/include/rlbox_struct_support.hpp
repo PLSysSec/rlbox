@@ -185,13 +185,13 @@ using convert_to_sandbox_equivalent_t =
     /* check that this macro is called in a global namespace */                \
     static_assert(                                                             \
       ::rlbox::detail::is_member_of_rlbox_detail<detail::markerStruct>,        \
-      "Invoke rlbox_load_structs_from_library in the global namespace");                \
+      "Invoke rlbox_load_structs_from_library in the global namespace");       \
                                                                                \
     sandbox_fields_reflection_##libId##_allClasses(                            \
       sandbox_equivalent_specialization)                                       \
                                                                                \
     sandbox_fields_reflection_##libId##_allClasses(                            \
-      tainted_data_specialization)                                                                   \
+      tainted_data_specialization)                                             \
   }
 
 // clang-format on

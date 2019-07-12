@@ -2,11 +2,14 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
+#include <cstdlib>
 #include <map>
 #include <mutex>
 #include <type_traits>
+#include <utility>
 
 #include "rlbox_helpers.hpp"
+#include "rlbox_struct_support.hpp"
 #include "rlbox_typetraits.hpp"
 
 namespace rlbox {
@@ -44,6 +47,17 @@ private:
         "Arguments to a sandbox function call should be primitives  or wrapped "
         "types like tainted, callbacks etc.");
     }
+  }
+
+  template<typename T_Ret, typename... T_Args>
+  static detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx>
+  sandbox_callback_interceptor(
+    detail::convert_to_sandbox_equivalent_t<T_Args, T_Sbx>...)
+  {
+    std::pair<T_Sbx*, void*> context =
+      T_Sbx::impl_get_executed_callback_sandbox_and_key();
+    (void)context;
+    throw "TODO: Not implemented";
   }
 
 public:
@@ -126,9 +140,9 @@ public:
     auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
     detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
                           "Malloc returned pointer outside the sandbox memory");
-    auto ptrEnd = reinterpret_cast<uintptr_t>(ptr + (count - 1));
+    auto ptr_end = reinterpret_cast<uintptr_t>(ptr + (count - 1));
     detail::dynamic_check(
-      is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptrEnd)),
+      is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptr_end)),
       "Malloc returned a pointer whose range goes beyond sandbox memory");
     auto cast_ptr = reinterpret_cast<T*>(ptr);
     return tainted<T*, T_Sbx>(cast_ptr);
@@ -189,6 +203,87 @@ public:
         reinterpret_cast<tainted_volatile<T_Result, T_Sbx>*>(&raw_result);
       tainted<T_Result, T_Sbx> wrapped_result = *cast_result;
       return wrapped_result;
+    }
+  }
+
+  template<typename T_Ret, typename... T_Args>
+  using T_Cb_no_wrap = detail::rlbox_remove_wrapper_t<T_Ret>(
+    detail::rlbox_remove_wrapper_t<T_Args>...);
+
+  template<typename T_Ret>
+  sandbox_callback<T_Cb_no_wrap<T_Ret>*, T_Sbx> register_callback(T_Ret (*)())
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T_Ret>,
+      "Modify the callback to change the first parameter to a sandbox."
+      "For instance if a callback has type\n\n"
+      "int foo() {...}\n\n"
+      "Change this to \n\n"
+      "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox) {...}\n");
+
+    // this is never executed, but we need it for the function to type-check
+    std::abort();
+  }
+
+  template<typename T_RL, typename T_Ret, typename... T_Args>
+  sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx> register_callback(
+    T_Ret (*func_ptr)(T_RL, T_Args...))
+  {
+    // Some branches don't use func_ptr, so make "use" it to get past linter
+    (void)func_ptr;
+    if_constexpr_named(cond1, !std::is_same_v<T_RL, RLBoxSandbox<T_Sbx>&>)
+    {
+      rlbox_detail_static_fail_because(
+        cond1,
+        "Modify the callback to change the first parameter to a sandbox."
+        "For instance if a callback has type\n\n"
+        "int foo(int a, int b) {...}\n\n"
+        "Change this to \n\n"
+        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
+    }
+    else if_constexpr_named(
+      cond2, !(std::is_base_of_v<sandbox_wrapper_base, T_Args> && ...))
+    {
+      rlbox_detail_static_fail_because(
+        cond2,
+        "Change all arguments to the callback have to be tainted."
+        "For instance if a callback has type\n\n"
+        "int foo(int a, int b) {...}\n\n"
+        "Change this to \n\n"
+        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
+    }
+    else if_constexpr_named(cond3,
+                            !(std::is_void_v<T_Ret> ||
+                              std::is_base_of_v<sandbox_wrapper_base, T_Ret>))
+    {
+      rlbox_detail_static_fail_because(
+        cond3,
+        "Change the callback return type to be tainted if it is not void."
+        "For instance if a callback has type\n\n"
+        "int foo(int a, int b) {...}\n\n"
+        "Change this to \n\n"
+        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
+    }
+    else
+    {
+      auto callback_interceptor =
+        sandbox_callback_interceptor<detail::rlbox_remove_wrapper_t<T_Ret>,
+                                     detail::rlbox_remove_wrapper_t<T_Args>...>;
+
+      // Need unique key for each callback we register - just use the func addr
+      void* unique_key = reinterpret_cast<void*>(func_ptr);
+
+      auto callback_trampoline = this->template impl_register_callback<
+        detail::rlbox_remove_wrapper_t<T_Ret>,
+        detail::rlbox_remove_wrapper_t<T_Args>...>(
+        unique_key, reinterpret_cast<void*>(callback_interceptor));
+
+      auto ret = sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx>(
+        this, func_ptr, callback_interceptor, callback_trampoline);
+      return ret;
     }
   }
 };

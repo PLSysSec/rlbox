@@ -2,9 +2,10 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
+#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
-#include <stdlib.h>
+#include <utility>
 
 namespace rlbox {
 namespace detail {
@@ -18,7 +19,7 @@ namespace detail {
       throw std::runtime_error(msg);
     #else
       std::cerr << msg << std::endl;
-      abort();
+      std::abort();
     #endif
   }
     // clang-format on
@@ -86,6 +87,27 @@ namespace detail {
     return const_cast<T_Result>(ptr);
   }
 
+  // https://stackoverflow.com/questions/37602057/why-isnt-a-for-loop-a-compile-time-expression
+  namespace compile_time_for_detail {
+    template<std::size_t N>
+    struct num
+    {
+      static const constexpr auto value = N;
+    };
+
+    template<class F, std::size_t... Is>
+    inline void compile_time_for_helper(F func, std::index_sequence<Is...>)
+    {
+      (func(num<Is>{}), ...);
+    }
+  }
+
+  template<std::size_t N, typename F>
+  inline void compile_time_for(F func)
+  {
+    compile_time_for_detail::compile_time_for_helper(
+      func, std::make_index_sequence<N>());
+  }
 /*
 Make sure classes can access the private memmbers of tainted<T1> and
 tainted_volatile. Ideally, this should be

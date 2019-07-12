@@ -9,6 +9,7 @@
 #include "rlbox_assign.hpp"
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_policy_types.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
@@ -515,9 +516,17 @@ public:
   template<typename T_Rhs>
   inline bool operator==(T_Rhs&& arg) const
   {
-    if_constexpr_named(cond1, !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>, std::nullptr_t>)
+    if_constexpr_named(
+      cond1,
+      !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>,
+                      std::nullptr_t>)
     {
-      rlbox_detail_static_fail_because(cond1, "Only comparisons to nullptr are allowed. All other comparisons to tainted types create many antipatterns. Rather than comparing tainted values directly, unwrap the values with the copy_and_verify API and then perform the comparisons.");
+      rlbox_detail_static_fail_because(
+        cond1,
+        "Only comparisons to nullptr are allowed. All other comparisons to "
+        "tainted types create many antipatterns. Rather than comparing tainted "
+        "values directly, unwrap the values with the copy_and_verify API and "
+        "then perform the comparisons.");
     }
     else if_constexpr_named(cond2, std::is_pointer_v<T>)
     {
@@ -533,9 +542,17 @@ public:
   template<typename T_Rhs>
   inline bool operator!=(T_Rhs&& arg) const
   {
-    if_constexpr_named(cond1, !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>, std::nullptr_t>)
+    if_constexpr_named(
+      cond1,
+      !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>,
+                      std::nullptr_t>)
     {
-      rlbox_detail_static_fail_because(cond1, "Only comparisons to nullptr are allowed. All other comparisons to tainted types create many antipatterns. Rather than comparing tainted values directly, unwrap the values with the copy_and_verify API and then perform the comparisons.");
+      rlbox_detail_static_fail_because(
+        cond1,
+        "Only comparisons to nullptr are allowed. All other comparisons to "
+        "tainted types create many antipatterns. Rather than comparing tainted "
+        "values directly, unwrap the values with the copy_and_verify API and "
+        "then perform the comparisons.");
     }
     else if_constexpr_named(cond2, std::is_pointer_v<T>)
     {
@@ -561,7 +578,10 @@ public:
     {
       auto unknownCase = !(cond1);
       rlbox_detail_static_fail_because(
-        unknownCase, "Operator ! only permitted for pointer types. For other types, unwrap the tainted value with the copy_and_verify API and then use operator !");
+        unknownCase,
+        "Operator ! only permitted for pointer types. For other types, unwrap "
+        "the tainted value with the copy_and_verify API and then use operator "
+        "!");
     }
   }
 };
