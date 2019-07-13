@@ -102,7 +102,7 @@ protected:
   }
 
   template<typename T>
-  static inline void* impl_get_unsandboxed_pointer(
+  static inline void* impl_get_unsandboxed_pointer_no_ctx(
     T_PointerType p,
     const void* example_unsandboxed_ptr)
   {
@@ -112,13 +112,10 @@ protected:
   }
 
   template<typename T>
-  static inline T_PointerType impl_get_sandboxed_pointer(
-    const void* p,
-    const void* example_unsandboxed_ptr)
+  static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(const void* p)
   {
-    auto mask = SandboxMemoryBaseMask &
-                reinterpret_cast<uintptr_t>(example_unsandboxed_ptr);
-    return static_cast<T_PointerType>(reinterpret_cast<uintptr_t>(p) - mask);
+    auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
+    return static_cast<T_PointerType>(ret);
   }
 
   inline T_PointerType impl_malloc_in_sandbox(size_t size)

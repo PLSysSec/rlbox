@@ -103,27 +103,26 @@ public:
   }
 
   template<typename T>
-  static inline T* get_unsandboxed_pointer(
+  static inline T* get_unsandboxed_pointer_no_ctx(
     convert_to_sandbox_equivalent_nonclass_t<T*> p,
     const void* example_unsandboxed_ptr)
   {
     if (p == 0) {
       return nullptr;
     }
-    auto ret = T_Sbx::template impl_get_unsandboxed_pointer<T>(
+    auto ret = T_Sbx::template impl_get_unsandboxed_pointer_no_ctx<T>(
       p, example_unsandboxed_ptr);
     return reinterpret_cast<T*>(ret);
   }
 
   template<typename T>
   static inline convert_to_sandbox_equivalent_nonclass_t<T*>
-  get_sandboxed_pointer(const void* p, const void* example_unsandboxed_ptr)
+  get_sandboxed_pointer_no_ctx(const void* p)
   {
     if (p == nullptr) {
       return 0;
     }
-    return T_Sbx::template impl_get_sandboxed_pointer<T>(
-      p, example_unsandboxed_ptr);
+    return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(p);
   }
 
   template<typename T>

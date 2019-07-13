@@ -2,8 +2,10 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
-#include <functional>
+#include <array>
+#include <cstring>
 #include <limits>
+#include <type_traits>
 
 #include "rlbox_helpers.hpp"
 #include "rlbox_typetraits.hpp"
@@ -11,62 +13,187 @@
 namespace rlbox::detail {
 
 template<typename T_To, typename T_From>
-inline constexpr valid_return_t<T_To> adjust_type_size(const T_From& val)
+inline constexpr void adjust_type_size_fundamental(T_To& to, const T_From& from)
 {
   using namespace std;
 
-  if_constexpr_named(cond1, !is_basic_type_v<T_From>)
+  if_constexpr_named(cond1, !is_fundamental_or_enum_v<T_To>)
   {
     rlbox_detail_static_fail_because(
-      cond1, "Conversion source should be fundamental, enum or pointer type");
+      cond1, "Conversion target should be fundamental or enum type");
   }
-  else if_constexpr_named(cond2, !is_basic_type_v<T_To>)
+  else if_constexpr_named(cond2, !is_fundamental_or_enum_v<T_From>)
   {
     rlbox_detail_static_fail_because(
-      cond2, "Conversion target should be fundamental, enum or pointer type");
+      cond2, "Conversion source should be fundamental or enum type");
+  }
+  else if_constexpr_named(cond3, is_enum_v<T_To> || is_enum_v<T_From>)
+  {
+    static_assert(std::is_same_v<T_To, T_From>);
+    to = from;
   }
   else if_constexpr_named(
-    cond3, is_floating_point_v<T_From> && is_floating_point_v<T_To>)
+    cond4, is_floating_point_v<T_To> || is_floating_point_v<T_From>)
   {
+    static_assert(is_floating_point_v<T_To> && is_floating_point_v<T_From>);
     // language coerces different float types
-    return val;
+    to = from;
   }
-  else if_constexpr_named(cond4,
-                          is_pointer_v<T_From> || is_null_pointer_v<T_From>)
+  else if_constexpr_named(cond5, is_integral_v<T_To> || is_integral_v<T_From>)
   {
-    // pointers just get truncated or extended
-    return static_cast<uintptr_t>(val);
-  }
-  else if_constexpr_named(
-    cond5, is_integral_v<T_From> && is_signed_v<T_From> != is_signed_v<T_To>)
-  {
-    rlbox_detail_static_fail_because(
-      cond5, "Conversion should not go between signed and unsigned");
-  }
-  else if_constexpr_named(cond6, is_integral_v<T_From>)
-  {
-    if constexpr (sizeof(T_To) >= sizeof(T_From)) {
-      return val;
-    } else {
+    static_assert(is_integral_v<T_To> && is_integral_v<T_From>);
+
+    if_constexpr_named(sub_cond1, is_signed_v<T_To> != is_signed_v<T_From>)
+    {
+      rlbox_detail_static_fail_because(
+        sub_cond1, "Conversion should not go between signed and unsigned");
+    }
+    else if constexpr (sizeof(T_To) >= sizeof(T_From)) { to = from; }
+    else
+    {
       // Only check upper for unsigned
-      rlbox::detail::dynamic_check(val <= numeric_limits<T_To>::max(),
-                                   "Overflow/underflow when converting value "
+      rlbox::detail::dynamic_check(from <= numeric_limits<T_To>::max(),
+                                   "Overflow when converting value "
                                    "to a type with smaller range");
       if constexpr (is_signed_v<T_From>) {
-        rlbox::detail::dynamic_check(val >= numeric_limits<T_To>::min(),
-                                     "Overflow/underflow when converting value "
+        rlbox::detail::dynamic_check(from >= numeric_limits<T_To>::min(),
+                                     "Underflow when converting value "
                                      "to a type with smaller range");
       }
-      return static_cast<T_To>(val);
+      to = static_cast<T_To>(from);
     }
   }
   else
   {
-    constexpr auto unknownCase =
-      !(cond1 || cond2 || cond3 || cond4 || cond5 || cond6);
+    constexpr auto unknownCase = !(cond1 || cond2 || cond3 || cond4 || cond5);
     rlbox_detail_static_fail_because(unknownCase,
                                      "Unexpected case for adjust_type_size");
   }
+}
+
+template<typename T_To, typename T_From>
+inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
+                                                            const T_From& from)
+{
+  using namespace std;
+
+  using T_To_C = std_array_to_c_arr_t<T_To>;
+  using T_From_C = std_array_to_c_arr_t<T_From>;
+  using T_To_El = remove_all_extents_t<T_To_C>;
+  using T_From_El = remove_all_extents_t<T_From_C>;
+
+  if_constexpr_named(cond1, is_array_v<T_To_C> != is_array_v<T_From_C>)
+  {
+    rlbox_detail_static_fail_because(
+      cond1, "Conversion should not go between array and non array types");
+  }
+  else if constexpr (!is_array_v<T_To_C>)
+  {
+    return adjust_type_size_fundamental(to, from);
+  }
+  else if_constexpr_named(cond2, !all_extents_same<T_To_C, T_From_C>)
+  {
+    rlbox_detail_static_fail_because(
+      cond2, "Conversion between arrays should have same dimensions");
+  }
+  else if_constexpr_named(cond3,
+                          is_pointer_v<T_To_El> || is_pointer_v<T_From_El>)
+  {
+    rlbox_detail_static_fail_because(
+      cond3, "adjust_type_size does not allow arrays of pointers");
+  }
+  else
+  {
+    // Explicitly using size to check for element type as we may be going across
+    // different types of the same width such as void* and uintptr_t
+    if constexpr (sizeof(T_To_El) == sizeof(T_From_El) &&
+                  is_signed_v<T_To_El> == is_signed_v<T_From_El>) {
+      // Sanity check - this should definitely be true
+      static_assert(sizeof(T_From_C) == sizeof(T_To_C));
+      memcpy(&to, &from, sizeof(T_To_C));
+    } else {
+      for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
+        adjust_type_size_fundamental_or_array(to[i], from[i]);
+      }
+    }
+  }
+}
+
+enum class adjust_type_direction
+{
+  TO_SANDBOX,
+  TO_APPLICATION,
+  NO_CHANGE
+};
+
+template<typename T_Sbx,
+         adjust_type_direction Direction,
+         typename T_To,
+         typename T_From>
+inline constexpr void adjust_type_size(T_To& to,
+                                       const T_From& from,
+                                       const void* example_unsandboxed_ptr)
+{
+  using namespace std;
+
+  using T_To_C = std_array_to_c_arr_t<T_To>;
+  using T_From_C = std_array_to_c_arr_t<T_From>;
+  using T_To_El = remove_all_extents_t<T_To_C>;
+  using T_From_El = remove_all_extents_t<T_From_C>;
+
+  if constexpr (is_pointer_v<T_To_C> || is_pointer_v<T_From_C>) {
+
+    if constexpr (Direction == adjust_type_direction::NO_CHANGE) {
+
+      static_assert(is_pointer_v<T_To_C> && is_pointer_v<T_From_C> &&
+                    sizeof(T_To_C) == sizeof(T_From_C));
+      to = from;
+
+    } else if constexpr (Direction == adjust_type_direction::TO_SANDBOX) {
+
+      static_assert(is_pointer_v<T_From_C>);
+      to = RLBoxSandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
+        remove_pointer_t<T_From_C>>(from);
+
+    } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
+
+      static_assert(is_pointer_v<T_To_C>);
+      to = RLBoxSandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
+        remove_pointer_t<T_To_C>>(from, example_unsandboxed_ptr);
+    }
+
+  } else if constexpr (is_pointer_v<T_To_El> || is_pointer_v<T_From_El>) {
+
+    static_assert(is_pointer_v<T_To_El> && is_pointer_v<T_From_El>);
+
+    if constexpr (Direction == adjust_type_direction::NO_CHANGE) {
+      // Sanity check - this should definitely be true
+      static_assert(sizeof(T_To_El) == sizeof(T_From_El) &&
+                    sizeof(T_From_C) == sizeof(T_To_C));
+      memcpy(&to, &from, sizeof(T_To_C));
+    } else {
+      for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
+        adjust_type_size(to[i], from[i]);
+      }
+    }
+
+  } else {
+    adjust_type_size_fundamental_or_array(to, from);
+  }
+}
+
+template<typename T_Sbx,
+         adjust_type_direction Direction,
+         typename T_To,
+         typename T_From>
+inline constexpr void adjust_type_size(T_To& to, const T_From& from)
+{
+  static_assert(
+    Direction == adjust_type_direction::NO_CHANGE ||
+      Direction == adjust_type_direction::TO_SANDBOX,
+    "Example pointer cannot be ommitted for direction TO_APPLICATION");
+  adjust_type_size<T_Sbx, Direction>(
+    to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
 }

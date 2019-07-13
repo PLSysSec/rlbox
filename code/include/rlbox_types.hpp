@@ -33,6 +33,11 @@ class tainted_base
   , public sandbox_wrapper_base_of<T>
 {};
 
+class tainted_marker
+{};
+class tainted_volatile_marker
+{};
+
 // Use a custom enum for returns as boolean returns are a bad idea
 // int returns are automatically cast to a boolean
 // Some APIs have overloads with boolean and non returns, so best to use a

@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "rlbox_helpers.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_types.hpp"
 

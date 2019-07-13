@@ -21,19 +21,19 @@ TEST_CASE("Type get_[un]sandboxed_pointer", "[get_sandboxed]")
   void* testPointer2 = reinterpret_cast<void*>(base + testPointerSboxRep2);
   const T_Ptr nullptrSboxRep = 0;
 
-  REQUIRE(RL::get_sandboxed_pointer<void>(testPointer1, testPointer2) ==
+  REQUIRE(RL::get_sandboxed_pointer_no_ctx<void>(testPointer1) ==
           testPointerSboxRep1); // NOLINT
-  REQUIRE(RL::get_unsandboxed_pointer<void>(
+  REQUIRE(RL::get_unsandboxed_pointer_no_ctx<void>(
             testPointerSboxRep1, testPointer2) == testPointer1); // NOLINT
   REQUIRE(sandbox.get_sandboxed_pointer<void>(testPointer1) ==
           testPointerSboxRep1); // NOLINT
   REQUIRE(sandbox.get_unsandboxed_pointer<void>(testPointerSboxRep1) ==
           testPointer1); // NOLINT
 
-  REQUIRE(RL::get_sandboxed_pointer<void>(nullptr, testPointer2) ==
+  REQUIRE(RL::get_sandboxed_pointer_no_ctx<void>(nullptr) ==
           nullptrSboxRep); // NOLINT
-  REQUIRE(RL::get_unsandboxed_pointer<void>(nullptrSboxRep, testPointer2) ==
-          nullptr); // NOLINT
+  REQUIRE(RL::get_unsandboxed_pointer_no_ctx<void>(
+            nullptrSboxRep, testPointer2) == nullptr); // NOLINT
   REQUIRE(sandbox.get_sandboxed_pointer<void>(nullptr) ==
           nullptrSboxRep); // NOLINT
   REQUIRE(sandbox.get_unsandboxed_pointer<void>(nullptrSboxRep) ==
@@ -58,9 +58,9 @@ TEST_CASE("Type get_[un]sandboxed_pointer for const pointers",
   // NOLINTNEXTLINE (cppcoreguidelines-pro-type-reinterpret-cast)
   auto testPointer2 = reinterpret_cast<const void*>(base + testPointerSboxRep2);
 
-  REQUIRE(RL::get_sandboxed_pointer<const void>(testPointer1, testPointer2) ==
+  REQUIRE(RL::get_sandboxed_pointer_no_ctx<const void>(testPointer1) ==
           testPointerSboxRep1); // NOLINT
-  REQUIRE(RL::get_unsandboxed_pointer<const void>(
+  REQUIRE(RL::get_unsandboxed_pointer_no_ctx<const void>(
             testPointerSboxRep1, testPointer2) == testPointer1); // NOLINT
   REQUIRE(sandbox.get_sandboxed_pointer<const void>(testPointer1) ==
           testPointerSboxRep1); // NOLINT

@@ -239,7 +239,7 @@ public:
   }
 
   using T_copy_verify_arr_result =
-    std::array<std::remove_cv_t<std::remove_extent_t<T>>, std::extent_v<T>>;
+    detail::c_to_std_array_t<std::remove_cv_t<T>>;
 
   inline T_copy_verify_arr_result copy_and_verify_array(
     std::function<RLBox_Verify_Status(T_copy_verify_arr_result)> verifier,
@@ -248,22 +248,9 @@ public:
     static_assert(std::is_array_v<T>,
                   "Can only call copy_and_verify_array on arrays");
 
-    tainted<T, T_Sbx>* tainted_ptr;
+    auto copy = impl().get_raw_value();
 
-    if constexpr (std::is_same_v<tainted<T, T_Sbx>, T_Wrap<T, T_Sbx>>) {
-      tainted_ptr = &impl();
-    } else {
-      tainted<std::remove_cv_t<T>, T_Sbx> copy;
-      detail::assign_wrapped_value_nonclass(copy, impl());
-      tainted_ptr = &copy;
-    }
-
-    // This is ok as...
-    // 1) tainted has the same layout as an unwrapped type
-    // 2) std::array has the same layout as a T[]
-    auto ret_ptr = reinterpret_cast<T_copy_verify_arr_result*>(tainted_ptr);
-    return verifier(*ret_ptr) == RLBox_Verify_Status::SAFE ? *ret_ptr
-                                                           : default_val;
+    return verifier(copy) == RLBox_Verify_Status::SAFE ? copy : default_val;
   }
 
   inline detail::valid_return_t<T> copy_and_verify_range(
@@ -273,9 +260,11 @@ public:
   {
     static_assert(std::is_pointer_v<T>,
                   "Can only call copy_and_verify_range on pointers");
+
+    using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
+
     static_assert(
-      detail::is_fundamental_or_enum_v<
-        std::remove_cv_t<std::remove_pointer_t<T>>>,
+      detail::is_fundamental_or_enum_v<T_El>,
       "copy_and_verify_range only allows fundamental types or enums");
 
     auto start = reinterpret_cast<const void*>(impl().get_raw_value());
@@ -293,7 +282,6 @@ public:
       no_overflow,
       "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
-    using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
     auto target = new T_El[count];
 
     for (size_t i = 0; i < count; i++) {
@@ -334,7 +322,9 @@ public:
 };
 
 template<typename T, typename T_Sbx>
-class tainted : public tainted_base_impl<tainted, T, T_Sbx>
+class tainted
+  : public tainted_base_impl<tainted, T, T_Sbx>
+  , public tainted_marker
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
@@ -350,6 +340,11 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
     "  2) Make sure you run (re-run) the struct-dump tool to list "
     "all structs in use by your program.\n");
 
+  static_assert(
+    detail::is_basic_type_v<T> || std::is_array_v<T>,
+    "Tainted types only support fundamental, enum, pointer, array and struct "
+    "types. Please file a bug if more support is needed.");
+
 private:
   using T_ClassBase = tainted_base_impl<tainted, T, T_Sbx>;
   using T_ConvertedType = typename RLBoxSandbox<
@@ -359,36 +354,36 @@ private:
   inline auto& get_raw_value_ref() noexcept { return data; }
   inline auto& get_raw_value_ref() const noexcept { return data; }
 
-  inline detail::valid_return_t<const T> get_raw_value() const noexcept
+  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() const
+    noexcept
   {
-    return data;
+    detail::value_type_t<std::remove_cv_t<T>> ret;
+    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
+      ret, data);
+    return ret;
   }
 
-  inline detail::valid_return_t<const T_ConvertedType> get_raw_sandbox_value()
-    const
+  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  get_raw_sandbox_value() const
   {
-    if constexpr (std::is_pointer_v<T>) {
-      // Need a reinterpret_cast as function pointers don't decay
-      auto data_ptr = reinterpret_cast<const void*>(data);
-      // Since tainted<ptrs> can only be null or a pointer referring to a
-      // location in sandbox memory, data can thus be the
-      // example_unsandboxed_ptr
-      return RLBoxSandbox<T_Sbx>::template get_sandboxed_pointer<T>(
-        data_ptr, data_ptr /* example_unsandboxed_ptr */);
-    } else {
-      return detail::adjust_type_size<T_ConvertedType>(data);
-    }
+    detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
+    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::TO_SANDBOX>(
+      ret, data);
+    return ret;
   };
 
-  inline detail::valid_return_t<T> get_raw_value() noexcept
+  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() noexcept
   {
-    rlbox_detail_forward_to_const(get_raw_value, detail::valid_return_t<T>);
+    rlbox_detail_forward_to_const(get_raw_value,
+                                  detail::value_type_t<std::remove_cv_t<T>>);
   }
 
-  inline detail::valid_return_t<T_ConvertedType> get_raw_sandbox_value()
+  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  get_raw_sandbox_value()
   {
-    rlbox_detail_forward_to_const(get_raw_sandbox_value,
-                                  detail::valid_return_t<T_ConvertedType>);
+    rlbox_detail_forward_to_const(
+      get_raw_sandbox_value,
+      detail::value_type_t<std::remove_cv_t<T_ConvertedType>>);
   };
 
   // Initializing with a pointer is dangerous and permitted only internally
@@ -404,7 +399,15 @@ public:
   tainted(const tainted<T, T_Sbx>& p) = default;
   tainted(const tainted_volatile<T, T_Sbx>& p)
   {
-    detail::assign_wrapped_value_nonclass(*this, p);
+    // Need to construct an example_unsandboxed_ptr for pointers or arrays of
+    // pointers. Since tainted_volatile is the type of data in sandbox memory,
+    // the address of data (&data) refers to a location in sandbox memory and
+    // can thus be the example_unsandboxed_ptr
+    const volatile void* p_data_ref = &p.get_sandbox_value_ref();
+    const void* example_unsandboxed_ptr = const_cast<const void*>(p_data_ref);
+    detail::adjust_type_size<T_Sbx,
+                             detail::adjust_type_direction::TO_APPLICATION>(
+      get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
   }
   tainted(const std::nullptr_t& arg)
     : data(arg)
@@ -587,7 +590,9 @@ public:
 };
 
 template<typename T, typename T_Sbx>
-class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
+class tainted_volatile
+  : public tainted_base_impl<tainted_volatile, T, T_Sbx>
+  , public tainted_volatile_marker
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_ASSIGNMENT_FRIENDLY
@@ -603,6 +608,11 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
     "  2) Make sure you run (re-run) the struct-dump tool to list "
     "all structs in use by your program.\n");
 
+  static_assert(
+    detail::is_basic_type_v<T> || std::is_array_v<T>,
+    "Tainted types only support fundamental, enum, pointer, array and struct "
+    "types. Please file a bug if more support is needed.");
+
 private:
   using T_ClassBase = tainted_base_impl<tainted_volatile, T, T_Sbx>;
   using T_ConvertedType = std::add_volatile_t<typename RLBoxSandbox<
@@ -612,37 +622,42 @@ private:
   inline auto& get_sandbox_value_ref() noexcept { return data; }
   inline auto& get_sandbox_value_ref() const noexcept { return data; }
 
-  inline detail::valid_return_t<const T> get_raw_value() const
+  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() const
   {
-    if constexpr (std::is_pointer_v<T>) {
-      // Since tainted_volatile is the type of data in sandbox memory, the
-      // address of data (&data) refers to a location in sandbox memory and can
-      // thus be the example_unsandboxed_ptr
-      const volatile void* data_ref = &data;
-      return RLBoxSandbox<T_Sbx>::template get_unsandboxed_pointer<
-        std::remove_pointer_t<T>>(
-        data, const_cast<const void*>(data_ref) /* example_unsandboxed_ptr */);
-    } else {
-      return detail::adjust_type_size<T>(data);
-    }
+    detail::value_type_t<std::remove_cv_t<T>> ret;
+    // Need to construct an example_unsandboxed_ptr for pointers or arrays of
+    // pointers. Since tainted_volatile is the type of data in sandbox memory,
+    // the address of data (&data) refers to a location in sandbox memory and
+    // can thus be the example_unsandboxed_ptr
+    const volatile void* data_ref = &data;
+    const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
+    detail::adjust_type_size<T_Sbx,
+                             detail::adjust_type_direction::TO_APPLICATION>(
+      ret, data, example_unsandboxed_ptr);
+    return ret;
   }
 
-  inline detail::valid_return_t<const T_ConvertedType> get_raw_sandbox_value()
-    const noexcept
+  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  get_raw_sandbox_value() const noexcept
   {
-    return data;
+    detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
+    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
+      ret, data);
+    return ret;
   };
 
-  inline detail::valid_return_t<T> get_raw_value()
+  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value()
   {
-    rlbox_detail_forward_to_const(get_raw_value, detail::valid_return_t<T>);
+    rlbox_detail_forward_to_const(get_raw_value,
+                                  detail::value_type_t<std::remove_cv_t<T>>);
   }
 
-  inline detail::valid_return_t<T_ConvertedType>
+  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
   get_raw_sandbox_value() noexcept
   {
-    rlbox_detail_forward_to_const(get_raw_sandbox_value,
-                                  detail::valid_return_t<T_ConvertedType>);
+    rlbox_detail_forward_to_const(
+      get_raw_sandbox_value,
+      detail::value_type_t<std::remove_cv_t<T_ConvertedType>>);
   };
 
   tainted_volatile() = default;
@@ -748,6 +763,7 @@ public:
   inline tainted_volatile<T, T_Sbx>& operator=(T_RhsRef&& val)
   {
     using T_Rhs = std::remove_reference_t<T_RhsRef>;
+    using T_Rhs_El = std::remove_all_extents_t<T_Rhs>;
 
     if_constexpr_named(
       cond1, std::is_same_v<std::remove_const_t<T_Rhs>, std::nullptr_t>)
@@ -758,21 +774,39 @@ public:
       // represented as integer
       data = 0;
     }
-    else if_constexpr_named(cond2,
-                            std::is_base_of_v<sandbox_wrapper_base, T_Rhs>)
+    else if_constexpr_named(cond2, std::is_base_of_v<tainted_marker, T_Rhs>)
     {
-      detail::assign_wrapped_value_nonclass(*this, val);
+      // Need to construct an example_unsandboxed_ptr for pointers or arrays of
+      // pointers. Since tainted_volatile is the type of data in sandbox memory,
+      // the address of data (&data) refers to a location in sandbox memory and
+      // can thus be the example_unsandboxed_ptr
+      const volatile void* data_ref = &get_sandbox_value_ref();
+      const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
+      detail::adjust_type_size<T_Sbx,
+                               detail::adjust_type_direction::TO_SANDBOX>(
+        get_sandbox_value_ref(),
+        val.get_raw_value_ref(),
+        example_unsandboxed_ptr);
+    }
+    else if_constexpr_named(cond3,
+                            std::is_base_of_v<tainted_volatile_marker, T_Rhs>)
+    {
+      detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
+        get_sandbox_value_ref(), val.get_sandbox_value_ref());
     }
     else if_constexpr_named(
-      cond3, detail::is_fundamental_or_enum_v<T> || std::is_array_v<T>)
+      cond4,
+      detail::is_fundamental_or_enum_v<T> ||
+        (std::is_array_v<T> && !std::is_pointer_v<T_Rhs_El>))
     {
       auto wrapped = tainted<T_Rhs, T_Sbx>(val);
       detail::assign_wrapped_value_nonclass(*this, wrapped);
     }
-    else if_constexpr_named(cond4, std::is_pointer_v<T_Rhs>)
+    else if_constexpr_named(
+      cond5, std::is_pointer_v<T_Rhs> || std::is_pointer_v<T_Rhs_El>)
     {
       rlbox_detail_static_fail_because(
-        cond4,
+        cond5,
         "Assignment of pointers is not safe as it could\n "
         "1) Leak pointers from the appliction to the sandbox\n "
         "2) Pass inaccessible pointers to the sandbox leading to crash\n "
@@ -787,7 +821,7 @@ public:
     }
     else
     {
-      auto unknownCase = !(cond1 || cond2 || cond3 /* || cond4 */);
+      auto unknownCase = !(cond1 || cond2 || cond3 || cond4 /* || cond5 */);
       rlbox_detail_static_fail_because(
         unknownCase, "Assignment of the given type of value is not supported");
     }

@@ -129,7 +129,8 @@ TEST_CASE("callback in no_op sandbox", "[no_op_sandbox]")
   //   sandbox.register_callback(test_callback);
 
   // const int test_val = 5;
-  // tainted<int, rlbox_noop_sandbox> ret = sandbox_invoke(sandbox, test_invoker, cb, test_val);
+  // tainted<int, rlbox_noop_sandbox> ret = sandbox_invoke(sandbox,
+  // test_invoker, cb, test_val);
 
   // REQUIRE(ret.UNSAFE_Unverified() == test_val + 2);
 

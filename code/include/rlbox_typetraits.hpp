@@ -2,6 +2,7 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
+#include <array>
 #include <type_traits>
 
 #include "rlbox_types.hpp"
@@ -19,8 +20,7 @@ constexpr bool is_fundamental_or_enum_v =
 
 template<typename T>
 constexpr bool is_basic_type_v =
-  std::is_fundamental_v<T> || std::is_enum_v<T> || std::is_pointer_v<T> ||
-  std::is_null_pointer_v<T>;
+  std::is_fundamental_v<T> || std::is_enum_v<T> || std::is_pointer_v<T>;
 
 template<typename T>
 using valid_return_t =
@@ -50,6 +50,119 @@ using add_const_if_this_const_t =
   std::conditional_t<std::is_const_v<std::remove_pointer_t<T_This>>,
                      std::add_const_t<T_Target>,
                      T_Target>;
+
+template<typename T>
+using c_to_std_array_t =
+  std::conditional_t<std::is_array_v<T>,
+                     std::array<std::remove_extent_t<T>, std::extent_v<T>>,
+                     T>;
+
+namespace std_array_to_c_arr_detail {
+  template<typename T>
+  struct W
+  {
+    using type = T;
+  };
+
+  template<typename T, size_t N>
+  W<T[N]> std_array_to_c_arr_helper(std::array<T, N>);
+
+  template<typename T>
+  W<T> std_array_to_c_arr_helper(T&&);
+}
+
+template<typename T>
+using std_array_to_c_arr_t =
+  typename decltype(std_array_to_c_arr_detail::std_array_to_c_arr_helper(
+    std::declval<T>()))::type;
+
+template<typename T>
+using value_type_t =
+  std::conditional_t<std::is_array_v<T>, c_to_std_array_t<T>, T>;
+
+namespace is_c_or_std_array_detail {
+  template<typename T, typename T_Enable = void>
+  struct is_c_or_std_array_helper;
+
+  template<typename T>
+  struct is_c_or_std_array_helper<T, std::enable_if_t<std::is_array_v<T>>>
+    : std::true_type
+  {};
+
+  template<typename T, size_t N>
+  std::true_type is_std_array_helper(std::array<T, N>);
+
+  template<typename T>
+  std::false_type is_std_array_helper(T);
+
+  template<typename T>
+  constexpr bool is_std_array_v =
+    decltype(is_std_array_helper(std::declval<T>()))::value;
+
+  template<typename T>
+  struct is_c_or_std_array_helper<T, std::enable_if_t<is_std_array_v<T>>>
+    : std::true_type
+  {};
+
+  template<typename T>
+  struct is_c_or_std_array_helper<
+    T,
+    std::enable_if_t<!std::is_array_v<T> && !is_std_array_v<T>>>
+    : std::false_type
+  {};
+}
+
+template<typename T>
+constexpr bool is_c_or_std_array_v =
+  is_c_or_std_array_detail::is_c_or_std_array_helper<T>::value;
+
+namespace all_extents_same_detail {
+
+  template<typename T1, typename T2, typename T_Enable = void>
+  struct all_extents_same_helper;
+
+  template<typename T1, typename T2>
+  struct all_extents_same_helper<
+    T1,
+    T2,
+    std::enable_if_t<std::rank_v<T1> != std::rank_v<T2>>> : std::false_type
+  {};
+
+  template<typename T1, typename T2>
+  struct all_extents_same_helper<
+    T1,
+    T2,
+    std::enable_if_t<std::rank_v<T1> == std::rank_v<T2> &&
+                     !std::is_array_v<T1> && !std::is_array_v<T2>>>
+    : std::true_type
+  {};
+
+  template<typename T1, typename T2>
+  struct all_extents_same_helper<
+    T1,
+    T2,
+    std::enable_if_t<std::rank_v<T1> == std::rank_v<T2> &&
+                     std::is_array_v<T1> && std::is_array_v<T2> &&
+                     std::extent_v<T1> != std::extent_v<T2>>> : std::false_type
+  {};
+
+  template<typename T1, typename T2>
+  struct all_extents_same_helper<
+    T1,
+    T2,
+    std::enable_if_t<std::rank_v<T1> == std::rank_v<T2> &&
+                     std::is_array_v<T1> && std::is_array_v<T2> &&
+                     std::extent_v<T1> == std::extent_v<T2>>>
+  {
+    static constexpr bool value =
+      all_extents_same_helper<std::remove_extent_t<T1>,
+                              std::remove_extent_t<T2>>::value;
+  };
+}
+
+template<typename T1, typename T2>
+constexpr bool all_extents_same =
+  all_extents_same_detail::all_extents_same_helper<T1, T2>::value;
 
 namespace detail_rlbox_remove_wrapper {
 

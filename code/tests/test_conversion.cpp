@@ -1,6 +1,7 @@
+#include <array>
 #include <cstdint>
+#include <cstring>
 #include <limits>
-#include <type_traits>
 
 #include "test_include.hpp"
 
@@ -9,57 +10,131 @@ struct Foo
   int a;
 };
 
-using rlbox::detail::adjust_type_size;
+using rlbox::detail::adjust_type_size_fundamental_or_array;
 
 // NOLINTNEXTLINE
-TEST_CASE("Type Convert function operates correctly", "[convert]")
+TEST_CASE(
+  "adjust_type_size_fundamental_or_array for numerics operates correctly",
+  "[convert]")
 {
   const int32_t randValue = 5;
 
   {
-    auto a = adjust_type_size<int64_t, int32_t>(randValue);
-    REQUIRE(std::is_same_v<decltype(a), int64_t>);
-    REQUIRE(a == randValue);
+    int64_t dest;
+    adjust_type_size_fundamental_or_array(dest, randValue);
+    REQUIRE(dest == randValue);
   }
 
   {
-    auto a = adjust_type_size<int64_t, const int32_t>(randValue);
-    REQUIRE(std::is_same_v<decltype(a), int64_t>);
-    REQUIRE(a == randValue);
-  }
-
-  {
-    auto a = adjust_type_size<const int64_t, int32_t>(randValue);
-    REQUIRE(std::is_same_v<decltype(a), int64_t>);
-    REQUIRE(a == randValue);
-  }
-
-  {
-    auto a = adjust_type_size<const int64_t, const int32_t>(randValue);
-    REQUIRE(std::is_same_v<decltype(a), int64_t>);
-    REQUIRE(a == randValue);
+    int64_t dest;
+    adjust_type_size_fundamental_or_array(dest, randValue);
+    REQUIRE(dest == randValue);
   }
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("Type Convert function compile time checks operate correctly",
+TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
+          "numerics operate correctly",
           "[convert]")
 {
   const int32_t randValue = 5;
-  REQUIRE_COMPILE_ERR(adjust_type_size<uint64_t, int32_t>(randValue)); // NOLINT
-  REQUIRE_COMPILE_ERR(adjust_type_size<int64_t, uint32_t>(randValue)); // NOLINT
+  // dont go across signs
+  {
+    uint64_t dest;
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+  }
+  {
+    int64_t dest;
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+  }
 
   Foo a{ randValue };
-  REQUIRE_COMPILE_ERR(adjust_type_size<Foo, Foo>(a));         // NOLINT
-  REQUIRE_COMPILE_ERR(adjust_type_size<Foo, int>(randValue)); // NOLINT
-  REQUIRE_COMPILE_ERR(adjust_type_size<int, Foo>(a));         // NOLINT
+  // does not support classes
+  {
+    Foo dest{};
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, a));
+  }
+  {
+    Foo dest{};
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+  }
+  {
+    int dest;
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, a));
+  }
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("Type Convert function dynamic bounds checks operate correctly",
+TEST_CASE("adjust_type_size_fundamental_or_array dynamic bounds checks for "
+          "numerics operate correctly",
           "[convert]")
 {
   uint64_t u32Max = std::numeric_limits<uint32_t>::max();
-  REQUIRE(adjust_type_size<uint32_t, uint64_t>(5) == 5);            // NOLINT
-  REQUIRE_THROWS(adjust_type_size<uint32_t, uint64_t>(u32Max + 1)); // NOLINT
+  const uint64_t randValue = 5;
+
+  {
+    uint32_t dest;
+    adjust_type_size_fundamental_or_array(dest, randValue);
+    REQUIRE(dest == randValue);
+  }
+
+  {
+    uint32_t dest;
+    REQUIRE_THROWS(adjust_type_size_fundamental_or_array(dest, u32Max + 1));
+  }
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("adjust_type_size_fundamental_or_array for arrays operates correctly",
+          "[convert]")
+{
+  const int32_t c_arr_1[4]{ 1, 2, 3, 4 }; // NOLINT
+  const std::array<int32_t, 4> std_arr_1{ 1, 2, 3, 4 };
+
+  const int64_t c_arr_2[4]{ 1, 2, 3, 4 }; // NOLINT
+  const std::array<int64_t, 4> std_arr_2{ 1, 2, 3, 4 };
+
+  {
+    std::array<int32_t, 4> dest{};
+    adjust_type_size_fundamental_or_array(dest, c_arr_1);
+    REQUIRE(dest == std_arr_1);
+  }
+
+  {
+    int32_t dest[4]{}; // NOLINT
+    adjust_type_size_fundamental_or_array(dest, std_arr_1);
+    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
+  }
+
+  {
+    std::array<int32_t, 4> dest{};
+    adjust_type_size_fundamental_or_array(dest, c_arr_2);
+    REQUIRE(dest == std_arr_1);
+  }
+
+  {
+    int32_t dest[4]{}; // NOLINT
+    adjust_type_size_fundamental_or_array(dest, std_arr_2);
+    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
+  }
+}
+
+TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
+          "arrays operate correctly",
+          "[convert]")
+{
+  const int32_t c_arr_1[4]{ 1, 2, 3, 4 }; // NOLINT
+
+  {
+    uint32_t dest[4]{}; // NOLINT
+    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, c_arr_1));
+  }
+
+  // NOLINTNEXTLINE
+  const int64_t c_arr_2[4]{ 1, std::numeric_limits<int64_t>::max(), 3, 4 };
+
+  {
+    int32_t dest[4]{}; // NOLINT
+    REQUIRE_THROWS(adjust_type_size_fundamental_or_array(dest, c_arr_2));
+  }
 }
