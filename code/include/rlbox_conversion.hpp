@@ -43,25 +43,39 @@ inline constexpr void adjust_type_size_fundamental(T_To& to, const T_From& from)
   {
     static_assert(is_integral_v<T_To> && is_integral_v<T_From>);
 
-    if_constexpr_named(sub_cond1, is_signed_v<T_To> != is_signed_v<T_From>)
-    {
-      rlbox_detail_static_fail_because(
-        sub_cond1, "Conversion should not go between signed and unsigned");
-    }
-    else if constexpr (sizeof(T_To) >= sizeof(T_From)) { to = from; }
-    else
-    {
-      // Only check upper for unsigned
-      rlbox::detail::dynamic_check(from <= numeric_limits<T_To>::max(),
-                                   "Overflow when converting value "
-                                   "to a type with smaller range");
-      if constexpr (is_signed_v<T_From>) {
-        rlbox::detail::dynamic_check(from >= numeric_limits<T_To>::min(),
-                                     "Underflow when converting value "
-                                     "to a type with smaller range");
+    const char* err_msg =
+      "Over/Underflow when converting between integer types";
+
+    if constexpr (is_signed_v<T_To> == is_signed_v<T_From> &&
+                  sizeof(T_To) >= sizeof(T_From)) {
+      // Eg: int64_t from int32_t, uint64_t from uint32_t
+    } else if constexpr (is_unsigned_v<T_To> && is_unsigned_v<T_From>) {
+      // Eg: uint32_t from uint64_t
+      dynamic_check(from <= numeric_limits<T_To>::max(), err_msg);
+    } else if constexpr (is_signed_v<T_To> && is_signed_v<T_From>) {
+      // Eg: int32_t from int64_t
+      dynamic_check(from >= numeric_limits<T_To>::min(), err_msg);
+      dynamic_check(from <= numeric_limits<T_To>::max(), err_msg);
+    } else if constexpr (is_unsigned_v<T_To> && is_signed_v<T_From>) {
+      if constexpr (sizeof(T_To) < sizeof(T_From)) {
+        // Eg: uint32_t from int64_t
+        dynamic_check(from >= 0, err_msg);
+        auto to_max = numeric_limits<T_To>::max();
+        dynamic_check(from <= static_cast<T_From>(to_max), err_msg);
+      } else {
+        // Eg: uint32_t from int32_t, uint64_t from int32_t
+        dynamic_check(from >= 0, err_msg);
       }
-      to = static_cast<T_To>(from);
+    } else if constexpr (is_signed_v<T_To> && is_unsigned_v<T_From>) {
+      if constexpr (sizeof(T_To) <= sizeof(T_From)) {
+        // Eg: int32_t from uint32_t, int32_t from uint64_t
+        auto to_max = numeric_limits<T_To>::max();
+        dynamic_check(from <= static_cast<T_From>(to_max), err_msg);
+      } else {
+        // Eg: int64_t from uint32_t
+      }
     }
+    to = static_cast<T_To>(from);
   }
   else
   {
@@ -196,4 +210,26 @@ inline constexpr void adjust_type_size(T_To& to, const T_From& from)
     to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
+template<typename T>
+void assign_or_copy(T& lhs, T&& rhs)
+{
+  if constexpr (std::is_assignable_v<T&, T>) {
+    lhs = rhs;
+  } else {
+    // Use memcpy as types like static arrays are not assignable with =
+    auto dest = reinterpret_cast<void*>(&lhs);
+    auto src = reinterpret_cast<const void*>(&rhs);
+    std::memcpy(dest, src, sizeof(T));
+  }
+}
+
+// specialization for array decays
+template<typename T, RLBOX_ENABLE_IF(std::is_array_v<T>)>
+void assign_or_copy(T& lhs, std::decay_t<T> rhs)
+{
+  // Use memcpy as types like static arrays are not assignable with =
+  auto dest = reinterpret_cast<void*>(&lhs);
+  auto src = reinterpret_cast<const void*>(rhs);
+  std::memcpy(dest, src, sizeof(T));
+}
 }

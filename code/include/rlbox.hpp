@@ -6,7 +6,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "rlbox_assign.hpp"
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_policy_types.hpp"
@@ -27,7 +26,6 @@ class tainted_base_impl
   , public sandbox_wrapper_base_of<T>
 {
   KEEP_CLASSES_FRIENDLY
-  KEEP_ASSIGNMENT_FRIENDLY
   KEEP_CAST_FRIENDLY
 
 private:
@@ -264,8 +262,8 @@ public:
     using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
 
     static_assert(
-      detail::is_fundamental_or_enum_v<T_El>,
-      "copy_and_verify_range only allows fundamental types or enums");
+      detail::is_basic_type_v<T_El>,
+      "copy_and_verify_range is not allowed on pointers to structs");
 
     auto start = reinterpret_cast<const void*>(impl().get_raw_value());
     if (start == nullptr) {
@@ -282,11 +280,30 @@ public:
       no_overflow,
       "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
+
+    // Need to construct an example_unsandboxed_ptr for pointers or arrays of
+    // pointers.
+    const void* example_unsandboxed_ptr;
+    if constexpr (std::is_same_v<T_Wrap<T, T_Sbx>, tainted<T, T_Sbx>>) {
+      // Since this is a tainted pointer we are dereferencing, it
+      // can thus be the example_unsandboxed_ptr
+      example_unsandboxed_ptr = impl().get_raw_value_ref();
+    } else {
+      // Since tainted_volatile is the type of data in sandbox memory,
+      // the address of data (&data) refers to a location in sandbox memory and
+      // can thus be the example_unsandboxed_ptr
+      example_unsandboxed_ptr =
+        detail::remove_volatile_from_ptr_cast(&impl().get_sandbox_value_ref());
+    }
+
     auto target = new T_El[count];
 
     for (size_t i = 0; i < count; i++) {
-      auto tainted_ptr = reinterpret_cast<tainted<T_El, T_Sbx>*>(&(target[i]));
-      detail::assign_wrapped_value_nonclass(*tainted_ptr, impl()[i]);
+      auto p_src_i_tainted = &(impl()[i]);
+      auto p_src_i = p_src_i_tainted.get_raw_value();
+      detail::adjust_type_size<T_Sbx,
+                               detail::adjust_type_direction::TO_APPLICATION>(
+        target[i], *p_src_i, example_unsandboxed_ptr);
     }
 
     return verifier(target) == RLBox_Verify_Status::SAFE ? target : default_val;
@@ -327,7 +344,6 @@ class tainted
   , public tainted_marker
 {
   KEEP_CLASSES_FRIENDLY
-  KEEP_ASSIGNMENT_FRIENDLY
   KEEP_CAST_FRIENDLY
 
   // Classes recieve their own specialization
@@ -595,7 +611,6 @@ class tainted_volatile
   , public tainted_volatile_marker
 {
   KEEP_CLASSES_FRIENDLY
-  KEEP_ASSIGNMENT_FRIENDLY
   KEEP_CAST_FRIENDLY
 
   // Classes recieve their own specialization
@@ -799,8 +814,8 @@ public:
       detail::is_fundamental_or_enum_v<T> ||
         (std::is_array_v<T> && !std::is_pointer_v<T_Rhs_El>))
     {
-      auto wrapped = tainted<T_Rhs, T_Sbx>(val);
-      detail::assign_wrapped_value_nonclass(*this, wrapped);
+      detail::adjust_type_size_fundamental_or_array(get_sandbox_value_ref(),
+                                                    val);
     }
     else if_constexpr_named(
       cond5, std::is_pointer_v<T_Rhs> || std::is_pointer_v<T_Rhs_El>)

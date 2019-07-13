@@ -5,7 +5,7 @@
 #include <cstring>
 #include <type_traits>
 
-#include "rlbox_assign.hpp"
+#include "rlbox_conversion.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox::detail {
