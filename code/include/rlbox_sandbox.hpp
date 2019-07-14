@@ -246,15 +246,18 @@ public:
   template<typename T, typename... T_Args>
   auto invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
   {
-    using T_Converted =
-      std::remove_pointer_t<convert_fn_ptr_to_sandbox_equivalent_t<T*>>;
-
     static_assert(
-      std::is_invocable_v<T_Converted,
-                          detail::rlbox_remove_wrapper_t<T_Args>...>,
+      std::is_invocable_v<
+        T,
+        detail::rlbox_remove_wrapper_t<std::remove_reference_t<T_Args>>...>,
       "Mismatched arguments types for function");
 
-    using T_Result = std::invoke_result_t<T_Converted, T_Args...>;
+    using T_Result = std::invoke_result_t<
+      T,
+      detail::rlbox_remove_wrapper_t<std::remove_reference_t<T_Args>>...>;
+
+    using T_Converted =
+      std::remove_pointer_t<convert_fn_ptr_to_sandbox_equivalent_t<T*>>;
 
     if constexpr (std::is_void_v<T_Result>) {
       this->template impl_invoke_with_func_ptr<T>(

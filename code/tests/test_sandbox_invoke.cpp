@@ -125,14 +125,14 @@ TEST_CASE("callback in no_op sandbox", "[no_op_sandbox]")
   RL sandbox;
   sandbox.create_sandbox();
 
-  // rlbox::sandbox_callback<T_Func_int_int, rlbox_noop_sandbox> cb =
-  //   sandbox.register_callback(test_callback);
+  rlbox::sandbox_callback<T_Func_int_int, rlbox_noop_sandbox> cb =
+    sandbox.register_callback(test_callback);
 
-  // const int test_val = 5;
-  // tainted<int, rlbox_noop_sandbox> ret = sandbox_invoke(sandbox,
-  // test_invoker, cb, test_val);
+  const int test_val = 5;
+  tainted<int, rlbox_noop_sandbox> ret =
+    sandbox_invoke(sandbox, test_invoker, cb, test_val); // NOLINT
 
-  // REQUIRE(ret.UNSAFE_Unverified() == test_val + 2);
+  REQUIRE(ret.UNSAFE_Unverified() == test_val + 2);
 
   sandbox.destroy_sandbox();
 }

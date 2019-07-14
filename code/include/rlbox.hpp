@@ -246,6 +246,10 @@ public:
     static_assert(std::is_array_v<T>,
                   "Can only call copy_and_verify_array on arrays");
 
+    static_assert(
+      detail::is_fundamental_or_enum_v<std::remove_all_extents_t<T>>,
+      "copy_and_verify_array is only safe for fundamental or enum types");
+
     auto copy = impl().get_raw_value();
 
     return verifier(copy) == RLBox_Verify_Status::SAFE ? copy : default_val;
@@ -260,6 +264,10 @@ public:
                   "Can only call copy_and_verify_range on pointers");
 
     using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
+
+    static_assert(detail::is_fundamental_or_enum_v<T_El>,
+                  "copy_and_verify_range is only safe for ranges of "
+                  "fundamental or enum types");
 
     auto start = reinterpret_cast<const void*>(impl().get_raw_value());
     if (start == nullptr) {
@@ -276,29 +284,12 @@ public:
       no_overflow,
       "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
-    // Need to construct an example_unsandboxed_ptr for pointers or arrays of
-    // pointers.
-    const void* example_unsandboxed_ptr;
-    if constexpr (std::is_same_v<T_Wrap<T, T_Sbx>, tainted<T, T_Sbx>>) {
-      // Since this is a tainted pointer we are dereferencing, it
-      // can thus be the example_unsandboxed_ptr
-      example_unsandboxed_ptr = impl().get_raw_value_ref();
-    } else {
-      // Since tainted_volatile is the type of data in sandbox memory,
-      // the address of data (&data) refers to a location in sandbox memory and
-      // can thus be the example_unsandboxed_ptr
-      example_unsandboxed_ptr =
-        detail::remove_volatile_from_ptr_cast(&impl().get_sandbox_value_ref());
-    }
-
     auto target = new T_El[count];
 
     for (size_t i = 0; i < count; i++) {
       auto p_src_i_tainted = &(impl()[i]);
       auto p_src_i = p_src_i_tainted.get_raw_value();
-      detail::adjust_type_size<T_Sbx,
-                               detail::adjust_type_direction::TO_APPLICATION>(
-        target[i], *p_src_i, example_unsandboxed_ptr);
+      detail::adjust_type_size_fundamental_or_array(target[i], *p_src_i);
     }
 
     return verifier(target) == RLBox_Verify_Status::SAFE ? target : default_val;
