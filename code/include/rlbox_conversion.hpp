@@ -80,8 +80,8 @@ inline constexpr void adjust_type_size_fundamental(T_To& to, const T_From& from)
   else
   {
     constexpr auto unknownCase = !(cond1 || cond2 || cond3 || cond4 || cond5);
-    rlbox_detail_static_fail_because(unknownCase,
-                                     "Unexpected case for adjust_type_size");
+    rlbox_detail_static_fail_because(
+      unknownCase, "Unexpected case for adjust_type_size_fundamental");
   }
 }
 
@@ -113,8 +113,9 @@ inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
   else if_constexpr_named(cond3,
                           is_pointer_v<T_To_El> || is_pointer_v<T_From_El>)
   {
-    rlbox_detail_static_fail_because(
-      cond3, "adjust_type_size does not allow arrays of pointers");
+    rlbox_detail_static_fail_because(cond3,
+                                     "adjust_type_size_fundamental_or_array "
+                                     "does not allow arrays of pointers");
   }
   else
   {
@@ -144,9 +145,10 @@ template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-inline constexpr void adjust_type_size(T_To& to,
-                                       const T_From& from,
-                                       const void* example_unsandboxed_ptr)
+inline constexpr void adjust_type_size_non_class(
+  T_To& to,
+  const T_From& from,
+  const void* example_unsandboxed_ptr)
 {
   using namespace std;
 
@@ -187,12 +189,59 @@ inline constexpr void adjust_type_size(T_To& to,
       memcpy(&to, &from, sizeof(T_To_C));
     } else {
       for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
-        adjust_type_size(to[i], from[i]);
+        adjust_type_size_non_class(to[i], from[i]);
       }
     }
 
   } else {
     adjust_type_size_fundamental_or_array(to, from);
+  }
+}
+
+template<typename T_Sbx,
+         adjust_type_direction Direction,
+         typename T_To,
+         typename T_From>
+inline constexpr void adjust_type_size_non_class(T_To& to, const T_From& from)
+{
+  static_assert(
+    Direction == adjust_type_direction::NO_CHANGE ||
+      Direction == adjust_type_direction::TO_SANDBOX,
+    "Example pointer cannot be ommitted for direction TO_APPLICATION");
+  adjust_type_size_non_class<T_Sbx, Direction>(
+    to, from, nullptr /* example_unsandboxed_ptr */);
+}
+
+// Structs implement their own adjust_type_size by specializing this class
+// Have to do this via a class, as functions can't be partially specialized
+template<typename T_Sbx,
+         adjust_type_direction Direction,
+         typename T_To,
+         typename T_From>
+class adjust_type_size_class;
+// The specialization implements the following
+// {
+//   static inline void run(T_To& to,
+//                          const T_From& from,
+//                          const void* example_unsandboxed_ptr);
+// }
+
+template<typename T_Sbx,
+         adjust_type_direction Direction,
+         typename T_To,
+         typename T_From>
+inline void adjust_type_size(T_To& to,
+                             const T_From& from,
+                             const void* example_unsandboxed_ptr)
+{
+  if constexpr (std::is_class_v<T_To>) {
+    // Sanity check
+    static_assert(std::is_class_v<T_From>);
+    adjust_type_size_class<T_Sbx, Direction, T_To, T_From>::run(
+      to, from, example_unsandboxed_ptr);
+  } else {
+    adjust_type_size_non_class<T_Sbx, Direction>(
+      to, from, example_unsandboxed_ptr);
   }
 }
 
@@ -210,26 +259,4 @@ inline constexpr void adjust_type_size(T_To& to, const T_From& from)
     to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
-template<typename T>
-void assign_or_copy(T& lhs, T&& rhs)
-{
-  if constexpr (std::is_assignable_v<T&, T>) {
-    lhs = rhs;
-  } else {
-    // Use memcpy as types like static arrays are not assignable with =
-    auto dest = reinterpret_cast<void*>(&lhs);
-    auto src = reinterpret_cast<const void*>(&rhs);
-    std::memcpy(dest, src, sizeof(T));
-  }
-}
-
-// specialization for array decays
-template<typename T, RLBOX_ENABLE_IF(std::is_array_v<T>)>
-void assign_or_copy(T& lhs, std::decay_t<T> rhs)
-{
-  // Use memcpy as types like static arrays are not assignable with =
-  auto dest = reinterpret_cast<void*>(&lhs);
-  auto src = reinterpret_cast<const void*>(rhs);
-  std::memcpy(dest, src, sizeof(T));
-}
 }

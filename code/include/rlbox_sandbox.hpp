@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_typetraits.hpp"
@@ -165,6 +166,11 @@ public:
 
   inline size_t get_total_memory() { return this->impl_get_total_memory(); }
 
+  inline void* get_memory_location()
+  {
+    return this->impl_get_memory_location();
+  }
+
   void* lookup_symbol(const char* func_name)
   {
     std::lock_guard<std::mutex> lock(func_ptr_cache_lock);
@@ -198,9 +204,13 @@ public:
     } else {
       auto raw_result = this->impl_invoke_with_func_ptr(
         reinterpret_cast<T*>(func_ptr), invoke_process_param(params)...);
-      auto cast_result =
-        reinterpret_cast<tainted_volatile<T_Result, T_Sbx>*>(&raw_result);
-      tainted<T_Result, T_Sbx> wrapped_result = *cast_result;
+      tainted<T_Result, T_Sbx> wrapped_result;
+      const void* example_unsandboxed_ptr = get_memory_location();
+      detail::adjust_type_size<T_Sbx,
+                               detail::adjust_type_direction::TO_APPLICATION>(
+        wrapped_result.get_raw_value_ref(),
+        raw_result,
+        example_unsandboxed_ptr);
       return wrapped_result;
     }
   }

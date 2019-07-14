@@ -261,10 +261,6 @@ public:
 
     using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
 
-    static_assert(
-      detail::is_basic_type_v<T_El>,
-      "copy_and_verify_range is not allowed on pointers to structs");
-
     auto start = reinterpret_cast<const void*>(impl().get_raw_value());
     if (start == nullptr) {
       return default_val;
@@ -279,7 +275,6 @@ public:
     detail::dynamic_check(
       no_overflow,
       "Pointer arithmetic overflowed a pointer beyond sandbox memory");
-
 
     // Need to construct an example_unsandboxed_ptr for pointers or arrays of
     // pointers.
@@ -374,8 +369,9 @@ private:
     noexcept
   {
     detail::value_type_t<std::remove_cv_t<T>> ret;
-    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
-      ret, data);
+    detail::adjust_type_size_non_class<
+      T_Sbx,
+      detail::adjust_type_direction::NO_CHANGE>(ret, data);
     return ret;
   }
 
@@ -383,8 +379,9 @@ private:
   get_raw_sandbox_value() const
   {
     detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
-    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::TO_SANDBOX>(
-      ret, data);
+    detail::adjust_type_size_non_class<
+      T_Sbx,
+      detail::adjust_type_direction::TO_SANDBOX>(ret, data);
     return ret;
   };
 
@@ -421,8 +418,9 @@ public:
     // can thus be the example_unsandboxed_ptr
     const volatile void* p_data_ref = &p.get_sandbox_value_ref();
     const void* example_unsandboxed_ptr = const_cast<const void*>(p_data_ref);
-    detail::adjust_type_size<T_Sbx,
-                             detail::adjust_type_direction::TO_APPLICATION>(
+    detail::adjust_type_size_non_class<
+      T_Sbx,
+      detail::adjust_type_direction::TO_APPLICATION>(
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
   }
   tainted(const std::nullptr_t& arg)
@@ -646,8 +644,9 @@ private:
     // can thus be the example_unsandboxed_ptr
     const volatile void* data_ref = &data;
     const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
-    detail::adjust_type_size<T_Sbx,
-                             detail::adjust_type_direction::TO_APPLICATION>(
+    detail::adjust_type_size_non_class<
+      T_Sbx,
+      detail::adjust_type_direction::TO_APPLICATION>(
       ret, data, example_unsandboxed_ptr);
     return ret;
   }
@@ -656,8 +655,9 @@ private:
   get_raw_sandbox_value() const noexcept
   {
     detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
-    detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
-      ret, data);
+    detail::adjust_type_size_non_class<
+      T_Sbx,
+      detail::adjust_type_direction::NO_CHANGE>(ret, data);
     return ret;
   };
 
@@ -797,17 +797,19 @@ public:
       // can thus be the example_unsandboxed_ptr
       const volatile void* data_ref = &get_sandbox_value_ref();
       const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
-      detail::adjust_type_size<T_Sbx,
-                               detail::adjust_type_direction::TO_SANDBOX>(
-        get_sandbox_value_ref(),
-        val.get_raw_value_ref(),
-        example_unsandboxed_ptr);
+      detail::adjust_type_size_non_class<
+        T_Sbx,
+        detail::adjust_type_direction::TO_SANDBOX>(get_sandbox_value_ref(),
+                                                   val.get_raw_value_ref(),
+                                                   example_unsandboxed_ptr);
     }
     else if_constexpr_named(cond3,
                             std::is_base_of_v<tainted_volatile_marker, T_Rhs>)
     {
-      detail::adjust_type_size<T_Sbx, detail::adjust_type_direction::NO_CHANGE>(
-        get_sandbox_value_ref(), val.get_sandbox_value_ref());
+      detail::adjust_type_size_non_class<
+        T_Sbx,
+        detail::adjust_type_direction::NO_CHANGE>(get_sandbox_value_ref(),
+                                                  val.get_sandbox_value_ref());
     }
     else if_constexpr_named(
       cond4,

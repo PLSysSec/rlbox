@@ -96,6 +96,15 @@ protected:
     return std::numeric_limits<size_t>::max();
   }
 
+  inline void* impl_get_memory_location()
+  {
+    // There isn't any sandbox memory for the noop_sandbox as we just redirect
+    // to the app. Also, this is mostly used for pointer swizzling or sandbox
+    // bounds checks which is also not present/not required. So we can just
+    // return null
+    return nullptr;
+  }
+
   // adding a template so that we can use static_assert to fire only if this
   // function is invoked
   template<typename T = void>
