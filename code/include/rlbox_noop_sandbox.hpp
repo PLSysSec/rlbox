@@ -132,8 +132,8 @@ protected:
     return reinterpret_cast<void*>(&func_name);                                \
   }()
 
-  template<typename T, typename... T_Args>
-  auto impl_invoke_with_func_ptr(T* func_ptr, T_Args&&... params)
+  template<typename T, typename T_Converted, typename... T_Args>
+  auto impl_invoke_with_func_ptr(T_Converted* func_ptr, T_Args&&... params)
   {
     thread_data->sandbox = this;
     return (*func_ptr)(params...);

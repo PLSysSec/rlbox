@@ -15,6 +15,18 @@
 
 namespace rlbox {
 
+namespace convert_fn_ptr_to_sandbox_equivalent_detail {
+  template<typename T, typename T_Sbx>
+  using conv = ::rlbox::detail::convert_to_sandbox_equivalent_t<T, T_Sbx>;
+
+  template<typename T_Ret, typename... T_Args>
+  using T_Func = T_Ret (*)(T_Args...);
+
+  template<typename T_Sbx, typename T_Ret, typename... T_Args>
+  T_Func<conv<T_Ret, T_Sbx>, conv<T_Args, T_Sbx>...> helper(
+    T_Ret (*)(T_Args...));
+}
+
 template<typename T_Sbx>
 class RLBoxSandbox : protected T_Sbx
 {
@@ -23,6 +35,11 @@ class RLBoxSandbox : protected T_Sbx
 private:
   std::mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
+
+  template<typename T>
+  using convert_fn_ptr_to_sandbox_equivalent_t = decltype(
+    ::rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::helper<T_Sbx>(
+      std::declval<T>()));
 
   template<typename T>
   inline auto invoke_process_param(T&& param)
@@ -50,15 +67,53 @@ private:
     }
   }
 
+  template<typename T, typename T_Arg>
+  inline tainted<T, T_Sbx> sandbox_callback_intercept_convert_param(
+    const T_Arg& arg,
+    const void* example_unsandboxed_ptr)
+  {
+    tainted<T, T_Sbx> ret;
+    detail::adjust_type_size<T_Sbx,
+                             detail::adjust_type_direction::TO_APPLICATION>(
+      ret.get_raw_value_ref(), arg, example_unsandboxed_ptr);
+    return ret;
+  }
+
   template<typename T_Ret, typename... T_Args>
   static detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx>
   sandbox_callback_interceptor(
-    detail::convert_to_sandbox_equivalent_t<T_Args, T_Sbx>...)
+    detail::convert_to_sandbox_equivalent_t<T_Args, T_Sbx>... args)
   {
     std::pair<T_Sbx*, void*> context =
       T_Sbx::impl_get_executed_callback_sandbox_and_key();
-    (void)context;
-    throw "TODO: Not implemented";
+    auto& sandbox = *(reinterpret_cast<RLBoxSandbox<T_Sbx>*>(context.first));
+    auto key = context.second;
+
+    using T_Func_Ret =
+      std::conditional_t<std::is_void_v<T_Ret>, void, tainted<T_Ret, T_Sbx>>;
+    using T_Func =
+      T_Func_Ret (*)(RLBoxSandbox<T_Sbx>&, tainted<T_Args, T_Sbx>...);
+    auto target_fn_ptr = reinterpret_cast<T_Func>(key);
+    const void* example_unsandboxed_ptr = sandbox.get_memory_location();
+
+    if constexpr (std::is_void_v<T_Func_Ret>) {
+      (*target_fn_ptr)(
+        sandbox,
+        sandbox.template sandbox_callback_intercept_convert_param<T_Args>(
+          args, example_unsandboxed_ptr)...);
+      return;
+    } else {
+      auto tainted_ret = (*target_fn_ptr)(
+        sandbox,
+        sandbox.template sandbox_callback_intercept_convert_param<T_Args>(
+          args, example_unsandboxed_ptr)...);
+
+      detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx> ret;
+      detail::adjust_type_size<T_Sbx,
+                               detail::adjust_type_direction::TO_SANDBOX>(
+        ret, tainted_ret.get_raw_value_ref());
+      return ret;
+    }
   }
 
 public:
@@ -191,19 +246,25 @@ public:
   template<typename T, typename... T_Args>
   auto invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
   {
+    using T_Converted =
+      std::remove_pointer_t<convert_fn_ptr_to_sandbox_equivalent_t<T*>>;
+
     static_assert(
-      std::is_invocable_v<T, detail::rlbox_remove_wrapper_t<T_Args>...>,
+      std::is_invocable_v<T_Converted,
+                          detail::rlbox_remove_wrapper_t<T_Args>...>,
       "Mismatched arguments types for function");
 
-    using T_Result = std::invoke_result_t<T, T_Args...>;
+    using T_Result = std::invoke_result_t<T_Converted, T_Args...>;
 
     if constexpr (std::is_void_v<T_Result>) {
-      this->impl_invoke_with_func_ptr(reinterpret_cast<T*>(func_ptr),
-                                      invoke_process_param(params)...);
+      this->template impl_invoke_with_func_ptr<T>(
+        reinterpret_cast<T_Converted*>(func_ptr),
+        invoke_process_param(params)...);
       return;
     } else {
-      auto raw_result = this->impl_invoke_with_func_ptr(
-        reinterpret_cast<T*>(func_ptr), invoke_process_param(params)...);
+      auto raw_result = this->template impl_invoke_with_func_ptr<T>(
+        reinterpret_cast<T_Converted*>(func_ptr),
+        invoke_process_param(params)...);
       tainted<T_Result, T_Sbx> wrapped_result;
       const void* example_unsandboxed_ptr = get_memory_location();
       detail::adjust_type_size<T_Sbx,
