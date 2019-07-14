@@ -10,30 +10,29 @@ struct Foo
   int a;
 };
 
-using rlbox::detail::adjust_type_size_fundamental_or_array;
+using rlbox::detail::convert_type_fundamental_or_array;
 
 // NOLINTNEXTLINE
-TEST_CASE(
-  "adjust_type_size_fundamental_or_array for numerics operates correctly",
-  "[convert]")
+TEST_CASE("convert_type_fundamental_or_array for numerics operates correctly",
+          "[convert]")
 {
   const int32_t randValue = 5;
 
   {
     int64_t dest;
-    adjust_type_size_fundamental_or_array(dest, randValue);
+    convert_type_fundamental_or_array(dest, randValue);
     REQUIRE(dest == randValue);
   }
 
   {
     int64_t dest;
-    adjust_type_size_fundamental_or_array(dest, randValue);
+    convert_type_fundamental_or_array(dest, randValue);
     REQUIRE(dest == randValue);
   }
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
+TEST_CASE("convert_type_fundamental_or_array compile time checks for "
           "numerics operate correctly",
           "[convert]")
 {
@@ -41,31 +40,31 @@ TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
   // dont go across signs
   {
     uint64_t dest;
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, randValue));
   }
   {
     int64_t dest;
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, randValue));
   }
 
   Foo a{ randValue };
   // does not support classes
   {
     Foo dest{};
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, a));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, a));
   }
   {
     Foo dest{};
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, randValue));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, randValue));
   }
   {
     int dest;
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, a));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, a));
   }
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("adjust_type_size_fundamental_or_array dynamic bounds checks for "
+TEST_CASE("convert_type_fundamental_or_array dynamic bounds checks for "
           "numerics operate correctly",
           "[convert]")
 {
@@ -74,18 +73,18 @@ TEST_CASE("adjust_type_size_fundamental_or_array dynamic bounds checks for "
 
   {
     uint32_t dest;
-    adjust_type_size_fundamental_or_array(dest, randValue);
+    convert_type_fundamental_or_array(dest, randValue);
     REQUIRE(dest == randValue);
   }
 
   {
     uint32_t dest;
-    REQUIRE_THROWS(adjust_type_size_fundamental_or_array(dest, u32Max + 1));
+    REQUIRE_THROWS(convert_type_fundamental_or_array(dest, u32Max + 1));
   }
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("adjust_type_size_fundamental_or_array for arrays operates correctly",
+TEST_CASE("convert_type_fundamental_or_array for arrays operates correctly",
           "[convert]")
 {
   const int32_t c_arr_1[4]{ 1, 2, 3, 4 }; // NOLINT
@@ -96,30 +95,30 @@ TEST_CASE("adjust_type_size_fundamental_or_array for arrays operates correctly",
 
   {
     std::array<int32_t, 4> dest{};
-    adjust_type_size_fundamental_or_array(dest, c_arr_1);
+    convert_type_fundamental_or_array(dest, c_arr_1);
     REQUIRE(dest == std_arr_1);
   }
 
   {
     int32_t dest[4]{}; // NOLINT
-    adjust_type_size_fundamental_or_array(dest, std_arr_1);
+    convert_type_fundamental_or_array(dest, std_arr_1);
     REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
   }
 
   {
     std::array<int32_t, 4> dest{};
-    adjust_type_size_fundamental_or_array(dest, c_arr_2);
+    convert_type_fundamental_or_array(dest, c_arr_2);
     REQUIRE(dest == std_arr_1);
   }
 
   {
     int32_t dest[4]{}; // NOLINT
-    adjust_type_size_fundamental_or_array(dest, std_arr_2);
+    convert_type_fundamental_or_array(dest, std_arr_2);
     REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
   }
 }
 
-TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
+TEST_CASE("convert_type_fundamental_or_array compile time checks for "
           "arrays operate correctly",
           "[convert]")
 {
@@ -127,7 +126,7 @@ TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
 
   {
     uint32_t dest[4]{}; // NOLINT
-    REQUIRE_COMPILE_ERR(adjust_type_size_fundamental_or_array(dest, c_arr_1));
+    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, c_arr_1));
   }
 
   // NOLINTNEXTLINE
@@ -135,6 +134,6 @@ TEST_CASE("adjust_type_size_fundamental_or_array compile time checks for "
 
   {
     int32_t dest[4]{}; // NOLINT
-    REQUIRE_THROWS(adjust_type_size_fundamental_or_array(dest, c_arr_2));
+    REQUIRE_THROWS(convert_type_fundamental_or_array(dest, c_arr_2));
   }
 }

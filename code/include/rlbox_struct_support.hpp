@@ -61,8 +61,8 @@ using convert_to_sandbox_equivalent_t =
 #define helper_create_tainted_v_field(fieldType, fieldName, isFrozen)          \
   tainted_volatile<fieldType, T_Sbx> fieldName;
 
-#define helper_adjust_type_size(fieldType, fieldName, isFrozen)                \
-  ::rlbox::detail::adjust_type_size<T_Sbx, Direction>(                         \
+#define helper_convert_type(fieldType, fieldName, isFrozen)                    \
+  ::rlbox::detail::convert_type<T_Sbx, Direction>(                             \
     lhs.fieldName, rhs.fieldName, example_unsandboxed_ptr);
 
 #define tainted_data_specialization(T, libId)                                  \
@@ -84,7 +84,7 @@ using convert_to_sandbox_equivalent_t =
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
-      sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size,   \
+      sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
                                                                                \
         return lhs;                                                            \
@@ -145,7 +145,7 @@ using convert_to_sandbox_equivalent_t =
       /* Since direction is TO_SANDBOX, we don't need a */                     \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = nullptr;                           \
-      sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size,   \
+      sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
                                                                                \
         return lhs;                                                            \
@@ -166,7 +166,7 @@ using convert_to_sandbox_equivalent_t =
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
-      sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size,   \
+      sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
     }                                                                          \
   };                                                                           \
@@ -183,7 +183,7 @@ using convert_to_sandbox_equivalent_t =
     /* Since direction is TO_SANDBOX, we don't need a */                       \
     /* example_unsandboxed_ptr*/                                               \
     const void* example_unsandboxed_ptr = nullptr;                             \
-    sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size,     \
+    sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,         \
                                                   helper_no_op)                \
                                                                                \
       return *this;                                                            \
@@ -193,14 +193,14 @@ using convert_to_sandbox_equivalent_t =
     template<typename T_Sbx,                                                   \
              detail::adjust_type_direction Direction,                          \
              typename T_From>                                                  \
-    class adjust_type_size_class<T_Sbx, Direction, T, T_From>                  \
+    class convert_type_class<T_Sbx, Direction, T, T_From>                      \
     {                                                                          \
     public:                                                                    \
       static inline void run(T& lhs,                                           \
                              const T_From& rhs,                                \
                              const void* example_unsandboxed_ptr)              \
       {                                                                        \
-        sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size, \
+        sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,     \
                                                       helper_no_op)            \
       }                                                                        \
     };                                                                         \
@@ -208,17 +208,17 @@ using convert_to_sandbox_equivalent_t =
     template<typename T_Sbx,                                                   \
              detail::adjust_type_direction Direction,                          \
              typename T_From>                                                  \
-    class adjust_type_size_class<T_Sbx,                                        \
-                                 Direction,                                    \
-                                 Sbx_##libId##_##T<T_Sbx>,                     \
-                                 T_From>                                       \
+    class convert_type_class<T_Sbx,                                            \
+                             Direction,                                        \
+                             Sbx_##libId##_##T<T_Sbx>,                         \
+                             T_From>                                           \
     {                                                                          \
     public:                                                                    \
       static inline void run(Sbx_##libId##_##T<T_Sbx>& lhs,                    \
                              const T_From& rhs,                                \
                              const void* example_unsandboxed_ptr)              \
       {                                                                        \
-        sandbox_fields_reflection_##libId##_class_##T(helper_adjust_type_size, \
+        sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,     \
                                                       helper_no_op)            \
       }                                                                        \
     };                                                                         \

@@ -73,8 +73,7 @@ private:
     const void* example_unsandboxed_ptr)
   {
     tainted<T, T_Sbx> ret;
-    detail::adjust_type_size<T_Sbx,
-                             detail::adjust_type_direction::TO_APPLICATION>(
+    detail::convert_type<T_Sbx, detail::adjust_type_direction::TO_APPLICATION>(
       ret.get_raw_value_ref(), arg, example_unsandboxed_ptr);
     return ret;
   }
@@ -109,8 +108,7 @@ private:
           args, example_unsandboxed_ptr)...);
 
       detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx> ret;
-      detail::adjust_type_size<T_Sbx,
-                               detail::adjust_type_direction::TO_SANDBOX>(
+      detail::convert_type<T_Sbx, detail::adjust_type_direction::TO_SANDBOX>(
         ret, tainted_ret.get_raw_value_ref());
       return ret;
     }
@@ -270,8 +268,8 @@ public:
         invoke_process_param(params)...);
       tainted<T_Result, T_Sbx> wrapped_result;
       const void* example_unsandboxed_ptr = get_memory_location();
-      detail::adjust_type_size<T_Sbx,
-                               detail::adjust_type_direction::TO_APPLICATION>(
+      detail::convert_type<T_Sbx,
+                           detail::adjust_type_direction::TO_APPLICATION>(
         wrapped_result.get_raw_value_ref(),
         raw_result,
         example_unsandboxed_ptr);

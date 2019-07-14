@@ -13,7 +13,7 @@
 namespace rlbox::detail {
 
 template<typename T_To, typename T_From>
-inline constexpr void adjust_type_size_fundamental(T_To& to, const T_From& from)
+inline constexpr void convert_type_fundamental(T_To& to, const T_From& from)
 {
   using namespace std;
 
@@ -81,13 +81,13 @@ inline constexpr void adjust_type_size_fundamental(T_To& to, const T_From& from)
   {
     constexpr auto unknownCase = !(cond1 || cond2 || cond3 || cond4 || cond5);
     rlbox_detail_static_fail_because(
-      unknownCase, "Unexpected case for adjust_type_size_fundamental");
+      unknownCase, "Unexpected case for convert_type_fundamental");
   }
 }
 
 template<typename T_To, typename T_From>
-inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
-                                                            const T_From& from)
+inline constexpr void convert_type_fundamental_or_array(T_To& to,
+                                                        const T_From& from)
 {
   using namespace std;
 
@@ -103,7 +103,7 @@ inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
   }
   else if constexpr (!is_array_v<T_To_C>)
   {
-    return adjust_type_size_fundamental(to, from);
+    return convert_type_fundamental(to, from);
   }
   else if_constexpr_named(cond2, !all_extents_same<T_To_C, T_From_C>)
   {
@@ -114,7 +114,7 @@ inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
                           is_pointer_v<T_To_El> || is_pointer_v<T_From_El>)
   {
     rlbox_detail_static_fail_because(cond3,
-                                     "adjust_type_size_fundamental_or_array "
+                                     "convert_type_fundamental_or_array "
                                      "does not allow arrays of pointers");
   }
   else
@@ -128,7 +128,7 @@ inline constexpr void adjust_type_size_fundamental_or_array(T_To& to,
       memcpy(&to, &from, sizeof(T_To_C));
     } else {
       for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
-        adjust_type_size_fundamental_or_array(to[i], from[i]);
+        convert_type_fundamental_or_array(to[i], from[i]);
       }
     }
   }
@@ -145,7 +145,7 @@ template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-inline constexpr void adjust_type_size_non_class(
+inline constexpr void convert_type_non_class(
   T_To& to,
   const T_From& from,
   const void* example_unsandboxed_ptr)
@@ -189,12 +189,12 @@ inline constexpr void adjust_type_size_non_class(
       memcpy(&to, &from, sizeof(T_To_C));
     } else {
       for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
-        adjust_type_size_non_class(to[i], from[i]);
+        convert_type_non_class(to[i], from[i]);
       }
     }
 
   } else {
-    adjust_type_size_fundamental_or_array(to, from);
+    convert_type_fundamental_or_array(to, from);
   }
 }
 
@@ -202,23 +202,23 @@ template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-inline constexpr void adjust_type_size_non_class(T_To& to, const T_From& from)
+inline constexpr void convert_type_non_class(T_To& to, const T_From& from)
 {
   static_assert(
     Direction == adjust_type_direction::NO_CHANGE ||
       Direction == adjust_type_direction::TO_SANDBOX,
     "Example pointer cannot be ommitted for direction TO_APPLICATION");
-  adjust_type_size_non_class<T_Sbx, Direction>(
+  convert_type_non_class<T_Sbx, Direction>(
     to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
-// Structs implement their own adjust_type_size by specializing this class
+// Structs implement their own convert_type by specializing this class
 // Have to do this via a class, as functions can't be partially specialized
 template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-class adjust_type_size_class;
+class convert_type_class;
 // The specialization implements the following
 // {
 //   static inline void run(T_To& to,
@@ -230,18 +230,17 @@ template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-inline void adjust_type_size(T_To& to,
-                             const T_From& from,
-                             const void* example_unsandboxed_ptr)
+inline void convert_type(T_To& to,
+                         const T_From& from,
+                         const void* example_unsandboxed_ptr)
 {
   if constexpr (std::is_class_v<T_To>) {
     // Sanity check
     static_assert(std::is_class_v<T_From>);
-    adjust_type_size_class<T_Sbx, Direction, T_To, T_From>::run(
+    convert_type_class<T_Sbx, Direction, T_To, T_From>::run(
       to, from, example_unsandboxed_ptr);
   } else {
-    adjust_type_size_non_class<T_Sbx, Direction>(
-      to, from, example_unsandboxed_ptr);
+    convert_type_non_class<T_Sbx, Direction>(to, from, example_unsandboxed_ptr);
   }
 }
 
@@ -249,13 +248,13 @@ template<typename T_Sbx,
          adjust_type_direction Direction,
          typename T_To,
          typename T_From>
-inline constexpr void adjust_type_size(T_To& to, const T_From& from)
+inline constexpr void convert_type(T_To& to, const T_From& from)
 {
   static_assert(
     Direction == adjust_type_direction::NO_CHANGE ||
       Direction == adjust_type_direction::TO_SANDBOX,
     "Example pointer cannot be ommitted for direction TO_APPLICATION");
-  adjust_type_size<T_Sbx, Direction>(
+  convert_type<T_Sbx, Direction>(
     to, from, nullptr /* example_unsandboxed_ptr */);
 }
 

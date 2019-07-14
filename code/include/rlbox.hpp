@@ -289,7 +289,7 @@ public:
     for (size_t i = 0; i < count; i++) {
       auto p_src_i_tainted = &(impl()[i]);
       auto p_src_i = p_src_i_tainted.get_raw_value();
-      detail::adjust_type_size_fundamental_or_array(target[i], *p_src_i);
+      detail::convert_type_fundamental_or_array(target[i], *p_src_i);
     }
 
     return verifier(target) == RLBox_Verify_Status::SAFE ? target : default_val;
@@ -360,9 +360,9 @@ private:
     noexcept
   {
     detail::value_type_t<std::remove_cv_t<T>> ret;
-    detail::adjust_type_size_non_class<
-      T_Sbx,
-      detail::adjust_type_direction::NO_CHANGE>(ret, data);
+    detail::convert_type_non_class<T_Sbx,
+                                   detail::adjust_type_direction::NO_CHANGE>(
+      ret, data);
     return ret;
   }
 
@@ -370,9 +370,9 @@ private:
   get_raw_sandbox_value() const
   {
     detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
-    detail::adjust_type_size_non_class<
-      T_Sbx,
-      detail::adjust_type_direction::TO_SANDBOX>(ret, data);
+    detail::convert_type_non_class<T_Sbx,
+                                   detail::adjust_type_direction::TO_SANDBOX>(
+      ret, data);
     return ret;
   };
 
@@ -409,7 +409,7 @@ public:
     // can thus be the example_unsandboxed_ptr
     const volatile void* p_data_ref = &p.get_sandbox_value_ref();
     const void* example_unsandboxed_ptr = const_cast<const void*>(p_data_ref);
-    detail::adjust_type_size_non_class<
+    detail::convert_type_non_class<
       T_Sbx,
       detail::adjust_type_direction::TO_APPLICATION>(
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
@@ -635,7 +635,7 @@ private:
     // can thus be the example_unsandboxed_ptr
     const volatile void* data_ref = &data;
     const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
-    detail::adjust_type_size_non_class<
+    detail::convert_type_non_class<
       T_Sbx,
       detail::adjust_type_direction::TO_APPLICATION>(
       ret, data, example_unsandboxed_ptr);
@@ -646,9 +646,9 @@ private:
   get_raw_sandbox_value() const noexcept
   {
     detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
-    detail::adjust_type_size_non_class<
-      T_Sbx,
-      detail::adjust_type_direction::NO_CHANGE>(ret, data);
+    detail::convert_type_non_class<T_Sbx,
+                                   detail::adjust_type_direction::NO_CHANGE>(
+      ret, data);
     return ret;
   };
 
@@ -788,27 +788,25 @@ public:
       // can thus be the example_unsandboxed_ptr
       const volatile void* data_ref = &get_sandbox_value_ref();
       const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
-      detail::adjust_type_size_non_class<
-        T_Sbx,
-        detail::adjust_type_direction::TO_SANDBOX>(get_sandbox_value_ref(),
-                                                   val.get_raw_value_ref(),
-                                                   example_unsandboxed_ptr);
+      detail::convert_type_non_class<T_Sbx,
+                                     detail::adjust_type_direction::TO_SANDBOX>(
+        get_sandbox_value_ref(),
+        val.get_raw_value_ref(),
+        example_unsandboxed_ptr);
     }
     else if_constexpr_named(cond3,
                             std::is_base_of_v<tainted_volatile_marker, T_Rhs>)
     {
-      detail::adjust_type_size_non_class<
-        T_Sbx,
-        detail::adjust_type_direction::NO_CHANGE>(get_sandbox_value_ref(),
-                                                  val.get_sandbox_value_ref());
+      detail::convert_type_non_class<T_Sbx,
+                                     detail::adjust_type_direction::NO_CHANGE>(
+        get_sandbox_value_ref(), val.get_sandbox_value_ref());
     }
     else if_constexpr_named(
       cond4,
       detail::is_fundamental_or_enum_v<T> ||
         (std::is_array_v<T> && !std::is_pointer_v<T_Rhs_El>))
     {
-      detail::adjust_type_size_fundamental_or_array(get_sandbox_value_ref(),
-                                                    val);
+      detail::convert_type_fundamental_or_array(get_sandbox_value_ref(), val);
     }
     else if_constexpr_named(
       cond5, std::is_pointer_v<T_Rhs> || std::is_pointer_v<T_Rhs_El>)
