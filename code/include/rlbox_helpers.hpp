@@ -37,6 +37,8 @@ namespace detail {
     static_assert(!(CondExpr), Message)
 #endif
 
+#define RLBOX_UNUSED(...) (void) __VA_ARGS__
+
 #define if_constexpr_named(varName, ...)                                       \
   if constexpr (constexpr auto varName = __VA_ARGS__; varName)
 

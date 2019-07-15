@@ -15,7 +15,7 @@ namespace detail_rlbox_is_tainted {
 
   template<typename T>
   std::false_type helper(T*);
-};
+}
 
 template<typename T>
 constexpr bool rlbox_is_tainted_v = decltype(detail_rlbox_is_tainted::helper(
@@ -28,7 +28,7 @@ namespace detail_rlbox_is_tainted_volatile {
 
   template<typename T>
   std::false_type helper(T*);
-};
+}
 
 template<typename T>
 constexpr bool rlbox_is_tainted_volatile_v =
@@ -42,7 +42,7 @@ namespace detail_rlbox_is_sandbox_callback {
 
   template<typename T>
   std::false_type helper(T*);
-};
+}
 
 template<typename T>
 constexpr bool rlbox_is_sandbox_callback_v =

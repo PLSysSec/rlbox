@@ -96,6 +96,9 @@ private:
     auto target_fn_ptr = reinterpret_cast<T_Func>(key);
     const void* example_unsandboxed_ptr = sandbox.get_memory_location();
 
+    // Some branches (after inlining function calls) don't use the param
+    RLBOX_UNUSED(example_unsandboxed_ptr);
+
     if constexpr (std::is_void_v<T_Func_Ret>) {
       (*target_fn_ptr)(
         sandbox,
@@ -301,8 +304,9 @@ public:
   sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx> register_callback(
     T_Ret (*func_ptr)(T_RL, T_Args...))
   {
-    // Some branches don't use func_ptr, so make "use" it to get past linter
-    (void)func_ptr;
+    // Some branches don't use the param
+    RLBOX_UNUSED(func_ptr);
+
     if_constexpr_named(cond1, !std::is_same_v<T_RL, RLBoxSandbox<T_Sbx>&>)
     {
       rlbox_detail_static_fail_because(

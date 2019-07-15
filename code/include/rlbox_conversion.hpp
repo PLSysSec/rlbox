@@ -47,6 +47,9 @@ inline constexpr void convert_type_fundamental(T_To& to, const T_From& from)
     const char* err_msg =
       "Over/Underflow when converting between integer types";
 
+    // Some branches don't use the param
+    RLBOX_UNUSED(err_msg);
+
     if constexpr (is_signed_v<T_To> == is_signed_v<T_From> &&
                   sizeof(T_To) >= sizeof(T_From)) {
       // Eg: int64_t from int32_t, uint64_t from uint32_t
@@ -152,6 +155,9 @@ inline constexpr void convert_type_non_class(
   const void* example_unsandboxed_ptr)
 {
   using namespace std;
+
+  // Some branches don't use the param
+  RLBOX_UNUSED(example_unsandboxed_ptr);
 
   using T_To_C = std_array_to_c_arr_t<T_To>;
   using T_From_C = std_array_to_c_arr_t<T_From>;
