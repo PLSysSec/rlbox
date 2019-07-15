@@ -11,8 +11,8 @@
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_struct_support.hpp"
-#include "rlbox_typetraits.hpp"
-#include "rlbox_wrappertraits.hpp"
+#include "rlbox_type_traits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 

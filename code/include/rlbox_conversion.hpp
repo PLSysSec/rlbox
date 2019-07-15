@@ -9,7 +9,7 @@
 
 #include "rlbox_helpers.hpp"
 #include "rlbox_types.hpp"
-#include "rlbox_typetraits.hpp"
+#include "rlbox_type_traits.hpp"
 
 namespace rlbox::detail {
 

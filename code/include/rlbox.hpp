@@ -13,9 +13,9 @@
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_types.hpp"
-#include "rlbox_typetraits.hpp"
+#include "rlbox_type_traits.hpp"
 #include "rlbox_unwrap.hpp"
-#include "rlbox_wrappertraits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 

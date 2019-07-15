@@ -1,4 +1,6 @@
-#include "rlbox_noop_sandbox.hpp"
+#define RLBOX_NO_COMPILE_CHECKS
+#define RLBOX_USE_EXCEPTIONS
+#include "rlbox_noop_sandbox.hpp" // IWYU pragma: keep
 #include "test_include.hpp"
 
 using RL = rlbox::RLBoxSandbox<rlbox::rlbox_noop_sandbox>;

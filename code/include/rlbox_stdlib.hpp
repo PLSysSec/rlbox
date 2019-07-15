@@ -7,7 +7,7 @@
 
 #include "rlbox_types.hpp"
 #include "rlbox_unwrap.hpp"
-#include "rlbox_wrappertraits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 #define KEEP_CAST_FRIENDLY                                                     \

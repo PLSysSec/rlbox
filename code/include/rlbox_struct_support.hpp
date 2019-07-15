@@ -7,7 +7,7 @@
 
 #include "rlbox_conversion.hpp"
 #include "rlbox_types.hpp"
-#include "rlbox_wrappertraits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox::detail {
 
