@@ -60,6 +60,11 @@ private:
       alignedMemU++;
     }
 
+    if ((alignedMemU + size) > (memU + paddedSize)) {
+      // Unexpected error while aligning memory
+      std::abort();
+    }
+
     auto alignedMem = reinterpret_cast<std::byte*>(alignedMemU);
     return std::make_pair(mem, alignedMem);
   }
@@ -72,7 +77,7 @@ public:
   using T_IntType = int32_t;
   using T_PointerType = uint32_t;
 
-  inline static const uint32_t SandboxMemorySize = 0xFF;
+  inline static const uint32_t SandboxMemorySize = 0xFFF;
   inline static const uintptr_t SandboxMemoryBaseMask =
     ~(static_cast<uintptr_t>(SandboxMemorySize));
   uintptr_t UnalignedSandboxMemory;
