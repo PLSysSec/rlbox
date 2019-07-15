@@ -1,21 +1,8 @@
-#include <cstdint>
-
 #include "test_include.hpp"
 #include "test_tainted_structs.hpp"
 
 using rlbox::tainted;
 using rlbox::tainted_volatile;
-
-// NOLINTNEXTLINE
-TEST_CASE("RLBox trait types do not introduce vtables", "[tainted_trait]")
-{
-  REQUIRE(sizeof(rlbox::sandbox_wrapper_base) < sizeof(uintptr_t)); // NOLINT
-  REQUIRE(sizeof(rlbox::sandbox_wrapper_base_of<int>) <
-          sizeof(uintptr_t));                                         // NOLINT
-  REQUIRE(sizeof(rlbox::tainted_base<int, int>) < sizeof(uintptr_t)); // NOLINT
-  REQUIRE(sizeof(rlbox::tainted_base_impl<tainted, int, int>) <
-          sizeof(uintptr_t)); // NOLINT
-}
 
 template<typename T>
 using T_Convert =
@@ -24,7 +11,8 @@ using T_Convert =
 // NOLINTNEXTLINE
 TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
 {
-
+  tainted<testStruct, TestSandbox> a{};
+  UNUSED(a);
   REQUIRE(sizeof(tainted<long long, TestSandbox>) ==
           sizeof(long long));                                    // NOLINT
   REQUIRE(sizeof(tainted<long, TestSandbox>) == sizeof(long));   // NOLINT

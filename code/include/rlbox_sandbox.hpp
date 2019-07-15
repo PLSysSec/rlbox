@@ -12,6 +12,7 @@
 #include "rlbox_helpers.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_typetraits.hpp"
+#include "rlbox_wrappertraits.hpp"
 
 namespace rlbox {
 
@@ -46,7 +47,7 @@ private:
   {
     using T_NoRef = std::remove_reference_t<T>;
 
-    if_constexpr_named(cond1, std::is_base_of_v<sandbox_wrapper_base, T_NoRef>)
+    if_constexpr_named(cond1, detail::rlbox_is_wrapper_v<T_NoRef>)
     {
       return param.UNSAFE_Sandboxed();
     }
@@ -313,8 +314,7 @@ public:
         "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
-    else if_constexpr_named(
-      cond2, !(std::is_base_of_v<sandbox_wrapper_base, T_Args> && ...))
+    else if_constexpr_named(cond2, !(detail::rlbox_is_wrapper_v<T_Args> && ...))
     {
       rlbox_detail_static_fail_because(
         cond2,
@@ -325,9 +325,8 @@ public:
         "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
-    else if_constexpr_named(cond3,
-                            !(std::is_void_v<T_Ret> ||
-                              std::is_base_of_v<sandbox_wrapper_base, T_Ret>))
+    else if_constexpr_named(
+      cond3, !(std::is_void_v<T_Ret> || detail::rlbox_is_wrapper_v<T_Ret>))
     {
       rlbox_detail_static_fail_because(
         cond3,

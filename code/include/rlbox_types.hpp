@@ -4,11 +4,6 @@
 
 namespace rlbox {
 
-template<template<typename, typename> typename T_Wrap,
-         typename T,
-         typename T_Sbx>
-class tainted_base_impl;
-
 template<typename T, typename T_Sbx>
 class tainted;
 
@@ -18,25 +13,8 @@ class tainted_volatile;
 template<typename T_Sbx>
 class RLBoxSandbox;
 
-/* Trait types */
-
-class sandbox_wrapper_base
-{};
-
-template<typename T>
-class sandbox_wrapper_base_of
-{};
-
 template<typename T, typename T_Sbx>
-class tainted_base
-  : public sandbox_wrapper_base
-  , public sandbox_wrapper_base_of<T>
-{};
-
-class tainted_marker
-{};
-class tainted_volatile_marker
-{};
+class sandbox_callback;
 
 // Use a custom enum for returns as boolean returns are a bad idea
 // int returns are automatically cast to a boolean

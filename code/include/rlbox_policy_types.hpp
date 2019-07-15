@@ -34,8 +34,6 @@ namespace callback_detail {
 
 template<typename T, typename T_Sbx>
 class sandbox_callback
-  : public sandbox_wrapper_base
-  , public sandbox_wrapper_base_of<T>
 {
 private:
   T_Sbx* sandbox;

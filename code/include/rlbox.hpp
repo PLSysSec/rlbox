@@ -15,6 +15,7 @@
 #include "rlbox_types.hpp"
 #include "rlbox_typetraits.hpp"
 #include "rlbox_unwrap.hpp"
+#include "rlbox_wrappertraits.hpp"
 
 namespace rlbox {
 
@@ -22,8 +23,6 @@ template<template<typename, typename> typename T_Wrap,
          typename T,
          typename T_Sbx>
 class tainted_base_impl
-  : public sandbox_wrapper_base
-  , public sandbox_wrapper_base_of<T>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY
@@ -327,7 +326,6 @@ public:
 template<typename T, typename T_Sbx>
 class tainted
   : public tainted_base_impl<tainted, T, T_Sbx>
-  , public tainted_marker
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY
@@ -426,8 +424,7 @@ public:
   // and structs
   template<typename T_Arg,
            RLBOX_ENABLE_IF(
-             !std::is_base_of_v<tainted_base<T, T_Sbx>,
-                                std::remove_reference_t<T_Arg>> &&
+             !detail::rlbox_is_wrapper_v<std::remove_reference_t<T_Arg>> &&
              detail::is_fundamental_or_enum_v<T> &&
              detail::is_fundamental_or_enum_v<std::remove_reference_t<T_Arg>>)>
   tainted(T_Arg&& arg)
@@ -597,7 +594,6 @@ public:
 template<typename T, typename T_Sbx>
 class tainted_volatile
   : public tainted_base_impl<tainted_volatile, T, T_Sbx>
-  , public tainted_volatile_marker
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY
@@ -780,7 +776,7 @@ public:
       // represented as integer
       data = 0;
     }
-    else if_constexpr_named(cond2, std::is_base_of_v<tainted_marker, T_Rhs>)
+    else if_constexpr_named(cond2, detail::rlbox_is_tainted_v<T_Rhs>)
     {
       // Need to construct an example_unsandboxed_ptr for pointers or arrays of
       // pointers. Since tainted_volatile is the type of data in sandbox memory,
@@ -794,8 +790,7 @@ public:
         val.get_raw_value_ref(),
         example_unsandboxed_ptr);
     }
-    else if_constexpr_named(cond3,
-                            std::is_base_of_v<tainted_volatile_marker, T_Rhs>)
+    else if_constexpr_named(cond3, detail::rlbox_is_tainted_volatile_v<T_Rhs>)
     {
       detail::convert_type_non_class<T_Sbx,
                                      detail::adjust_type_direction::NO_CHANGE>(

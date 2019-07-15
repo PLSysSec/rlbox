@@ -5,8 +5,6 @@
 #include <array>
 #include <type_traits>
 
-#include "rlbox_types.hpp"
-
 namespace rlbox::detail {
 
 #define RLBOX_ENABLE_IF(...) std::enable_if_t<__VA_ARGS__>* = nullptr
@@ -163,63 +161,6 @@ namespace all_extents_same_detail {
 template<typename T1, typename T2>
 constexpr bool all_extents_same =
   all_extents_same_detail::all_extents_same_helper<T1, T2>::value;
-
-namespace detail_rlbox_remove_wrapper {
-
-  template<class TData>
-  struct unwrapper
-  {
-    using type = TData;
-  };
-
-  template<typename T>
-  unwrapper<T> unwrap_helper(sandbox_wrapper_base_of<T>);
-
-  template<typename T, typename T_Enable = void>
-  struct rlbox_remove_wrapper_helper;
-
-  template<typename T>
-  struct rlbox_remove_wrapper_helper<
-    T,
-    std::enable_if_t<std::is_base_of_v<sandbox_wrapper_base, T>>>
-  {
-    using ret = decltype(unwrap_helper(std::declval<T>()));
-    using type = typename ret::type;
-  };
-
-  template<typename T>
-  struct rlbox_remove_wrapper_helper<
-    T,
-    std::enable_if_t<!std::is_base_of_v<sandbox_wrapper_base, T>>>
-  {
-    using type = T;
-  };
-}
-
-template<typename T>
-using rlbox_remove_wrapper_t =
-  typename detail_rlbox_remove_wrapper::rlbox_remove_wrapper_helper<T>::type;
-
-// https://stackoverflow.com/questions/34974844/check-if-a-type-is-from-a-particular-namespace
-namespace detail_is_member_of_rlbox_detail {
-  template<typename T, typename = void>
-  struct is_member_of_rlbox_detail_helper : std::false_type
-  {};
-
-  template<typename T>
-  struct is_member_of_rlbox_detail_helper<
-    T,
-    decltype(struct_is_member_of_rlbox_detail(std::declval<T>()))>
-    : std::true_type
-  {};
-}
-
-template<typename T>
-void struct_is_member_of_rlbox_detail(T&&);
-
-template<typename T>
-constexpr auto is_member_of_rlbox_detail =
-  detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper<T>::value;
 
 // remove all pointers/extent types
 namespace remove_all_pointers_detail {
