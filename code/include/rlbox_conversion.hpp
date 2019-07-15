@@ -8,8 +8,8 @@
 #include <type_traits>
 
 #include "rlbox_helpers.hpp"
-#include "rlbox_types.hpp"
 #include "rlbox_type_traits.hpp"
+#include "rlbox_types.hpp"
 
 namespace rlbox::detail {
 

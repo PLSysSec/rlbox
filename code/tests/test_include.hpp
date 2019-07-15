@@ -20,7 +20,7 @@
 #define REQUIRE_COMPILE_ERR REQUIRE_THROWS
 #define REQUIRE_NO_COMPILE_ERR REQUIRE_NOTHROW
 
-#define UNUSED(...) (void) __VA_ARGS__
+#define UNUSED(...) (void)__VA_ARGS__
 
 // The point here is to use the C types as is, so turn off the links
 using CallbackType = int (*)(unsigned, const char*, unsigned[1]); // NOLINT

@@ -12,8 +12,8 @@
 #include "rlbox_sandbox.hpp"
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
-#include "rlbox_types.hpp"
 #include "rlbox_type_traits.hpp"
+#include "rlbox_types.hpp"
 #include "rlbox_unwrap.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -324,8 +324,7 @@ public:
 };
 
 template<typename T, typename T_Sbx>
-class tainted
-  : public tainted_base_impl<tainted, T, T_Sbx>
+class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY
@@ -592,8 +591,7 @@ public:
 };
 
 template<typename T, typename T_Sbx>
-class tainted_volatile
-  : public tainted_base_impl<tainted_volatile, T, T_Sbx>
+class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY

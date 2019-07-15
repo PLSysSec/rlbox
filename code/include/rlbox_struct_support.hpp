@@ -99,6 +99,18 @@ using convert_to_sandbox_equivalent_t =
       return *ret_ptr;                                                         \
     }                                                                          \
                                                                                \
+    inline std::remove_cv_t<T> get_raw_value() noexcept                        \
+    {                                                                          \
+      rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T>);       \
+    }                                                                          \
+                                                                               \
+    inline std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>                          \
+    get_raw_sandbox_value() noexcept                                           \
+    {                                                                          \
+      rlbox_detail_forward_to_const(                                           \
+        get_raw_sandbox_value, std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>);    \
+    }                                                                          \
+                                                                               \
     tainted_volatile() = default;                                              \
     tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;           \
                                                                                \
@@ -114,6 +126,11 @@ using convert_to_sandbox_equivalent_t =
       tainted<T*, T_Sbx> ret(ref_cast);                                        \
       return ret;                                                              \
     }                                                                          \
+                                                                               \
+    inline auto UNSAFE_Unverified() { return get_raw_value(); }                \
+    inline auto UNSAFE_Sandboxed() { return get_raw_sandbox_value(); }         \
+    inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
     /* Can't define this yet due, to mutually dependent definition between     \
     tainted and tainted_volatile for structs */                                \
@@ -152,6 +169,18 @@ using convert_to_sandbox_equivalent_t =
         return lhs;                                                            \
     }                                                                          \
                                                                                \
+    inline std::remove_cv_t<T> get_raw_value() noexcept                        \
+    {                                                                          \
+      rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T>);       \
+    }                                                                          \
+                                                                               \
+    inline std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>                          \
+    get_raw_sandbox_value() noexcept                                           \
+    {                                                                          \
+      rlbox_detail_forward_to_const(                                           \
+        get_raw_sandbox_value, std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>);    \
+    }                                                                          \
+                                                                               \
   public:                                                                      \
     sandbox_fields_reflection_##libId##_class_##T(helper_create_tainted_field, \
                                                   helper_no_op)                \
@@ -170,6 +199,11 @@ using convert_to_sandbox_equivalent_t =
       sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
     }                                                                          \
+                                                                               \
+    inline auto UNSAFE_Unverified() { return get_raw_value(); }                \
+    inline auto UNSAFE_Sandboxed() { return get_raw_sandbox_value(); }         \
+    inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
   };                                                                           \
                                                                                \
   /* Had to delay the definition due, to mutually dependence between           \
