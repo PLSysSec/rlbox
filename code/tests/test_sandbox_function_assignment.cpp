@@ -5,7 +5,7 @@
 using rlbox::tainted;
 using RL = rlbox::RLBoxSandbox<TestSandbox>;
 
-int test_fn(int a)
+static int test_fn(int a)
 {
   return a;
 }

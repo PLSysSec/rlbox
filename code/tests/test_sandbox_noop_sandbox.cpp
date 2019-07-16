@@ -8,12 +8,12 @@ using rlbox::tainted;
 using RL = rlbox::RLBoxSandbox<rlbox_noop_sandbox>;
 
 int GlobalVal = 0;
-void test_func_void(int param)
+static void test_func_void(int param)
 {
   GlobalVal = param;
 }
 
-int test_func_int(int param)
+static int test_func_int(int param)
 {
   return param;
 }
@@ -39,14 +39,14 @@ TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
 
 using T_Func_int_int = int (*)(int);
 
-tainted<int, rlbox_noop_sandbox> test_callback(
+static tainted<int, rlbox_noop_sandbox> test_callback(
   RL&, // NOLINT
   tainted<int, rlbox_noop_sandbox> val)
 {
   return val + 1;
 }
 
-int test_invoker(T_Func_int_int cb, int val)
+static int test_invoker(T_Func_int_int cb, int val)
 {
   return (cb(val)) + 1;
 }

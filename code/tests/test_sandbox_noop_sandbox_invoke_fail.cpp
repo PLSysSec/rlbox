@@ -5,7 +5,7 @@
 
 using RL = rlbox::RLBoxSandbox<rlbox::rlbox_noop_sandbox>;
 
-void test_func() {}
+static void test_func() {}
 
 // This test has to be in a separate file as it is testing the missing #define
 // before the #include "rlbox_noop_sandbox.hpp"
@@ -18,6 +18,7 @@ TEST_CASE("sandbox_lookup_symbol on no_op sandbox without #define causes error",
 
   // Error due to the missing #define described above
   REQUIRE_COMPILE_ERR(sandbox_lookup_symbol(sandbox, test_func)); // NOLINT
+  UNUSED(test_func);
 
   sandbox.destroy_sandbox();
 }
