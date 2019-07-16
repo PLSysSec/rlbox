@@ -8,46 +8,28 @@
 
 namespace rlbox::detail {
 
-namespace detail_rlbox_is_tainted {
+#define rlbox_generate_wrapper_check(name)                                     \
+  namespace detail_rlbox_is_##name                                             \
+  {                                                                            \
+                                                                               \
+    template<typename T, typename T_Sbx>                                       \
+    std::true_type helper(name<T, T_Sbx>*);                                    \
+                                                                               \
+    template<typename T>                                                       \
+    std::false_type helper(T*);                                                \
+  }                                                                            \
+                                                                               \
+  template<typename T>                                                         \
+  constexpr bool rlbox_is_##name##_v =                                         \
+    decltype(detail_rlbox_is_##name::helper(                                   \
+      std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;
 
-  template<typename T, typename T_Sbx>
-  std::true_type helper(tainted<T, T_Sbx>*);
+rlbox_generate_wrapper_check(tainted)
+rlbox_generate_wrapper_check(tainted_volatile)
+rlbox_generate_wrapper_check(sandbox_callback)
+rlbox_generate_wrapper_check(sandbox_function)
 
-  template<typename T>
-  std::false_type helper(T*);
-}
-
-template<typename T>
-constexpr bool rlbox_is_tainted_v = decltype(detail_rlbox_is_tainted::helper(
-  std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;
-
-namespace detail_rlbox_is_tainted_volatile {
-
-  template<typename T, typename T_Sbx>
-  std::true_type helper(tainted_volatile<T, T_Sbx>*);
-
-  template<typename T>
-  std::false_type helper(T*);
-}
-
-template<typename T>
-constexpr bool rlbox_is_tainted_volatile_v =
-  decltype(detail_rlbox_is_tainted_volatile::helper(
-    std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;
-
-namespace detail_rlbox_is_sandbox_callback {
-
-  template<typename T, typename T_Sbx>
-  std::true_type helper(sandbox_callback<T, T_Sbx>*);
-
-  template<typename T>
-  std::false_type helper(T*);
-}
-
-template<typename T>
-constexpr bool rlbox_is_sandbox_callback_v =
-  decltype(detail_rlbox_is_sandbox_callback::helper(
-    std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;
+#undef rlbox_generate_wrapper_check
 
 template<typename T>
 constexpr bool rlbox_is_tainted_or_vol_v =
@@ -56,7 +38,7 @@ constexpr bool rlbox_is_tainted_or_vol_v =
 template<typename T>
 constexpr bool rlbox_is_wrapper_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T> ||
-  rlbox_is_sandbox_callback_v<T>;
+  rlbox_is_sandbox_callback_v<T> || rlbox_is_sandbox_function_v<T>;
 
 namespace detail_rlbox_remove_wrapper {
 
@@ -74,6 +56,9 @@ namespace detail_rlbox_remove_wrapper {
 
   template<typename T, typename T_Sbx>
   unwrapper<T> helper(sandbox_callback<T, T_Sbx>*);
+
+  template<typename T, typename T_Sbx>
+  unwrapper<T> helper(sandbox_function<T, T_Sbx>*);
 
   template<typename T>
   unwrapper<T> helper(T*);

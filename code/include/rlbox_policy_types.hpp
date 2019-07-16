@@ -11,6 +11,28 @@
 
 namespace rlbox {
 
+template<typename T, typename T_Sbx>
+class sandbox_function
+{
+  KEEP_CLASSES_FRIENDLY
+private:
+  using T_Func = detail::convert_to_sandbox_equivalent_t<T, T_Sbx>;
+  T_Func data;
+
+  // Keep constructor private as only RLBoxSandbox should be able to create this
+  // object
+  sandbox_function(T_Func p_data)
+    : data(p_data)
+  {}
+
+  inline T_Func get_raw_sandbox_value() const noexcept { return data; }
+
+  inline T_Func get_raw_sandbox_value() noexcept { return data; }
+
+public:
+  sandbox_function(const sandbox_function<T, T_Sbx>& p) = default;
+};
+
 namespace callback_detail {
 
   // Compute the expected type of the callback
@@ -105,7 +127,8 @@ private:
     return callback_trampoline;
   }
 
-public:
+  // Keep constructor private as only RLBoxSandbox should be able to create this
+  // object
   sandbox_callback(RLBoxSandbox<T_Sbx>* p_sandbox,
                    T_Callback p_callback,
                    T_Interceptor p_callback_interceptor,
@@ -121,6 +144,7 @@ public:
                           "Unexpected null sandbox when creating a callback");
   }
 
+public:
   sandbox_callback(sandbox_callback&& other)
   {
     move_obj(std::forward<sandbox_callback>(other));

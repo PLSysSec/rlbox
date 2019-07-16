@@ -150,7 +150,10 @@ But C++ doesn't seem to allow the above
   friend class RLBoxSandbox;                                                   \
                                                                                \
   template<typename U1, typename U2>                                           \
-  friend class sandbox_callback;
+  friend class sandbox_callback;                                               \
+                                                                               \
+  template<typename U1, typename U2>                                           \
+  friend class sandbox_function;
 
 }
 

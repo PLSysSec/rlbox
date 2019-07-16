@@ -398,6 +398,7 @@ private:
 public:
   tainted() = default;
   tainted(const tainted<T, T_Sbx>& p) = default;
+
   tainted(const tainted_volatile<T, T_Sbx>& p)
   {
     // Need to construct an example_unsandboxed_ptr for pointers or arrays of
@@ -411,6 +412,7 @@ public:
       detail::adjust_type_direction::TO_APPLICATION>(
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
   }
+
   tainted(
     const sandbox_callback<
       detail::function_ptr_t<T> // Need to ensure we never generate code that
@@ -424,13 +426,35 @@ public:
       "types (i.e. types that live in application memory).\n"
       "If you still want to do this, consider changing your code to store the "
       "value in sandbox memory as follows. Convert\n\n"
-      "sandbox_callbback<T_Func, Sbx> cb = ...;\n"
+      "sandbox_callback<T_Func, Sbx> cb = ...;\n"
       "tainted<T_Func, Sbx> foo = cb;\n\n"
       "to\n\n"
       "tainted<T_Func*, Sbx> foo_ptr = sandbox.malloc_in_sandbox<T_Func*>();\n"
       "*foo_ptr = cb;\n\n"
       "This would keep the assignment in sandbox memory");
   }
+
+  tainted(
+    const sandbox_function<
+      detail::function_ptr_t<T> // Need to ensure we never generate code that
+                                // creates a sandbox_function of a non function
+      ,
+      T_Sbx>&)
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T>,
+      "RLBox does not support assigning sandbox_function values to tainted "
+      "types (i.e. types that live in application memory).\n"
+      "If you still want to do this, consider changing your code to store the "
+      "value in sandbox memory as follows. Convert\n\n"
+      "sandbox_function<T_Func, Sbx> cb = ...;\n"
+      "tainted<T_Func, Sbx> foo = cb;\n\n"
+      "to\n\n"
+      "tainted<T_Func*, Sbx> foo_ptr = sandbox.malloc_in_sandbox<T_Func*>();\n"
+      "*foo_ptr = cb;\n\n"
+      "This would keep the assignment in sandbox memory");
+  }
+
   tainted(const std::nullptr_t& arg)
     : data(arg)
   {
@@ -814,7 +838,9 @@ public:
                                      detail::adjust_type_direction::NO_CHANGE>(
         get_sandbox_value_ref(), val.get_sandbox_value_ref());
     }
-    else if_constexpr_named(cond4, detail::rlbox_is_sandbox_callback_v<T_Rhs>)
+    else if_constexpr_named(cond4,
+                            detail::rlbox_is_sandbox_callback_v<T_Rhs> ||
+                              detail::rlbox_is_sandbox_function_v<T_Rhs>)
     {
       using T_RhsFunc = detail::rlbox_remove_wrapper_t<T_Rhs>;
 
@@ -856,9 +882,13 @@ public:
         "\n "
         "Instead, if you want to pass in a pointer, do one of the following\n "
         "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
-        "2) For function pointers, register with sandbox_callback, and pass in "
-        "the registered value\n "
-        "3) For raw pointers, use assign_pointer which performs required "
+        "2) For pointers that point to functions in the application, register "
+        "with sandbox.register_callback(\"foo\"), and pass in the registered "
+        "value\n "
+        "3) For pointers that point to functions in the sandbox, get the "
+        "address with sandbox_function_address(sandbox, foo), and pass in the "
+        "address\n "
+        "4) For raw pointers, use assign_pointer which performs required "
         "safety checks\n ");
     }
     else

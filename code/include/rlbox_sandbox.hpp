@@ -449,13 +449,24 @@ public:
       return ret;
     }
   }
+
+  // this is an internal function, but as it is invoked from macros it needs to
+  // be public
+  template<typename T>
+  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function(
+    void* func_ptr)
+  {
+    auto internal_func_ptr = get_sandboxed_pointer<T*>(func_ptr);
+    return sandbox_function<T*, T_Sbx>(internal_func_ptr);
+  }
 };
 
 #if defined(__clang__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #elif defined(__GNUC__) || defined(__GNUG__)
-// Can't turn off the variadic macro warning emitted from -pedantic
+// Can't turn off the variadic macro warning emitted from -pedantic so use a
+// hack to stop GCC emitting warnings for the reminder of this file
 #  pragma GCC system_header
 #elif defined(_MSC_VER)
 // Doesn't seem to emit the warning
@@ -477,6 +488,10 @@ public:
 #define sandbox_invoke(sandbox, func_name, ...)                                \
   sandbox.invoke_with_func_ptr<decltype(func_name)>(                           \
     sandbox_lookup_symbol(sandbox, func_name), ##__VA_ARGS__)
+
+#define sandbox_function_address(sandbox, func_name)                           \
+  sandbox.INTERNAL_get_sandbox_function<decltype(func_name)>(                  \
+    sandbox_lookup_symbol(sandbox, func_name))
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop
