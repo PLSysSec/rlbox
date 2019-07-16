@@ -250,7 +250,7 @@ public:
       // Silent failure is better here as RAII types may try to invoke this
       // after destruction
       if (!sandbox_created) {
-        return tainted<T*, T_Sbx>(nullptr);
+        return tainted<T*, T_Sbx>::internal_factory(nullptr);
       }
     }
 
@@ -264,7 +264,7 @@ public:
       is_in_same_sandbox(ptr, reinterpret_cast<void*>(ptr_end)),
       "Malloc returned a pointer whose range goes beyond sandbox memory");
     auto cast_ptr = reinterpret_cast<T*>(ptr);
-    return tainted<T*, T_Sbx>(cast_ptr);
+    return tainted<T*, T_Sbx>::internal_factory(cast_ptr);
   }
 
   template<typename T>

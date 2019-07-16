@@ -72,7 +72,7 @@ static tainted<int, TestSandbox> good_callback_3(RL&) // NOLINT
 }
 
 static tainted<int, TestSandbox> good_callback_4(
-  RL&,                              // NOLINT
+  RL&,                       // NOLINT
   tainted<int, TestSandbox>) // NOLINT
 {
   const int test_val = 5;

@@ -41,7 +41,7 @@ inline tainted<T_Lhs, T_Sbx> sandbox_reinterpret_cast(
 
   tainted<T_Rhs, T_Sbx> taintedVal = rhs;
   auto raw = reinterpret_cast<T_Lhs>(taintedVal.UNSAFE_Unverified());
-  tainted<T_Lhs, T_Sbx> ret(raw);
+  auto ret = tainted<T_Lhs, T_Sbx>::internal_factory(raw);
   return ret;
 }
 
@@ -58,7 +58,7 @@ inline tainted<T_Lhs, T_Sbx> sandbox_const_cast(
 
   tainted<T_Rhs, T_Sbx> taintedVal = rhs;
   auto raw = const_cast<T_Lhs>(taintedVal.UNSAFE_Unverified());
-  tainted<T_Lhs, T_Sbx> ret(raw);
+  auto ret = tainted<T_Lhs, T_Sbx>::internal_factory(raw);
   return ret;
 }
 

@@ -72,12 +72,12 @@ public:
         no_overflow,                                                           \
         "Pointer arithmetic overflowed a pointer beyond sandbox memory");      \
                                                                                \
-      return tainted<T, T_Sbx>(reinterpret_cast<T>(target));                   \
+      return tainted<T, T_Sbx>::internal_factory(reinterpret_cast<T>(target)); \
     } else {                                                                   \
       auto raw = impl().get_raw_value();                                       \
       auto ret = raw opSymbol raw_rhs;                                         \
       using T_Ret = decltype(ret);                                             \
-      return tainted<T_Ret, T_Sbx>(ret);                                       \
+      return tainted<T_Ret, T_Sbx>::internal_factory(ret);                     \
     }                                                                          \
   }
 
@@ -101,7 +101,7 @@ public:
                                                                                \
     auto ret = raw opSymbol raw_rhs;                                           \
     using T_Ret = decltype(ret);                                               \
-    return tainted<T_Ret, T_Sbx>(ret);                                         \
+    return tainted<T_Ret, T_Sbx>::internal_factory(ret);                       \
   }
 
   BinaryOp(*)
@@ -124,7 +124,7 @@ public:
     auto raw = impl().get_raw_value();                                         \
     auto ret = opSymbol raw;                                                   \
     using T_Ret = decltype(ret);                                               \
-    return tainted<T_Ret, T_Sbx>(ret);                                         \
+    return tainted<T_Ret, T_Sbx>::internal_factory(ret);                       \
   }
 
   UnaryOp(-)
@@ -155,8 +155,8 @@ public:
       no_overflow,
       "Pointer arithmetic overflowed a pointer beyond sandbox memory");
 
-    auto target_wrap =
-      tainted<const T, T_Sbx>(reinterpret_cast<const T>(target));
+    auto target_wrap = tainted<const T, T_Sbx>::internal_factory(
+      reinterpret_cast<const T>(target));
     return *target_wrap;
   }
 
@@ -389,10 +389,22 @@ private:
 
   // Initializing with a pointer is dangerous and permitted only internally
   template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>
-  tainted(T2 val)
+  tainted(T2 val, const void* /* internal_tag */)
     : data(val)
   {
+    // Sanity check
     static_assert(std::is_pointer_v<T>);
+  }
+
+  template<typename T_Rhs>
+  static inline tainted<T, T_Sbx> internal_factory(T_Rhs&& rhs)
+  {
+    if constexpr (std::is_pointer_v<std::remove_reference_t<T_Rhs>>) {
+      const void* internal_tag = nullptr;
+      return tainted(std::forward<T_Rhs>(rhs), internal_tag);
+    } else {
+      return tainted(std::forward<T_Rhs>(rhs));
+    }
   }
 
 public:
@@ -411,6 +423,31 @@ public:
       T_Sbx,
       detail::adjust_type_direction::TO_APPLICATION>(
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
+  }
+
+  // Initializing with a pointer is dangerous and permitted only internally
+  template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>
+  tainted(T2 val)
+    : data(val)
+  {
+    rlbox_detail_static_fail_because(
+      std::is_pointer_v<T2>,
+      "Assignment of pointers is not safe as it could\n "
+      "1) Leak pointers from the appliction to the sandbox which may break "
+      "ASLR\n "
+      "2) Pass inaccessible pointers to the sandbox leading to crash\n "
+      "3) Break sandboxes that require pointers to be swizzled first\n "
+      "\n "
+      "Instead, if you want to pass in a pointer, do one of the following\n "
+      "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
+      "2) For pointers that point to functions in the application, register "
+      "with sandbox.register_callback(\"foo\"), and pass in the registered "
+      "value\n "
+      "3) For pointers that point to functions in the sandbox, get the "
+      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address\n "
+      "4) For raw pointers, use assign_raw_pointer which performs required "
+      "safety checks\n ");
   }
 
   tainted(
@@ -473,6 +510,33 @@ public:
   tainted(T_Arg&& arg)
     : data(std::forward<T_Arg>(arg))
   {}
+
+  template<typename T_Rhs>
+  void assign_raw_pointer(RLBoxSandbox<T_Sbx> sandbox, T_Rhs val)
+  {
+    static_assert(std::is_pointer_v<T_Rhs>);
+    // Maybe a function pointer, so we need to cast
+    const void* cast_val = reinterpret_cast<void*>(val);
+    bool safe = sandbox.is_pointer_in_sandbox_memory(cast_val);
+    detail::dynamic_check(
+      safe,
+      "Tried to assign a pointer that is not in the sandbox.\n "
+      "This is not safe as it could\n "
+      "1) Leak pointers from the appliction to the sandbox which may break "
+      "ASLR\n "
+      "2) Pass inaccessible pointers to the sandbox leading to crash\n "
+      "3) Break sandboxes that require pointers to be swizzled first\n "
+      "\n "
+      "Instead, if you want to pass in a pointer, do one of the following\n "
+      "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
+      "2) For pointers that point to functions in the application, register "
+      "with sandbox.register_callback(\"foo\"), and pass in the registered "
+      "value\n "
+      "3) For pointers that point to functions in the sandbox, get the "
+      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address\n ");
+    data = val;
+  }
 
 private:
   using T_OpDerefRet = detail::dereference_result_t<T>;
@@ -744,7 +808,7 @@ public:
     auto ref =
       detail::remove_volatile_from_ptr_cast(&this->get_sandbox_value_ref());
     auto ref_cast = reinterpret_cast<const T*>(ref);
-    tainted<const T*, T_Sbx> ret(ref_cast);
+    auto ret = tainted<const T*, T_Sbx>::internal_factory(ref_cast);
     return ret;
   }
 
@@ -876,7 +940,8 @@ public:
       rlbox_detail_static_fail_because(
         cond6,
         "Assignment of pointers is not safe as it could\n "
-        "1) Leak pointers from the appliction to the sandbox\n "
+        "1) Leak pointers from the appliction to the sandbox which may break "
+        "ASLR\n "
         "2) Pass inaccessible pointers to the sandbox leading to crash\n "
         "3) Break sandboxes that require pointers to be swizzled first\n "
         "\n "
@@ -888,7 +953,7 @@ public:
         "3) For pointers that point to functions in the sandbox, get the "
         "address with sandbox_function_address(sandbox, foo), and pass in the "
         "address\n "
-        "4) For raw pointers, use assign_pointer which performs required "
+        "4) For raw pointers, use assign_raw_pointer which performs required "
         "safety checks\n ");
     }
     else
@@ -900,6 +965,34 @@ public:
     }
 
     return *this;
+  }
+
+  template<typename T_Rhs>
+  void assign_raw_pointer(RLBoxSandbox<T_Sbx> sandbox, T_Rhs val)
+  {
+    static_assert(std::is_pointer_v<T_Rhs>);
+    // Maybe a function pointer, so we need to cast
+    const void* cast_val = reinterpret_cast<void*>(val);
+    bool safe = sandbox.is_pointer_in_sandbox_memory(cast_val);
+    detail::dynamic_check(
+      safe,
+      "Tried to assign a pointer that is not in the sandbox.\n "
+      "This is not safe as it could\n "
+      "1) Leak pointers from the appliction to the sandbox which may break "
+      "ASLR\n "
+      "2) Pass inaccessible pointers to the sandbox leading to crash\n "
+      "3) Break sandboxes that require pointers to be swizzled first\n "
+      "\n "
+      "Instead, if you want to pass in a pointer, do one of the following\n "
+      "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
+      "2) For pointers that point to functions in the application, register "
+      "with sandbox.register_callback(\"foo\"), and pass in the registered "
+      "value\n "
+      "3) For pointers that point to functions in the sandbox, get the "
+      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address\n ");
+    get_sandbox_value_ref() =
+      sandbox.template get_sandboxed_pointer<T_Rhs>(cast_val);
   }
 
   // ==, != and ! are not supported for tainted_volatile, however, we implement

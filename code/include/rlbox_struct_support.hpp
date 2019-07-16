@@ -123,7 +123,7 @@ using convert_to_sandbox_equivalent_t =
       operator&() noexcept                                                     \
     {                                                                          \
       auto ref_cast = reinterpret_cast<T*>(&get_sandbox_value_ref());          \
-      tainted<T*, T_Sbx> ret(ref_cast);                                        \
+      auto ret = tainted<T*, T_Sbx>::internal_factory(ref_cast);               \
       return ret;                                                              \
     }                                                                          \
                                                                                \
