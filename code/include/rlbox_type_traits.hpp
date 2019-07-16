@@ -78,6 +78,13 @@ template<typename T>
 using value_type_t =
   std::conditional_t<std::is_array_v<T>, c_to_std_array_t<T>, T>;
 
+template<typename T>
+using function_ptr_t =
+  std::conditional_t<std::is_pointer_v<T> &&
+                       std::is_function_v<std::remove_pointer_t<T>>,
+                     T,
+                     int (*)(int)>;
+
 namespace is_c_or_std_array_detail {
   template<typename T, typename T_Enable = void>
   struct is_c_or_std_array_helper;

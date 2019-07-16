@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace rlbox {
@@ -110,6 +111,22 @@ namespace detail {
     compile_time_for_detail::compile_time_for_helper(
       func, std::make_index_sequence<N>());
   }
+
+  template<typename T, typename T2>
+  inline auto return_first_result(T first_task, T2 second_task)
+  {
+    using T_Result = std::invoke_result_t<T>;
+
+    if constexpr (std::is_void_v<T_Result>) {
+      first_task();
+      second_task();
+    } else {
+      auto val = first_task();
+      second_task();
+      return val;
+    }
+  }
+
 /*
 Make sure classes can access the private memmbers of tainted<T1> and
 tainted_volatile. Ideally, this should be
@@ -130,7 +147,10 @@ But C++ doesn't seem to allow the above
   friend class tainted_volatile;                                               \
                                                                                \
   template<typename U1>                                                        \
-  friend class RLBoxSandbox;
+  friend class RLBoxSandbox;                                                   \
+                                                                               \
+  template<typename U1, typename U2>                                           \
+  friend class sandbox_callback;
 
 }
 

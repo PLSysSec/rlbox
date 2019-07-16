@@ -411,6 +411,26 @@ public:
       detail::adjust_type_direction::TO_APPLICATION>(
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
   }
+  tainted(
+    const sandbox_callback<
+      detail::function_ptr_t<T> // Need to ensure we never generate code that
+                                // creates a sandbox_callback of a non function
+      ,
+      T_Sbx>&)
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T>,
+      "RLBox does not support assigning sandbox_callback values to tainted "
+      "types (i.e. types that live in application memory).\n"
+      "If you still want to do this, consider changing your code to store the "
+      "value in sandbox memory as follows. Convert\n\n"
+      "sandbox_callbback<T_Func, Sbx> cb = ...;\n"
+      "tainted<T_Func, Sbx> foo = cb;\n\n"
+      "to\n\n"
+      "tainted<T_Func*, Sbx> foo_ptr = sandbox.malloc_in_sandbox<T_Func*>();\n"
+      "*foo_ptr = cb;\n\n"
+      "This would keep the assignment in sandbox memory");
+  }
   tainted(const std::nullptr_t& arg)
     : data(arg)
   {
@@ -794,18 +814,41 @@ public:
                                      detail::adjust_type_direction::NO_CHANGE>(
         get_sandbox_value_ref(), val.get_sandbox_value_ref());
     }
+    else if_constexpr_named(cond4, detail::rlbox_is_sandbox_callback_v<T_Rhs>)
+    {
+      using T_RhsFunc = detail::rlbox_remove_wrapper_t<T_Rhs>;
+
+      // need to perform some typechecking to ensure we are assigning compatible
+      // function pointer types only
+      if_constexpr_named(subcond1, !std::is_assignable_v<T&, T_RhsFunc>)
+      {
+        rlbox_detail_static_fail_because(
+          subcond1,
+          "Trying to assign function pointer to field of incompatible types");
+      }
+      else
+      {
+        // Need to reinterpret_cast as the representation of the signature of a
+        // callback uses the machine model of the sandbox, while the field uses
+        // that of the application. But we have already checked above that this
+        // is safe.
+        auto func = val.get_raw_sandbox_value();
+        using T_Cast = std::remove_volatile_t<T_ConvertedType>;
+        get_sandbox_value_ref() = reinterpret_cast<T_Cast>(func);
+      }
+    }
     else if_constexpr_named(
-      cond4,
+      cond5,
       detail::is_fundamental_or_enum_v<T> ||
         (std::is_array_v<T> && !std::is_pointer_v<T_Rhs_El>))
     {
       detail::convert_type_fundamental_or_array(get_sandbox_value_ref(), val);
     }
     else if_constexpr_named(
-      cond5, std::is_pointer_v<T_Rhs> || std::is_pointer_v<T_Rhs_El>)
+      cond6, std::is_pointer_v<T_Rhs> || std::is_pointer_v<T_Rhs_El>)
     {
       rlbox_detail_static_fail_because(
-        cond5,
+        cond6,
         "Assignment of pointers is not safe as it could\n "
         "1) Leak pointers from the appliction to the sandbox\n "
         "2) Pass inaccessible pointers to the sandbox leading to crash\n "
@@ -820,7 +863,8 @@ public:
     }
     else
     {
-      auto unknownCase = !(cond1 || cond2 || cond3 || cond4 /* || cond5 */);
+      auto unknownCase =
+        !(cond1 || cond2 || cond3 || cond4 || cond5 /* || cond6 */);
       rlbox_detail_static_fail_because(
         unknownCase, "Assignment of the given type of value is not supported");
     }

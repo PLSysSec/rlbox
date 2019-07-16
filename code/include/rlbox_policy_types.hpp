@@ -35,8 +35,10 @@ namespace callback_detail {
 template<typename T, typename T_Sbx>
 class sandbox_callback
 {
+  KEEP_CLASSES_FRIENDLY
+
 private:
-  T_Sbx* sandbox;
+  RLBoxSandbox<T_Sbx>* sandbox;
 
   using T_Callback =
     decltype(callback_detail::callback_type_helper<T_Sbx>(std::declval<T>()));
@@ -56,27 +58,64 @@ private:
   using T_Trampoline = detail::convert_to_sandbox_equivalent_t<T, T_Sbx>;
   T_Trampoline callback_trampoline;
 
+  // The unique key representing the callback to pass to unregister_callback on
+  // destruction
+  void* key;
+
   inline void move_obj(sandbox_callback&& other)
   {
     sandbox = other.sandbox;
     callback = other.callback;
     callback_interceptor = other.callback_interceptor;
     callback_trampoline = other.callback_trampoline;
+    key = other.key;
     other.sandbox = nullptr;
     other.callback = nullptr;
     other.callback_interceptor = nullptr;
     other.callback_trampoline = 0;
+    other.key = nullptr;
+  }
+
+  template<typename T_Ret, typename... T_Args>
+  inline void unregister_helper(T_Ret (*)(T_Args...))
+  {
+    if (callback != nullptr) {
+      // Don't need to worry about race between unregister and move as
+      // 1) this will not happen in a correctly written program
+      // 2) if this does happen, the worst that can happen is an invocation of a
+      // null function pointer, which causes a crash that cannot be exploited
+      // for RCE
+      sandbox->template unregister_callback<T_Ret, T_Args...>(key);
+      sandbox = nullptr;
+      callback = nullptr;
+      callback_interceptor = nullptr;
+      callback_trampoline = 0;
+      key = nullptr;
+    }
+  }
+
+  inline T_Callback get_raw_value() const noexcept { return callback; }
+  inline T_Trampoline get_raw_sandbox_value() const noexcept
+  {
+    return callback_trampoline;
+  }
+  inline T_Callback get_raw_value() noexcept { return callback; }
+  inline T_Trampoline get_raw_sandbox_value() noexcept
+  {
+    return callback_trampoline;
   }
 
 public:
-  sandbox_callback(T_Sbx* p_sandbox,
+  sandbox_callback(RLBoxSandbox<T_Sbx>* p_sandbox,
                    T_Callback p_callback,
                    T_Interceptor p_callback_interceptor,
-                   T_Trampoline p_callback_trampoline)
+                   T_Trampoline p_callback_trampoline,
+                   void* p_key)
     : sandbox(p_sandbox)
     , callback(p_callback)
     , callback_interceptor(p_callback_interceptor)
     , callback_trampoline(p_callback_trampoline)
+    , key(p_key)
   {
     detail::dynamic_check(sandbox != nullptr,
                           "Unexpected null sandbox when creating a callback");
@@ -95,23 +134,21 @@ public:
     return *this;
   }
 
-  //   void unregister()
-  //   {
-  //     if (callback != nullptr) {
-  //       sandbox->template
-  //       impl_UnregisterCallback<T>(stateObject->actualCallback); delete
-  //       stateObject; this->sandbox = nullptr; this->callback =
-  //       nullptr; this->stateObject = nullptr;
-  //     }
-  //   }
-
-  //   ~sandbox_callback() { unregister(); }
-
-  inline T_Callback UNSAFE_Unverified() const noexcept { return callback; }
-  inline T_Trampoline UNSAFE_Sandboxed() const noexcept
+  void unregister()
   {
-    return callback_trampoline;
+    T dummy = nullptr;
+    unregister_helper(dummy);
   }
+
+  ~sandbox_callback() { unregister(); }
+
+  inline auto UNSAFE_Unverified() const noexcept { return get_raw_value(); }
+  inline auto UNSAFE_Sandboxed() const noexcept
+  {
+    return get_raw_sandbox_value();
+  }
+  inline auto UNSAFE_Unverified() noexcept { return get_raw_value(); }
+  inline auto UNSAFE_Sandboxed() noexcept { return get_raw_sandbox_value(); }
 };
 
 }

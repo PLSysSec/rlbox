@@ -155,4 +155,27 @@ protected:
   }
 
   inline size_t impl_get_total_memory() { return SandboxMemorySize; }
+
+  inline void* impl_get_memory_location()
+  {
+    return reinterpret_cast<void*>(SandboxMemoryBase);
+  }
+
+  template<typename T_Ret, typename... T_Args>
+  inline T_PointerType impl_register_callback(void*, void*)
+  {
+    return 0;
+  }
+
+  static inline std::pair<TestSandbox*, void*>
+  impl_get_executed_callback_sandbox_and_key()
+  {
+    TestSandbox* s = nullptr;
+    void* k = nullptr;
+    return std::make_pair(s, k);
+  }
+
+  template<typename T_Ret, typename... T_Args>
+  inline void impl_unregister_callback(void*)
+  {}
 };

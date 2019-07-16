@@ -2,11 +2,13 @@
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
+#include <algorithm>
 #include <cstdlib>
 #include <map>
 #include <mutex>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
@@ -36,6 +38,18 @@ class RLBoxSandbox : protected T_Sbx
 private:
   std::mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
+
+  std::mutex creation_lock;
+  // This variable tracks of the sandbox has already been created/destroyed.
+  // APIs in this class should be called only when the sandbox is created.
+  // However, it is expensive to check in APIs such as invoke or in the callback
+  // interceptor. Instead we leave it up to the user to ensure these APIs are
+  // never called prior to sandbox construction. We perform checks, where they
+  // would not add too much overhead
+  bool sandbox_created = false;
+
+  std::mutex callback_lock;
+  std::vector<void*> callback_keys;
 
   template<typename T>
   using convert_fn_ptr_to_sandbox_equivalent_t = decltype(
@@ -118,6 +132,28 @@ private:
     }
   }
 
+  template<typename T_Ret, typename... T_Args>
+  inline void unregister_callback(void* key)
+  {
+    {
+      std::lock_guard<std::mutex> lock(creation_lock);
+      // Silent failure is better here as RAII types may try to invoke this
+      // after destruction
+      if (!sandbox_created) {
+        return;
+      }
+    }
+
+    this->template impl_unregister_callback<T_Ret, T_Args...>(key);
+
+    std::lock_guard<std::mutex> lock(callback_lock);
+    auto el_ref = std::find(callback_keys.begin(), callback_keys.end(), key);
+    detail::dynamic_check(
+      el_ref != callback_keys.end(),
+      "Unexpected state. Unregistering a callback that was never registered.");
+    callback_keys.erase(el_ref);
+  }
+
 public:
   /***** Function to adjust for custom machine models *****/
 
@@ -134,10 +170,27 @@ public:
   template<typename... T_Args>
   inline auto create_sandbox(T_Args... args)
   {
-    return this->impl_create_sandbox(std::forward<T_Args>(args)...);
+    detail::return_first_result(
+      [&]() {
+        return this->impl_create_sandbox(std::forward<T_Args>(args)...);
+      },
+      [&]() {
+        std::lock_guard<std::mutex> lock(creation_lock);
+        sandbox_created = true;
+      });
   }
 
-  inline auto destroy_sandbox() { return this->impl_destroy_sandbox(); }
+  inline auto destroy_sandbox()
+  {
+    {
+      std::lock_guard<std::mutex> lock(creation_lock);
+      detail::dynamic_check(sandbox_created,
+                            "destroy_sandbox called without sandbox creation");
+      sandbox_created = false;
+    }
+
+    return this->impl_destroy_sandbox();
+  }
 
   template<typename T>
   inline T* get_unsandboxed_pointer(
@@ -192,6 +245,15 @@ public:
   template<typename T>
   inline tainted<T*, T_Sbx> malloc_in_sandbox(uint32_t count)
   {
+    {
+      std::lock_guard<std::mutex> lock(creation_lock);
+      // Silent failure is better here as RAII types may try to invoke this
+      // after destruction
+      if (!sandbox_created) {
+        return tainted<T*, T_Sbx>(nullptr);
+      }
+    }
+
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
     auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
@@ -208,6 +270,15 @@ public:
   template<typename T>
   inline void free_in_sandbox(tainted<T*, T_Sbx> ptr)
   {
+    {
+      std::lock_guard<std::mutex> lock(creation_lock);
+      // Silent failure is better here as RAII types may try to invoke this
+      // after destruction
+      if (!sandbox_created) {
+        return;
+      }
+    }
+
     this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
   }
 
@@ -343,12 +414,30 @@ public:
     }
     else
     {
+      {
+        std::lock_guard<std::mutex> lock(creation_lock);
+        detail::dynamic_check(
+          sandbox_created, "register_callback called without sandbox creation");
+      }
+      // Need unique key for each callback we register - just use the func addr
+      void* unique_key = reinterpret_cast<void*>(func_ptr);
+
+      // Make sure that the user hasn't previously registered this function...
+      // If they have, we would returning 2 owning types (sandbox_callback) to
+      // the same callback which would be bad
+      {
+        std::lock_guard<std::mutex> lock(callback_lock);
+        bool exists =
+          std::find(callback_keys.begin(), callback_keys.end(), unique_key) !=
+          callback_keys.end();
+        detail::dynamic_check(
+          !exists, "You have previously already registered this callback.");
+        callback_keys.push_back(unique_key);
+      }
+
       auto callback_interceptor =
         sandbox_callback_interceptor<detail::rlbox_remove_wrapper_t<T_Ret>,
                                      detail::rlbox_remove_wrapper_t<T_Args>...>;
-
-      // Need unique key for each callback we register - just use the func addr
-      void* unique_key = reinterpret_cast<void*>(func_ptr);
 
       auto callback_trampoline = this->template impl_register_callback<
         detail::rlbox_remove_wrapper_t<T_Ret>,
@@ -356,7 +445,7 @@ public:
         unique_key, reinterpret_cast<void*>(callback_interceptor));
 
       auto ret = sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx>(
-        this, func_ptr, callback_interceptor, callback_trampoline);
+        this, func_ptr, callback_interceptor, callback_trampoline, unique_key);
       return ret;
     }
   }

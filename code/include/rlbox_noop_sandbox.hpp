@@ -144,10 +144,10 @@ protected:
   {
     std::lock_guard<std::mutex> lock(callback_mutex);
 
-    // need a compile time for loop as we we need I to be a compile time value
-    // this is because we are returning the I'th callback trampoline
     void* chosen_trampoline = nullptr;
 
+    // need a compile time for loop as we we need I to be a compile time value
+    // this is because we are returning the I'th callback trampoline
     detail::compile_time_for<MAX_CALLBACKS>([&](auto I) {
       if (!chosen_trampoline && callback_unique_keys[I.value] == nullptr) {
         callback_unique_keys[I.value] = key;
@@ -169,21 +169,18 @@ protected:
     return std::make_pair(sandbox, key);
   }
 
-  // template<typename TFunc>
-  // inline void impl_UnregisterCallback(void* key)
-  // {
-  //   std::lock_guard<std::mutex> lock(callbackMutex);
-  //   for(unsigned int i = 0; i < CALLBACK_SLOT_COUNT; i++)
-  //   {
-  //     if(callbackUniqueKey[i] == key)
-  //     {
-  //       callbackUniqueKey[i] = nullptr;
-  //       allowedFunctions[i] = nullptr;
-  //       functionState[i] = nullptr;
-  //       break;
-  //     }
-  //   }
-  // }
+  template<typename T_Ret, typename... T_Args>
+  inline void impl_unregister_callback(void* key)
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex);
+    for (uint32_t i = 0; i < MAX_CALLBACKS; i++) {
+      if (callback_unique_keys[i] == key) {
+        callback_unique_keys[i] = nullptr;
+        callbacks[i] = nullptr;
+        break;
+      }
+    }
+  }
 };
 
 }
