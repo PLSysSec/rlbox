@@ -90,7 +90,7 @@ target_include_directories(testing-lib INTERFACE code/tests)
 
 add_executable(testing
                code/tests/test_main.cpp
-               code/tests/test_callback_assignment.cpp
+               code/tests/test_callback.cpp
                code/tests/test_comparison.cpp
                code/tests/test_conversion.cpp
                code/tests/test_operators.cpp
