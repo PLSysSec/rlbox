@@ -11,17 +11,17 @@ using T_Convert =
 // NOLINTNEXTLINE
 TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
 {
-  tainted<testStruct, TestSandbox> a{};
+  tainted<testVarietyStruct, TestSandbox> a{};
   UNUSED(a);
   REQUIRE(sizeof(tainted<long long, TestSandbox>) ==
           sizeof(long long));                                    // NOLINT
   REQUIRE(sizeof(tainted<long, TestSandbox>) == sizeof(long));   // NOLINT
   REQUIRE(sizeof(tainted<int, TestSandbox>) == sizeof(int));     // NOLINT
   REQUIRE(sizeof(tainted<void*, TestSandbox>) == sizeof(void*)); // NOLINT
-  REQUIRE(sizeof(tainted<testStruct, TestSandbox>) ==
-          sizeof(testStruct)); // NOLINT
-  REQUIRE(sizeof(tainted<testStruct*, TestSandbox>) ==
-          sizeof(testStruct*)); // NOLINT
+  REQUIRE(sizeof(tainted<testVarietyStruct, TestSandbox>) ==
+          sizeof(testVarietyStruct)); // NOLINT
+  REQUIRE(sizeof(tainted<testVarietyStruct*, TestSandbox>) ==
+          sizeof(testVarietyStruct*)); // NOLINT
 
   REQUIRE(sizeof(tainted_volatile<long long, TestSandbox>) ==
           sizeof(TestSandbox::T_LongLongType)); // NOLINT
@@ -31,8 +31,8 @@ TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
           sizeof(TestSandbox::T_IntType)); // NOLINT
   REQUIRE(sizeof(tainted_volatile<void*, TestSandbox>) ==
           sizeof(TestSandbox::T_PointerType)); // NOLINT
-  REQUIRE(sizeof(tainted_volatile<testStruct, TestSandbox>) ==
-          sizeof(T_Convert<testStruct>)); // NOLINT
-  REQUIRE(sizeof(tainted_volatile<testStruct*, TestSandbox>) ==
-          sizeof(T_Convert<testStruct*>)); // NOLINT
+  REQUIRE(sizeof(tainted_volatile<testVarietyStruct, TestSandbox>) ==
+          sizeof(T_Convert<testVarietyStruct>)); // NOLINT
+  REQUIRE(sizeof(tainted_volatile<testVarietyStruct*, TestSandbox>) ==
+          sizeof(T_Convert<testVarietyStruct*>)); // NOLINT
 }

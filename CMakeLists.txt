@@ -85,33 +85,32 @@ target_include_directories(rlbox-cpp17-lib INTERFACE code/include)
 
 # Tests ###################
 
-add_library(testing-lib INTERFACE)
-target_include_directories(testing-lib INTERFACE code/tests)
-
-add_executable(testing
-               code/tests/test_main.cpp
-               code/tests/test_callback.cpp
-               code/tests/test_comparison.cpp
-               code/tests/test_conversion.cpp
-               code/tests/test_operators.cpp
-               code/tests/test_sandbox_function_assignment.cpp
-               code/tests/test_sandbox_noop_sandbox.cpp
-               code/tests/test_sandbox_noop_sandbox_invoke_fail.cpp
-               code/tests/test_sandbox_ptr_conversion.cpp
-               code/tests/test_stdlib.cpp
-               code/tests/test_tainted_assignment.cpp
-               code/tests/test_tainted_sizes.cpp
-               code/tests/test_tainted_structs.cpp
-               code/tests/test_type_traits.cpp
-               code/tests/test_verification.cpp
-               code/tests/test_verify_arrays.cpp
-               code/tests/test_wrapper_traits.cpp)
-
-target_link_libraries(testing
-                      Catch2::Catch2
-                      rlbox-cpp17-lib
-                      testing-lib)
-
 include(CTest)
 include(Catch)
-catch_discover_tests(testing)
+
+# Test rlbox features
+add_executable(test_rlbox
+               code/tests/test_main.cpp
+               code/tests/rlbox/test_callback.cpp
+               code/tests/rlbox/test_comparison.cpp
+               code/tests/rlbox/test_conversion.cpp
+               code/tests/rlbox/test_operators.cpp
+               code/tests/rlbox/test_sandbox_function_assignment.cpp
+               code/tests/rlbox/test_sandbox_noop_sandbox.cpp
+               code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
+               code/tests/rlbox/test_sandbox_ptr_conversion.cpp
+               code/tests/rlbox/test_stdlib.cpp
+               code/tests/rlbox/test_tainted_assignment.cpp
+               code/tests/rlbox/test_tainted_sizes.cpp
+               code/tests/rlbox/test_tainted_structs.cpp
+               code/tests/rlbox/test_type_traits.cpp
+               code/tests/rlbox/test_verification.cpp
+               code/tests/rlbox/test_verify_arrays.cpp
+               code/tests/rlbox/test_wrapper_traits.cpp)
+
+target_include_directories(test_rlbox PRIVATE code/tests/rlbox)
+
+target_link_libraries(test_rlbox Catch2::Catch2 rlbox-cpp17-lib)
+
+catch_discover_tests(test_rlbox)
+

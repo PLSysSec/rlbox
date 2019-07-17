@@ -16,15 +16,15 @@ TEST_CASE("rlbox_is_tainted_v", "[wrapper_traits]")
   REQUIRE(!rlbox_is_tainted_v<int>);
   REQUIRE(!rlbox_is_tainted_v<int*>);
   REQUIRE(!rlbox_is_tainted_v<char[4]>); // NOLINT
-  REQUIRE(!rlbox_is_tainted_v<testStruct>);
+  REQUIRE(!rlbox_is_tainted_v<testVarietyStruct>);
 
   // fundamental tainted
   REQUIRE(rlbox_is_tainted_v<tainted<int, TestSandbox>>);
   REQUIRE(!rlbox_is_tainted_v<tainted_volatile<int, TestSandbox>>);
 
   // enum tainted
-  REQUIRE(rlbox_is_tainted_v<tainted<testEnum, TestSandbox>>);
-  REQUIRE(!rlbox_is_tainted_v<tainted_volatile<testEnum, TestSandbox>>);
+  REQUIRE(rlbox_is_tainted_v<tainted<testBasicEnum, TestSandbox>>);
+  REQUIRE(!rlbox_is_tainted_v<tainted_volatile<testBasicEnum, TestSandbox>>);
 
   // pointer tainted
   REQUIRE(rlbox_is_tainted_v<tainted<int*, TestSandbox>>);
@@ -37,8 +37,9 @@ TEST_CASE("rlbox_is_tainted_v", "[wrapper_traits]")
                                                TestSandbox>>);
 
   // struct tainted
-  REQUIRE(rlbox_is_tainted_v<tainted<testStruct, TestSandbox>>);
-  REQUIRE(!rlbox_is_tainted_v<tainted_volatile<testStruct, TestSandbox>>);
+  REQUIRE(rlbox_is_tainted_v<tainted<testVarietyStruct, TestSandbox>>);
+  REQUIRE(
+    !rlbox_is_tainted_v<tainted_volatile<testVarietyStruct, TestSandbox>>);
 
   // sandbox_callback
   REQUIRE(!rlbox_is_tainted_v<sandbox_callback<int (*)(int), TestSandbox>>);
@@ -51,7 +52,8 @@ TEST_CASE("rlbox_remove_wrapper_t", "[wrapper_traits]")
   REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<int>, int>);
   REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<int*>, int*>);
   REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<char[4]>, char[4]>); // NOLINT
-  REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<testStruct>, testStruct>);
+  REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<testVarietyStruct>,
+                         testVarietyStruct>);
 
   // fundamental tainted
   REQUIRE(
@@ -61,11 +63,12 @@ TEST_CASE("rlbox_remove_wrapper_t", "[wrapper_traits]")
                    int>);
 
   // enum tainted
-  REQUIRE(std::is_same_v<rlbox_remove_wrapper_t<tainted<testEnum, TestSandbox>>,
-                         testEnum>);
+  REQUIRE(
+    std::is_same_v<rlbox_remove_wrapper_t<tainted<testBasicEnum, TestSandbox>>,
+                   testBasicEnum>);
   REQUIRE(std::is_same_v<
-          rlbox_remove_wrapper_t<tainted_volatile<testEnum, TestSandbox>>,
-          testEnum>);
+          rlbox_remove_wrapper_t<tainted_volatile<testBasicEnum, TestSandbox>>,
+          testBasicEnum>);
 
   // pointer tainted
   REQUIRE(
@@ -84,12 +87,13 @@ TEST_CASE("rlbox_remove_wrapper_t", "[wrapper_traits]")
       char[4]>);                                                      // NOLINT
 
   // struct tainted
-  REQUIRE(
-    std::is_same_v<rlbox_remove_wrapper_t<tainted<testStruct, TestSandbox>>,
-                   testStruct>);
   REQUIRE(std::is_same_v<
-          rlbox_remove_wrapper_t<tainted_volatile<testStruct, TestSandbox>>,
-          testStruct>);
+          rlbox_remove_wrapper_t<tainted<testVarietyStruct, TestSandbox>>,
+          testVarietyStruct>);
+  REQUIRE(
+    std::is_same_v<
+      rlbox_remove_wrapper_t<tainted_volatile<testVarietyStruct, TestSandbox>>,
+      testVarietyStruct>);
 
   // sandbox_callback
   REQUIRE(std::is_same_v<

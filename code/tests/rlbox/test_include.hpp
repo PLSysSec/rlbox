@@ -25,13 +25,13 @@
 // The point here is to use the C types as is, so turn off the links
 using CallbackType = int (*)(unsigned, const char*, unsigned[1]); // NOLINT
 
-enum testEnum
+enum testBasicEnum
 {
-  testEnumVal1,
-  testEnumVal2
+  testBasicEnumVal1,
+  testBasicEnumVal2
 };
 
-struct testStruct
+struct testVarietyStruct
 {
   unsigned long fieldLong;                               // NOLINT
   const char* fieldString;                               // NOLINT

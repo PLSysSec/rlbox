@@ -10,7 +10,7 @@
 // Don't know the compiler... just let it go through
 #endif
 
-#define sandbox_fields_reflection_testlib_class_testStruct(f, g, ...)          \
+#define sandbox_fields_reflection_testing_class_testVarietyStruct(f, g, ...)   \
   f(unsigned long, fieldLong, FIELD_NORMAL, ##__VA_ARGS__) g()                 \
     f(const char*, fieldString, FIELD_NORMAL, ##__VA_ARGS__) g() f(            \
       unsigned int, fieldBool, FIELD_NORMAL, ##__VA_ARGS__) g()                \
@@ -26,8 +26,8 @@
               FIELD_NORMAL,                                                    \
               ##__VA_ARGS__) g()
 
-#define sandbox_fields_reflection_testlib_allClasses(f, ...)                   \
-  f(testStruct, testlib, ##__VA_ARGS__)
+#define sandbox_fields_reflection_testing_allClasses(f, ...)                   \
+  f(testVarietyStruct, testing, ##__VA_ARGS__)
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

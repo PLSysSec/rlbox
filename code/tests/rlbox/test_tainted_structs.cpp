@@ -18,7 +18,7 @@ TEST_CASE("Tainted struct assignment", "[tainted_struct]")
   std::strncpy(fieldString.UNSAFE_Unverified(), "Hello", strSize);
   const auto fieldBool = 1;
 
-  auto ps = sandbox.malloc_in_sandbox<testStruct>();
+  auto ps = sandbox.malloc_in_sandbox<testVarietyStruct>();
   ps->fieldLong = fieldLong;
   ps->fieldString = sandbox_reinterpret_cast<const char*>(fieldString);
   ps->fieldBool = fieldBool;
