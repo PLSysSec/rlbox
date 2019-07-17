@@ -486,11 +486,11 @@ public:
 #endif
 
 #define sandbox_invoke(sandbox, func_name, ...)                                \
-  sandbox.invoke_with_func_ptr<decltype(func_name)>(                           \
+  sandbox.template invoke_with_func_ptr<decltype(func_name)>(                  \
     sandbox_lookup_symbol(sandbox, func_name), ##__VA_ARGS__)
 
 #define sandbox_function_address(sandbox, func_name)                           \
-  sandbox.INTERNAL_get_sandbox_function<decltype(func_name)>(                  \
+  sandbox.template INTERNAL_get_sandbox_function<decltype(func_name)>(         \
     sandbox_lookup_symbol(sandbox, func_name))
 
 #if defined(__clang__)

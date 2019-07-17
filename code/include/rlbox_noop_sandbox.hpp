@@ -116,7 +116,7 @@ protected:
     rlbox_detail_static_fail_because(
       fail,
       "The no_op_sandbox uses static calls and thus developers should add\n\n"
-      "#define RLBOX_USE_STATIC_CALLS rlbox_noop_sandbox_lookup_symbol\n\n"
+      "#define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol\n\n"
       "to their code, to ensure that static calls are handled correctly.");
 
     return nullptr;
@@ -129,7 +129,7 @@ protected:
                      rlbox::RLBoxSandbox<rlbox::rlbox_noop_sandbox>>,          \
       "Forwarding another sandboxes calls to rlbox_noop_sandbox. "             \
       "Please check the use of RLBOX_USE_STATIC_CALLS.");                      \
-    return reinterpret_cast<void*>(&func_name);                                \
+    return reinterpret_cast<void*>(&func_name); /* NOLINT */                   \
   }()
 
   template<typename T, typename T_Converted, typename... T_Args>
