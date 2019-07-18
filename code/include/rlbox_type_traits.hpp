@@ -28,13 +28,6 @@ template<typename T>
 using valid_param_t = std::conditional_t<std::is_void_v<T>, void*, T>;
 
 template<typename T>
-using dereference_result_t =
-  std::conditional_t<std::is_pointer_v<T>,
-                     std::remove_pointer_t<T>,
-                     std::remove_extent_t<T> // is_array
-                     >;
-
-template<typename T>
 constexpr bool is_func_or_func_ptr =
   std::is_function_v<T> || std::is_function_v<std::remove_pointer_t<T>> ||
   std::is_member_function_pointer_v<T>;
@@ -85,6 +78,13 @@ template<typename T>
 using std_array_to_c_arr_t =
   typename decltype(std_array_to_c_arr_detail::std_array_to_c_arr_helper(
     std::declval<T>()))::type;
+
+template<typename T>
+using dereference_result_t =
+  std::conditional_t<std::is_pointer_v<T>,
+                     std::remove_pointer_t<T>,
+                     std::remove_extent_t<std_array_to_c_arr_t<T>> // is_array
+                     >;
 
 template<typename T>
 using value_type_t =

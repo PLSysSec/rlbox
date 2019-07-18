@@ -1,3 +1,4 @@
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <limits>
@@ -22,12 +23,13 @@ using rlbox::RLBox_Verify_Status;
 using rlbox::RLBoxSandbox;
 using rlbox::tainted;
 
-// NOLINTNEXTLINE(google-runtime-references)
-static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(RLBoxSandbox<rlbox::rlbox_noop_sandbox>& sandbox,
-                           tainted<unsigned, rlbox::rlbox_noop_sandbox> a,
-                           tainted<const char*, rlbox::rlbox_noop_sandbox> b,
-                           // NOLINTNEXTLINE
-                           tainted<unsigned[1], rlbox::rlbox_noop_sandbox> c)
+static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
+  // NOLINTNEXTLINE(google-runtime-references)
+  RLBoxSandbox<rlbox::rlbox_noop_sandbox>& sandbox,
+  tainted<unsigned, rlbox::rlbox_noop_sandbox> a,
+  tainted<const char*, rlbox::rlbox_noop_sandbox> b,
+  // NOLINTNEXTLINE
+  tainted<unsigned[1], rlbox::rlbox_noop_sandbox> c)
 {
   const unsigned upper_bound = 100;
   auto aCopy = a.copy_and_verify(
@@ -150,7 +152,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   //   const unsigned cb_val_param = 4;
 
-  //   tainted<char*, TestType> cb_ptr_param = sandbox.template malloc_in_sandbox<char>(upper_bound);
+  //   tainted<char*, TestType> cb_ptr_param = sandbox.template
+  //   malloc_in_sandbox<char>(upper_bound);
   //   std::strcpy(cb_ptr_param.UNSAFE_Unverified(), "Hello");
 
   //   auto cb_callback_param = sandbox.register_callback(exampleCallback);
@@ -162,7 +165,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //                                 cb_callback_param);
 
   //   auto result = resultT.copy_and_verify(
-  //     [](int val) { return val > 0 && val < upper_bound                                    ? RLBox_Verify_Status::SAFE
+  //     [](int val) { return val > 0 && val < upper_bound ?
+  //     RLBox_Verify_Status::SAFE
   //                                 : RLBox_Verify_Status::UNSAFE; }, -1);
   //   REQUIRE(result == 10);
 

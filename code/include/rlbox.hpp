@@ -34,9 +34,6 @@ private:
     return *static_cast<const T_Wrap<T, T_Sbx>*>(this);
   }
 
-protected:
-  using T_OpDerefRet = detail::dereference_result_t<T>;
-
 public:
   inline auto UNSAFE_Unverified() { return impl().get_raw_value(); }
   inline auto UNSAFE_Sandboxed() { return impl().get_raw_sandbox_value(); }
@@ -132,38 +129,91 @@ public:
 
 #undef UnaryOp
 
+private:
   using T_OpSubscriptArrRet =
-    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>;
+    std::conditional_t<std::is_pointer_v<T>,
+      tainted_volatile<detail::dereference_result_t<T>, T_Sbx>, // is_pointer
+      T_Wrap<detail::dereference_result_t<T>, T_Sbx>            // is_array
+      >;
 
+public:
   template<typename T_Rhs>
   inline const T_OpSubscriptArrRet& operator[](T_Rhs&& rhs) const
   {
-    static_assert(std::is_pointer_v<T>,
-                  "Operator [] in tainted_base_impl only supports pointers");
+    static_assert(std::is_pointer_v<T> || detail::is_c_or_std_array_v<T>,
+                  "Operator [] supports pointers and arrays only");
 
-    auto ptr = this->impl().get_raw_value();
     auto raw_rhs = detail::unwrap_value(rhs);
     static_assert(std::is_integral_v<decltype(raw_rhs)>,
                   "Can only index with numeric types");
 
-    // increment the target by size of the data structure
-    auto target =
-      reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*this->impl());
-    auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(
-      ptr, reinterpret_cast<const void*>(target));
-    detail::dynamic_check(
-      no_overflow,
-      "Pointer arithmetic overflowed a pointer beyond sandbox memory");
+    if constexpr (std::is_pointer_v<T>)
+    {
+      auto ptr = this->impl().get_raw_value();
 
-    auto target_wrap = tainted<const T, T_Sbx>::internal_factory(
-      reinterpret_cast<const T>(target));
-    return *target_wrap;
+      // increment the target by size of the data structure
+      auto target =
+        reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*this->impl());
+      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(
+        ptr, reinterpret_cast<const void*>(target));
+      detail::dynamic_check(
+        no_overflow,
+        "Pointer arithmetic overflowed a pointer beyond sandbox memory");
+
+      auto target_wrap = tainted<const T, T_Sbx>::internal_factory(
+        reinterpret_cast<const T>(target));
+      return *target_wrap;
+    }
+    else
+    {
+      using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
+      detail::dynamic_check(
+        raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(raw_rhs) <
+                          std::extent_v<detail::std_array_to_c_arr_t<T>, 0>,
+        "Static array indexing overflow");
+
+      const void* target_ptr;
+      if constexpr (detail::rlbox_is_tainted_v<T>) {
+        auto& data_ref = impl().get_raw_value_ref();
+        target_ptr = &(data_ref[raw_rhs]);
+      } else {
+        auto& data_ref = impl().get_sandbox_value_ref();
+        auto target_ptr_vol = &(data_ref[raw_rhs]);
+        // target_ptr is a volatile... remove this.
+        // Safe as we will return a tainted_volatile if this is the case
+        target_ptr = detail::remove_volatile_from_ptr_cast(target_ptr_vol);
+      }
+
+      using T_Target = const T_Wrap<detail::dereference_result_t<T>, T_Sbx>;
+      auto wrapped_target_ptr = reinterpret_cast<T_Target*>(target_ptr);
+      return *wrapped_target_ptr;
+    }
   }
 
   template<typename T_Rhs>
   inline T_OpSubscriptArrRet& operator[](T_Rhs&& rhs)
   {
     rlbox_detail_forward_to_const_a(operator[], T_OpSubscriptArrRet&, rhs);
+  }
+
+private:
+  using T_OpDerefRet = tainted_volatile<std::remove_pointer_t<T>, T_Sbx>;
+
+public:
+  inline T_OpDerefRet& operator*() const
+  {
+    static_assert(std::is_pointer_v<T>, "Operator * only allowed on pointers");
+    auto ret_ptr_const = reinterpret_cast<const T_OpDerefRet*>(impl().get_raw_value());
+    // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
+    //        If T_OpDerefRet is a const ptr, then the const is captured
+    //        inside the wrapper
+    auto ret_ptr = const_cast<T_OpDerefRet*>(ret_ptr_const);
+    return *ret_ptr;
+  }
+
+  inline T_OpDerefRet& operator*()
+  {
+    rlbox_detail_forward_to_const(operator*, T_OpDerefRet&);
   }
 
   // We need to implement the -> operator even though T is not a struct
@@ -542,104 +592,6 @@ public:
     data = val;
   }
 
-private:
-  using T_OpDerefRet = detail::dereference_result_t<T>;
-  using T_OpDerefWrappedRet =
-    std::conditional_t<std::is_pointer_v<T>,
-                       tainted_volatile<T_OpDerefRet, T_Sbx>&,
-                       tainted<T_OpDerefRet, T_Sbx>* // is_array
-                       >;
-
-public:
-  inline T_OpDerefWrappedRet operator*() const
-  {
-    if_constexpr_named(cond1, std::is_pointer_v<T>)
-    {
-      auto ret_ptr_const =
-        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-          get_raw_value());
-      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
-      //        If T_OpDerefRet is a const ptr, then the const is captured
-      //        inside the wrapper
-      auto ret_ptr =
-        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(ret_ptr_const);
-      return *ret_ptr;
-    }
-    else if_constexpr_named(cond2, std::is_array_v<T>)
-    {
-      // C arrays are value types
-      // Dereferencing an array in application memory returns a pointer to
-      // application memory
-      std::remove_extent_t<T>* decayed_arr = get_raw_value();
-      auto decayed_arr_wrapped_const =
-        reinterpret_cast<const tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr);
-      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
-      //        If T_OpDerefRet is a const ptr, then the const is captured
-      //        inside the wrapper
-      auto decayed_arr_wrapped =
-        const_cast<tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr_wrapped_const);
-      return *decayed_arr_wrapped;
-    }
-    else
-    {
-      auto unknownCase = !(cond1 || cond2);
-      rlbox_detail_static_fail_because(
-        unknownCase, "Dereference only supported for pointers or arrays");
-    }
-  }
-
-  inline T_OpDerefWrappedRet operator*()
-  {
-    rlbox_detail_forward_to_const(operator*, T_OpDerefWrappedRet);
-  }
-
-  // Needed as the definition of unary * above shadows the base's binary *
-  rlbox_detail_forward_binop_to_base(*, T_ClassBase)
-
-  // Operator [] is subtly different for tainted <static arrays> and
-  // tainted_volatile<static arrays>
-  using T_OpSubscriptRet = std::conditional_t<
-    std::is_pointer_v<T>,
-    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>, // is_pointer
-    tainted<detail::dereference_result_t<T>, T_Sbx>           // is_array
-    >;
-
-  template<typename T_Rhs>
-  inline const T_OpSubscriptRet& operator[](T_Rhs&& rhs) const
-  {
-    static_assert(std::is_pointer_v<T> || std::is_array_v<T>,
-                  "Operator [] only supported for pointers and static arrays");
-
-    if constexpr (std::is_pointer_v<T>) {
-      // defer to base class
-      using T_Base = const T_ClassBase;
-      return this->T_Base::operator[](rhs);
-    } else {
-      // array
-      auto raw_rhs = detail::unwrap_value(rhs);
-      static_assert(std::is_integral_v<decltype(raw_rhs)>,
-                    "Can only index with numeric types");
-
-      using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
-      detail::dynamic_check(raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(
-                                              raw_rhs) < std::extent_v<T, 0>,
-                            "Static array indexing overflow");
-
-      auto& data_ref = this->get_raw_value_ref();
-      auto target_ptr = &(data_ref[raw_rhs]);
-      using T_Target = const tainted<detail::dereference_result_t<T>, T_Sbx>;
-      auto wrapped_target_ptr = reinterpret_cast<T_Target*>(target_ptr);
-
-      return *wrapped_target_ptr;
-    }
-  }
-
-  template<typename T_Rhs>
-  inline T_OpSubscriptRet& operator[](T_Rhs&& rhs)
-  {
-    rlbox_detail_forward_to_const_a(operator[], T_OpSubscriptRet&, rhs);
-  }
-
   // In general comparison operators are unsafe.
   // However comparing tainted with nullptr is fine because
   // 1) tainted values are in application memory and thus cannot change the
@@ -792,56 +744,7 @@ private:
   tainted_volatile() = default;
   tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;
 
-  using T_OpDerefRet = detail::dereference_result_t<T>;
-
 public:
-  inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*() const
-  {
-    if_constexpr_named(cond1, std::is_pointer_v<T>)
-    {
-      auto ret_ptr_const =
-        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-          get_raw_value());
-      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
-      //        If T_OpDerefRet is a const ptr, then the const is captured
-      //        inside the wrapper
-      auto ret_ptr =
-        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(ret_ptr_const);
-      return *ret_ptr;
-    }
-    else if_constexpr_named(cond2, std::is_array_v<T>)
-    {
-      // C arrays are value types.
-      // Dereferencing an array in sandbox memory returns a pointer to sandbox
-      // memory
-      std::remove_extent_t<T>* decayed_arr = get_raw_value();
-      auto decayed_arr_wrapped_const =
-        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-          decayed_arr);
-      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
-      //        If T_OpDerefRet is a const ptr, then the const is captured
-      //        inside the wrapper
-      auto decayed_arr_wrapped =
-        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-          decayed_arr_wrapped_const);
-      return *decayed_arr_wrapped;
-    }
-    else
-    {
-      auto unknownCase = !(cond1 || cond2);
-      rlbox_detail_static_fail_because(
-        unknownCase, "Dereference only supported for pointers or arrays");
-    }
-  }
-
-  inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*()
-  {
-    using T_Ret = tainted_volatile<T_OpDerefRet, T_Sbx>&;
-    rlbox_detail_forward_to_const(operator*, T_Ret);
-  }
-
-  // Needed as the definition of unary * above shadows the base's binary *
-  rlbox_detail_forward_binop_to_base(*, T_ClassBase)
 
   inline tainted<const T*, T_Sbx> operator&() const noexcept
   {
@@ -854,58 +757,12 @@ public:
 
   inline tainted<T*, T_Sbx> operator&() noexcept
   {
-    rlbox_detail_forward_to_const(operator[], T_OpSubscriptRet&);
+    using T_Ret = tainted<T*, T_Sbx>;
+    rlbox_detail_forward_to_const(operator&, T_Ret);
   }
 
   // Needed as the definition of unary & above shadows the base's binary &
   rlbox_detail_forward_binop_to_base(&, T_ClassBase)
-
-  // Operator [] is subtly different for tainted <static arrays> and
-  // tainted_volatile<static arrays>
-  using T_OpSubscriptRet =
-    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>;
-
-  template<typename T_Rhs>
-  inline const T_OpSubscriptRet& operator[](T_Rhs&& rhs) const
-  {
-    static_assert(std::is_pointer_v<T> || std::is_array_v<T>,
-                  "Operator [] only supported for pointers and static arrays");
-
-    if constexpr (std::is_pointer_v<T>) {
-      // defer to base class
-      using T_Base = const T_ClassBase;
-      return this->T_Base::operator[](rhs);
-    } else {
-      // array
-      auto raw_rhs = detail::unwrap_value(rhs);
-      static_assert(std::is_integral_v<decltype(raw_rhs)>,
-                    "Can only index with numeric types");
-
-      using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
-      detail::dynamic_check(raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(
-                                              raw_rhs) < std::extent_v<T, 0>,
-                            "Static array indexing overflow");
-
-      auto& data_ref = this->get_sandbox_value_ref();
-      auto target_ptr = &(data_ref[raw_rhs]);
-      // target_ptr points to a volatile, remove this. Safe as we will
-      // ultimately return a tainted_volatile
-      auto target_ptr_non_vol =
-        detail::remove_volatile_from_ptr_cast(target_ptr);
-
-      using T_Target =
-        const tainted_volatile<detail::dereference_result_t<T>, T_Sbx>;
-      auto wrapped_target_ptr = reinterpret_cast<T_Target*>(target_ptr_non_vol);
-
-      return *wrapped_target_ptr;
-    }
-  }
-
-  template<typename T_Rhs>
-  inline T_OpSubscriptRet& operator[](T_Rhs&& rhs)
-  {
-    rlbox_detail_forward_to_const_a(operator[], T_OpSubscriptRet&, rhs);
-  }
 
   template<typename T_RhsRef>
   inline tainted_volatile<T, T_Sbx>& operator=(T_RhsRef&& val)
