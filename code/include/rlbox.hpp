@@ -377,20 +377,12 @@ public:
 
 namespace tainted_detail {
   template<typename T, typename T_Sbx>
-  using tainted_repr_t = T;
+  using tainted_repr_t = detail::c_to_std_array_t<T>;
 
   template<typename T, typename T_Sbx>
-  using tainted_vol_repr_t = std::add_volatile_t<typename RLBoxSandbox<
-    T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>;
-
-  // template<typename T, typename T_Sbx>
-  // using tainted_repr_t = detail::c_to_std_array_t<T>;
-
-  // template<typename T, typename T_Sbx>
-  // using tainted_vol_repr_t = detail::c_to_std_array_t<std::add_volatile_t<
-  // tainted_repr_t<typename RLBoxSandbox<T_Sbx>::template
-  // convert_to_sandbox_equivalent_nonclass_t<T>>
-  // >>;
+  using tainted_vol_repr_t =
+    detail::c_to_std_array_t<std::add_volatile_t<typename RLBoxSandbox<
+      T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>>;
 }
 
 template<typename T, typename T_Sbx>
@@ -416,44 +408,36 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 
 private:
   using T_ClassBase = tainted_base_impl<tainted, T, T_Sbx>;
+  using T_AppType = tainted_detail::tainted_repr_t<T, T_Sbx>;
   using T_SandboxedType = tainted_detail::tainted_vol_repr_t<T, T_Sbx>;
-  T data;
+  T_AppType data;
 
   inline auto& get_raw_value_ref() noexcept { return data; }
   inline auto& get_raw_value_ref() const noexcept { return data; }
 
-  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() const
-    noexcept
+  inline std::remove_cv_t<T_AppType> get_raw_value() const noexcept
   {
-    detail::value_type_t<std::remove_cv_t<T>> ret;
-    detail::convert_type_non_class<T_Sbx,
-                                   detail::adjust_type_direction::NO_CHANGE>(
-      ret, data);
-    return ret;
+    return data;
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
-  get_raw_sandbox_value() const
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() const
   {
-    detail::value_type_t<std::remove_cv_t<T_SandboxedType>> ret;
+    std::remove_cv_t<T_SandboxedType> ret;
     detail::convert_type_non_class<T_Sbx,
                                    detail::adjust_type_direction::TO_SANDBOX>(
       ret, data);
     return ret;
   };
 
-  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() noexcept
+  inline std::remove_cv_t<T_AppType> get_raw_value() noexcept
   {
-    rlbox_detail_forward_to_const(get_raw_value,
-                                  detail::value_type_t<std::remove_cv_t<T>>);
+    rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T_AppType>);
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
-  get_raw_sandbox_value()
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value()
   {
-    rlbox_detail_forward_to_const(
-      get_raw_sandbox_value,
-      detail::value_type_t<std::remove_cv_t<T_SandboxedType>>);
+    rlbox_detail_forward_to_const(get_raw_sandbox_value,
+                                  std::remove_cv_t<T_SandboxedType>);
   };
 
   // Initializing with a pointer is dangerous and permitted only internally
@@ -709,15 +693,16 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 
 private:
   using T_ClassBase = tainted_base_impl<tainted_volatile, T, T_Sbx>;
+  using T_AppType = tainted_detail::tainted_repr_t<T, T_Sbx>;
   using T_SandboxedType = tainted_detail::tainted_vol_repr_t<T, T_Sbx>;
   T_SandboxedType data;
 
   inline auto& get_sandbox_value_ref() noexcept { return data; }
   inline auto& get_sandbox_value_ref() const noexcept { return data; }
 
-  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value() const
+  inline std::remove_cv_t<T_AppType> get_raw_value() const
   {
-    detail::value_type_t<std::remove_cv_t<T>> ret;
+    std::remove_cv_t<T_AppType> ret;
     // Need to construct an example_unsandboxed_ptr for pointers or arrays of
     // pointers. Since tainted_volatile is the type of data in sandbox memory,
     // the address of data (&data) refers to a location in sandbox memory and
@@ -731,28 +716,21 @@ private:
     return ret;
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
-  get_raw_sandbox_value() const noexcept
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() const
+    noexcept
   {
-    detail::value_type_t<std::remove_cv_t<T_SandboxedType>> ret;
-    detail::convert_type_non_class<T_Sbx,
-                                   detail::adjust_type_direction::NO_CHANGE>(
-      ret, data);
-    return ret;
+    return data;
   };
 
-  inline detail::value_type_t<std::remove_cv_t<T>> get_raw_value()
+  inline std::remove_cv_t<T_AppType> get_raw_value()
   {
-    rlbox_detail_forward_to_const(get_raw_value,
-                                  detail::value_type_t<std::remove_cv_t<T>>);
+    rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T_AppType>);
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
-  get_raw_sandbox_value() noexcept
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() noexcept
   {
-    rlbox_detail_forward_to_const(
-      get_raw_sandbox_value,
-      detail::value_type_t<std::remove_cv_t<T_SandboxedType>>);
+    rlbox_detail_forward_to_const(get_raw_sandbox_value,
+                                  std::remove_cv_t<T_SandboxedType>);
   };
 
   tainted_volatile() = default;
