@@ -130,11 +130,11 @@ public:
 #undef UnaryOp
 
 private:
-  using T_OpSubscriptArrRet =
-    std::conditional_t<std::is_pointer_v<T>,
-      tainted_volatile<detail::dereference_result_t<T>, T_Sbx>, // is_pointer
-      T_Wrap<detail::dereference_result_t<T>, T_Sbx>            // is_array
-      >;
+  using T_OpSubscriptArrRet = std::conditional_t<
+    std::is_pointer_v<T>,
+    tainted_volatile<detail::dereference_result_t<T>, T_Sbx>, // is_pointer
+    T_Wrap<detail::dereference_result_t<T>, T_Sbx>            // is_array
+    >;
 
 public:
   template<typename T_Rhs>
@@ -147,8 +147,7 @@ public:
     static_assert(std::is_integral_v<decltype(raw_rhs)>,
                   "Can only index with numeric types");
 
-    if constexpr (std::is_pointer_v<T>)
-    {
+    if constexpr (std::is_pointer_v<T>) {
       auto ptr = this->impl().get_raw_value();
 
       // increment the target by size of the data structure
@@ -163,9 +162,7 @@ public:
       auto target_wrap = tainted<const T, T_Sbx>::internal_factory(
         reinterpret_cast<const T>(target));
       return *target_wrap;
-    }
-    else
-    {
+    } else {
       using T_Rhs_Unsigned = std::make_unsigned_t<decltype(raw_rhs)>;
       detail::dynamic_check(
         raw_rhs >= 0 && static_cast<T_Rhs_Unsigned>(raw_rhs) <
@@ -203,7 +200,8 @@ public:
   inline T_OpDerefRet& operator*() const
   {
     static_assert(std::is_pointer_v<T>, "Operator * only allowed on pointers");
-    auto ret_ptr_const = reinterpret_cast<const T_OpDerefRet*>(impl().get_raw_value());
+    auto ret_ptr_const =
+      reinterpret_cast<const T_OpDerefRet*>(impl().get_raw_value());
     // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
     //        If T_OpDerefRet is a const ptr, then the const is captured
     //        inside the wrapper
@@ -377,6 +375,24 @@ public:
   }
 };
 
+namespace tainted_detail {
+  template<typename T, typename T_Sbx>
+  using tainted_repr_t = T;
+
+  template<typename T, typename T_Sbx>
+  using tainted_vol_repr_t = std::add_volatile_t<typename RLBoxSandbox<
+    T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>;
+
+  // template<typename T, typename T_Sbx>
+  // using tainted_repr_t = detail::c_to_std_array_t<T>;
+
+  // template<typename T, typename T_Sbx>
+  // using tainted_vol_repr_t = detail::c_to_std_array_t<std::add_volatile_t<
+  // tainted_repr_t<typename RLBoxSandbox<T_Sbx>::template
+  // convert_to_sandbox_equivalent_nonclass_t<T>>
+  // >>;
+}
+
 template<typename T, typename T_Sbx>
 class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
@@ -400,8 +416,7 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 
 private:
   using T_ClassBase = tainted_base_impl<tainted, T, T_Sbx>;
-  using T_ConvertedType = typename RLBoxSandbox<
-    T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>;
+  using T_SandboxedType = tainted_detail::tainted_vol_repr_t<T, T_Sbx>;
   T data;
 
   inline auto& get_raw_value_ref() noexcept { return data; }
@@ -417,10 +432,10 @@ private:
     return ret;
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
   get_raw_sandbox_value() const
   {
-    detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
+    detail::value_type_t<std::remove_cv_t<T_SandboxedType>> ret;
     detail::convert_type_non_class<T_Sbx,
                                    detail::adjust_type_direction::TO_SANDBOX>(
       ret, data);
@@ -433,12 +448,12 @@ private:
                                   detail::value_type_t<std::remove_cv_t<T>>);
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
   get_raw_sandbox_value()
   {
     rlbox_detail_forward_to_const(
       get_raw_sandbox_value,
-      detail::value_type_t<std::remove_cv_t<T_ConvertedType>>);
+      detail::value_type_t<std::remove_cv_t<T_SandboxedType>>);
   };
 
   // Initializing with a pointer is dangerous and permitted only internally
@@ -694,9 +709,8 @@ class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 
 private:
   using T_ClassBase = tainted_base_impl<tainted_volatile, T, T_Sbx>;
-  using T_ConvertedType = std::add_volatile_t<typename RLBoxSandbox<
-    T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>;
-  T_ConvertedType data;
+  using T_SandboxedType = tainted_detail::tainted_vol_repr_t<T, T_Sbx>;
+  T_SandboxedType data;
 
   inline auto& get_sandbox_value_ref() noexcept { return data; }
   inline auto& get_sandbox_value_ref() const noexcept { return data; }
@@ -717,10 +731,10 @@ private:
     return ret;
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
   get_raw_sandbox_value() const noexcept
   {
-    detail::value_type_t<std::remove_cv_t<T_ConvertedType>> ret;
+    detail::value_type_t<std::remove_cv_t<T_SandboxedType>> ret;
     detail::convert_type_non_class<T_Sbx,
                                    detail::adjust_type_direction::NO_CHANGE>(
       ret, data);
@@ -733,19 +747,18 @@ private:
                                   detail::value_type_t<std::remove_cv_t<T>>);
   }
 
-  inline detail::value_type_t<std::remove_cv_t<T_ConvertedType>>
+  inline detail::value_type_t<std::remove_cv_t<T_SandboxedType>>
   get_raw_sandbox_value() noexcept
   {
     rlbox_detail_forward_to_const(
       get_raw_sandbox_value,
-      detail::value_type_t<std::remove_cv_t<T_ConvertedType>>);
+      detail::value_type_t<std::remove_cv_t<T_SandboxedType>>);
   };
 
   tainted_volatile() = default;
   tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;
 
 public:
-
   inline tainted<const T*, T_Sbx> operator&() const noexcept
   {
     auto ref =
@@ -820,7 +833,7 @@ public:
         // that of the application. But we have already checked above that this
         // is safe.
         auto func = val.get_raw_sandbox_value();
-        using T_Cast = std::remove_volatile_t<T_ConvertedType>;
+        using T_Cast = std::remove_volatile_t<T_SandboxedType>;
         get_sandbox_value_ref() = reinterpret_cast<T_Cast>(func);
       }
     }
