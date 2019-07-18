@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <memory>
 namespace mpl_ {
@@ -17,7 +18,50 @@ struct na;
 
 #include "libtest.h"
 
+using rlbox::RLBox_Verify_Status;
+using rlbox::RLBoxSandbox;
 using rlbox::tainted;
+
+// NOLINTNEXTLINE(google-runtime-references)
+static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(RLBoxSandbox<rlbox::rlbox_noop_sandbox>& sandbox,
+                           tainted<unsigned, rlbox::rlbox_noop_sandbox> a,
+                           tainted<const char*, rlbox::rlbox_noop_sandbox> b,
+                           // NOLINTNEXTLINE
+                           tainted<unsigned[1], rlbox::rlbox_noop_sandbox> c)
+{
+  const unsigned upper_bound = 100;
+  auto aCopy = a.copy_and_verify(
+    [](unsigned val) {
+      return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
+                                          : RLBox_Verify_Status::UNSAFE;
+    },
+    -1U);
+  auto bCopy = b.copy_and_verify_string(
+    [](const char* val) {
+      return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+                                       : RLBox_Verify_Status::UNSAFE;
+    },
+    nullptr);
+
+  std::array<unsigned, 1> def_array = { 0 };
+
+  auto cCopy = c.copy_and_verify_array(
+    [](std::array<unsigned, 1> arr) {
+      unsigned val = arr[0];
+      return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
+                                          : RLBox_Verify_Status::UNSAFE;
+    },
+    def_array);
+  REQUIRE(cCopy[0] + 1 == aCopy);
+  auto ret = aCopy + strlen(bCopy);
+  delete[] bCopy; // NOLINT
+
+  // test reentrancy
+  tainted<int*, rlbox::rlbox_noop_sandbox> pFoo =
+    sandbox.template malloc_in_sandbox<int>();
+  sandbox.free_in_sandbox(pFoo);
+  return ret; // NOLINT
+}
 
 // NOLINTNEXTLINE
 TEMPLATE_TEST_CASE("sandbox glue tests",
@@ -27,78 +71,58 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   rlbox::RLBoxSandbox<TestType> sandbox;
   sandbox.create_sandbox();
 
-  const int int_val1 = 20;
-  const int int_val2 = 22;
-
   SECTION("test simple function invocation") // NOLINT
   {
-    tainted<int, TestType> a = int_val1;
-    auto ret2 = sandbox_invoke(sandbox, simpleAddTest, a, int_val2);
-    REQUIRE(ret2.UNSAFE_Unverified() == (int_val1 + int_val2));
+    const int val1 = 20;
+    const int val2 = 22;
+    tainted<int, TestType> a = val1;
+    auto ret2 = sandbox_invoke(sandbox, simpleAddTest, a, val2);
+    REQUIRE(ret2.UNSAFE_Unverified() == (val1 + val2));
   }
 
   SECTION("test 64 bit returns") // NOLINT
   {
+    const uint32_t val1 = 20;
     const auto u32Max = std::numeric_limits<std::uint32_t>::max();
-    auto ret2 = sandbox_invoke(sandbox,
-                               simpleU64AddTest,
-                               u32Max,
-                               int_val1);
-    uint64_t result = static_cast<uint64_t>(u32Max) + int_val1;
+    auto ret2 = sandbox_invoke(sandbox, simpleU64AddTest, u32Max, val1);
+    uint64_t result = static_cast<uint64_t>(u32Max) + val1;
     REQUIRE(ret2.UNSAFE_Unverified() == result);
   }
 
-  // SECTION("testTwoVerificationFunctionFormats") // NOLINT
-  // {
-  //     auto result1 = sandbox_invoke(sandbox, simpleAddTest, 2, 3)
-  //         .copyAndVerify([](int val){ return val > 0 && val < 10?
-  //         RLBox_Verify_Status::SAFE : RLBox_Verify_Status::UNSAFE;}, -1);
-  //     REQUIRE(result1 == 5);
+  SECTION("test verification function") // NOLINT
+  {
+    const int val1 = 2;
+    const int val2 = 3;
+    const int upper_bound = 10;
+    auto result1 = sandbox_invoke(sandbox, simpleAddTest, val1, val2)
+                     .copy_and_verify(
+                       [](int val) {
+                         return val > 0 && val < upper_bound
+                                  ? RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE;
+                       },
+                       -1);
+    REQUIRE(result1 == val1 + val2);
+  }
 
-  //     auto result2 = sandbox_invoke(sandbox, simpleAddTest, 2, 3)
-  //         .copyAndVerify([](int val){ return val > 0 && val < 10? val :
-  //         -1;});
-  //     REQUIRE(result2 == 5);
-  // }
+  SECTION("test pointer verification function") // NOLINT
+  {
+    const int val1 = 4;
+    const int upper_bound = 10;
 
-  // SECTION("testPointerVerificationFunctionFormats") // NOLINT
-  // {
-  //     tainted<int*, TestType> pa = sandbox->template mallocInSandbox<int>();
-  //     *pa = 4;
+    tainted<int*, TestType> pa = sandbox.template malloc_in_sandbox<int>();
+    *pa = val1;
 
-  //     auto result1 = sandbox_invoke(sandbox, echoPointer, pa)
-  //         .copyAndVerify([](int* val){ return *val > 0 && *val < 10? *val :
-  //         -1;});
-  //     REQUIRE(result1 == 4);
-  // }
-
-  //     static int exampleCallback(RLBoxSandbox<TestType>* sandbox,
-  //     tainted<unsigned, TestType> a, tainted<const char*, TestType> b,
-  //     tainted<unsigned[1], TestType> c)
-  // {
-  //     auto aCopy = a.copyAndVerify([](unsigned val){ return val > 0 && val <
-  //     100? val : -1; }); auto bCopy = b.copyAndVerifyString(sandbox, [](const
-  //     char* val) { return strlen(val) < 100? RLBox_Verify_Status::SAFE :
-  //     RLBox_Verify_Status::UNSAFE; }, nullptr); unsigned cCopy[1];
-  //     c.copyAndVerify(cCopy, sizeof(cCopy), [](unsigned arr[1], size_t
-  //     arrSize){
-  //         UNUSED(arrSize);
-  //         unsigned val = *arr;
-  //         return val > 0 && val < 100? RLBox_Verify_Status::SAFE :
-  //         RLBox_Verify_Status::UNSAFE;
-  //     });
-  //     if(cCopy[0] + 1 != aCopy)
-  //     {
-  //         printf("Unexpected callback value: %d, %d\n", cCopy[0] + 1, aCopy);
-  //         exit(1);
-  //     }
-  //     auto ret = aCopy + strlen(bCopy);
-  //     free((void*)bCopy);
-
-  //     //test reentrancy
-  //     tainted<int*, TestType> pFoo = sandbox->template
-  //     mallocInSandbox<int>(); sandbox->freeInSandbox(pFoo); return ret;
-  // }
+    auto result1 = sandbox_invoke(sandbox, echoPointer, pa)
+                     .copy_and_verify(
+                       [](const int* val) {
+                         return *val > 0 && *val < upper_bound
+                                  ? RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE;
+                       },
+                       -1);
+    REQUIRE(result1 == val1);
+  }
 
   // static int exampleCallback2(RLBoxSandbox<TestType>* sandbox,
   //     tainted<unsigned long, TestType> val1,
@@ -119,24 +143,39 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //     )? 11 : -1;
   // }
 
-  // SECTION("testCallback") // NOLINT
+  (void)exampleCallback;
+  // SECTION("test callback 1 and re-entrancy") // NOLINT
   // {
-  //     {
-  //         auto resultT = sandbox_invoke(sandbox, simpleCallbackTest,
-  //         (unsigned) 4, sandbox->stackarr("Hello"), registeredCallback);
+  //   const int upper_bound = 10;
 
-  //         auto result = resultT
-  //             .copyAndVerify([](int val){ return val > 0 && val < 100? val :
-  //             -1; });
-  //         REQUIRE(result == 10);
-  //     }
+  //   const unsigned cb_val_param = 4;
 
+  //   tainted<char*, TestType> cb_ptr_param = sandbox.template malloc_in_sandbox<char>(upper_bound);
+  //   std::strcpy(cb_ptr_param.UNSAFE_Unverified(), "Hello");
+
+  //   auto cb_callback_param = sandbox.register_callback(exampleCallback);
+
+  //   auto resultT = sandbox_invoke(sandbox,
+  //                                 simpleCallbackTest,
+  //                                 cb_val_param,
+  //                                 cb_ptr_param,
+  //                                 cb_callback_param);
+
+  //   auto result = resultT.copy_and_verify(
+  //     [](int val) { return val > 0 && val < upper_bound                                    ? RLBox_Verify_Status::SAFE
+  //                                 : RLBox_Verify_Status::UNSAFE; }, -1);
+  //   REQUIRE(result == 10);
+
+  //   sandbox.template free_in_sandbox(cb_ptr_param);
+  // }
+
+  // SECTION("testCallback2") // NOLINT
   //     {
   //         auto resultT = sandbox_invoke(sandbox, simpleCallbackTest2, 4,
   //         registeredCallback2);
 
   //         auto result = resultT
-  //             .copyAndVerify([](int val){ return val; });
+  //             .copy_and_verify([](int val){ return val; });
   //         REQUIRE(result == 11);
   //     }
   // }
@@ -150,7 +189,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   //     auto resultT = sandbox_invoke(sandbox, simpleCallbackTest, (unsigned)
   //     4, sandbox->stackarr("Hello"), fnPtr); auto result = resultT
-  //         .copyAndVerify([](int val){ return val > 0 && val < 100? val : -1;
+  //         .copy_and_verify([](int val){ return val > 0 && val < 100? val :
+  //         -1;
   //         });
   //     REQUIRE(result == 10);
   // }
@@ -172,7 +212,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //     auto retStrRaw = sandbox_invoke(sandbox, simpleEchoTest, temp);
   //     *retStrRaw = 'g';
   //     *retStrRaw = 'H';
-  //     char* retStr = retStrRaw.copyAndVerifyString(sandbox, [](char* val) {
+  //     char* retStr = retStrRaw.copy_and_verifyString(sandbox, [](char* val) {
   //     return strlen(val) < 100? RLBox_Verify_Status::SAFE :
   //     RLBox_Verify_Status::UNSAFE; }, nullptr);
 
@@ -189,19 +229,19 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   // SECTION("testFloatingPoint") // NOLINT
   // {
   //     auto resultF = sandbox_invoke(sandbox, simpleFloatAddTest, 1.0f, 2.0f)
-  //         .copyAndVerify([](float val){ return val > 0 && val < 100? val :
+  //         .copy_and_verify([](float val){ return val > 0 && val < 100? val :
   //         -1.0; });
   //     REQUIRE(resultF == 3.0);
 
   //     auto resultD = sandbox_invoke(sandbox, simpleDoubleAddTest, 1.0, 2.0)
-  //         .copyAndVerify([](double val){ return val > 0 && val < 100? val :
+  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
   //         -1.0; });
   //     REQUIRE(resultD == 3.0);
 
   //     //test float to double conversions
 
   //     auto resultFD = sandbox_invoke(sandbox, simpleFloatAddTest, 1.0, 2.0)
-  //         .copyAndVerify([](double val){ return val > 0 && val < 100? val :
+  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
   //         -1.0; });
   //     REQUIRE(resultFD == 3.0);
   // }
@@ -214,7 +254,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //     double d = 2.0;
 
   //     auto resultD = sandbox_invoke(sandbox, simplePointerValAddTest, pd, d)
-  //         .copyAndVerify([](double val){ return val > 0 && val < 100? val :
+  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
   //         -1.0; });
   //     REQUIRE(resultD == 3.0);
   // }
@@ -223,17 +263,18 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   // {
   //     auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
   //     auto result = resultT
-  //         .copyAndVerify([this, ignoreGlobalStringsInLib](tainted<testStruct,
-  //         TestType>& val){
+  //         .copy_and_verify([this,
+  //         ignoreGlobalStringsInLib](tainted<testStruct, TestType>& val){
   //             testStruct ret;
-  //             ret.fieldLong = val.fieldLong.copyAndVerify([](unsigned long
+  //             ret.fieldLong = val.fieldLong.copy_and_verify([](unsigned long
   //             val) { return val; }); ret.fieldString =
   //             ignoreGlobalStringsInLib? "Hello" :
-  //             val.fieldString.copyAndVerifyString(sandbox, [](const char*
+  //             val.fieldString.copy_and_verifyString(sandbox, [](const char*
   //             val) { return strlen(val) < 100? RLBox_Verify_Status::SAFE :
   //             RLBox_Verify_Status::UNSAFE; }, nullptr); ret.fieldBool =
-  //             val.fieldBool.copyAndVerify([](unsigned int val) { return val;
-  //             }); val.fieldFixedArr.copyAndVerify(ret.fieldFixedArr,
+  //             val.fieldBool.copy_and_verify([](unsigned int val) { return
+  //             val;
+  //             }); val.fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
   //             sizeof(ret.fieldFixedArr), [](char* arr, size_t size){
   //             UNUSED(arr); UNUSED(size); return RLBox_Verify_Status::SAFE;
   //             }); return ret;
@@ -245,7 +286,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   //     //writes should still go through
   //     resultT.fieldLong = 17;
-  //     long val = resultT.fieldLong.copyAndVerify([](unsigned long val) {
+  //     long val = resultT.fieldLong.copy_and_verify([](unsigned long val) {
   //     return val; }); REQUIRE(val == 17);
   // }
 
@@ -253,17 +294,18 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   // {
   //     auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
   //     auto result = resultT
-  //         .copyAndVerify([this, ignoreGlobalStringsInLib](tainted<testStruct,
-  //         TestType>* val) {
+  //         .copy_and_verify([this,
+  //         ignoreGlobalStringsInLib](tainted<testStruct, TestType>* val) {
   //             testStruct ret;
-  //             ret.fieldLong = val->fieldLong.copyAndVerify([](unsigned long
+  //             ret.fieldLong = val->fieldLong.copy_and_verify([](unsigned long
   //             val) { return val; }); ret.fieldString =
   //             ignoreGlobalStringsInLib? "Hello" :
-  //             val->fieldString.copyAndVerifyString(sandbox, [](const char*
+  //             val->fieldString.copy_and_verifyString(sandbox, [](const char*
   //             val) { return strlen(val) < 100? RLBox_Verify_Status::SAFE :
   //             RLBox_Verify_Status::UNSAFE; }, nullptr); ret.fieldBool =
-  //             val->fieldBool.copyAndVerify([](unsigned int val) { return val;
-  //             }); val->fieldFixedArr.copyAndVerify(ret.fieldFixedArr,
+  //             val->fieldBool.copy_and_verify([](unsigned int val) { return
+  //             val;
+  //             }); val->fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
   //             sizeof(ret.fieldFixedArr), [](char* arr, size_t size){
   //             UNUSED(arr); UNUSED(size); return RLBox_Verify_Status::SAFE;
   //             }); return ret;
@@ -275,20 +317,20 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   //     //writes should still go through
   //     resultT->fieldLong = 17;
-  //     long val2 = resultT->fieldLong.copyAndVerify([](unsigned long val) {
+  //     long val2 = resultT->fieldLong.copy_and_verify([](unsigned long val) {
   //     return val; }); REQUIRE(val2 == 17);
 
   //     //test & and * operators
-  //     unsigned long val3 = (*&resultT->fieldLong).copyAndVerify([](unsigned
+  //     unsigned long val3 = (*&resultT->fieldLong).copy_and_verify([](unsigned
   //     long val) { return val; }); REQUIRE(val3 == 17);
   // }
 
   // SECTION("testPointersInStruct") // NOLINT
   // {
-  //     auto initVal = sandbox->template mallocInSandbox<char>();
+  //     auto initVal = sandbox.template mallocInSandbox<char>();
   //     auto resultT = sandbox_invoke(sandbox, initializePointerStruct,
   //     initVal); auto result = resultT
-  //         .copyAndVerify([](tainted<pointersStruct, TestType>& val){
+  //         .copy_and_verify([](tainted<pointersStruct, TestType>& val){
   //             pointersStruct ret;
   //             ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
   //             ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
@@ -313,7 +355,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   // SECTION("test32BitPointerEdgeCases") // NOLINT
   // {
-  //     auto initVal = sandbox->template mallocInSandbox<char>(8);
+  //     auto initVal = sandbox.template mallocInSandbox<char>(8);
   //     *(initVal.getPointerIncrement(sandbox, 3)) = 'v';
   //     char* initValRaw = initVal.UNSAFE_Unverified();
 

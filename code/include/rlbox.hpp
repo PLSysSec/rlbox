@@ -317,8 +317,12 @@ public:
     auto str_len = std::strlen(start) + 1;
     auto ret = copy_and_verify_range(verifier, str_len, default_val);
 
+    // ugly, but safe as we are operating on a copy
+    using T_NoConst = detail::remove_const_from_pointer<decltype(ret)>;
+    auto ret_mod = const_cast<T_NoConst>(ret);
+
     // ensure the string has a trailing null
-    ret[str_len - 1] = '\0';
+    ret_mod[str_len - 1] = '\0';
     return ret;
   }
 };
@@ -540,18 +544,25 @@ public:
 
 private:
   using T_OpDerefRet = detail::dereference_result_t<T>;
+  using T_OpDerefWrappedRet =
+    std::conditional_t<std::is_pointer_v<T>,
+                       tainted_volatile<T_OpDerefRet, T_Sbx>&,
+                       tainted<T_OpDerefRet, T_Sbx>* // is_array
+                       >;
 
 public:
-  inline std::conditional_t<std::is_pointer_v<T>,
-                            tainted_volatile<T_OpDerefRet, T_Sbx>&,
-                            tainted<T_OpDerefRet, T_Sbx>* // is_array
-                            >
-  operator*() const
+  inline T_OpDerefWrappedRet operator*() const
   {
     if_constexpr_named(cond1, std::is_pointer_v<T>)
     {
-      auto ret_ptr = reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-        get_raw_value());
+      auto ret_ptr_const =
+        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+          get_raw_value());
+      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
+      //        If T_OpDerefRet is a const ptr, then the const is captured
+      //        inside the wrapper
+      auto ret_ptr =
+        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(ret_ptr_const);
       return *ret_ptr;
     }
     else if_constexpr_named(cond2, std::is_array_v<T>)
@@ -560,8 +571,13 @@ public:
       // Dereferencing an array in application memory returns a pointer to
       // application memory
       std::remove_extent_t<T>* decayed_arr = get_raw_value();
+      auto decayed_arr_wrapped_const =
+        reinterpret_cast<const tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr);
+      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
+      //        If T_OpDerefRet is a const ptr, then the const is captured
+      //        inside the wrapper
       auto decayed_arr_wrapped =
-        reinterpret_cast<tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr);
+        const_cast<tainted<T_OpDerefRet, T_Sbx>*>(decayed_arr_wrapped_const);
       return *decayed_arr_wrapped;
     }
     else
@@ -570,6 +586,11 @@ public:
       rlbox_detail_static_fail_because(
         unknownCase, "Dereference only supported for pointers or arrays");
     }
+  }
+
+  inline T_OpDerefWrappedRet operator*()
+  {
+    rlbox_detail_forward_to_const(operator*, T_OpDerefWrappedRet);
   }
 
   // Needed as the definition of unary * above shadows the base's binary *
@@ -778,8 +799,14 @@ public:
   {
     if_constexpr_named(cond1, std::is_pointer_v<T>)
     {
-      auto ret_ptr = reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
-        get_raw_value());
+      auto ret_ptr_const =
+        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+          get_raw_value());
+      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
+      //        If T_OpDerefRet is a const ptr, then the const is captured
+      //        inside the wrapper
+      auto ret_ptr =
+        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(ret_ptr_const);
       return *ret_ptr;
     }
     else if_constexpr_named(cond2, std::is_array_v<T>)
@@ -788,8 +815,15 @@ public:
       // Dereferencing an array in sandbox memory returns a pointer to sandbox
       // memory
       std::remove_extent_t<T>* decayed_arr = get_raw_value();
+      auto decayed_arr_wrapped_const =
+        reinterpret_cast<const tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+          decayed_arr);
+      // Safe - If T_OpDerefRet is not a const ptr, this is trivially safe
+      //        If T_OpDerefRet is a const ptr, then the const is captured
+      //        inside the wrapper
       auto decayed_arr_wrapped =
-        reinterpret_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(decayed_arr);
+        const_cast<tainted_volatile<T_OpDerefRet, T_Sbx>*>(
+          decayed_arr_wrapped_const);
       return *decayed_arr_wrapped;
     }
     else
@@ -798,6 +832,12 @@ public:
       rlbox_detail_static_fail_because(
         unknownCase, "Dereference only supported for pointers or arrays");
     }
+  }
+
+  inline tainted_volatile<T_OpDerefRet, T_Sbx>& operator*()
+  {
+    using T_Ret = tainted_volatile<T_OpDerefRet, T_Sbx>&;
+    rlbox_detail_forward_to_const(operator*, T_Ret);
   }
 
   // Needed as the definition of unary * above shadows the base's binary *

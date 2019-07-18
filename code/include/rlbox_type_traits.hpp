@@ -50,6 +50,18 @@ using add_const_if_this_const_t =
                      T_Target>;
 
 template<typename T>
+using remove_const_from_pointer = std::conditional_t<
+  std::is_pointer_v<T>,
+  std::add_pointer_t<std::remove_const_t<std::remove_pointer_t<T>>>,
+  T>;
+
+template<typename T>
+using add_const_from_pointer = std::conditional_t<
+  std::is_pointer_v<T>,
+  std::remove_pointer_t<std::add_const_t<std::remove_pointer_t<T>>>,
+  T>;
+
+template<typename T>
 using c_to_std_array_t =
   std::conditional_t<std::is_array_v<T>,
                      std::array<std::remove_extent_t<T>, std::extent_v<T>>,
