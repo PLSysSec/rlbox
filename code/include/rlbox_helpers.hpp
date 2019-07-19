@@ -66,33 +66,30 @@ namespace detail {
 #define rlbox_detail_forward_to_const(func_name, result_type)                  \
   using T_ConstClassPtr = std::add_pointer_t<                                  \
     std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
-  if constexpr (std::is_fundamental_v<result_type>) {                          \
-    return const_cast<T_ConstClassPtr>(this)->func_name();                     \
-  } else if constexpr (std::is_pointer_v<result_type> ||                       \
-                       std::is_reference_v<result_type>) {                     \
-    return const_cast<result_type>(                                            \
-      const_cast<T_ConstClassPtr>(this)->func_name());                         \
-  } else if constexpr (detail::rlbox_is_tainted_v<result_type>) {              \
+  if constexpr (detail::rlbox_is_tainted_v<result_type> &&                     \
+                !std::is_reference_v<result_type>) {                           \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name());                         \
+  } else if constexpr (std::is_fundamental_v<result_type>) {                   \
+    return const_cast<T_ConstClassPtr>(this)->func_name();                     \
   } else {                                                                     \
-    static_assert(!detail::true_v<result_type>, "Unsupported");                \
+    return const_cast<result_type>(                                            \
+      const_cast<T_ConstClassPtr>(this)->func_name());                         \
   }
 
 #define rlbox_detail_forward_to_const_a(func_name, result_type, ...)           \
   using T_ConstClassPtr = std::add_pointer_t<                                  \
     std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
-  if constexpr (std::is_fundamental_v<result_type>) {                          \
-    return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
-  } else if constexpr (std::is_pointer_v<result_type> ||                       \
-                       std::is_reference_v<result_type>) {                     \
-    return const_cast<result_type>(                                            \
-      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
-  } else if constexpr (detail::rlbox_is_tainted_v<result_type>) {              \
+  if constexpr (detail::rlbox_is_tainted_v<result_type> &&                     \
+                !std::is_reference_v<result_type>) {                           \
+    static_assert(detail::rlbox_is_tainted_v<result_type>);                    \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
+  } else if constexpr (std::is_fundamental_v<result_type>) {                   \
+    return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
   } else {                                                                     \
-    static_assert(!detail::true_v<result_type>, "Unsupported");                \
+    return const_cast<result_type>(                                            \
+      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
   }
 
   template<typename T>
