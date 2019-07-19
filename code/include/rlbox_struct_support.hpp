@@ -71,6 +71,9 @@ using convert_to_sandbox_equivalent_t =
   template<typename T_Sbx>                                                     \
   class tainted_volatile<T, T_Sbx>                                             \
   {                                                                            \
+    KEEP_CLASSES_FRIENDLY                                                      \
+    KEEP_CAST_FRIENDLY                                                         \
+                                                                               \
   private:                                                                     \
     inline Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref() noexcept          \
     {                                                                          \
@@ -132,6 +135,12 @@ using convert_to_sandbox_equivalent_t =
     inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
     inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
+    T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
+    {                                                                          \
+      tainted<T, T_Sbx> val(*this);                                            \
+      return verifier(val);                                                    \
+    }                                                                          \
+                                                                               \
     /* Can't define this yet due, to mutually dependent definition between     \
     tainted and tainted_volatile for structs */                                \
     inline tainted_volatile<T, T_Sbx>& operator=(                              \
@@ -141,6 +150,9 @@ using convert_to_sandbox_equivalent_t =
   template<typename T_Sbx>                                                     \
   class tainted<T, T_Sbx>                                                      \
   {                                                                            \
+    KEEP_CLASSES_FRIENDLY                                                      \
+    KEEP_CAST_FRIENDLY                                                         \
+                                                                               \
   private:                                                                     \
     inline T& get_raw_value_ref() noexcept                                     \
     {                                                                          \
@@ -204,6 +216,11 @@ using convert_to_sandbox_equivalent_t =
     inline auto UNSAFE_Sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
     inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
+                                                                               \
+    T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
+    {                                                                          \
+      return verifier(*this);                                                  \
+    }                                                                          \
   };                                                                           \
                                                                                \
   /* Had to delay the definition due, to mutually dependence between           \

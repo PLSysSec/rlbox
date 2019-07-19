@@ -1,3 +1,4 @@
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <limits>
@@ -278,7 +279,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     REQUIRE(resultFD == dVal1 + dVal2);
   }
 
-  SECTION("testPointerValAdd") // NOLINT
+  SECTION("test pointer val add") // NOLINT
   {
     const double d1 = 1.0;
     const double d2 = 2.0;
@@ -298,111 +299,113 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     REQUIRE(resultD == d1 + d2);
   }
 
-  // SECTION("testStructures" bool ignoreGlobalStringsInLib) // NOLINT
+  SECTION("test structures") // NOLINT
+  {
+    auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
+    auto result = resultT.copy_and_verify([](
+                                            tainted<testStruct, TestType> val) {
+      testStruct ret{};
+      ret.fieldLong = val.fieldLong.UNSAFE_Unverified();
+
+      ret.fieldString = val.fieldString.copy_and_verify_string(
+        [](const char* val) {
+          return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+                                           : RLBox_Verify_Status::UNSAFE;
+        },
+        nullptr);
+
+      ret.fieldBool = val.fieldBool.UNSAFE_Unverified();
+
+      std::array<char, 8> default_arr{ 0 }; // NOLINT
+      auto fieldFixedArr = val.fieldFixedArr.copy_and_verify(
+        [](std::array<char, 8>) { // NOLINT
+          return RLBox_Verify_Status::SAFE;
+        },
+        default_arr);
+      std::memcpy(&ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
+
+      return ret;
+    });
+    REQUIRE(result.fieldLong == 7);
+    REQUIRE(std::strcmp(result.fieldString, "Hello") == 0);
+    REQUIRE(result.fieldBool == 1);
+    REQUIRE(std::strcmp(&result.fieldFixedArr[0], "Bye") == 0);
+
+    // writes should still go through
+    resultT.fieldLong = 17;                               // NOLINT
+    REQUIRE(resultT.fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+  }
+
+  // SECTION("test structure pointer") // NOLINT
   // {
-  //   auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
+  //   auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
   //   auto result =
-  //     resultT.copy_and_verify([](tainted<testStruct, TestType>& val) {
-  //       testStruct ret{};
-  //       ret.fieldLong =
-  //         val.fieldLong.copy_and_verify([](unsigned long val) { return val;
-  //         });
-  //       ret.fieldString = ignoreGlobalStringsInLib
-  //                           ? "Hello"
-  //                           : val.fieldString.copy_and_verify_string(
-  //                               sandbox,
-  //                               [](const char* val) {
-  //                                 return strlen(val) < upper_bound
-  //                                          ? RLBox_Verify_Status::SAFE
-  //                                          : RLBox_Verify_Status::UNSAFE;
-  //                               },
-  //                               nullptr);
-  //       ret.fieldBool =
-  //         val.fieldBool.copy_and_verify([](unsigned int val) { return val;
-  //         });
-  //       val.fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
-  //                                         sizeof(ret.fieldFixedArr),
-  //                                         [](char* arr, size_t size) {
-  //                                           UNUSED(arr);
-  //                                           UNUSED(size);
-  //                                           return RLBox_Verify_Status::SAFE;
-  //                                         });
+  //     resultT.copy_and_verify([](tainted<testStruct, TestType>* val) {
+  //       testStruct ret;
+  //       ret.fieldLong = val->fieldLong.UNSAFE_Unverified();
+
+  //       ret.fieldString = val->fieldString.copy_and_verify_string(
+  //         [](const char* val) {
+  //           return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+  //                                            : RLBox_Verify_Status::UNSAFE;
+  //         },
+  //         nullptr);
+
+  //       ret.fieldBool = val->fieldBool.UNSAFE_Unverified();
+
+  //       std::array<char, 8> default_arr{ 0 }; // NOLINT
+  //       auto fieldFixedArr = val->fieldFixedArr.copy_and_verify(
+  //         [](std::array<char, 8>) { // NOLINT
+  //           return RLBox_Verify_Status::SAFE;
+  //         },
+  //         default_arr);
+  //       std::memcpy(
+  //         &ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
+
   //       return ret;
   //     });
-  //   REQUIRE(result.fieldLong == 7 && strcmp(result.fieldString, "Hello") == 0
-  //   &&
-  //           result.fieldBool == 1 && strcmp(result.fieldFixedArr, "Bye") ==
-  //           0);
+  //   REQUIRE(result.fieldLong == 7);
+  //   REQUIRE(std::strcmp(result.fieldString, "Hello") == 0);
+  //   REQUIRE(result.fieldBool == 1);
+  //   REQUIRE(std::strcmp(&result.fieldFixedArr[0], "Bye") == 0);
 
   //   // writes should still go through
-  //   resultT.fieldLong = 17;
-  //   long val =
-  //     resultT.fieldLong.copy_and_verify([](unsigned long val) { return val;
+  //   resultT->fieldLong = 17;                               // NOLINT
+  //   REQUIRE(resultT->fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+
+  //   // test & and * operators
+  //   unsigned long val3 =
+  //     (*&resultT->fieldLong).copy_and_verify([](unsigned long val) {
+  //       return val;
   //     });
-  //   REQUIRE(val == 17);
+  //   REQUIRE(val3 == 17);
   // }
 
-  // SECTION("testStructurePointers"bool ignoreGlobalStringsInLib) // NOLINT
-  // {
-  //     auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
-  //     auto result = resultT
-  //         .copy_and_verify([this,
-  //         ignoreGlobalStringsInLib](tainted<testStruct, TestType>* val) {
-  //             testStruct ret;
-  //             ret.fieldLong = val->fieldLong.copy_and_verify([](unsigned long
-  //             val) { return val; }); ret.fieldString =
-  //             ignoreGlobalStringsInLib? "Hello" :
-  //             val->fieldString.copy_and_verify_string(sandbox, [](const char*
-  //             val) { return strlen(val) < upper_bound?
-  //             RLBox_Verify_Status::SAFE : RLBox_Verify_Status::UNSAFE; },
-  //             nullptr); ret.fieldBool =
-  //             val->fieldBool.copy_and_verify([](unsigned int val) { return
-  //             val;
-  //             }); val->fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
-  //             sizeof(ret.fieldFixedArr), [](char* arr, size_t size){
-  //             UNUSED(arr); UNUSED(size); return RLBox_Verify_Status::SAFE;
-  //             }); return ret;
-  //         });
-  //     REQUIRE(result.fieldLong == 7 &&
-  //         strcmp(result.fieldString, "Hello") == 0 &&
-  //         result.fieldBool == 1 &&
-  //         strcmp(result.fieldFixedArr, "Bye") == 0);
+  SECTION("test pointers in struct") // NOLINT
+  {
+    auto initVal = sandbox.template malloc_in_sandbox<char>();
+    auto resultT = sandbox_invoke(sandbox, initializePointerStruct, initVal);
+    auto result =
+      resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) {
+        pointersStruct ret{};
+        ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
+        ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
+        ret.pointerArray[1] = val.pointerArray[1].UNSAFE_Unverified();
+        ret.pointerArray[2] = val.pointerArray[2].UNSAFE_Unverified();
+        ret.pointerArray[3] = val.pointerArray[3].UNSAFE_Unverified();
+        ret.lastPointer = val.lastPointer.UNSAFE_Unverified();
+        return ret;
+      });
+    char* initValRaw = initVal.UNSAFE_Unverified();
+    sandbox.free_in_sandbox(initVal);
 
-  //     //writes should still go through
-  //     resultT->fieldLong = 17;
-  //     long val2 = resultT->fieldLong.copy_and_verify([](unsigned long val) {
-  //     return val; }); REQUIRE(val2 == 17);
-
-  //     //test & and * operators
-  //     unsigned long val3 = (*&resultT->fieldLong).copy_and_verify([](unsigned
-  //     long val) { return val; }); REQUIRE(val3 == 17);
-  // }
-
-  // SECTION("test pointers in struct") // NOLINT
-  // {
-  //   auto initVal = sandbox.template malloc_in_sandbox<char>();
-  //   auto resultT = sandbox_invoke(sandbox, initializePointerStruct, initVal);
-  //   auto result =
-  //     resultT.copy_and_verify([](tainted<pointersStruct, TestType>& val) {
-  //       pointersStruct ret;
-  //       ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
-  //       ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
-  //       ret.pointerArray[1] = val.pointerArray[1].UNSAFE_Unverified();
-  //       ret.pointerArray[2] = val.pointerArray[2].UNSAFE_Unverified();
-  //       ret.pointerArray[3] = val.pointerArray[3].UNSAFE_Unverified();
-  //       ret.lastPointer = val.lastPointer.UNSAFE_Unverified();
-  //       return ret;
-  //     });
-  //   char* initValRaw = initVal.UNSAFE_Unverified();
-  //   sandbox.free_in_sandbox(initVal);
-
-  //   REQUIRE(result.firstPointer == initValRaw &&
-  //           result.pointerArray[0] == (char*)(((uintptr_t)initValRaw) + 1) &&
-  //           result.pointerArray[1] == (char*)(((uintptr_t)initValRaw) + 2) &&
-  //           result.pointerArray[2] == (char*)(((uintptr_t)initValRaw) + 3) &&
-  //           result.pointerArray[3] == (char*)(((uintptr_t)initValRaw) + 4) &&
-  //           result.lastPointer == (char*)(((uintptr_t)initValRaw) + 5));
-  // }
+    REQUIRE(result.firstPointer == initValRaw);
+    REQUIRE(result.pointerArray[0] == (initValRaw + 1)); // NOLINT
+    REQUIRE(result.pointerArray[1] == (initValRaw + 2)); // NOLINT
+    REQUIRE(result.pointerArray[2] == (initValRaw + 3)); // NOLINT
+    REQUIRE(result.pointerArray[3] == (initValRaw + 4)); // NOLINT
+    REQUIRE(result.lastPointer == (initValRaw + 5));     // NOLINT
+  }
 
   SECTION("test 32-bit pointer edge cases") // NOLINT
   {

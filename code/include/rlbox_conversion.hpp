@@ -187,8 +187,6 @@ inline constexpr void convert_type_non_class(
 
   } else if constexpr (is_pointer_v<T_To_El> || is_pointer_v<T_From_El>) {
 
-    static_assert(is_pointer_v<T_To_El> && is_pointer_v<T_From_El>);
-
     if constexpr (Direction == adjust_type_direction::NO_CHANGE) {
       // Sanity check - this should definitely be true
       static_assert(sizeof(T_To_El) == sizeof(T_From_El) &&
@@ -196,7 +194,8 @@ inline constexpr void convert_type_non_class(
       memcpy(&to, &from, sizeof(T_To_C));
     } else {
       for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
-        convert_type_non_class(to[i], from[i]);
+        convert_type_non_class<T_Sbx, Direction>(
+          to[i], from[i], example_unsandboxed_ptr);
       }
     }
 

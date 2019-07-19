@@ -170,7 +170,7 @@ public:
         "Static array indexing overflow");
 
       const void* target_ptr;
-      if constexpr (detail::rlbox_is_tainted_v<T>) {
+      if constexpr (detail::rlbox_is_tainted_v<T_Wrap<T, T_Sbx>>) {
         auto& data_ref = impl().get_raw_value_ref();
         target_ptr = &(data_ref[raw_rhs]);
       } else {
