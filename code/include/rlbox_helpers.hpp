@@ -70,7 +70,8 @@ namespace detail {
                 !std::is_reference_v<result_type>) {                           \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name());                         \
-  } else if constexpr (std::is_fundamental_v<result_type>) {                   \
+  } else if constexpr (std::is_fundamental_v<result_type> ||                   \
+                       detail::is_std_array_v<result_type>) {                  \
     return const_cast<T_ConstClassPtr>(this)->func_name();                     \
   } else {                                                                     \
     return const_cast<result_type>(                                            \
@@ -85,7 +86,8 @@ namespace detail {
     static_assert(detail::rlbox_is_tainted_v<result_type>);                    \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
-  } else if constexpr (std::is_fundamental_v<result_type>) {                   \
+  } else if constexpr (std::is_fundamental_v<result_type> ||                   \
+                       detail::is_std_array_v<result_type>) {                  \
     return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
   } else {                                                                     \
     return const_cast<result_type>(                                            \

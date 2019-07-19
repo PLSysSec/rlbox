@@ -1,14 +1,13 @@
-#include <array>
 #include <cstdint>
 #include <cstring>
 #include <limits>
 #include <memory>
+#include <utility>
 
 // IWYU pragma: no_forward_declare mpl_::na
 #include "libtest.h"
 #include "test_sandbox_glue.hpp"
 
-using rlbox::RLBox_Verify_Status;
 using rlbox::RLBoxSandbox;
 using rlbox::tainted;
 
@@ -23,31 +22,19 @@ static tainted<int, TestType> exampleCallback(
 {
   const unsigned upper_bound = 100;
   auto aCopy = a.copy_and_verify(
-    [](unsigned val) {
-      return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
-                                          : RLBox_Verify_Status::UNSAFE;
-    },
-    -1U);
-  auto bCopy = b.copy_and_verify_string(
-    [](const char* val) {
-      return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
-                                       : RLBox_Verify_Status::UNSAFE;
-    },
-    nullptr);
-
-  unsigned* def_ptr = nullptr;
+    [](unsigned val) { return val > 0 && val < upper_bound ? val : -1U; });
+  auto bCopy =
+    b.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
+      return std::strlen(val.get()) < upper_bound ? std::move(val) : nullptr;
+    });
 
   auto cCopy = c.copy_and_verify_range(
-    [](const unsigned* arr) {
-      return *arr > 0 && *arr < upper_bound ? RLBox_Verify_Status::SAFE
-                                            : RLBox_Verify_Status::UNSAFE;
+    [](std::unique_ptr<const unsigned[]> arr) { // NOLINT
+      return arr[0] > 0 && arr[0] < upper_bound ? std::move(arr) : nullptr;
     },
-    1,
-    def_ptr);
+    1);
   REQUIRE(cCopy[0] + 1 == aCopy); // NOLINT
-  auto ret = aCopy + strlen(bCopy);
-  delete[] bCopy; // NOLINT
-  delete[] cCopy; // NOLINT
+  auto ret = aCopy + std::strlen(bCopy.get());
 
   // test reentrancy
   tainted<int*, TestType> pFoo = sandbox.template malloc_in_sandbox<int>();
@@ -114,13 +101,9 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const int val1 = 2;
     const int val2 = 3;
     auto result1 = sandbox_invoke(sandbox, simpleAddTest, val1, val2)
-                     .copy_and_verify(
-                       [](int val) {
-                         return val > 0 && val < upper_bound
-                                  ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-                       },
-                       -1);
+                     .copy_and_verify([](int val) {
+                       return val > 0 && val < upper_bound ? val : -1;
+                     });
     REQUIRE(result1 == val1 + val2);
   }
 
@@ -132,14 +115,18 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     *pa = val1;
 
     auto result1 = sandbox_invoke(sandbox, echoPointer, pa)
-                     .copy_and_verify(
-                       [](const int* val) {
-                         return *val > 0 && *val < upper_bound
-                                  ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-                       },
-                       -1);
+                     .copy_and_verify([](std::unique_ptr<const int> val) {
+                       return *val > 0 && *val < upper_bound ? *val : -1;
+                     });
     REQUIRE(result1 == val1);
+
+    auto result2 =
+      sandbox_invoke(sandbox, echoPointer, pa)
+        .copy_and_verify([](std::unique_ptr<const int> val) {
+          return *val > 0 && *val < upper_bound ? std::move(val) : nullptr;
+        });
+
+    REQUIRE(*result2 == val1);
   }
 
   SECTION("test callback 1 and re-entrancy") // NOLINT
@@ -153,11 +140,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
       sandbox, simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
 
     auto result = resultT.copy_and_verify(
-      [](int val) {
-        return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
-                                            : RLBox_Verify_Status::UNSAFE;
-      },
-      -1);
+      [](int val) { return val > 0 && val < upper_bound ? val : -1; });
     REQUIRE(result == 10);
   }
 
@@ -169,8 +152,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto resultT =
       sandbox_invoke(sandbox, simpleCallbackTest2, 4, cb_callback_param);
 
-    auto result = resultT.copy_and_verify(
-      [](int /* val */) { return RLBox_Verify_Status::SAFE; }, -1);
+    auto result = resultT.copy_and_verify([](int val) { return val; });
     REQUIRE(result == 11);
   }
 
@@ -186,11 +168,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
       sandbox, simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
 
     auto result = resultT.copy_and_verify(
-      [](int val) {
-        return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
-                                            : RLBox_Verify_Status::UNSAFE;
-      },
-      -1);
+      [](int val) { return val > 0 && val < upper_bound ? val : -1; });
     REQUIRE(result == 10);
 
     sandbox.free_in_sandbox(pFoo);
@@ -216,24 +194,20 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     // test some modifications of the string
     *retStrRaw = 'g';
     char* retStr = retStrRaw.copy_and_verify_string(
-      [](char* val) {
-        return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
-                                         : RLBox_Verify_Status::UNSAFE;
-      },
-      nullptr);
+      [](std::unique_ptr<char[]> val) { // NOLINT
+        return std::strlen(val.get()) < upper_bound ? val.release() : nullptr;
+      });
 
     REQUIRE(retStr != nullptr);
     REQUIRE(sandbox.is_pointer_in_app_memory(retStr));
 
-    REQUIRE(strcmp(str, retStr) != 0);
+    REQUIRE(std::strcmp(str, retStr) != 0);
     *retStrRaw = 'H';
-    char* retStr2 = retStrRaw.copy_and_verify_string(
-      [](char* val) {
-        return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
-                                         : RLBox_Verify_Status::UNSAFE;
-      },
-      nullptr);
-    REQUIRE(strcmp(str, retStr2) == 0);
+    auto retStr2 = retStrRaw.copy_and_verify_string(
+      [](std::unique_ptr<char[]> val) { // NOLINT
+        return std::strlen(val.get()) < upper_bound ? std::move(val) : nullptr;
+      });
+    REQUIRE(std::strcmp(str, retStr2.get()) == 0);
 
     sandbox.free_in_sandbox(temp);
     delete[] retStr; // NOLINT
@@ -248,34 +222,22 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const auto defaultVal = -1.0;
 
     auto resultF = sandbox_invoke(sandbox, simpleFloatAddTest, fVal1, fVal2)
-                     .copy_and_verify(
-                       [](float val) {
-                         return val > 0 && val < upper_bound
-                                  ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-                       },
-                       defaultVal);
+                     .copy_and_verify([&](float val) {
+                       return val > 0 && val < upper_bound ? val : defaultVal;
+                     });
     REQUIRE(resultF == fVal1 + fVal2);
 
     auto resultD = sandbox_invoke(sandbox, simpleDoubleAddTest, dVal1, dVal2)
-                     .copy_and_verify(
-                       [](double val) {
-                         return val > 0 && val < upper_bound
-                                  ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-                       },
-                       defaultVal);
+                     .copy_and_verify([&](double val) {
+                       return val > 0 && val < upper_bound ? val : defaultVal;
+                     });
     REQUIRE(resultD == dVal1 + dVal2);
 
     // test float to double conversions
     auto resultFD = sandbox_invoke(sandbox, simpleFloatAddTest, dVal1, dVal2)
-                      .copy_and_verify(
-                        [](double val) {
-                          return val > 0 && val < upper_bound
-                                   ? RLBox_Verify_Status::SAFE
-                                   : RLBox_Verify_Status::UNSAFE;
-                        },
-                        defaultVal);
+                      .copy_and_verify([&](double val) {
+                        return val > 0 && val < upper_bound ? val : defaultVal;
+                      });
     REQUIRE(resultFD == dVal1 + dVal2);
   }
 
@@ -289,13 +251,9 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     *p = d1;
 
     auto resultD = sandbox_invoke(sandbox, simplePointerValAddTest, p, d2)
-                     .copy_and_verify(
-                       [](double val) {
-                         return val > 0 && val < upper_bound
-                                  ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-                       },
-                       defaultVal);
+                     .copy_and_verify([&](double val) {
+                       return val > 0 && val < upper_bound ? val : defaultVal;
+                     });
     REQUIRE(resultD == d1 + d2);
   }
 
@@ -308,20 +266,13 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
       ret.fieldLong = val.fieldLong.UNSAFE_Unverified();
 
       ret.fieldString = val.fieldString.copy_and_verify_string(
-        [](const char* val) {
-          return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
-                                           : RLBox_Verify_Status::UNSAFE;
-        },
-        nullptr);
+        [](std::unique_ptr<const char[]> val) { // NOLINT
+          return std::strlen(val.get()) < upper_bound ? val.release() : nullptr;
+        });
 
       ret.fieldBool = val.fieldBool.UNSAFE_Unverified();
 
-      std::array<char, 8> default_arr{ 0 }; // NOLINT
-      auto fieldFixedArr = val.fieldFixedArr.copy_and_verify(
-        [](std::array<char, 8>) { // NOLINT
-          return RLBox_Verify_Status::SAFE;
-        },
-        default_arr);
+      auto fieldFixedArr = val.fieldFixedArr.UNSAFE_Unverified();
       std::memcpy(&ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
 
       return ret;
@@ -346,7 +297,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   //       ret.fieldString = val->fieldString.copy_and_verify_string(
   //         [](const char* val) {
-  //           return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+  //           return std::strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
   //                                            : RLBox_Verify_Status::UNSAFE;
   //         },
   //         nullptr);

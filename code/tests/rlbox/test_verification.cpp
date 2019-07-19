@@ -1,6 +1,8 @@
+#include <memory>
+#include <utility>
+
 #include "test_include.hpp"
 
-using rlbox::RLBox_Verify_Status;
 using rlbox::tainted;
 
 // NOLINTNEXTLINE
@@ -12,11 +14,7 @@ TEST_CASE("RLBox test basic verification", "[verification]")
 
   tainted<int, TestSandbox> test = testVal;
   auto result = test.copy_and_verify(
-    [](int val) {
-      return val > lb && val < ub ? RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE;
-    },
-    -1);
+    [](int val) { return val > lb && val < ub ? val : -1; });
   REQUIRE(result == 5);
 }
 
@@ -32,11 +30,7 @@ TEST_CASE("RLBox test enum verification", "[verification]")
 
   tainted<Example_Enum, TestSandbox> ref = ENUM_FIRST;
   auto enumVal = ref.copy_and_verify(
-    [](Example_Enum val) {
-      return val <= ENUM_THIRD ? RLBox_Verify_Status::SAFE
-                               : RLBox_Verify_Status::UNSAFE;
-    },
-    ENUM_UNKNOWN);
+    [](Example_Enum val) { return val <= ENUM_THIRD ? val : ENUM_UNKNOWN; });
   UNUSED(enumVal);
 }
 
@@ -46,7 +40,6 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   const auto testVal = 5;
   const auto lb = 0;
   const auto ub = 10;
-  const auto def = -1;
 
   rlbox::RLBoxSandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
@@ -54,13 +47,11 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();
   *pa = testVal;
 
-  auto result1 = pa.copy_and_verify(
-    [](const int* val) {
-      return *val > lb && *val < ub ? RLBox_Verify_Status::SAFE
-                                    : RLBox_Verify_Status::UNSAFE;
-    },
-    def);
-  REQUIRE(result1 == testVal);
+  auto result1 = pa.copy_and_verify([](std::unique_ptr<int> val) {
+    return *val > lb && *val < ub ? std::move(val) : nullptr;
+  });
+  REQUIRE(result1 != nullptr);
+  REQUIRE(*result1 == testVal);
 
   sandbox.destroy_sandbox();
 }

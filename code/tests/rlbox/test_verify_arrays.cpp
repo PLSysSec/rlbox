@@ -1,10 +1,9 @@
 #include <array>
 #include <cstdint>
 #include <cstring>
+#include <memory>
 
 #include "test_include.hpp"
-
-using rlbox::RLBox_Verify_Status;
 
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test array verification", "[verification]")
@@ -31,22 +30,19 @@ TEST_CASE("RLBox test array verification", "[verification]")
   std::array<long, 4> def = // NOLINT
     { defaultVal1, defaultVal2, defaultVal3, defaultVal4 };
 
-  auto result_fail = pa->copy_and_verify(
-    [](std::array<long, 4>) { // NOLINT
-      return RLBox_Verify_Status::UNSAFE;
-    },
-    def);
+  auto result_fail = pa->copy_and_verify([&def](std::array<long, 4>) { // NOLINT
+    return def;
+  });
 
   REQUIRE(result_fail[0] == defaultVal1);
   REQUIRE(result_fail[1] == defaultVal2);
   REQUIRE(result_fail[2] == defaultVal3);
   REQUIRE(result_fail[3] == defaultVal4);
 
-  auto result_success = pa->copy_and_verify(
-    [](std::array<long, 4>) { // NOLINT
-      return RLBox_Verify_Status::SAFE;
-    },
-    def);
+  auto result_success =
+    pa->copy_and_verify([](std::array<long, 4> val) { // NOLINT
+      return val;
+    });
 
   REQUIRE(result_success[0] == testVal1);
   REQUIRE(result_success[1] == testVal2);
@@ -72,18 +68,15 @@ TEST_CASE("RLBox test range verification", "[verification]")
     rlbox::sandbox_reinterpret_cast<unsigned int*>(pa); // NOLINT
 
   auto checked_range = pa_cast.copy_and_verify_range(
-    [](unsigned int*) { // NOLINT
-      return RLBox_Verify_Status::SAFE;
+    [](std::unique_ptr<unsigned int[]> val) { // NOLINT
+      return val;
     },
-    2,
-    nullptr);
+    2);
 
   auto val32_ptr = reinterpret_cast<const uint32_t*>(&val64); // NOLINT
   REQUIRE(checked_range[0] == val32_ptr[0]);                  // NOLINT
   REQUIRE(checked_range[1] == val32_ptr[1]);                  // NOLINT
-  REQUIRE(sandbox.is_pointer_in_app_memory(checked_range));
-
-  delete[] checked_range; // NOLINT
+  REQUIRE(sandbox.is_pointer_in_app_memory(checked_range.get()));
 
   sandbox.destroy_sandbox();
 }
@@ -99,16 +92,13 @@ TEST_CASE("RLBox test string verification", "[verification]")
 
   std::strncpy(pc.UNSAFE_Unverified(), "Hello", max_length);
 
-  auto checked_string = pc.copy_and_verify_string(
-    [](char*) { // NOLINT
-      return RLBox_Verify_Status::SAFE;
-    },
-    nullptr);
+  auto checked_string =
+    pc.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
+      return val;
+    });
 
-  REQUIRE(strcmp(checked_string, "Hello") == 0); // NOLINT
-  REQUIRE(sandbox.is_pointer_in_app_memory(checked_string));
-
-  delete[] checked_string; // NOLINT
+  REQUIRE(strcmp(checked_string.get(), "Hello") == 0); // NOLINT
+  REQUIRE(sandbox.is_pointer_in_app_memory(checked_string.get()));
 
   sandbox.destroy_sandbox();
 }

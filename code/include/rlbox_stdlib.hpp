@@ -5,6 +5,7 @@
 #include <cstring>
 #include <type_traits>
 
+#include "rlbox_helpers.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_unwrap.hpp"
 #include "rlbox_wrapper_traits.hpp"
@@ -62,28 +63,6 @@ inline tainted<T_Lhs, T_Sbx> sandbox_const_cast(
   return ret;
 }
 
-namespace detail {
-  // Checks that a given range is either entirely in a sandbox or entirely
-  // outside
-  // This is intentionally not const correct, so use with care
-  template<typename T_Sbx, typename T_Ptr, typename T_Num>
-  inline void* check_range_boundaries_get_start(RLBoxSandbox<T_Sbx>& sandbox,
-                                                T_Ptr* ptr,
-                                                T_Num size)
-  {
-    auto ptr_start_val = reinterpret_cast<uintptr_t>(ptr);
-    auto ptr_end_val = ptr_start_val + size;
-
-    auto ptr_start = reinterpret_cast<void*>(ptr_start_val);
-    auto ptr_end = reinterpret_cast<void*>(ptr_end_val);
-
-    detail::dynamic_check(sandbox.is_in_same_sandbox(ptr_start, ptr_end),
-                          "range has overflowed sandbox bounds");
-
-    return ptr_start;
-  }
-}
-
 template<typename T_Sbx,
          typename T_Rhs,
          typename T_Val,
@@ -106,8 +85,8 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(RLBoxSandbox<T_Sbx>& sandbox,
                         "Called memset for memory larger than the sandbox");
 
   tainted<T_Rhs*, T_Sbx> ptr_tainted = ptr;
-  void* dest_start = detail::check_range_boundaries_get_start(
-    sandbox, ptr_tainted.UNSAFE_Unverified(), num_val);
+  void* dest_start = ptr_tainted.UNSAFE_Unverified();
+  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
 
   std::memset(dest_start, detail::unwrap_value(value), num_val);
   return ptr;
@@ -135,14 +114,14 @@ inline T_Wrap<T_Rhs*, T_Sbx> memcpy(RLBoxSandbox<T_Sbx>& sandbox,
                         "Called memcpy for memory larger than the sandbox");
 
   tainted<T_Rhs*, T_Sbx> dest_tainted = dest;
-  void* dest_start = detail::check_range_boundaries_get_start(
-    sandbox, dest_tainted.UNSAFE_Unverified(), num_val);
+  void* dest_start = dest_tainted.UNSAFE_Unverified();
+  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
 
   // src also needs to be checked, as we don't want to allow a src rand to start
   // inside the sandbox and end outside, and vice versa
   // src may or may not be a wrapper, so use unwrap_value
-  void* src_start = detail::check_range_boundaries_get_start(
-    sandbox, detail::unwrap_value(src), num_val);
+  const void* src_start = detail::unwrap_value(src);
+  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src_start, num_val);
 
   std::memcpy(dest_start, src_start, num_val);
 

@@ -28,6 +28,10 @@ template<typename T>
 using valid_param_t = std::conditional_t<std::is_void_v<T>, void*, T>;
 
 template<typename T>
+using valid_array_el_t =
+  std::conditional_t<std::is_void_v<T> || std::is_function_v<T>, int, T>;
+
+template<typename T>
 constexpr bool is_func_or_func_ptr =
   std::is_function_v<T> || std::is_function_v<std::remove_pointer_t<T>> ||
   std::is_member_function_pointer_v<T>;
@@ -35,6 +39,10 @@ constexpr bool is_func_or_func_ptr =
 template<typename T>
 constexpr bool is_one_level_ptr_v =
   std::is_pointer_v<T> && !std::is_pointer_v<std::remove_pointer_t<T>>;
+
+template<typename T_To, typename T_From>
+constexpr bool is_same_or_same_ref_v =
+  std::is_same_v<T_To, T_From>&& std::is_reference_v<T_To&, T_From>;
 
 template<typename T_This, typename T_Target>
 using add_const_if_this_const_t =
@@ -107,14 +115,14 @@ namespace is_c_or_std_array_detail {
   {};
 
   template<typename T, size_t N>
-  std::true_type is_std_array_helper(std::array<T, N>);
+  std::true_type is_std_array_helper(std::array<T, N>*);
 
   template<typename T>
-  std::false_type is_std_array_helper(T);
+  std::false_type is_std_array_helper(T*);
 
   template<typename T>
   constexpr bool is_std_array_v =
-    decltype(is_std_array_helper(std::declval<T>()))::value;
+    decltype(is_std_array_helper(std::declval<std::add_pointer_t<T>>()))::value;
 
   template<typename T>
   struct is_c_or_std_array_helper<T, std::enable_if_t<is_std_array_v<T>>>
@@ -135,6 +143,27 @@ constexpr bool is_std_array_v = is_c_or_std_array_detail::is_std_array_v<T>;
 template<typename T>
 constexpr bool is_c_or_std_array_v =
   is_c_or_std_array_detail::is_c_or_std_array_helper<T>::value;
+
+namespace std_array_el_detail {
+  template<typename T>
+  struct W
+  {
+    using type = T;
+  };
+
+  template<typename T, size_t N>
+  W<T> is_std_array_helper(std::array<T, N>*);
+
+  template<typename T>
+  W<void> is_std_array_helper(T*);
+
+  template<typename T>
+  using std_array_el_t = decltype(std_array_el_detail::is_std_array_helper(
+    std::declval<std::add_pointer_t<T>>));
+}
+
+template<typename T>
+using std_array_el_t = typename std_array_el_detail::std_array_el_t<T>::type;
 
 namespace all_extents_same_detail {
 

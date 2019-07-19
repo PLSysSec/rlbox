@@ -9,6 +9,7 @@
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_policy_types.hpp"
+#include "rlbox_range.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_stdlib.hpp"
 #include "rlbox_struct_support.hpp"
@@ -234,40 +235,36 @@ public:
     rlbox_detail_forward_to_const(operator->, T_Ret);
   }
 
-  template<typename T_Def>
-  inline T_Def copy_and_verify(
-    std::function<RLBox_Verify_Status(
-      detail::c_to_std_array_t<std::remove_cv_t<T>>)> verifier,
-    T_Def default_val) const
+  template<typename T_Func>
+  inline auto copy_and_verify(T_Func verifier) const
   {
-    using T_Deref = std::remove_pointer_t<T>;
+    using T_Deref = std::remove_cv_t<std::remove_pointer_t<T>>;
 
     if_constexpr_named(cond1, detail::is_fundamental_or_enum_v<T>)
     {
-      static_assert(std::is_assignable_v<T_Def&, T>,
-                    "Incorrect type for default value");
       auto val = impl().get_raw_value();
-      return verifier(val) == RLBox_Verify_Status::SAFE ? val : default_val;
+      return verifier(val);
     }
     else if_constexpr_named(
       cond2, detail::is_one_level_ptr_v<T> && !std::is_class_v<T_Deref>)
     {
-      static_assert(std::is_assignable_v<T_Def&, std::remove_pointer_t<T>>,
-                    "Incorrect type for default value");
       static_assert(!std::is_void_v<T_Deref>,
-                    "copy_and_verify does not work for void*. Cast it to a "
-                    "different tainted pointer with sandbox_reinterpret_cast");
+                    "copy_and_verify not recommended for void* as it could "
+                    "lead to some anti-patterns in verifiers. Cast it to a "
+                    "different tainted pointer with sandbox_reinterpret_cast "
+                    "and then call copy_and_verify. Alternately, you can use "
+                    "the UNSAFE_Unverified API to do this without casting.");
 
       auto val = impl().get_raw_value();
       if (val == nullptr) {
-        return default_val;
+        return verifier(nullptr);
       } else {
         // Important to assign to a local variable (i.e. make a copy)
         // Else, for tainted_volatile, this will allow a
         // time-of-check-time-of-use attack
-        auto val_deref = *val;
-        return verifier(&val_deref) == RLBox_Verify_Status::SAFE ? val_deref
-                                                                 : default_val;
+        auto val_copy = std::make_unique<T_Deref>();
+        *val_copy = *val;
+        return verifier(std::move(val_copy));
       }
     }
     else if_constexpr_named(
@@ -279,55 +276,49 @@ public:
     else if_constexpr_named(cond4, std::is_array_v<T>)
     {
       static_assert(
-        std::is_same_v<T_Def, detail::c_to_std_array_t<std::remove_cv_t<T>>>,
-        "Incorrect type for default value");
-
-      static_assert(
         detail::is_fundamental_or_enum_v<std::remove_all_extents_t<T>>,
-        "copy_and_verify on arrays is only safe for fundamental or enum types");
+        "copy_and_verify on arrays is only safe for fundamental or enum types. "
+        "For arrays of other types, apply copy_and_verify on each element "
+        "individually --- a[i].copy_and_verify(...)");
 
       auto copy = impl().get_raw_value();
-      return verifier(copy) == RLBox_Verify_Status::SAFE ? copy : default_val;
+      return verifier(copy);
     }
     else
     {
-      auto unknownCase = !(cond1 || cond2 || cond3);
+      auto unknownCase = !(cond1 || cond2 || cond3 || cond4);
       rlbox_detail_static_fail_because(
         unknownCase,
         "copy_and_verify not supported for this type as it may be unsafe");
     }
   }
 
-  inline detail::valid_return_t<T> copy_and_verify_range(
-    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
-    std::size_t count,
-    detail::valid_param_t<T> default_val) const
+private:
+  using T_CopyAndVerifyRangeEl =
+    detail::valid_array_el_t<std::remove_cv_t<std::remove_pointer_t<T>>>;
+
+  // Template needed to ensure that function isn't instantiated for unsupported
+  // types like function pointers which causes compile errors...
+  template<typename T2 = T>
+  inline std::unique_ptr<T_CopyAndVerifyRangeEl[]> copy_and_verify_range_helper(
+    std::size_t count) const
   {
-    static_assert(std::is_pointer_v<T>,
-                  "Can only call copy_and_verify_range on pointers");
+    static_assert(std::is_pointer_v<T>);
+    static_assert(detail::is_fundamental_or_enum_v<T_CopyAndVerifyRangeEl>);
 
-    using T_El = std::remove_cv_t<std::remove_pointer_t<T>>;
-
-    static_assert(detail::is_fundamental_or_enum_v<T_El>,
-                  "copy_and_verify_range is only safe for ranges of "
-                  "fundamental or enum types");
+    detail::dynamic_check(
+      count != 0,
+      "Called copy_and_verify_range/copy_and_verify_string with count 0");
 
     auto start = reinterpret_cast<const void*>(impl().get_raw_value());
     if (start == nullptr) {
-      return default_val;
+      return nullptr;
     }
 
-    auto end_exclusive_tainted = &(impl()[count + 1]);
-    auto end_exclusive =
-      reinterpret_cast<uintptr_t>(end_exclusive_tainted.get_raw_value());
-    auto end = reinterpret_cast<const void*>(end_exclusive - 1);
+    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(
+      start, count * sizeof(T_CopyAndVerifyRangeEl));
 
-    auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(start, end);
-    detail::dynamic_check(
-      no_overflow,
-      "Pointer arithmetic overflowed a pointer beyond sandbox memory");
-
-    auto target = new T_El[count];
+    auto target = std::make_unique<T_CopyAndVerifyRangeEl[]>(count);
 
     for (size_t i = 0; i < count; i++) {
       auto p_src_i_tainted = &(impl()[i]);
@@ -335,23 +326,39 @@ public:
       detail::convert_type_fundamental_or_array(target[i], *p_src_i);
     }
 
-    return verifier(target) == RLBox_Verify_Status::SAFE ? target : default_val;
+    return std::move(target);
   }
 
-  inline detail::valid_return_t<T> copy_and_verify_string(
-    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
-    detail::valid_param_t<T> default_val) const
+public:
+  template<typename T_Func>
+  inline auto copy_and_verify_range(T_Func verifier, std::size_t count) const
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "Can only call copy_and_verify_range on pointers");
+
+    static_assert(
+      detail::is_fundamental_or_enum_v<T_CopyAndVerifyRangeEl>,
+      "copy_and_verify_range is only safe for ranges of "
+      "fundamental or enum types. For other types, call "
+      "copy_and_verify on each element --- a[i].copy_and_verify(...)");
+
+    std::unique_ptr<T_CopyAndVerifyRangeEl[]> target =
+      copy_and_verify_range_helper(count);
+    return verifier(std::move(target));
+  }
+
+  template<typename T_Func>
+  inline auto copy_and_verify_string(T_Func verifier) const
   {
     static_assert(std::is_pointer_v<T>,
                   "Can only call copy_and_verify_string on pointers");
 
-    static_assert(
-      std::is_same_v<char, std::remove_cv_t<std::remove_pointer_t<T>>>,
-      "copy_and_verify_string only allows char*");
+    static_assert(std::is_same_v<char, T_CopyAndVerifyRangeEl>,
+                  "copy_and_verify_string only allows char*");
 
     auto start = impl().get_raw_value();
     if (start == nullptr) {
-      return default_val;
+      return verifier(nullptr);
     }
 
     // it is safe to run strlen on a tainted<string> as worst case, the string
@@ -359,15 +366,13 @@ public:
     // however, copy_and_verify_range ensures that we never copy memory outsider
     // the range
     auto str_len = std::strlen(start) + 1;
-    auto ret = copy_and_verify_range(verifier, str_len, default_val);
-
-    // ugly, but safe as we are operating on a copy
-    using T_NoConst = detail::remove_const_from_pointer<decltype(ret)>;
-    auto ret_mod = const_cast<T_NoConst>(ret);
+    std::unique_ptr<T_CopyAndVerifyRangeEl[]> target =
+      copy_and_verify_range_helper(str_len);
 
     // ensure the string has a trailing null
-    ret_mod[str_len - 1] = '\0';
-    return ret;
+    target[str_len - 1] = '\0';
+
+    return verifier(std::move(target));
   }
 };
 
