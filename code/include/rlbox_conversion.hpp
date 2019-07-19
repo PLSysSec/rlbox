@@ -241,9 +241,11 @@ inline void convert_type(T_To& to,
                          const T_From& from,
                          const void* example_unsandboxed_ptr)
 {
-  if constexpr (std::is_class_v<T_To>) {
+  if constexpr ((std::is_class_v<T_To> ||
+                 std::is_class_v<T_From>)&&!detail::is_std_array_v<T_To> &&
+                !detail::is_std_array_v<T_From>) {
     // Sanity check
-    static_assert(std::is_class_v<T_From>);
+    static_assert(std::is_class_v<T_From> && std::is_class_v<T_To>);
     convert_type_class<T_Sbx, Direction, T_To, T_From>::run(
       to, from, example_unsandboxed_ptr);
   } else {

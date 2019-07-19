@@ -40,7 +40,10 @@ private:
     thread_data->last_callback_invoked = N;
     using T_Func = T_Ret (*)(T_Args...);
     T_Func func = reinterpret_cast<T_Func>(thread_data->sandbox->callbacks[N]);
-    return func(std::forward<T_Args>(params)...);
+    // Callbacks are invoked through function pointers, cannot use std::forward
+    // as we don't have caller context for T_Args, which means they are all
+    // effectively passed by value
+    return func(params...);
   }
 
 protected:

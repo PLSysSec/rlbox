@@ -401,10 +401,22 @@ public:
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else if_constexpr_named(
-      cond3, !(std::is_void_v<T_Ret> || detail::rlbox_is_wrapper_v<T_Ret>))
+      cond3, (std::is_array_v<detail::rlbox_remove_wrapper_t<T_Args>> || ...))
     {
       rlbox_detail_static_fail_because(
         cond3,
+        "Change all static array arguments to the callback to be pointers."
+        "For instance if a callback has type\n\n"
+        "int foo(int a[4]) {...}\n\n"
+        "Change this to \n\n"
+        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int*, T_Sbx> a) {...}\n");
+    }
+    else if_constexpr_named(
+      cond4, !(std::is_void_v<T_Ret> || detail::rlbox_is_wrapper_v<T_Ret>))
+    {
+      rlbox_detail_static_fail_because(
+        cond4,
         "Change the callback return type to be tainted if it is not void."
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"

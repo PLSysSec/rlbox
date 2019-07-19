@@ -1,4 +1,3 @@
-#include <array>
 #include <cstdint>
 #include <cstring>
 #include <limits>
@@ -29,7 +28,7 @@ static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
   tainted<unsigned, rlbox::rlbox_noop_sandbox> a,
   tainted<const char*, rlbox::rlbox_noop_sandbox> b,
   // NOLINTNEXTLINE
-  tainted<unsigned[1], rlbox::rlbox_noop_sandbox> c)
+  tainted<unsigned*, rlbox::rlbox_noop_sandbox> c)
 {
   const unsigned upper_bound = 100;
   auto aCopy = a.copy_and_verify(
@@ -45,18 +44,18 @@ static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
     },
     nullptr);
 
-  std::array<unsigned, 1> def_array = { 0 };
+  unsigned* def_ptr = nullptr;
 
-  auto cCopy = c.copy_and_verify_array(
-    [](std::array<unsigned, 1> arr) {
-      unsigned val = arr[0];
-      return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
-                                          : RLBox_Verify_Status::UNSAFE;
-    },
-    def_array);
-  REQUIRE(cCopy[0] + 1 == aCopy);
+  auto cCopy = c.copy_and_verify_range(
+    [](const unsigned* arr) {
+      return *arr > 0 && *arr < upper_bound ? RLBox_Verify_Status::SAFE
+                                            : RLBox_Verify_Status::UNSAFE;
+    }, 1,
+    def_ptr);
+  REQUIRE(cCopy[0] + 1 == aCopy); // NOLINT
   auto ret = aCopy + strlen(bCopy);
   delete[] bCopy; // NOLINT
+  delete[] cCopy; // NOLINT
 
   // test reentrancy
   tainted<int*, rlbox::rlbox_noop_sandbox> pFoo =
@@ -95,7 +94,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   {
     const int val1 = 2;
     const int val2 = 3;
-    const int upper_bound = 10;
+    const int upper_bound = 100;
     auto result1 = sandbox_invoke(sandbox, simpleAddTest, val1, val2)
                      .copy_and_verify(
                        [](int val) {
@@ -110,7 +109,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   SECTION("test pointer verification function") // NOLINT
   {
     const int val1 = 4;
-    const int upper_bound = 10;
+    const int upper_bound = 100;
 
     tainted<int*, TestType> pa = sandbox.template malloc_in_sandbox<int>();
     *pa = val1;
@@ -146,32 +145,35 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   // }
 
   (void)exampleCallback;
-  // SECTION("test callback 1 and re-entrancy") // NOLINT
-  // {
-  //   const int upper_bound = 10;
+  SECTION("test callback 1 and re-entrancy") // NOLINT
+  {
+    const int upper_bound = 100;
 
-  //   const unsigned cb_val_param = 4;
+    const unsigned cb_val_param = 4;
 
-  //   tainted<char*, TestType> cb_ptr_param = sandbox.template
-  //   malloc_in_sandbox<char>(upper_bound);
-  //   std::strcpy(cb_ptr_param.UNSAFE_Unverified(), "Hello");
+    tainted<char*, TestType> cb_ptr_param = sandbox.template
+    malloc_in_sandbox<char>(upper_bound);
+    //strcpy is safe here
+    // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
+    std::strcpy(cb_ptr_param.UNSAFE_Unverified(), "Hello");
 
-  //   auto cb_callback_param = sandbox.register_callback(exampleCallback);
+    auto cb_callback_param = sandbox.register_callback(exampleCallback);
+    (void) cb_callback_param;
 
-  //   auto resultT = sandbox_invoke(sandbox,
-  //                                 simpleCallbackTest,
-  //                                 cb_val_param,
-  //                                 cb_ptr_param,
-  //                                 cb_callback_param);
+    auto resultT = sandbox_invoke(sandbox,
+                                  simpleCallbackTest,
+                                  cb_val_param,
+                                  cb_ptr_param,
+                                  cb_callback_param);
 
-  //   auto result = resultT.copy_and_verify(
-  //     [](int val) { return val > 0 && val < upper_bound ?
-  //     RLBox_Verify_Status::SAFE
-  //                                 : RLBox_Verify_Status::UNSAFE; }, -1);
-  //   REQUIRE(result == 10);
+    auto result = resultT.copy_and_verify(
+      [](int val) { return val > 0 && val < upper_bound ?
+      RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE; }, -1);
+    REQUIRE(result == 10);
 
-  //   sandbox.template free_in_sandbox(cb_ptr_param);
-  // }
+    sandbox.template free_in_sandbox(cb_ptr_param);
+  }
 
   // SECTION("testCallback2") // NOLINT
   //     {

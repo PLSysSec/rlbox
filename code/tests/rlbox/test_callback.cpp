@@ -61,6 +61,9 @@ static int bad_callback_6(RL&, tainted<int, TestSandbox>) // NOLINT
   return test_val;
 }
 
+// Using static array parameter
+static void bad_callback_7(RL&, tainted<int[4], TestSandbox>) {} // NOLINT
+
 static void good_callback_1(RL&) {} // NOLINT
 
 static void good_callback_2(RL&, tainted<int, TestSandbox>) {} // NOLINT
@@ -91,6 +94,7 @@ TEST_CASE("callback sig checks", "[sandbox_callback]")
   REQUIRE_COMPILE_ERR(sandbox.register_callback(bad_callback_4));
   REQUIRE_COMPILE_ERR(sandbox.register_callback(bad_callback_5));
   REQUIRE_COMPILE_ERR(sandbox.register_callback(bad_callback_6));
+  REQUIRE_COMPILE_ERR(sandbox.register_callback(bad_callback_7));
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_1));
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_2));
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_3));

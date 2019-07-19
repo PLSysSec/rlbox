@@ -130,6 +130,9 @@ namespace is_c_or_std_array_detail {
 }
 
 template<typename T>
+constexpr bool is_std_array_v = is_c_or_std_array_detail::is_std_array_v<T>;
+
+template<typename T>
 constexpr bool is_c_or_std_array_v =
   is_c_or_std_array_detail::is_c_or_std_array_helper<T>::value;
 
