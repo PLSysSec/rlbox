@@ -81,7 +81,7 @@ TEST_CASE("RLBox test range verification", "[verification]")
   auto val32_ptr = reinterpret_cast<const uint32_t*>(&val64); // NOLINT
   REQUIRE(checked_range[0] == val32_ptr[0]);                  // NOLINT
   REQUIRE(checked_range[1] == val32_ptr[1]);                  // NOLINT
-  REQUIRE(!sandbox.is_pointer_in_sandbox_memory(checked_range));
+  REQUIRE(sandbox.is_pointer_in_app_memory(checked_range));
 
   delete[] checked_range; // NOLINT
 
@@ -106,7 +106,7 @@ TEST_CASE("RLBox test string verification", "[verification]")
     nullptr);
 
   REQUIRE(strcmp(checked_string, "Hello") == 0); // NOLINT
-  REQUIRE(!sandbox.is_pointer_in_sandbox_memory(checked_string));
+  REQUIRE(sandbox.is_pointer_in_app_memory(checked_string));
 
   delete[] checked_string; // NOLINT
 

@@ -292,6 +292,11 @@ public:
     return this->impl_is_pointer_in_sandbox_memory(p);
   }
 
+  inline bool is_pointer_in_app_memory(const void* p)
+  {
+    return this->impl_is_pointer_in_app_memory(p);
+  }
+
   inline size_t get_total_memory() { return this->impl_get_total_memory(); }
 
   inline void* get_memory_location()

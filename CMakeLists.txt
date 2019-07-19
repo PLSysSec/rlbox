@@ -123,9 +123,9 @@ add_library(rlbox_glue_lib_shared SHARED code/tests/rlbox_glue/lib/libtest.c)
 target_include_directories(rlbox_glue_lib_shared
                            PUBLIC code/tests/rlbox_glue/lib)
 
-add_executable(test_rlbox_glue
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_sandbox_glue.cpp)
+add_executable(test_rlbox_glue code/tests/test_main.cpp
+                               code/tests/rlbox_glue/test_sandbox_glue.cpp)
+target_include_directories(test_rlbox_glue PUBLIC code/tests/rlbox_glue)
 
 target_link_libraries(test_rlbox_glue
                       Catch2::Catch2

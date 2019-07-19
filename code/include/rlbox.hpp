@@ -243,15 +243,16 @@ public:
 
     if_constexpr_named(cond1, detail::is_fundamental_or_enum_v<T>)
     {
-      static_assert(std::is_same_v<T_Def, T>, "Incorrect default type");
+      static_assert(std::is_assignable_v<T_Def&, T>,
+                    "Incorrect type for default value");
       auto val = impl().get_raw_value();
       return verifier(val) == RLBox_Verify_Status::SAFE ? val : default_val;
     }
     else if_constexpr_named(
       cond2, detail::is_one_level_ptr_v<T> && !std::is_class_v<T_Deref>)
     {
-      static_assert(std::is_same_v<T_Def, std::remove_pointer_t<T>>,
-                    "Incorrect default type");
+      static_assert(std::is_assignable_v<T_Def&, std::remove_pointer_t<T>>,
+                    "Incorrect type for default value");
       static_assert(!std::is_void_v<T_Deref>,
                     "copy_and_verify does not work for void*. Cast it to a "
                     "different tainted pointer with sandbox_reinterpret_cast");

@@ -2,33 +2,23 @@
 #include <cstring>
 #include <limits>
 #include <memory>
-namespace mpl_ {
-struct na;
-} // namespace mpl_
 
-// IWYU pragma: begin_exports
-#include "catch2/catch.hpp"
-// IWYU pragma: end_exports
-
-// NOLINTNEXTLINE
-#define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol
-#define RLBOX_USE_EXCEPTIONS
-#include "rlbox.hpp"
-#include "rlbox_noop_sandbox.hpp"
-
+// IWYU pragma: no_forward_declare mpl_::na
 #include "libtest.h"
+#include "test_sandbox_glue.hpp"
 
 using rlbox::RLBox_Verify_Status;
 using rlbox::RLBoxSandbox;
 using rlbox::tainted;
 
-static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
+template<typename TestType>
+static tainted<int, TestType> exampleCallback(
   // NOLINTNEXTLINE(google-runtime-references)
-  RLBoxSandbox<rlbox::rlbox_noop_sandbox>& sandbox,
-  tainted<unsigned, rlbox::rlbox_noop_sandbox> a,
-  tainted<const char*, rlbox::rlbox_noop_sandbox> b,
+  RLBoxSandbox<TestType>& sandbox,
+  tainted<unsigned, TestType> a,
+  tainted<const char*, TestType> b,
   // NOLINTNEXTLINE
-  tainted<unsigned*, rlbox::rlbox_noop_sandbox> c)
+  tainted<unsigned*, TestType> c)
 {
   const unsigned upper_bound = 100;
   auto aCopy = a.copy_and_verify(
@@ -50,7 +40,8 @@ static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
     [](const unsigned* arr) {
       return *arr > 0 && *arr < upper_bound ? RLBox_Verify_Status::SAFE
                                             : RLBox_Verify_Status::UNSAFE;
-    }, 1,
+    },
+    1,
     def_ptr);
   REQUIRE(cCopy[0] + 1 == aCopy); // NOLINT
   auto ret = aCopy + strlen(bCopy);
@@ -58,10 +49,29 @@ static tainted<int, rlbox::rlbox_noop_sandbox> exampleCallback(
   delete[] cCopy; // NOLINT
 
   // test reentrancy
-  tainted<int*, rlbox::rlbox_noop_sandbox> pFoo =
-    sandbox.template malloc_in_sandbox<int>();
+  tainted<int*, TestType> pFoo = sandbox.template malloc_in_sandbox<int>();
   sandbox.free_in_sandbox(pFoo);
   return ret; // NOLINT
+}
+
+template<typename TestType>
+static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
+  RLBoxSandbox<TestType>& /* sandbox */,
+  tainted<unsigned long, TestType> val1, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val2, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val3, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val4, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val5, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val6) // NOLINT(google-runtime-int)
+{
+  return ((val1.UNSAFE_Unverified() == 4)     // NOLINT
+          && (val2.UNSAFE_Unverified() == 5)  // NOLINT
+          && (val3.UNSAFE_Unverified() == 6)  // NOLINT
+          && (val4.UNSAFE_Unverified() == 7)  // NOLINT
+          && (val5.UNSAFE_Unverified() == 8)  // NOLINT
+          && (val6.UNSAFE_Unverified() == 9)) // NOLINT
+           ? 11                               // NOLINT
+           : -1;                              // NOLINT
 }
 
 // NOLINTNEXTLINE
@@ -71,6 +81,14 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 {
   rlbox::RLBoxSandbox<TestType> sandbox;
   sandbox.create_sandbox();
+
+  const int upper_bound = 100;
+
+  tainted<char*, TestType> sb_string =
+    sandbox.template malloc_in_sandbox<char>(upper_bound);
+  // strcpy is safe here
+  // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
+  std::strcpy(sb_string.UNSAFE_Unverified(), "Hello");
 
   SECTION("test simple function invocation") // NOLINT
   {
@@ -94,7 +112,6 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   {
     const int val1 = 2;
     const int val2 = 3;
-    const int upper_bound = 100;
     auto result1 = sandbox_invoke(sandbox, simpleAddTest, val1, val2)
                      .copy_and_verify(
                        [](int val) {
@@ -109,7 +126,6 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   SECTION("test pointer verification function") // NOLINT
   {
     const int val1 = 4;
-    const int upper_bound = 100;
 
     tainted<int*, TestType> pa = sandbox.template malloc_in_sandbox<int>();
     *pa = val1;
@@ -125,175 +141,200 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     REQUIRE(result1 == val1);
   }
 
-  // static int exampleCallback2(RLBoxSandbox<TestType>* sandbox,
-  //     tainted<unsigned long, TestType> val1,
-  //     tainted<unsigned long, TestType> val2,
-  //     tainted<unsigned long, TestType> val3,
-  //     tainted<unsigned long, TestType> val4,
-  //     tainted<unsigned long, TestType> val5,
-  //     tainted<unsigned long, TestType> val6
-  // )
-  // {
-  //     return (
-  //         (val1.UNSAFE_Unverified() == 4) &&
-  //         (val2.UNSAFE_Unverified() == 5) &&
-  //         (val3.UNSAFE_Unverified() == 6) &&
-  //         (val4.UNSAFE_Unverified() == 7) &&
-  //         (val5.UNSAFE_Unverified() == 8) &&
-  //         (val6.UNSAFE_Unverified() == 9)
-  //     )? 11 : -1;
-  // }
-
-  (void)exampleCallback;
   SECTION("test callback 1 and re-entrancy") // NOLINT
   {
-    const int upper_bound = 100;
-
     const unsigned cb_val_param = 4;
 
-    tainted<char*, TestType> cb_ptr_param = sandbox.template
-    malloc_in_sandbox<char>(upper_bound);
-    //strcpy is safe here
-    // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
-    std::strcpy(cb_ptr_param.UNSAFE_Unverified(), "Hello");
+    auto cb_callback_param =
+      sandbox.register_callback(exampleCallback<rlbox::rlbox_noop_sandbox>);
 
-    auto cb_callback_param = sandbox.register_callback(exampleCallback);
-    (void) cb_callback_param;
-
-    auto resultT = sandbox_invoke(sandbox,
-                                  simpleCallbackTest,
-                                  cb_val_param,
-                                  cb_ptr_param,
-                                  cb_callback_param);
+    auto resultT = sandbox_invoke(
+      sandbox, simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
 
     auto result = resultT.copy_and_verify(
-      [](int val) { return val > 0 && val < upper_bound ?
-      RLBox_Verify_Status::SAFE
-                                  : RLBox_Verify_Status::UNSAFE; }, -1);
+      [](int val) {
+        return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
+                                            : RLBox_Verify_Status::UNSAFE;
+      },
+      -1);
     REQUIRE(result == 10);
-
-    sandbox.template free_in_sandbox(cb_ptr_param);
   }
 
-  // SECTION("testCallback2") // NOLINT
-  //     {
-  //         auto resultT = sandbox_invoke(sandbox, simpleCallbackTest2, 4,
-  //         registeredCallback2);
+  SECTION("test callback 2") // NOLINT
+  {
+    auto cb_callback_param =
+      sandbox.register_callback(exampleCallback2<rlbox::rlbox_noop_sandbox>);
 
-  //         auto result = resultT
-  //             .copy_and_verify([](int val){ return val; });
-  //         REQUIRE(result == 11);
-  //     }
-  // }
+    auto resultT =
+      sandbox_invoke(sandbox, simpleCallbackTest2, 4, cb_callback_param);
 
-  // SECTION("testInternalCallback") // NOLINT
+    auto result = resultT.copy_and_verify(
+      [](int /* val */) { return RLBox_Verify_Status::SAFE; }, -1);
+    REQUIRE(result == 11);
+  }
+
+  SECTION("test callback to an internal function") // NOLINT
+  {
+    auto fnPtr = sandbox_function_address(sandbox, internalCallback);
+
+    tainted<testStruct*, TestType> pFoo =
+      sandbox.template malloc_in_sandbox<testStruct>();
+    pFoo->fieldFnPtr = fnPtr;
+
+    auto resultT = sandbox_invoke(
+      sandbox, simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
+
+    auto result = resultT.copy_and_verify(
+      [](int val) {
+        return val > 0 && val < upper_bound ? RLBox_Verify_Status::SAFE
+                                            : RLBox_Verify_Status::UNSAFE;
+      },
+      -1);
+    REQUIRE(result == 10);
+
+    sandbox.free_in_sandbox(pFoo);
+  }
+
+  SECTION("test echo and pointer locations") // NOLINT
+  {
+    const char* str = "Hello";
+
+    // str is allocated in our heap, not the sandbox's heap
+    REQUIRE(sandbox.is_pointer_in_app_memory(str));
+
+    tainted<char*, TestType> temp =
+      sandbox.template malloc_in_sandbox<char>(std::strlen(str) + 1);
+    char* str_in_sbx = temp.UNSAFE_Unverified();
+    REQUIRE(sandbox.is_pointer_in_sandbox_memory(str_in_sbx));
+
+    // strcpy is safe here
+    // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
+    std::strcpy(str_in_sbx, str);
+
+    auto retStrRaw = sandbox_invoke(sandbox, simpleEchoTest, temp);
+    // test some modifications of the string
+    *retStrRaw = 'g';
+    char* retStr = retStrRaw.copy_and_verify_string(
+      [](char* val) {
+        return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+                                         : RLBox_Verify_Status::UNSAFE;
+      },
+      nullptr);
+
+    REQUIRE(retStr != nullptr);
+    REQUIRE(sandbox.is_pointer_in_app_memory(retStr));
+
+    REQUIRE(strcmp(str, retStr) != 0);
+    *retStrRaw = 'H';
+    char* retStr2 = retStrRaw.copy_and_verify_string(
+      [](char* val) {
+        return strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
+                                         : RLBox_Verify_Status::UNSAFE;
+      },
+      nullptr);
+    REQUIRE(strcmp(str, retStr2) == 0);
+
+    sandbox.free_in_sandbox(temp);
+    delete[] retStr; // NOLINT
+  }
+
+  SECTION("test floating point") // NOLINT
+  {
+    const float fVal1 = 1.0;
+    const float fVal2 = 2.0;
+    const double dVal1 = 1.0;
+    const double dVal2 = 2.0;
+    const auto defaultVal = -1.0;
+
+    auto resultF = sandbox_invoke(sandbox, simpleFloatAddTest, fVal1, fVal2)
+                     .copy_and_verify(
+                       [](float val) {
+                         return val > 0 && val < upper_bound
+                                  ? RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE;
+                       },
+                       defaultVal);
+    REQUIRE(resultF == fVal1 + fVal2);
+
+    auto resultD = sandbox_invoke(sandbox, simpleDoubleAddTest, dVal1, dVal2)
+                     .copy_and_verify(
+                       [](double val) {
+                         return val > 0 && val < upper_bound
+                                  ? RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE;
+                       },
+                       defaultVal);
+    REQUIRE(resultD == dVal1 + dVal2);
+
+    // test float to double conversions
+    auto resultFD = sandbox_invoke(sandbox, simpleFloatAddTest, dVal1, dVal2)
+                      .copy_and_verify(
+                        [](double val) {
+                          return val > 0 && val < upper_bound
+                                   ? RLBox_Verify_Status::SAFE
+                                   : RLBox_Verify_Status::UNSAFE;
+                        },
+                        defaultVal);
+    REQUIRE(resultFD == dVal1 + dVal2);
+  }
+
+  SECTION("testPointerValAdd") // NOLINT
+  {
+    const double d1 = 1.0;
+    const double d2 = 2.0;
+    const auto defaultVal = -1.0;
+
+    tainted<double*, TestType> p = sandbox.template malloc_in_sandbox<double>();
+    *p = d1;
+
+    auto resultD = sandbox_invoke(sandbox, simplePointerValAddTest, p, d2)
+                     .copy_and_verify(
+                       [](double val) {
+                         return val > 0 && val < upper_bound
+                                  ? RLBox_Verify_Status::SAFE
+                                  : RLBox_Verify_Status::UNSAFE;
+                       },
+                       defaultVal);
+    REQUIRE(resultD == d1 + d2);
+  }
+
+  // SECTION("testStructures" bool ignoreGlobalStringsInLib) // NOLINT
   // {
-  //     auto fnPtr = sandbox_function(sandbox, internalCallback);
+  //   auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
+  //   auto result =
+  //     resultT.copy_and_verify([](tainted<testStruct, TestType>& val) {
+  //       testStruct ret{};
+  //       ret.fieldLong =
+  //         val.fieldLong.copy_and_verify([](unsigned long val) { return val; });
+  //       ret.fieldString = ignoreGlobalStringsInLib
+  //                           ? "Hello"
+  //                           : val.fieldString.copy_and_verify_string(
+  //                               sandbox,
+  //                               [](const char* val) {
+  //                                 return strlen(val) < upper_bound
+  //                                          ? RLBox_Verify_Status::SAFE
+  //                                          : RLBox_Verify_Status::UNSAFE;
+  //                               },
+  //                               nullptr);
+  //       ret.fieldBool =
+  //         val.fieldBool.copy_and_verify([](unsigned int val) { return val; });
+  //       val.fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
+  //                                         sizeof(ret.fieldFixedArr),
+  //                                         [](char* arr, size_t size) {
+  //                                           UNUSED(arr);
+  //                                           UNUSED(size);
+  //                                           return RLBox_Verify_Status::SAFE;
+  //                                         });
+  //       return ret;
+  //     });
+  //   REQUIRE(result.fieldLong == 7 && strcmp(result.fieldString, "Hello") == 0 &&
+  //           result.fieldBool == 1 && strcmp(result.fieldFixedArr, "Bye") == 0);
 
-  //     tainted<testStruct*, TestType> pFoo = sandbox->template
-  //     mallocInSandbox<testStruct>(); pFoo->fieldFnPtr = fnPtr;
-
-  //     auto resultT = sandbox_invoke(sandbox, simpleCallbackTest, (unsigned)
-  //     4, sandbox->stackarr("Hello"), fnPtr); auto result = resultT
-  //         .copy_and_verify([](int val){ return val > 0 && val < 100? val :
-  //         -1;
-  //         });
-  //     REQUIRE(result == 10);
-  // }
-
-  // SECTION("testEchoAndPointerLocations") // NOLINT
-  // {
-  //     const char* str = "Hello";
-
-  //     //str is allocated in our heap, not the sandbox's heap
-  //     REQUIRE(sandbox->isPointerInAppMemoryOrNull(str));
-
-  //     tainted<char*, TestType> temp = sandbox->template
-  //     mallocInSandbox<char>(strlen(str) + 1); char* strInSandbox =
-  //     temp.UNSAFE_Unverified();
-  //     REQUIRE(sandbox->isPointerInSandboxMemoryOrNull(strInSandbox));
-
-  //     strcpy(strInSandbox, str);
-
-  //     auto retStrRaw = sandbox_invoke(sandbox, simpleEchoTest, temp);
-  //     *retStrRaw = 'g';
-  //     *retStrRaw = 'H';
-  //     char* retStr = retStrRaw.copy_and_verifyString(sandbox, [](char* val) {
-  //     return strlen(val) < 100? RLBox_Verify_Status::SAFE :
-  //     RLBox_Verify_Status::UNSAFE; }, nullptr);
-
-  //     REQUIRE(retStr != nullptr &&
-  //     sandbox->isPointerInAppMemoryOrNull(retStr));
-
-  //     auto isStringSame = strcmp(str, retStr) == 0;
-  //     REQUIRE(isStringSame);
-
-  //     sandbox->freeInSandbox(temp);
-  //     free(retStr);
-  // }
-
-  // SECTION("testFloatingPoint") // NOLINT
-  // {
-  //     auto resultF = sandbox_invoke(sandbox, simpleFloatAddTest, 1.0f, 2.0f)
-  //         .copy_and_verify([](float val){ return val > 0 && val < 100? val :
-  //         -1.0; });
-  //     REQUIRE(resultF == 3.0);
-
-  //     auto resultD = sandbox_invoke(sandbox, simpleDoubleAddTest, 1.0, 2.0)
-  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
-  //         -1.0; });
-  //     REQUIRE(resultD == 3.0);
-
-  //     //test float to double conversions
-
-  //     auto resultFD = sandbox_invoke(sandbox, simpleFloatAddTest, 1.0, 2.0)
-  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
-  //         -1.0; });
-  //     REQUIRE(resultFD == 3.0);
-  // }
-
-  // SECTION("testPointerValAdd") // NOLINT
-  // {
-  //     tainted<double*, TestType> pd = sandbox->template
-  //     mallocInSandbox<double>(); *pd = 1.0;
-
-  //     double d = 2.0;
-
-  //     auto resultD = sandbox_invoke(sandbox, simplePointerValAddTest, pd, d)
-  //         .copy_and_verify([](double val){ return val > 0 && val < 100? val :
-  //         -1.0; });
-  //     REQUIRE(resultD == 3.0);
-  // }
-
-  // SECTION("testStructures"bool ignoreGlobalStringsInLib) // NOLINT
-  // {
-  //     auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
-  //     auto result = resultT
-  //         .copy_and_verify([this,
-  //         ignoreGlobalStringsInLib](tainted<testStruct, TestType>& val){
-  //             testStruct ret;
-  //             ret.fieldLong = val.fieldLong.copy_and_verify([](unsigned long
-  //             val) { return val; }); ret.fieldString =
-  //             ignoreGlobalStringsInLib? "Hello" :
-  //             val.fieldString.copy_and_verifyString(sandbox, [](const char*
-  //             val) { return strlen(val) < 100? RLBox_Verify_Status::SAFE :
-  //             RLBox_Verify_Status::UNSAFE; }, nullptr); ret.fieldBool =
-  //             val.fieldBool.copy_and_verify([](unsigned int val) { return
-  //             val;
-  //             }); val.fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
-  //             sizeof(ret.fieldFixedArr), [](char* arr, size_t size){
-  //             UNUSED(arr); UNUSED(size); return RLBox_Verify_Status::SAFE;
-  //             }); return ret;
-  //         });
-  //     REQUIRE(result.fieldLong == 7 &&
-  //         strcmp(result.fieldString, "Hello") == 0 &&
-  //         result.fieldBool == 1 &&
-  //         strcmp(result.fieldFixedArr, "Bye") == 0);
-
-  //     //writes should still go through
-  //     resultT.fieldLong = 17;
-  //     long val = resultT.fieldLong.copy_and_verify([](unsigned long val) {
-  //     return val; }); REQUIRE(val == 17);
+  //   // writes should still go through
+  //   resultT.fieldLong = 17;
+  //   long val =
+  //     resultT.fieldLong.copy_and_verify([](unsigned long val) { return val; });
+  //   REQUIRE(val == 17);
   // }
 
   // SECTION("testStructurePointers"bool ignoreGlobalStringsInLib) // NOLINT
@@ -306,9 +347,10 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //             ret.fieldLong = val->fieldLong.copy_and_verify([](unsigned long
   //             val) { return val; }); ret.fieldString =
   //             ignoreGlobalStringsInLib? "Hello" :
-  //             val->fieldString.copy_and_verifyString(sandbox, [](const char*
-  //             val) { return strlen(val) < 100? RLBox_Verify_Status::SAFE :
-  //             RLBox_Verify_Status::UNSAFE; }, nullptr); ret.fieldBool =
+  //             val->fieldString.copy_and_verify_string(sandbox, [](const char*
+  //             val) { return strlen(val) < upper_bound?
+  //             RLBox_Verify_Status::SAFE : RLBox_Verify_Status::UNSAFE; },
+  //             nullptr); ret.fieldBool =
   //             val->fieldBool.copy_and_verify([](unsigned int val) { return
   //             val;
   //             }); val->fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
@@ -333,7 +375,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   // SECTION("testPointersInStruct") // NOLINT
   // {
-  //     auto initVal = sandbox.template mallocInSandbox<char>();
+  //     auto initVal = sandbox.template malloc_in_sandbox<char>();
   //     auto resultT = sandbox_invoke(sandbox, initializePointerStruct,
   //     initVal); auto result = resultT
   //         .copy_and_verify([](tainted<pointersStruct, TestType>& val){
@@ -347,7 +389,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //             return ret;
   //         });
   //     char* initValRaw = initVal.UNSAFE_Unverified();
-  //     sandbox->freeInSandbox(initVal);
+  //     sandbox.free_in_sandbox(initVal);
 
   //     REQUIRE(
   //         result.firstPointer == initValRaw &&
@@ -361,7 +403,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   // SECTION("test32BitPointerEdgeCases") // NOLINT
   // {
-  //     auto initVal = sandbox.template mallocInSandbox<char>(8);
+  //     auto initVal = sandbox.template malloc_in_sandbox<char>(8);
   //     *(initVal.getPointerIncrement(sandbox, 3)) = 'v';
   //     char* initValRaw = initVal.UNSAFE_Unverified();
 
@@ -392,6 +434,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //         (((uintptr_t) initValRaw) + 4)
   //     );
   // }
+
+  sandbox.template free_in_sandbox(sb_string);
 
   sandbox.destroy_sandbox();
 }

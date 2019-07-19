@@ -154,6 +154,11 @@ protected:
     return mask == SandboxMemoryBase;
   }
 
+  inline bool impl_is_pointer_in_app_memory(const void* p)
+  {
+    return !(impl_is_pointer_in_sandbox_memory(p));
+  }
+
   inline size_t impl_get_total_memory() { return SandboxMemorySize; }
 
   inline void* impl_get_memory_location()

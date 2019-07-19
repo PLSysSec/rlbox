@@ -31,6 +31,12 @@ private:
 
 public:
   sandbox_function(const sandbox_function<T, T_Sbx>& p) = default;
+
+  inline auto UNSAFE_Sandboxed() const noexcept
+  {
+    return get_raw_sandbox_value();
+  }
+  inline auto UNSAFE_Sandboxed() noexcept { return get_raw_sandbox_value(); }
 };
 
 namespace callback_detail {
