@@ -236,7 +236,8 @@ public:
 
   template<typename T_Def>
   inline T_Def copy_and_verify(
-    std::function<RLBox_Verify_Status(detail::valid_param_t<T>)> verifier,
+    std::function<RLBox_Verify_Status(
+      detail::c_to_std_array_t<std::remove_cv_t<T>>)> verifier,
     T_Def default_val) const
   {
     using T_Deref = std::remove_pointer_t<T>;
@@ -275,6 +276,19 @@ public:
       rlbox_detail_static_fail_because(
         cond3, "TODO: copy_and_verify not yet implemented for class pointers");
     }
+    else if_constexpr_named(cond4, std::is_array_v<T>)
+    {
+      static_assert(
+        std::is_same_v<T_Def, detail::c_to_std_array_t<std::remove_cv_t<T>>>,
+        "Incorrect type for default value");
+
+      static_assert(
+        detail::is_fundamental_or_enum_v<std::remove_all_extents_t<T>>,
+        "copy_and_verify on arrays is only safe for fundamental or enum types");
+
+      auto copy = impl().get_raw_value();
+      return verifier(copy) == RLBox_Verify_Status::SAFE ? copy : default_val;
+    }
     else
     {
       auto unknownCase = !(cond1 || cond2 || cond3);
@@ -282,25 +296,6 @@ public:
         unknownCase,
         "copy_and_verify not supported for this type as it may be unsafe");
     }
-  }
-
-  using T_copy_verify_arr_result =
-    detail::c_to_std_array_t<std::remove_cv_t<T>>;
-
-  inline T_copy_verify_arr_result copy_and_verify_array(
-    std::function<RLBox_Verify_Status(T_copy_verify_arr_result)> verifier,
-    T_copy_verify_arr_result default_val) const
-  {
-    static_assert(std::is_array_v<T>,
-                  "Can only call copy_and_verify_array on arrays");
-
-    static_assert(
-      detail::is_fundamental_or_enum_v<std::remove_all_extents_t<T>>,
-      "copy_and_verify_array is only safe for fundamental or enum types");
-
-    auto copy = impl().get_raw_value();
-
-    return verifier(copy) == RLBox_Verify_Status::SAFE ? copy : default_val;
   }
 
   inline detail::valid_return_t<T> copy_and_verify_range(

@@ -31,7 +31,7 @@ TEST_CASE("RLBox test array verification", "[verification]")
   std::array<long, 4> def = // NOLINT
     { defaultVal1, defaultVal2, defaultVal3, defaultVal4 };
 
-  auto result_fail = pa->copy_and_verify_array(
+  auto result_fail = pa->copy_and_verify(
     [](std::array<long, 4>) { // NOLINT
       return RLBox_Verify_Status::UNSAFE;
     },
@@ -42,7 +42,7 @@ TEST_CASE("RLBox test array verification", "[verification]")
   REQUIRE(result_fail[2] == defaultVal3);
   REQUIRE(result_fail[3] == defaultVal4);
 
-  auto result_success = pa->copy_and_verify_array(
+  auto result_success = pa->copy_and_verify(
     [](std::array<long, 4>) { // NOLINT
       return RLBox_Verify_Status::SAFE;
     },
