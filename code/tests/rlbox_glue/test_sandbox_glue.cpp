@@ -305,7 +305,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //     resultT.copy_and_verify([](tainted<testStruct, TestType>& val) {
   //       testStruct ret{};
   //       ret.fieldLong =
-  //         val.fieldLong.copy_and_verify([](unsigned long val) { return val; });
+  //         val.fieldLong.copy_and_verify([](unsigned long val) { return val;
+  //         });
   //       ret.fieldString = ignoreGlobalStringsInLib
   //                           ? "Hello"
   //                           : val.fieldString.copy_and_verify_string(
@@ -317,7 +318,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //                               },
   //                               nullptr);
   //       ret.fieldBool =
-  //         val.fieldBool.copy_and_verify([](unsigned int val) { return val; });
+  //         val.fieldBool.copy_and_verify([](unsigned int val) { return val;
+  //         });
   //       val.fieldFixedArr.copy_and_verify(ret.fieldFixedArr,
   //                                         sizeof(ret.fieldFixedArr),
   //                                         [](char* arr, size_t size) {
@@ -327,13 +329,16 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //                                         });
   //       return ret;
   //     });
-  //   REQUIRE(result.fieldLong == 7 && strcmp(result.fieldString, "Hello") == 0 &&
-  //           result.fieldBool == 1 && strcmp(result.fieldFixedArr, "Bye") == 0);
+  //   REQUIRE(result.fieldLong == 7 && strcmp(result.fieldString, "Hello") == 0
+  //   &&
+  //           result.fieldBool == 1 && strcmp(result.fieldFixedArr, "Bye") ==
+  //           0);
 
   //   // writes should still go through
   //   resultT.fieldLong = 17;
   //   long val =
-  //     resultT.fieldLong.copy_and_verify([](unsigned long val) { return val; });
+  //     resultT.fieldLong.copy_and_verify([](unsigned long val) { return val;
+  //     });
   //   REQUIRE(val == 17);
   // }
 
@@ -373,67 +378,62 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   //     long val) { return val; }); REQUIRE(val3 == 17);
   // }
 
-  // SECTION("testPointersInStruct") // NOLINT
+  // SECTION("test pointers in struct") // NOLINT
   // {
-  //     auto initVal = sandbox.template malloc_in_sandbox<char>();
-  //     auto resultT = sandbox_invoke(sandbox, initializePointerStruct,
-  //     initVal); auto result = resultT
-  //         .copy_and_verify([](tainted<pointersStruct, TestType>& val){
-  //             pointersStruct ret;
-  //             ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
-  //             ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
-  //             ret.pointerArray[1] = val.pointerArray[1].UNSAFE_Unverified();
-  //             ret.pointerArray[2] = val.pointerArray[2].UNSAFE_Unverified();
-  //             ret.pointerArray[3] = val.pointerArray[3].UNSAFE_Unverified();
-  //             ret.lastPointer = val.lastPointer.UNSAFE_Unverified();
-  //             return ret;
-  //         });
-  //     char* initValRaw = initVal.UNSAFE_Unverified();
-  //     sandbox.free_in_sandbox(initVal);
+  //   auto initVal = sandbox.template malloc_in_sandbox<char>();
+  //   auto resultT = sandbox_invoke(sandbox, initializePointerStruct, initVal);
+  //   auto result =
+  //     resultT.copy_and_verify([](tainted<pointersStruct, TestType>& val) {
+  //       pointersStruct ret;
+  //       ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
+  //       ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
+  //       ret.pointerArray[1] = val.pointerArray[1].UNSAFE_Unverified();
+  //       ret.pointerArray[2] = val.pointerArray[2].UNSAFE_Unverified();
+  //       ret.pointerArray[3] = val.pointerArray[3].UNSAFE_Unverified();
+  //       ret.lastPointer = val.lastPointer.UNSAFE_Unverified();
+  //       return ret;
+  //     });
+  //   char* initValRaw = initVal.UNSAFE_Unverified();
+  //   sandbox.free_in_sandbox(initVal);
 
-  //     REQUIRE(
-  //         result.firstPointer == initValRaw &&
-  //         result.pointerArray[0] == (char*) (((uintptr_t) initValRaw) + 1) &&
-  //         result.pointerArray[1] == (char*) (((uintptr_t) initValRaw) + 2) &&
-  //         result.pointerArray[2] == (char*) (((uintptr_t) initValRaw) + 3) &&
-  //         result.pointerArray[3] == (char*) (((uintptr_t) initValRaw) + 4) &&
-  //         result.lastPointer ==     (char*) (((uintptr_t) initValRaw) + 5)
-  //     );
+  //   REQUIRE(result.firstPointer == initValRaw &&
+  //           result.pointerArray[0] == (char*)(((uintptr_t)initValRaw) + 1) &&
+  //           result.pointerArray[1] == (char*)(((uintptr_t)initValRaw) + 2) &&
+  //           result.pointerArray[2] == (char*)(((uintptr_t)initValRaw) + 3) &&
+  //           result.pointerArray[3] == (char*)(((uintptr_t)initValRaw) + 4) &&
+  //           result.lastPointer == (char*)(((uintptr_t)initValRaw) + 5));
   // }
 
-  // SECTION("test32BitPointerEdgeCases") // NOLINT
-  // {
-  //     auto initVal = sandbox.template malloc_in_sandbox<char>(8);
-  //     *(initVal.getPointerIncrement(sandbox, 3)) = 'v';
-  //     char* initValRaw = initVal.UNSAFE_Unverified();
+  SECTION("test 32-bit pointer edge cases") // NOLINT
+  {
+    auto initVal = sandbox.template malloc_in_sandbox<char>(upper_bound);
+    auto initVal3 = initVal + 3; // NOLINT
+    *initVal3 = 'v';
 
-  //     auto resultT = sandbox_invoke(sandbox, initializePointerStructPtr,
-  //     initVal);
+    auto resultT = sandbox_invoke(sandbox, initializePointerStructPtr, initVal);
 
-  //     //check that reading a pointer in an array doesn't read neighboring
-  //     elements REQUIRE(
-  //         resultT->pointerArray[0].UNSAFE_Unverified() == (char*)
-  //         (((uintptr_t) initValRaw) + 1)
-  //     );
+    char* initValRaw = initVal.UNSAFE_Unverified();
+    // check that reading a pointer in an array doesn't read neighboring
+    // elements
+    // NOLINTNEXTLINE
+    REQUIRE(resultT->pointerArray[0].UNSAFE_Unverified() == (initValRaw + 1));
 
-  //     //check that a write doesn't overwrite neighboring elements
-  //     resultT->pointerArray[0] = nullptr;
-  //     REQUIRE(
-  //         resultT->pointerArray[1].UNSAFE_Unverified() == (char*)
-  //         (((uintptr_t) initValRaw) + 2)
-  //     );
+    // check that a write doesn't overwrite neighboring elements
+    resultT->pointerArray[0] = nullptr;
+    // NOLINTNEXTLINE
+    REQUIRE(resultT->pointerArray[1].UNSAFE_Unverified() == (initValRaw + 2));
 
-  //     //check that array reference decay followed by a read doesn't read
-  //     neighboring elements tainted<char**, TestType> elRef =
-  //     &(resultT->pointerArray[2]); REQUIRE((**elRef).UNSAFE_Unverified() ==
-  //     'v');
+    // check that array reference decay followed by a read doesn't read
+    // neighboring elements
+    tainted<char**, TestType> elRef = &(resultT->pointerArray[2]);
+    REQUIRE((**elRef).UNSAFE_Unverified() == 'v');
 
-  //     //check that array reference decay followed by a write doesn't
-  //     overwrite neighboring elements *elRef = nullptr; REQUIRE(
-  //         resultT->pointerArray[3].UNSAFE_Unverified() == (char*)
-  //         (((uintptr_t) initValRaw) + 4)
-  //     );
-  // }
+    // check that array reference decay followed by a write doesn't
+    // overwrite neighboring elements
+    *elRef = nullptr;
+    // NOLINTNEXTLINE
+    REQUIRE(resultT->pointerArray[3].UNSAFE_Unverified() == (initValRaw + 4));
+  }
 
   sandbox.template free_in_sandbox(sb_string);
 

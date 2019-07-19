@@ -68,9 +68,15 @@ namespace detail {
     std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
   if constexpr (std::is_fundamental_v<result_type>) {                          \
     return const_cast<T_ConstClassPtr>(this)->func_name();                     \
-  } else {                                                                     \
+  } else if constexpr (std::is_pointer_v<result_type> ||                       \
+                       std::is_reference_v<result_type>) {                     \
     return const_cast<result_type>(                                            \
       const_cast<T_ConstClassPtr>(this)->func_name());                         \
+  } else if constexpr (detail::rlbox_is_tainted_v<result_type>) {              \
+    return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
+      const_cast<T_ConstClassPtr>(this)->func_name());                         \
+  } else {                                                                     \
+    static_assert(!detail::true_v<result_type>, "Unsupported");                \
   }
 
 #define rlbox_detail_forward_to_const_a(func_name, result_type, ...)           \
@@ -78,9 +84,15 @@ namespace detail {
     std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
   if constexpr (std::is_fundamental_v<result_type>) {                          \
     return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
-  } else {                                                                     \
+  } else if constexpr (std::is_pointer_v<result_type> ||                       \
+                       std::is_reference_v<result_type>) {                     \
     return const_cast<result_type>(                                            \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
+  } else if constexpr (detail::rlbox_is_tainted_v<result_type>) {              \
+    return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
+      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
+  } else {                                                                     \
+    static_assert(!detail::true_v<result_type>, "Unsupported");                \
   }
 
   template<typename T>
