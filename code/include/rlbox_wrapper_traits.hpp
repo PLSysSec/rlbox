@@ -22,12 +22,13 @@ namespace rlbox::detail {
   template<typename T>                                                         \
   constexpr bool rlbox_is_##name##_v =                                         \
     decltype(detail_rlbox_is_##name::helper(                                   \
-      std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;
+      std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;  \
+  RLBOX_REQUIRE_SEMI_COLON
 
-rlbox_generate_wrapper_check(tainted)
-rlbox_generate_wrapper_check(tainted_volatile)
-rlbox_generate_wrapper_check(sandbox_callback)
-rlbox_generate_wrapper_check(sandbox_function)
+rlbox_generate_wrapper_check(tainted);
+rlbox_generate_wrapper_check(tainted_volatile);
+rlbox_generate_wrapper_check(sandbox_callback);
+rlbox_generate_wrapper_check(sandbox_function);
 
 #undef rlbox_generate_wrapper_check
 

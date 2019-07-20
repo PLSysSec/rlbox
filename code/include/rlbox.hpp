@@ -77,10 +77,11 @@ public:
       using T_Ret = decltype(ret);                                             \
       return tainted<T_Ret, T_Sbx>::internal_factory(ret);                     \
     }                                                                          \
-  }
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
 
-  BinaryOpValAndPtr(+)
-  BinaryOpValAndPtr(-)
+  BinaryOpValAndPtr(+);
+  BinaryOpValAndPtr(-);
 
 #undef BinaryOpValAndPtr
 
@@ -100,16 +101,17 @@ public:
     auto ret = raw opSymbol raw_rhs;                                           \
     using T_Ret = decltype(ret);                                               \
     return tainted<T_Ret, T_Sbx>::internal_factory(ret);                       \
-  }
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
 
-  BinaryOp(*)
-  BinaryOp(/)
-  BinaryOp(%)
-  BinaryOp(^)
-  BinaryOp(&)
-  BinaryOp(|)
-  BinaryOp(<<)
-  BinaryOp(>>)
+  BinaryOp(*);
+  BinaryOp(/);
+  BinaryOp(%);
+  BinaryOp(^);
+  BinaryOp(&);
+  BinaryOp(|);
+  BinaryOp(<<);
+  BinaryOp(>>);
 
 #undef BinaryOp
 
@@ -123,10 +125,11 @@ public:
     auto ret = opSymbol raw;                                                   \
     using T_Ret = decltype(ret);                                               \
     return tainted<T_Ret, T_Sbx>::internal_factory(ret);                       \
-  }
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
 
-  UnaryOp(-)
-  UnaryOp(~)
+  UnaryOp(-);
+  UnaryOp(~);
 
 #undef UnaryOp
 
@@ -235,7 +238,7 @@ public:
     rlbox_detail_forward_to_const(operator->, T_Ret);
   }
 
-  //The verifier should have the following signature for the given types
+  // The verifier should have the following signature for the given types
   // If tainted type is simple such as int
   //      using T_Func = T_Ret(*)(int)
   // If tainted type is a pointer to a simple type such as int*
@@ -777,7 +780,7 @@ public:
   }
 
   // Needed as the definition of unary & above shadows the base's binary &
-  rlbox_detail_forward_binop_to_base(&, T_ClassBase)
+  rlbox_detail_forward_binop_to_base(&, T_ClassBase);
 
   template<typename T_RhsRef>
   inline tainted_volatile<T, T_Sbx>& operator=(T_RhsRef&& val)

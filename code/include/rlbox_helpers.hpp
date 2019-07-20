@@ -40,6 +40,8 @@ namespace detail {
 
 #define RLBOX_UNUSED(...) (void)__VA_ARGS__
 
+#define RLBOX_REQUIRE_SEMI_COLON static_assert(true)
+
 #define if_constexpr_named(varName, ...)                                       \
   if constexpr (constexpr auto varName = __VA_ARGS__; varName)
 
@@ -61,7 +63,8 @@ namespace detail {
   {                                                                            \
     auto b = static_cast<__VA_ARGS__*>(this);                                  \
     return (*b)opSymbol rhs;                                                   \
-  }
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
 
 #define rlbox_detail_forward_to_const(func_name, result_type)                  \
   using T_ConstClassPtr = std::add_pointer_t<                                  \
