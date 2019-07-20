@@ -8,13 +8,13 @@
 #include "libtest.h"
 #include "test_sandbox_glue.hpp"
 
-using rlbox::RLBoxSandbox;
+using rlbox::rlbox_sandbox;
 using rlbox::tainted;
 
 template<typename TestType>
 static tainted<int, TestType> exampleCallback(
   // NOLINTNEXTLINE(google-runtime-references)
-  RLBoxSandbox<TestType>& sandbox,
+  rlbox_sandbox<TestType>& sandbox,
   tainted<unsigned, TestType> a,
   tainted<const char*, TestType> b,
   // NOLINTNEXTLINE
@@ -44,7 +44,7 @@ static tainted<int, TestType> exampleCallback(
 
 template<typename TestType>
 static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
-  RLBoxSandbox<TestType>& /* sandbox */,
+  rlbox_sandbox<TestType>& /* sandbox */,
   tainted<unsigned long, TestType> val1, // NOLINT(google-runtime-int)
   tainted<unsigned long, TestType> val2, // NOLINT(google-runtime-int)
   tainted<unsigned long, TestType> val3, // NOLINT(google-runtime-int)
@@ -52,12 +52,12 @@ static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
   tainted<unsigned long, TestType> val5, // NOLINT(google-runtime-int)
   tainted<unsigned long, TestType> val6) // NOLINT(google-runtime-int)
 {
-  return ((val1.UNSAFE_Unverified() == 4)     // NOLINT
-          && (val2.UNSAFE_Unverified() == 5)  // NOLINT
-          && (val3.UNSAFE_Unverified() == 6)  // NOLINT
-          && (val4.UNSAFE_Unverified() == 7)  // NOLINT
-          && (val5.UNSAFE_Unverified() == 8)  // NOLINT
-          && (val6.UNSAFE_Unverified() == 9)) // NOLINT
+  return ((val1.UNSAFE_unverified() == 4)     // NOLINT
+          && (val2.UNSAFE_unverified() == 5)  // NOLINT
+          && (val3.UNSAFE_unverified() == 6)  // NOLINT
+          && (val4.UNSAFE_unverified() == 7)  // NOLINT
+          && (val5.UNSAFE_unverified() == 8)  // NOLINT
+          && (val6.UNSAFE_unverified() == 9)) // NOLINT
            ? 11                               // NOLINT
            : -1;                              // NOLINT
 }
@@ -67,7 +67,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
                    "[sandbox_glue_tests]",
                    rlbox::rlbox_noop_sandbox)
 {
-  rlbox::RLBoxSandbox<TestType> sandbox;
+  rlbox::rlbox_sandbox<TestType> sandbox;
   sandbox.create_sandbox();
 
   const int upper_bound = 100;
@@ -76,7 +76,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     sandbox.template malloc_in_sandbox<char>(upper_bound);
   // strcpy is safe here
   // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
-  std::strcpy(sb_string.UNSAFE_Unverified(), "Hello");
+  std::strcpy(sb_string.UNSAFE_unverified(), "Hello");
 
   SECTION("test simple function invocation") // NOLINT
   {
@@ -84,7 +84,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const int val2 = 22;
     tainted<int, TestType> a = val1;
     auto ret2 = sandbox_invoke(sandbox, simpleAddTest, a, val2);
-    REQUIRE(ret2.UNSAFE_Unverified() == (val1 + val2));
+    REQUIRE(ret2.UNSAFE_unverified() == (val1 + val2));
   }
 
   SECTION("test 64 bit returns") // NOLINT
@@ -93,7 +93,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const auto u32Max = std::numeric_limits<std::uint32_t>::max();
     auto ret2 = sandbox_invoke(sandbox, simpleU64AddTest, u32Max, val1);
     uint64_t result = static_cast<uint64_t>(u32Max) + val1;
-    REQUIRE(ret2.UNSAFE_Unverified() == result);
+    REQUIRE(ret2.UNSAFE_unverified() == result);
   }
 
   SECTION("test verification function") // NOLINT
@@ -183,7 +183,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
     tainted<char*, TestType> temp =
       sandbox.template malloc_in_sandbox<char>(std::strlen(str) + 1);
-    char* str_in_sbx = temp.UNSAFE_Unverified();
+    char* str_in_sbx = temp.UNSAFE_unverified();
     REQUIRE(sandbox.is_pointer_in_sandbox_memory(str_in_sbx));
 
     // strcpy is safe here
@@ -263,16 +263,16 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto result = resultT.copy_and_verify([](
                                             tainted<testStruct, TestType> val) {
       testStruct ret{};
-      ret.fieldLong = val.fieldLong.UNSAFE_Unverified();
+      ret.fieldLong = val.fieldLong.UNSAFE_unverified();
 
       ret.fieldString = val.fieldString.copy_and_verify_string(
         [](std::unique_ptr<const char[]> val) { // NOLINT
           return std::strlen(val.get()) < upper_bound ? val.release() : nullptr;
         });
 
-      ret.fieldBool = val.fieldBool.UNSAFE_Unverified();
+      ret.fieldBool = val.fieldBool.UNSAFE_unverified();
 
-      auto fieldFixedArr = val.fieldFixedArr.UNSAFE_Unverified();
+      auto fieldFixedArr = val.fieldFixedArr.UNSAFE_unverified();
       std::memcpy(&ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
 
       return ret;
@@ -284,7 +284,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
     // writes should still go through
     resultT.fieldLong = 17;                               // NOLINT
-    REQUIRE(resultT.fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+    REQUIRE(resultT.fieldLong.UNSAFE_unverified() == 17); // NOLINT
   }
 
   SECTION("test structure pointer") // NOLINT
@@ -294,7 +294,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto result = resultT.copy_and_verify(
       [](std::unique_ptr<tainted<testStruct, TestType>> val) {
         testStruct ret{};
-        ret.fieldLong = val->fieldLong.UNSAFE_Unverified();
+        ret.fieldLong = val->fieldLong.UNSAFE_unverified();
 
         ret.fieldString = val->fieldString.copy_and_verify_string(
           [](std::unique_ptr<const char[]> val) { // NOLINT
@@ -302,9 +302,9 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
                                                         : nullptr;
           });
 
-        ret.fieldBool = val->fieldBool.UNSAFE_Unverified();
+        ret.fieldBool = val->fieldBool.UNSAFE_unverified();
 
-        auto fieldFixedArr = val->fieldFixedArr.UNSAFE_Unverified();
+        auto fieldFixedArr = val->fieldFixedArr.UNSAFE_unverified();
         std::memcpy(
           &ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
 
@@ -317,7 +317,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
     // writes should still go through
     resultT->fieldLong = 17;                               // NOLINT
-    REQUIRE(resultT->fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+    REQUIRE(resultT->fieldLong.UNSAFE_unverified() == 17); // NOLINT
 
     // test & and * operators
     auto val3 =
@@ -334,15 +334,15 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto result =
       resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) {
         pointersStruct ret{};
-        ret.firstPointer = val.firstPointer.UNSAFE_Unverified();
-        ret.pointerArray[0] = val.pointerArray[0].UNSAFE_Unverified();
-        ret.pointerArray[1] = val.pointerArray[1].UNSAFE_Unverified();
-        ret.pointerArray[2] = val.pointerArray[2].UNSAFE_Unverified();
-        ret.pointerArray[3] = val.pointerArray[3].UNSAFE_Unverified();
-        ret.lastPointer = val.lastPointer.UNSAFE_Unverified();
+        ret.firstPointer = val.firstPointer.UNSAFE_unverified();
+        ret.pointerArray[0] = val.pointerArray[0].UNSAFE_unverified();
+        ret.pointerArray[1] = val.pointerArray[1].UNSAFE_unverified();
+        ret.pointerArray[2] = val.pointerArray[2].UNSAFE_unverified();
+        ret.pointerArray[3] = val.pointerArray[3].UNSAFE_unverified();
+        ret.lastPointer = val.lastPointer.UNSAFE_unverified();
         return ret;
       });
-    char* initValRaw = initVal.UNSAFE_Unverified();
+    char* initValRaw = initVal.UNSAFE_unverified();
     sandbox.free_in_sandbox(initVal);
 
     REQUIRE(result.firstPointer == initValRaw);
@@ -361,27 +361,27 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
     auto resultT = sandbox_invoke(sandbox, initializePointerStructPtr, initVal);
 
-    char* initValRaw = initVal.UNSAFE_Unverified();
+    char* initValRaw = initVal.UNSAFE_unverified();
     // check that reading a pointer in an array doesn't read neighboring
     // elements
     // NOLINTNEXTLINE
-    REQUIRE(resultT->pointerArray[0].UNSAFE_Unverified() == (initValRaw + 1));
+    REQUIRE(resultT->pointerArray[0].UNSAFE_unverified() == (initValRaw + 1));
 
     // check that a write doesn't overwrite neighboring elements
     resultT->pointerArray[0] = nullptr;
     // NOLINTNEXTLINE
-    REQUIRE(resultT->pointerArray[1].UNSAFE_Unverified() == (initValRaw + 2));
+    REQUIRE(resultT->pointerArray[1].UNSAFE_unverified() == (initValRaw + 2));
 
     // check that array reference decay followed by a read doesn't read
     // neighboring elements
     tainted<char**, TestType> elRef = &(resultT->pointerArray[2]);
-    REQUIRE((**elRef).UNSAFE_Unverified() == 'v');
+    REQUIRE((**elRef).UNSAFE_unverified() == 'v');
 
     // check that array reference decay followed by a write doesn't
     // overwrite neighboring elements
     *elRef = nullptr;
     // NOLINTNEXTLINE
-    REQUIRE(resultT->pointerArray[3].UNSAFE_Unverified() == (initValRaw + 4));
+    REQUIRE(resultT->pointerArray[3].UNSAFE_unverified() == (initValRaw + 4));
   }
 
   sandbox.template free_in_sandbox(sb_string);

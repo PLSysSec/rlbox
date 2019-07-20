@@ -5,7 +5,7 @@
 
 using rlbox::rlbox_noop_sandbox;
 using rlbox::tainted;
-using RL = rlbox::RLBoxSandbox<rlbox_noop_sandbox>;
+using RL = rlbox::rlbox_sandbox<rlbox_noop_sandbox>;
 
 int GlobalVal = 0;
 static void test_func_void(int param)
@@ -32,7 +32,7 @@ TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
   REQUIRE(GlobalVal == TestFuncVal);                    // NOLINT
 
   auto result = sandbox_invoke(sandbox, test_func_int, TestFuncVal); // NOLINT
-  REQUIRE(result.UNSAFE_Unverified() == TestFuncVal);                // NOLINT
+  REQUIRE(result.UNSAFE_unverified() == TestFuncVal);                // NOLINT
 
   sandbox.destroy_sandbox();
 }
@@ -64,7 +64,7 @@ TEST_CASE("callback in no_op sandbox", "[no_op_sandbox]")
   tainted<int, rlbox_noop_sandbox> ret =
     sandbox_invoke(sandbox, test_invoker, cb, test_val); // NOLINT
 
-  REQUIRE(ret.UNSAFE_Unverified() == test_val + 2);
+  REQUIRE(ret.UNSAFE_unverified() == test_val + 2);
 
   sandbox.destroy_sandbox();
 }

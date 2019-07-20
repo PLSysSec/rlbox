@@ -25,7 +25,7 @@ inline void check_range_doesnt_cross_app_sbx_boundary(const void* ptr,
   auto ptr_end = reinterpret_cast<void*>(ptr_end_val);
 
   detail::dynamic_check(
-    RLBoxSandbox<T_Sbx>::is_in_same_sandbox(ptr_start, ptr_end),
+    rlbox_sandbox<T_Sbx>::is_in_same_sandbox(ptr_start, ptr_end),
     "range has overflowed sandbox bounds");
 }
 

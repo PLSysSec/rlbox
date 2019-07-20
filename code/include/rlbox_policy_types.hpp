@@ -19,7 +19,7 @@ private:
   using T_Func = detail::convert_to_sandbox_equivalent_t<T, T_Sbx>;
   T_Func data;
 
-  // Keep constructor private as only RLBoxSandbox should be able to create this
+  // Keep constructor private as only rlbox_sandbox should be able to create this
   // object
   sandbox_function(T_Func p_data)
     : data(p_data)
@@ -32,11 +32,11 @@ private:
 public:
   sandbox_function(const sandbox_function<T, T_Sbx>& p) = default;
 
-  inline auto UNSAFE_Sandboxed() const noexcept
+  inline auto UNSAFE_sandboxed() const noexcept
   {
     return get_raw_sandbox_value();
   }
-  inline auto UNSAFE_Sandboxed() noexcept { return get_raw_sandbox_value(); }
+  inline auto UNSAFE_sandboxed() noexcept { return get_raw_sandbox_value(); }
 };
 
 namespace callback_detail {
@@ -45,7 +45,7 @@ namespace callback_detail {
   template<typename T_Sbx, typename T_Ret, typename... T_Args>
   using T_Cb =
     std::conditional_t<std::is_void_v<T_Ret>, void, tainted<T_Ret, T_Sbx>> (*)(
-      RLBoxSandbox<T_Sbx>&,
+      rlbox_sandbox<T_Sbx>&,
       tainted<T_Args, T_Sbx>...);
 
   template<typename T_Sbx, typename T_Ret, typename... T_Args>
@@ -66,7 +66,7 @@ class sandbox_callback
   KEEP_CLASSES_FRIENDLY
 
 private:
-  RLBoxSandbox<T_Sbx>* sandbox;
+  rlbox_sandbox<T_Sbx>* sandbox;
 
   using T_Callback =
     decltype(callback_detail::callback_type_helper<T_Sbx>(std::declval<T>()));
@@ -133,9 +133,9 @@ private:
     return callback_trampoline;
   }
 
-  // Keep constructor private as only RLBoxSandbox should be able to create this
+  // Keep constructor private as only rlbox_sandbox should be able to create this
   // object
-  sandbox_callback(RLBoxSandbox<T_Sbx>* p_sandbox,
+  sandbox_callback(rlbox_sandbox<T_Sbx>* p_sandbox,
                    T_Callback p_callback,
                    T_Interceptor p_callback_interceptor,
                    T_Trampoline p_callback_trampoline,
@@ -172,13 +172,13 @@ public:
 
   ~sandbox_callback() { unregister(); }
 
-  inline auto UNSAFE_Unverified() const noexcept { return get_raw_value(); }
-  inline auto UNSAFE_Sandboxed() const noexcept
+  inline auto UNSAFE_unverified() const noexcept { return get_raw_value(); }
+  inline auto UNSAFE_sandboxed() const noexcept
   {
     return get_raw_sandbox_value();
   }
-  inline auto UNSAFE_Unverified() noexcept { return get_raw_value(); }
-  inline auto UNSAFE_Sandboxed() noexcept { return get_raw_sandbox_value(); }
+  inline auto UNSAFE_unverified() noexcept { return get_raw_value(); }
+  inline auto UNSAFE_sandboxed() noexcept { return get_raw_sandbox_value(); }
 };
 
 }

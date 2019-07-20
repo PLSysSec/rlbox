@@ -3,7 +3,7 @@
 #include "test_include.hpp"
 
 using T_Ptr = typename TestSandbox::T_PointerType;
-using RL = rlbox::RLBoxSandbox<TestSandbox>;
+using RL = rlbox::rlbox_sandbox<TestSandbox>;
 
 // NOLINTNEXTLINE
 TEST_CASE("Type get_[un]sandboxed_pointer", "[get_sandboxed]")

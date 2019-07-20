@@ -3,7 +3,7 @@
 #include "test_include.hpp"
 
 using rlbox::tainted;
-using RL = rlbox::RLBoxSandbox<TestSandbox>;
+using RL = rlbox::rlbox_sandbox<TestSandbox>;
 
 static int test_fn(int a)
 {

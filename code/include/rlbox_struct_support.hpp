@@ -20,7 +20,7 @@ struct convert_to_sandbox_equivalent_helper<
   T_Sbx,
   std::enable_if_t<!std::is_class_v<T>>>
 {
-  using type = typename RLBoxSandbox<
+  using type = typename rlbox_sandbox<
     T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>;
 };
 
@@ -137,10 +137,10 @@ using convert_to_sandbox_equivalent_t =
       return ret;                                                              \
     }                                                                          \
                                                                                \
-    inline auto UNSAFE_Unverified() { return get_raw_value(); }                \
-    inline auto UNSAFE_Sandboxed() { return get_raw_sandbox_value(); }         \
-    inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
-    inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
+    inline auto UNSAFE_unverified() { return get_raw_value(); }                \
+    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
+    inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
     T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
     {                                                                          \
@@ -225,10 +225,10 @@ using convert_to_sandbox_equivalent_t =
                                                     helper_no_op)              \
     }                                                                          \
                                                                                \
-    inline auto UNSAFE_Unverified() { return get_raw_value(); }                \
-    inline auto UNSAFE_Sandboxed() { return get_raw_sandbox_value(); }         \
-    inline auto UNSAFE_Unverified() const { return get_raw_value(); }          \
-    inline auto UNSAFE_Sandboxed() const { return get_raw_sandbox_value(); }   \
+    inline auto UNSAFE_unverified() { return get_raw_value(); }                \
+    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
+    inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
     T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
     {                                                                          \

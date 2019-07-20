@@ -20,17 +20,17 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
   tainted<int, TestSandbox> c = b;
   tainted<int, TestSandbox> d; // NOLINT
   d = b;
-  REQUIRE(a.UNSAFE_Unverified() == RandomVal1); // NOLINT
-  REQUIRE(b.UNSAFE_Unverified() == RandomVal2); // NOLINT
-  REQUIRE(c.UNSAFE_Unverified() == RandomVal2); // NOLINT
-  REQUIRE(d.UNSAFE_Unverified() == RandomVal2); // NOLINT
+  REQUIRE(a.UNSAFE_unverified() == RandomVal1); // NOLINT
+  REQUIRE(b.UNSAFE_unverified() == RandomVal2); // NOLINT
+  REQUIRE(c.UNSAFE_unverified() == RandomVal2); // NOLINT
+  REQUIRE(d.UNSAFE_unverified() == RandomVal2); // NOLINT
 }
 
 // NOLINTNEXTLINE
 TEST_CASE("tainted_volatile assignment operates correctly",
           "[tainted_assignment]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
@@ -40,8 +40,8 @@ TEST_CASE("tainted_volatile assignment operates correctly",
   uint64_t max32Val = std::numeric_limits<uint32_t>::max();
   *pc = max32Val;
 
-  REQUIRE((*pc).UNSAFE_Unverified() == max32Val);
-  REQUIRE(pc->UNSAFE_Unverified() == max32Val);
+  REQUIRE((*pc).UNSAFE_unverified() == max32Val);
+  REQUIRE(pc->UNSAFE_unverified() == max32Val);
 
   uint64_t max64Val = std::numeric_limits<uint64_t>::max();
   REQUIRE_THROWS(*pc = max64Val);
@@ -53,12 +53,12 @@ TEST_CASE("tainted_volatile assignment operates correctly",
 TEST_CASE("tainted tainted_volatile conversion operates correctly",
           "[tainted_assignment]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
   REQUIRE(std::is_same_v<decltype(ptr), tainted<uint32_t*, TestSandbox>>);
-  REQUIRE(ptr.UNSAFE_Unverified() != nullptr);
+  REQUIRE(ptr.UNSAFE_unverified() != nullptr);
 
   auto& val = *ptr;
   REQUIRE(
@@ -88,7 +88,7 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 // NOLINTNEXTLINE
 TEST_CASE("tainted pointer assignments", "[tainted_assignment]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   tainted<int**, TestSandbox> pa = nullptr;

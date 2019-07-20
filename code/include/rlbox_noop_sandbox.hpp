@@ -130,7 +130,7 @@ protected:
   []() {                                                                       \
     static_assert(                                                             \
       std::is_same_v<std::remove_reference_t<decltype(sandbox)>,               \
-                     rlbox::RLBoxSandbox<rlbox::rlbox_noop_sandbox>>,          \
+                     rlbox::rlbox_sandbox<rlbox::rlbox_noop_sandbox>>,          \
       "Forwarding another sandboxes calls to rlbox_noop_sandbox. "             \
       "Please check the use of RLBOX_USE_STATIC_CALLS.");                      \
     return reinterpret_cast<void*>(&func_name); /* NOLINT */                   \

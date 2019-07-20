@@ -13,7 +13,7 @@ template<typename T_Rhs>
 inline auto unwrap_value(const T_Rhs& rhs) noexcept
 {
   if constexpr (detail::rlbox_is_wrapper_v<T_Rhs>) {
-    return rhs.UNSAFE_Unverified();
+    return rhs.UNSAFE_unverified();
   } else {
     return rhs;
   }

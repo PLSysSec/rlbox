@@ -161,7 +161,7 @@ But C++ doesn't seem to allow the above
   friend class tainted_volatile;                                               \
                                                                                \
   template<typename U1>                                                        \
-  friend class RLBoxSandbox;                                                   \
+  friend class rlbox_sandbox;                                                   \
                                                                                \
   template<typename U1, typename U2>                                           \
   friend class sandbox_callback;                                               \

@@ -41,7 +41,7 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   const auto lb = 0;
   const auto ub = 10;
 
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();

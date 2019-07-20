@@ -175,13 +175,13 @@ inline constexpr void convert_type_non_class(
     } else if constexpr (Direction == adjust_type_direction::TO_SANDBOX) {
 
       static_assert(is_pointer_v<T_From_C>);
-      to = RLBoxSandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
+      to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
         remove_pointer_t<T_From_C>>(from);
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
 
       static_assert(is_pointer_v<T_To_C>);
-      to = RLBoxSandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
+      to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
         remove_pointer_t<T_To_C>>(from, example_unsandboxed_ptr);
     }
 

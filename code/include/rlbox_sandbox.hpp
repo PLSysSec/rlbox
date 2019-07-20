@@ -31,7 +31,7 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
 }
 
 template<typename T_Sbx>
-class RLBoxSandbox : protected T_Sbx
+class rlbox_sandbox : protected T_Sbx
 {
   KEEP_CLASSES_FRIENDLY
 
@@ -63,14 +63,14 @@ private:
 
     if_constexpr_named(cond1, detail::rlbox_is_wrapper_v<T_NoRef>)
     {
-      return param.UNSAFE_Sandboxed();
+      return param.UNSAFE_sandboxed();
     }
     else if_constexpr_named(cond2, detail::is_fundamental_or_enum_v<T_NoRef>)
     {
       // For unwrapped primitives, assign to a tainted var and then unwrap so
       // that we adjust for machine model
       tainted<T_NoRef, T_Sbx> copy = param;
-      return copy.UNSAFE_Sandboxed();
+      return copy.UNSAFE_sandboxed();
     }
     else
     {
@@ -100,13 +100,13 @@ private:
   {
     std::pair<T_Sbx*, void*> context =
       T_Sbx::impl_get_executed_callback_sandbox_and_key();
-    auto& sandbox = *(reinterpret_cast<RLBoxSandbox<T_Sbx>*>(context.first));
+    auto& sandbox = *(reinterpret_cast<rlbox_sandbox<T_Sbx>*>(context.first));
     auto key = context.second;
 
     using T_Func_Ret =
       std::conditional_t<std::is_void_v<T_Ret>, void, tainted<T_Ret, T_Sbx>>;
     using T_Func =
-      T_Func_Ret (*)(RLBoxSandbox<T_Sbx>&, tainted<T_Args, T_Sbx>...);
+      T_Func_Ret (*)(rlbox_sandbox<T_Sbx>&, tainted<T_Args, T_Sbx>...);
     auto target_fn_ptr = reinterpret_cast<T_Func>(key);
     const void* example_unsandboxed_ptr = sandbox.get_memory_location();
 
@@ -236,6 +236,15 @@ public:
     return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(p);
   }
 
+  /**
+   * @brief Create a pointer accessible to the sandbox. The pointer is allocated
+   * in sandbox memory.
+   *
+   * @tparam T - the type of the pointer you want to create. If T=int, this
+   * would return a pointer to an int, accessible to the sandbox which is
+   * tainted.
+   * @return tainted<T*, T_Sbx> - Tainted pointer accessible to the sandbox.
+   */
   template<typename T>
   inline tainted<T*, T_Sbx> malloc_in_sandbox()
   {
@@ -370,7 +379,7 @@ public:
       "For instance if a callback has type\n\n"
       "int foo() {...}\n\n"
       "Change this to \n\n"
-      "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox) {...}\n");
+      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...}\n");
 
     // this is never executed, but we need it for the function to type-check
     std::abort();
@@ -383,7 +392,7 @@ public:
     // Some branches don't use the param
     RLBOX_UNUSED(func_ptr);
 
-    if_constexpr_named(cond1, !std::is_same_v<T_RL, RLBoxSandbox<T_Sbx>&>)
+    if_constexpr_named(cond1, !std::is_same_v<T_RL, rlbox_sandbox<T_Sbx>&>)
     {
       rlbox_detail_static_fail_because(
         cond1,
@@ -391,7 +400,7 @@ public:
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else if_constexpr_named(cond2, !(detail::rlbox_is_wrapper_v<T_Args> && ...))
@@ -402,7 +411,7 @@ public:
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else if_constexpr_named(
@@ -414,7 +423,7 @@ public:
         "For instance if a callback has type\n\n"
         "int foo(int a[4]) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
         "tainted<int*, T_Sbx> a) {...}\n");
     }
     else if_constexpr_named(
@@ -426,7 +435,7 @@ public:
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(RLBoxSandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else

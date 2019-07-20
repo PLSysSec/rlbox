@@ -7,7 +7,7 @@ using rlbox::tainted;
 // NOLINTNEXTLINE
 TEST_CASE("Test comparisons to nullptr", "[compare_nullptr]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   auto ptr = sandbox.malloc_in_sandbox<uint32_t>();

@@ -11,7 +11,7 @@ template<typename T, typename T_Sbx>
 class tainted_volatile;
 
 template<typename T_Sbx>
-class RLBoxSandbox;
+class rlbox_sandbox;
 
 template<typename T, typename T_Sbx>
 class sandbox_callback;

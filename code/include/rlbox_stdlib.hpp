@@ -41,7 +41,7 @@ inline tainted<T_Lhs, T_Sbx> sandbox_reinterpret_cast(
                 "sandbox_reinterpret_cast on incompatible types");
 
   tainted<T_Rhs, T_Sbx> taintedVal = rhs;
-  auto raw = reinterpret_cast<T_Lhs>(taintedVal.UNSAFE_Unverified());
+  auto raw = reinterpret_cast<T_Lhs>(taintedVal.UNSAFE_unverified());
   auto ret = tainted<T_Lhs, T_Sbx>::internal_factory(raw);
   return ret;
 }
@@ -58,7 +58,7 @@ inline tainted<T_Lhs, T_Sbx> sandbox_const_cast(
                 "sandbox_const_cast on incompatible types");
 
   tainted<T_Rhs, T_Sbx> taintedVal = rhs;
-  auto raw = const_cast<T_Lhs>(taintedVal.UNSAFE_Unverified());
+  auto raw = const_cast<T_Lhs>(taintedVal.UNSAFE_unverified());
   auto ret = tainted<T_Lhs, T_Sbx>::internal_factory(raw);
   return ret;
 }
@@ -69,7 +69,7 @@ template<typename T_Sbx,
          typename T_Num,
          template<typename, typename>
          typename T_Wrap>
-inline T_Wrap<T_Rhs*, T_Sbx> memset(RLBoxSandbox<T_Sbx>& sandbox,
+inline T_Wrap<T_Rhs*, T_Sbx> memset(rlbox_sandbox<T_Sbx>& sandbox,
                                     T_Wrap<T_Rhs*, T_Sbx> ptr,
                                     T_Val value,
                                     T_Num num)
@@ -85,7 +85,7 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(RLBoxSandbox<T_Sbx>& sandbox,
                         "Called memset for memory larger than the sandbox");
 
   tainted<T_Rhs*, T_Sbx> ptr_tainted = ptr;
-  void* dest_start = ptr_tainted.UNSAFE_Unverified();
+  void* dest_start = ptr_tainted.UNSAFE_unverified();
   detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
 
   std::memset(dest_start, detail::unwrap_value(value), num_val);
@@ -98,7 +98,7 @@ template<typename T_Sbx,
          typename T_Num,
          template<typename, typename>
          typename T_Wrap>
-inline T_Wrap<T_Rhs*, T_Sbx> memcpy(RLBoxSandbox<T_Sbx>& sandbox,
+inline T_Wrap<T_Rhs*, T_Sbx> memcpy(rlbox_sandbox<T_Sbx>& sandbox,
                                     T_Wrap<T_Rhs*, T_Sbx> dest,
                                     T_Lhs src,
                                     T_Num num)
@@ -114,7 +114,7 @@ inline T_Wrap<T_Rhs*, T_Sbx> memcpy(RLBoxSandbox<T_Sbx>& sandbox,
                         "Called memcpy for memory larger than the sandbox");
 
   tainted<T_Rhs*, T_Sbx> dest_tainted = dest;
-  void* dest_start = dest_tainted.UNSAFE_Unverified();
+  void* dest_start = dest_tainted.UNSAFE_unverified();
   detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
 
   // src also needs to be checked, as we don't want to allow a src rand to start

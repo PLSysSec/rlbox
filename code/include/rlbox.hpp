@@ -36,10 +36,10 @@ private:
   }
 
 public:
-  inline auto UNSAFE_Unverified() { return impl().get_raw_value(); }
-  inline auto UNSAFE_Sandboxed() { return impl().get_raw_sandbox_value(); }
-  inline auto UNSAFE_Unverified() const { return impl().get_raw_value(); }
-  inline auto UNSAFE_Sandboxed() const
+  inline auto UNSAFE_unverified() { return impl().get_raw_value(); }
+  inline auto UNSAFE_sandboxed() { return impl().get_raw_sandbox_value(); }
+  inline auto UNSAFE_unverified() const { return impl().get_raw_value(); }
+  inline auto UNSAFE_sandboxed() const
   {
     return impl().get_raw_sandbox_value();
   }
@@ -63,7 +63,7 @@ public:
       /* increment the target by size of the data structure */                 \
       auto target =                                                            \
         reinterpret_cast<uintptr_t>(ptr) opSymbol raw_rhs * sizeof(*impl());   \
-      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(              \
+      auto no_overflow = rlbox_sandbox<T_Sbx>::is_in_same_sandbox(              \
         reinterpret_cast<const void*>(ptr),                                    \
         reinterpret_cast<const void*>(target));                                \
       detail::dynamic_check(                                                   \
@@ -157,7 +157,7 @@ public:
       // increment the target by size of the data structure
       auto target =
         reinterpret_cast<uintptr_t>(ptr) + raw_rhs * sizeof(*this->impl());
-      auto no_overflow = RLBoxSandbox<T_Sbx>::is_in_same_sandbox(
+      auto no_overflow = rlbox_sandbox<T_Sbx>::is_in_same_sandbox(
         ptr, reinterpret_cast<const void*>(target));
       detail::dynamic_check(
         no_overflow,
@@ -221,7 +221,7 @@ public:
   // We need to implement the -> operator even though T is not a struct
   // So that we can support code patterns such as the below
   // tainted<T*> a;
-  // a->UNSAFE_Unverified();
+  // a->UNSAFE_unverified();
   inline auto operator-> () const
   {
     static_assert(std::is_pointer_v<T>,
@@ -272,7 +272,7 @@ public:
                     "lead to some anti-patterns in verifiers. Cast it to a "
                     "different tainted pointer with sandbox_reinterpret_cast "
                     "and then call copy_and_verify. Alternately, you can use "
-                    "the UNSAFE_Unverified API to do this without casting.");
+                    "the UNSAFE_unverified API to do this without casting.");
 
       auto val = impl().get_raw_value();
       if (val == nullptr) {
@@ -408,7 +408,7 @@ namespace tainted_detail {
 
   template<typename T, typename T_Sbx>
   using tainted_vol_repr_t =
-    detail::c_to_std_array_t<std::add_volatile_t<typename RLBoxSandbox<
+    detail::c_to_std_array_t<std::add_volatile_t<typename rlbox_sandbox<
       T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>>;
 }
 
@@ -592,7 +592,7 @@ public:
   {}
 
   template<typename T_Rhs>
-  void assign_raw_pointer(RLBoxSandbox<T_Sbx> sandbox, T_Rhs val)
+  void assign_raw_pointer(rlbox_sandbox<T_Sbx> sandbox, T_Rhs val)
   {
     static_assert(std::is_pointer_v<T_Rhs>);
     // Maybe a function pointer, so we need to cast
@@ -883,7 +883,7 @@ public:
   }
 
   template<typename T_Rhs>
-  void assign_raw_pointer(RLBoxSandbox<T_Sbx> sandbox, T_Rhs val)
+  void assign_raw_pointer(rlbox_sandbox<T_Sbx> sandbox, T_Rhs val)
   {
     static_assert(std::is_pointer_v<T_Rhs>);
     // Maybe a function pointer, so we need to cast

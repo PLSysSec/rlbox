@@ -8,7 +8,7 @@
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test array verification", "[verification]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   auto pa = sandbox.malloc_in_sandbox<long[4]>(); // NOLINT
@@ -55,7 +55,7 @@ TEST_CASE("RLBox test array verification", "[verification]")
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test range verification", "[verification]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   // long long is the 64 bit type in the TestSandbox
@@ -84,13 +84,13 @@ TEST_CASE("RLBox test range verification", "[verification]")
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test string verification", "[verification]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   const uint32_t max_length = 100;
   auto pc = sandbox.malloc_in_sandbox<char>(max_length); // NOLINT
 
-  std::strncpy(pc.UNSAFE_Unverified(), "Hello", max_length);
+  std::strncpy(pc.UNSAFE_unverified(), "Hello", max_length);
 
   auto checked_string =
     pc.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT

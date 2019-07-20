@@ -1,7 +1,7 @@
 #include "test_include.hpp"
 
 using rlbox::tainted;
-using RL = rlbox::RLBoxSandbox<TestSandbox>;
+using RL = rlbox::rlbox_sandbox<TestSandbox>;
 
 // NOLINTNEXTLINE
 tainted<int, TestSandbox> test_cb(RL& /*unused*/, tainted<int, TestSandbox> a)

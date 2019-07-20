@@ -186,7 +186,7 @@ protected:
 #define rlbox_test_sandbox_lookup_symbol(sandbox, func_name)                   \
   []() {                                                                       \
     static_assert(std::is_same_v<std::remove_reference_t<decltype(sandbox)>,   \
-                                 rlbox::RLBoxSandbox<TestSandbox>>,            \
+                                 rlbox::rlbox_sandbox<TestSandbox>>,            \
                   "Forwarding another sandboxes calls to rlbox_test_sandbox. " \
                   "Please check the use of RLBOX_USE_STATIC_CALLS.");          \
     return reinterpret_cast<void*>(&func_name);                                \

@@ -12,14 +12,14 @@ TEST_CASE("Test operator + for numerics", "[operator]")
   tainted<int32_t, TestSandbox> b = 3 + 4;
   tainted<int32_t, TestSandbox> c = a + 3;
   tainted<int32_t, TestSandbox> d = a + b;
-  REQUIRE(a.UNSAFE_Unverified() == 3);
-  REQUIRE(b.UNSAFE_Unverified() == 7);
-  REQUIRE(c.UNSAFE_Unverified() == 6);
-  REQUIRE(d.UNSAFE_Unverified() == 10);
+  REQUIRE(a.UNSAFE_unverified() == 3);
+  REQUIRE(b.UNSAFE_unverified() == 7);
+  REQUIRE(c.UNSAFE_unverified() == 6);
+  REQUIRE(d.UNSAFE_unverified() == 10);
 
   tainted<uint32_t, TestSandbox> ovWrap = std::numeric_limits<uint32_t>::max();
   ovWrap = ovWrap + 1;
-  REQUIRE(ovWrap.UNSAFE_Unverified() == 0);
+  REQUIRE(ovWrap.UNSAFE_unverified() == 0);
 }
 
 TEST_CASE("Test operators that produce new values for numerics", "[operator]")
@@ -38,20 +38,20 @@ TEST_CASE("Test operators that produce new values for numerics", "[operator]")
   tainted<uint32_t, TestSandbox> s_e = e;
   tainted<uint32_t, TestSandbox> s_r = -(((((s_a + s_b) - s_c) * s_d) / s_e));
 
-  REQUIRE(s_r.UNSAFE_Unverified() == r);
+  REQUIRE(s_r.UNSAFE_unverified() == r);
 }
 
 // NOLINTNEXTLINE
 TEST_CASE("Test operator +, - for pointers", "[operator]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   tainted<int32_t*, TestSandbox> pc = sandbox.malloc_in_sandbox<int32_t>();
   tainted<int32_t*, TestSandbox> inc = pc + 1;
 
-  auto diff = reinterpret_cast<char*>(inc.UNSAFE_Unverified()) - // NOLINT
-              reinterpret_cast<char*>(pc.UNSAFE_Unverified());   // NOLINT
+  auto diff = reinterpret_cast<char*>(inc.UNSAFE_unverified()) - // NOLINT
+              reinterpret_cast<char*>(pc.UNSAFE_unverified());   // NOLINT
   REQUIRE(diff == 4);
 
   tainted<int32_t*, TestSandbox> nullPtr = nullptr;
@@ -62,20 +62,20 @@ TEST_CASE("Test operator +, - for pointers", "[operator]")
   REQUIRE_THROWS(pc + TestSandbox::SandboxMemorySize);
 
   tainted<int32_t*, TestSandbox> dec = inc - 1;
-  REQUIRE(pc.UNSAFE_Unverified() == dec.UNSAFE_Unverified());
+  REQUIRE(pc.UNSAFE_unverified() == dec.UNSAFE_unverified());
 
   auto pc2 = sandbox.malloc_in_sandbox<char>();
   auto inc2 = pc2 + 1;
 
-  auto diff2 = reinterpret_cast<char*>(inc2.UNSAFE_Unverified()) - // NOLINT
-               reinterpret_cast<char*>(pc2.UNSAFE_Unverified());   // NOLINT
+  auto diff2 = reinterpret_cast<char*>(inc2.UNSAFE_unverified()) - // NOLINT
+               reinterpret_cast<char*>(pc2.UNSAFE_unverified());   // NOLINT
   REQUIRE(diff2 == 1);
 
   auto pc3 = sandbox.malloc_in_sandbox<int32_t*>();
   auto inc3 = pc3 + 1;
 
-  auto diff3 = reinterpret_cast<char*>(inc3.UNSAFE_Unverified()) - // NOLINT
-               reinterpret_cast<char*>(pc3.UNSAFE_Unverified());   // NOLINT
+  auto diff3 = reinterpret_cast<char*>(inc3.UNSAFE_unverified()) - // NOLINT
+               reinterpret_cast<char*>(pc3.UNSAFE_unverified());   // NOLINT
   REQUIRE(diff3 == sizeof(TestSandbox::T_PointerType));
 
   sandbox.destroy_sandbox();
@@ -86,7 +86,7 @@ TEST_CASE(
   "Test operators that produce new values for tainted_volatile numerics",
   "[operator]")
 {
-  rlbox::RLBoxSandbox<TestSandbox> sandbox;
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
   // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
@@ -100,13 +100,13 @@ TEST_CASE(
   {
     tainted<uint64_t, TestSandbox> result = (*pc) + rhs;
     uint64_t expected_result = max32Val + rhs;
-    REQUIRE(result.UNSAFE_Unverified() == expected_result);
+    REQUIRE(result.UNSAFE_unverified() == expected_result);
   }
 
   {
     tainted<uint64_t, TestSandbox> result = (*pc) + (*pc);
     uint64_t expected_result = max32Val + max32Val;
-    REQUIRE(result.UNSAFE_Unverified() == expected_result);
+    REQUIRE(result.UNSAFE_unverified() == expected_result);
   }
 
   sandbox.destroy_sandbox();
