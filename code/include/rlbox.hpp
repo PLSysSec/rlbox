@@ -270,8 +270,8 @@ public:
     else if_constexpr_named(
       cond3, detail::is_one_level_ptr_v<T> && std::is_class_v<T_Deref>)
     {
-      rlbox_detail_static_fail_because(
-        cond3, "TODO: copy_and_verify not yet implemented for class pointers");
+      auto val_copy = std::make_unique<tainted<T_Deref, T_Sbx>>(*impl());
+      return verifier(std::move(val_copy));
     }
     else if_constexpr_named(cond4, std::is_array_v<T>)
     {

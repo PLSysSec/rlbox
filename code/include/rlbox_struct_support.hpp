@@ -80,11 +80,18 @@ using convert_to_sandbox_equivalent_t =
       return *reinterpret_cast<Sbx_##libId##_##T<T_Sbx>*>(this);               \
     }                                                                          \
                                                                                \
+    inline const Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref() const       \
+      noexcept                                                                 \
+    {                                                                          \
+      return *reinterpret_cast<const Sbx_##libId##_##T<T_Sbx>*>(this);         \
+    }                                                                          \
+                                                                               \
     inline T get_raw_value() const noexcept                                    \
     {                                                                          \
       T lhs;                                                                   \
       auto& rhs = get_sandbox_value_ref();                                     \
-      auto Direction = detail::adjust_type_direction::TO_APPLICATION;          \
+      constexpr auto Direction =                                               \
+        detail::adjust_type_direction::TO_APPLICATION;                         \
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
@@ -159,6 +166,11 @@ using convert_to_sandbox_equivalent_t =
       return *reinterpret_cast<T*>(this);                                      \
     }                                                                          \
                                                                                \
+    inline const T& get_raw_value_ref() const noexcept                         \
+    {                                                                          \
+      return *reinterpret_cast<const T*>(this);                                \
+    }                                                                          \
+                                                                               \
     inline T get_raw_value() const noexcept                                    \
     {                                                                          \
       auto ret_ptr = reinterpret_cast<const T*>(this);                         \
@@ -171,7 +183,7 @@ using convert_to_sandbox_equivalent_t =
     {                                                                          \
       Sbx_##libId##_##T<T_Sbx> lhs;                                            \
       auto& rhs = get_raw_value_ref();                                         \
-      auto Direction = detail::adjust_type_direction::TO_SANDBOX;              \
+      constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;    \
       /* Since direction is TO_SANDBOX, we don't need a */                     \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = nullptr;                           \
@@ -204,7 +216,8 @@ using convert_to_sandbox_equivalent_t =
     {                                                                          \
       auto& lhs = get_raw_value_ref();                                         \
       auto& rhs = p.get_sandbox_value_ref();                                   \
-      auto Direction = detail::adjust_type_direction::TO_APPLICATION;          \
+      constexpr auto Direction =                                               \
+        detail::adjust_type_direction::TO_APPLICATION;                         \
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
@@ -231,7 +244,7 @@ using convert_to_sandbox_equivalent_t =
   {                                                                            \
     auto& lhs = get_sandbox_value_ref();                                       \
     auto& rhs = rhs_wrap.get_raw_value_ref();                                  \
-    auto Direction = detail::adjust_type_direction::TO_SANDBOX;                \
+    constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;      \
     /* Since direction is TO_SANDBOX, we don't need a */                       \
     /* example_unsandboxed_ptr*/                                               \
     const void* example_unsandboxed_ptr = nullptr;                             \

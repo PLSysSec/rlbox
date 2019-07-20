@@ -287,50 +287,45 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     REQUIRE(resultT.fieldLong.UNSAFE_Unverified() == 17); // NOLINT
   }
 
-  // SECTION("test structure pointer") // NOLINT
-  // {
-  //   auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
-  //   auto result =
-  //     resultT.copy_and_verify([](tainted<testStruct, TestType>* val) {
-  //       testStruct ret;
-  //       ret.fieldLong = val->fieldLong.UNSAFE_Unverified();
+  SECTION("test structure pointer") // NOLINT
+  {
+    auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
 
-  //       ret.fieldString = val->fieldString.copy_and_verify_string(
-  //         [](const char* val) {
-  //           return std::strlen(val) < upper_bound ? RLBox_Verify_Status::SAFE
-  //                                            : RLBox_Verify_Status::UNSAFE;
-  //         },
-  //         nullptr);
+    auto result = resultT.copy_and_verify(
+      [](std::unique_ptr<tainted<testStruct, TestType>> val) {
+        testStruct ret{};
+        ret.fieldLong = val->fieldLong.UNSAFE_Unverified();
 
-  //       ret.fieldBool = val->fieldBool.UNSAFE_Unverified();
+        ret.fieldString = val->fieldString.copy_and_verify_string(
+          [](std::unique_ptr<const char[]> val) { // NOLINT
+            return std::strlen(val.get()) < upper_bound ? val.release()
+                                                        : nullptr;
+          });
 
-  //       std::array<char, 8> default_arr{ 0 }; // NOLINT
-  //       auto fieldFixedArr = val->fieldFixedArr.copy_and_verify(
-  //         [](std::array<char, 8>) { // NOLINT
-  //           return RLBox_Verify_Status::SAFE;
-  //         },
-  //         default_arr);
-  //       std::memcpy(
-  //         &ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
+        ret.fieldBool = val->fieldBool.UNSAFE_Unverified();
 
-  //       return ret;
-  //     });
-  //   REQUIRE(result.fieldLong == 7);
-  //   REQUIRE(std::strcmp(result.fieldString, "Hello") == 0);
-  //   REQUIRE(result.fieldBool == 1);
-  //   REQUIRE(std::strcmp(&result.fieldFixedArr[0], "Bye") == 0);
+        auto fieldFixedArr = val->fieldFixedArr.UNSAFE_Unverified();
+        std::memcpy(
+          &ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
 
-  //   // writes should still go through
-  //   resultT->fieldLong = 17;                               // NOLINT
-  //   REQUIRE(resultT->fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+        return ret;
+      });
+    REQUIRE(result.fieldLong == 7);
+    REQUIRE(std::strcmp(result.fieldString, "Hello") == 0);
+    REQUIRE(result.fieldBool == 1);
+    REQUIRE(std::strcmp(&result.fieldFixedArr[0], "Bye") == 0);
 
-  //   // test & and * operators
-  //   unsigned long val3 =
-  //     (*&resultT->fieldLong).copy_and_verify([](unsigned long val) {
-  //       return val;
-  //     });
-  //   REQUIRE(val3 == 17);
-  // }
+    // writes should still go through
+    resultT->fieldLong = 17;                               // NOLINT
+    REQUIRE(resultT->fieldLong.UNSAFE_Unverified() == 17); // NOLINT
+
+    // test & and * operators
+    auto val3 =
+      (*&resultT->fieldLong).copy_and_verify([](unsigned long val) { // NOLINT
+        return val;
+      });
+    REQUIRE(val3 == 17); // NOLINT
+  }
 
   SECTION("test pointers in struct") // NOLINT
   {
