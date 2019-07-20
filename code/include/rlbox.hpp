@@ -235,6 +235,22 @@ public:
     rlbox_detail_forward_to_const(operator->, T_Ret);
   }
 
+  //The verifier should have the following signature for the given types
+  // If tainted type is simple such as int
+  //      using T_Func = T_Ret(*)(int)
+  // If tainted type is a pointer to a simple type such as int*
+  //      using T_Func = T_Ret(*)(unique_ptr<int>)
+  // If tainted type is a pointer to class such as Foo*
+  //      using T_Func = T_Ret(*)(unique_ptr<Foo>)
+  // If tainted type is an array such as int[4]
+  //      using T_Func = T_Ret(*)(std::array<int, 4>)
+  // For completeness, if tainted_type is a class such as Foo, the
+  //  copy_and_verify is implemented in rlbox_struct_support.hpp. The verifier
+  //  should be
+  //      using T_Func = T_Ret(*)(tainted<Foo>)
+  //
+  // In the above signatures T_Ret is not constrained, and can be anything the
+  // caller chooses.
   template<typename T_Func>
   inline auto copy_and_verify(T_Func verifier) const
   {
@@ -330,6 +346,10 @@ private:
   }
 
 public:
+  // The verifier should have the following signature.
+  // If the tainted type is int*
+  //      using T_Func = T_Ret(*)(unique_ptr<int[]>)
+  // T_Ret is not constrained, and can be anything the caller chooses.
   template<typename T_Func>
   inline auto copy_and_verify_range(T_Func verifier, std::size_t count) const
   {
@@ -347,6 +367,9 @@ public:
     return verifier(std::move(target));
   }
 
+  // The verifier should have the following signature.
+  //      using T_Func = T_Ret(*)(unique_ptr<char[]>)
+  // T_Ret is not constrained, and can be anything the caller chooses.
   template<typename T_Func>
   inline auto copy_and_verify_string(T_Func verifier) const
   {
