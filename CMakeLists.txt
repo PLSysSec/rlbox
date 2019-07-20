@@ -4,6 +4,8 @@ project(rlbox-cpp17
         VERSION 0.1
         DESCRIPTION "RLBox safe sandboxing API in C++17")
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 # Project Settings ###################
 
 # set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -77,6 +79,67 @@ endif()
 
 add_subdirectory("${catch2_SOURCE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+
+# Documentation ###################
+find_package(Doxygen QUIET)
+
+if(DOXYGEN_FOUND)
+  # Technique from https://devblogs.microsoft.com/cppblog/clear-functional-c
+  # -documentation-with-sphinx-breathe-doxygen-cmake/
+  set(DOXYGEN_PROJECT_NAME "RLBox")
+  set(DOXYGEN_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code/include)
+  set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/docs/doxygen)
+  set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
+  set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+  set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+  # Replace variables inside @@ with the current values
+  configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+
+  file(GLOB_RECURSE
+       RLBOX_SOURCE_FILES
+       code/include/*.[chi]pp
+       code/include/*.[chi]xx
+       code/include/*.cc
+       code/include/*.hh
+       code/include/*.ii
+       code/include/*.[CHI])
+
+  file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
+  add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
+                     DEPENDS ${RLBOX_SOURCE_FILES}
+                     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+                     MAIN_DEPENDENCY ${DOXYFILE_OUT}
+                     ${DOXYFILE_IN}
+                     COMMENT "Generating Doxygen documentation")
+
+  add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+
+  find_package(Sphinx QUIET)
+  if(SPHINX_FOUND)
+    set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/docs)
+    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/docs/sphinx)
+    set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
+
+    # Only regenerate Sphinx when:
+    # - Doxygen has rerun
+    # - Our doc files have been updated
+    # - The Sphinx config has been updated
+    add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
+                       COMMAND ${SPHINX_EXECUTABLE} -b html
+                       -Dbreathe_projects.RLBox=${DOXYGEN_OUTPUT_DIR}/xml
+                       ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                       DEPENDS
+                       ${SPHINX_SOURCE}/index.rst
+                       ${DOXYGEN_INDEX_FILE}
+                       MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
+                       COMMENT "Generating Sphinx documentation")
+
+    add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
+  endif()
+
+endif()
 
 # Targets ###################
 
