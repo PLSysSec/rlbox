@@ -29,6 +29,8 @@ TEST_CASE("Tainted sizes work as expected", "[tainted_size]")
           sizeof(TestSandbox::T_LongType)); // NOLINT
   REQUIRE(sizeof(tainted_volatile<int, TestSandbox>) ==
           sizeof(TestSandbox::T_IntType)); // NOLINT
+  REQUIRE(sizeof(tainted_volatile<short, TestSandbox>) ==
+          sizeof(TestSandbox::T_ShortType)); // NOLINT
   REQUIRE(sizeof(tainted_volatile<void*, TestSandbox>) ==
           sizeof(TestSandbox::T_PointerType)); // NOLINT
   REQUIRE(sizeof(tainted_volatile<testVarietyStruct, TestSandbox>) ==

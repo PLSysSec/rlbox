@@ -18,6 +18,7 @@ public:
   using T_LongType = long;
   using T_IntType = int;
   using T_PointerType = uintptr_t;
+  using T_ShortType = short;
 
 private:
   std::mutex callback_mutex;
@@ -130,7 +131,7 @@ protected:
   []() {                                                                       \
     static_assert(                                                             \
       std::is_same_v<std::remove_reference_t<decltype(sandbox)>,               \
-                     rlbox::rlbox_sandbox<rlbox::rlbox_noop_sandbox>>,          \
+                     rlbox::rlbox_sandbox<rlbox::rlbox_noop_sandbox>>,         \
       "Forwarding another sandboxes calls to rlbox_noop_sandbox. "             \
       "Please check the use of RLBOX_USE_STATIC_CALLS.");                      \
     return reinterpret_cast<void*>(&func_name); /* NOLINT */                   \

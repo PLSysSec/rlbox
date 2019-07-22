@@ -18,6 +18,16 @@ static int test_func_int(int param)
   return param;
 }
 
+static testBasicEnum test_func_enum(testBasicEnum val)
+{
+  return val;
+}
+
+static void* test_func_ptr(int* ptr)
+{
+  return ptr;
+}
+
 // NOLINTNEXTLINE
 TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
 {
@@ -33,6 +43,13 @@ TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
 
   auto result = sandbox_invoke(sandbox, test_func_int, TestFuncVal); // NOLINT
   REQUIRE(result.UNSAFE_unverified() == TestFuncVal);                // NOLINT
+
+  auto result2 =
+    sandbox_invoke(sandbox, test_func_enum, testBasicEnumVal1); // NOLINT
+  REQUIRE(result2.UNSAFE_unverified() == testBasicEnumVal1);    // NOLINT
+
+  auto result3 = sandbox_invoke(sandbox, test_func_ptr, nullptr); // NOLINT
+  REQUIRE(result3.UNSAFE_unverified() == nullptr);                // NOLINT
 
   sandbox.destroy_sandbox();
 }

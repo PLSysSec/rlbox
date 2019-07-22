@@ -19,8 +19,8 @@ private:
   using T_Func = detail::convert_to_sandbox_equivalent_t<T, T_Sbx>;
   T_Func data;
 
-  // Keep constructor private as only rlbox_sandbox should be able to create this
-  // object
+  // Keep constructor private as only rlbox_sandbox should be able to create
+  // this object
   sandbox_function(T_Func p_data)
     : data(p_data)
   {}
@@ -133,8 +133,8 @@ private:
     return callback_trampoline;
   }
 
-  // Keep constructor private as only rlbox_sandbox should be able to create this
-  // object
+  // Keep constructor private as only rlbox_sandbox should be able to create
+  // this object
   sandbox_callback(rlbox_sandbox<T_Sbx>* p_sandbox,
                    T_Callback p_callback,
                    T_Interceptor p_callback_interceptor,

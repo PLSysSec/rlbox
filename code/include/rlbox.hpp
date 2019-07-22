@@ -63,7 +63,7 @@ public:
       /* increment the target by size of the data structure */                 \
       auto target =                                                            \
         reinterpret_cast<uintptr_t>(ptr) opSymbol raw_rhs * sizeof(*impl());   \
-      auto no_overflow = rlbox_sandbox<T_Sbx>::is_in_same_sandbox(              \
+      auto no_overflow = rlbox_sandbox<T_Sbx>::is_in_same_sandbox(             \
         reinterpret_cast<const void*>(ptr),                                    \
         reinterpret_cast<const void*>(target));                                \
       detail::dynamic_check(                                                   \
@@ -592,11 +592,13 @@ public:
   {}
 
   template<typename T_Rhs>
-  void assign_raw_pointer(rlbox_sandbox<T_Sbx> sandbox, T_Rhs val)
+  void assign_raw_pointer(rlbox_sandbox<T_Sbx>& sandbox, T_Rhs val)
   {
-    static_assert(std::is_pointer_v<T_Rhs>);
+    static_assert(std::is_pointer_v<T_Rhs>, "Must be a pointer");
+    static_assert(std::is_assignable_v<T&, T_Rhs>,
+                  "Should assign pointers of compatible types.");
     // Maybe a function pointer, so we need to cast
-    const void* cast_val = reinterpret_cast<void*>(val);
+    const void* cast_val = reinterpret_cast<const void*>(val);
     bool safe = sandbox.is_pointer_in_sandbox_memory(cast_val);
     detail::dynamic_check(
       safe,
@@ -678,8 +680,6 @@ public:
 
   inline bool operator!()
   {
-    // Technically operator ! is permitted on static arrays as well, but until
-    // we figure out what that does, we do not support this as a precaution
     if_constexpr_named(cond1, std::is_pointer_v<T>)
     {
       // Checking for null pointer
@@ -693,6 +693,25 @@ public:
         "Operator ! only permitted for pointer types. For other types, unwrap "
         "the tainted value with the copy_and_verify API and then use operator "
         "!");
+    }
+  }
+
+  template<typename T_Dummy = void>
+  operator bool() const
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      // Checking for null pointer
+      return get_raw_value() != nullptr;
+    }
+    else
+    {
+      auto unknownCase = !(cond1);
+      rlbox_detail_static_fail_because(
+        unknownCase,
+        "Implicit conversion to bool is only permitted for pointer types. For "
+        "other types, unwrap the tainted value with the copy_and_verify API "
+        "and then perform the required checks");
     }
   }
 };
@@ -883,11 +902,13 @@ public:
   }
 
   template<typename T_Rhs>
-  void assign_raw_pointer(rlbox_sandbox<T_Sbx> sandbox, T_Rhs val)
+  void assign_raw_pointer(rlbox_sandbox<T_Sbx>& sandbox, T_Rhs val)
   {
-    static_assert(std::is_pointer_v<T_Rhs>);
+    static_assert(std::is_pointer_v<T_Rhs>, "Must be a pointer");
+    static_assert(std::is_assignable_v<T&, T_Rhs>,
+                  "Should assign pointers of compatible types.");
     // Maybe a function pointer, so we need to cast
-    const void* cast_val = reinterpret_cast<void*>(val);
+    const void* cast_val = reinterpret_cast<const void*>(val);
     bool safe = sandbox.is_pointer_in_sandbox_memory(cast_val);
     detail::dynamic_check(
       safe,
@@ -957,6 +978,22 @@ public:
       "Instead you can write this code as \n"
       "tainted<int*> temp = *a;\n"
       "assert(!temp);\n");
+    return false;
+  }
+
+  template<typename T_Dummy = void>
+  operator bool() const
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T_Dummy>,
+      "Cannot apply implicit conversion to bool on values that are located in "
+      "sandbox memory. This error occurs if you compare a dereferenced value "
+      "such as the code shown below\n\n"
+      "tainted<int**> a = ...;\n"
+      "assert(*a);\n\n"
+      "Instead you can write this code as \n"
+      "tainted<int*> temp = *a;\n"
+      "assert(temp);\n");
     return false;
   }
 };

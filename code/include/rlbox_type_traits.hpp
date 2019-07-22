@@ -265,6 +265,7 @@ using base_type_t = typename base_type_detail::base_type<T>::type;
 // convert types
 namespace convert_detail {
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
@@ -273,12 +274,32 @@ namespace convert_detail {
   struct convert_base_types_t_helper;
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
+    T_IntType,
+    T_LongType,
+    T_LongLongType,
+    T_PointerType,
+    std::enable_if_t<std::is_same_v<short, T> && !std::is_const_v<T>>>
+  {
+    using type = T_ShortType;
+  };
+
+  template<typename T,
+           typename T_ShortType,
+           typename T_IntType,
+           typename T_LongType,
+           typename T_LongLongType,
+           typename T_PointerType>
+  struct convert_base_types_t_helper<
+    T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -289,12 +310,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -305,12 +328,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -321,12 +346,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -337,12 +364,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -351,6 +380,7 @@ namespace convert_detail {
   {
     using type = std::make_unsigned_t<
       typename convert_base_types_t_helper<std::make_signed_t<T>,
+                                           T_ShortType,
                                            T_IntType,
                                            T_LongType,
                                            T_LongLongType,
@@ -358,12 +388,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -376,12 +408,14 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<
     T,
+    T_ShortType,
     T_IntType,
     T_LongType,
     T_LongLongType,
@@ -390,6 +424,7 @@ namespace convert_detail {
   {
     using type = typename convert_base_types_t_helper<
       std::remove_extent_t<T>,
+      T_ShortType,
       T_IntType,
       T_LongType,
       T_LongLongType,
@@ -397,11 +432,13 @@ namespace convert_detail {
   };
 
   template<typename T,
+           typename T_ShortType,
            typename T_IntType,
            typename T_LongType,
            typename T_LongLongType,
            typename T_PointerType>
   struct convert_base_types_t_helper<T,
+                                     T_ShortType,
                                      T_IntType,
                                      T_LongType,
                                      T_LongLongType,
@@ -410,6 +447,7 @@ namespace convert_detail {
   {
     using type = std::add_const_t<
       typename convert_base_types_t_helper<std::remove_const_t<T>,
+                                           T_ShortType,
                                            T_IntType,
                                            T_LongType,
                                            T_LongLongType,
@@ -418,12 +456,14 @@ namespace convert_detail {
 }
 
 template<typename T,
+         typename T_ShortType,
          typename T_IntType,
          typename T_LongType,
          typename T_LongLongType,
          typename T_PointerType>
 using convert_base_types_t =
   typename convert_detail::convert_base_types_t_helper<T,
+                                                       T_ShortType,
                                                        T_IntType,
                                                        T_LongType,
                                                        T_LongLongType,

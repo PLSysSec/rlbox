@@ -73,7 +73,7 @@ namespace detail {
                 !std::is_reference_v<result_type>) {                           \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name());                         \
-  } else if constexpr (std::is_fundamental_v<result_type> ||                   \
+  } else if constexpr (detail::is_fundamental_or_enum_v<result_type> ||        \
                        detail::is_std_array_v<result_type>) {                  \
     return const_cast<T_ConstClassPtr>(this)->func_name();                     \
   } else {                                                                     \
@@ -89,7 +89,7 @@ namespace detail {
     static_assert(detail::rlbox_is_tainted_v<result_type>);                    \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
-  } else if constexpr (std::is_fundamental_v<result_type> ||                   \
+  } else if constexpr (detail::is_fundamental_or_enum_v<result_type> ||        \
                        detail::is_std_array_v<result_type>) {                  \
     return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
   } else {                                                                     \
@@ -161,7 +161,7 @@ But C++ doesn't seem to allow the above
   friend class tainted_volatile;                                               \
                                                                                \
   template<typename U1>                                                        \
-  friend class rlbox_sandbox;                                                   \
+  friend class rlbox_sandbox;                                                  \
                                                                                \
   template<typename U1, typename U2>                                           \
   friend class sandbox_callback;                                               \

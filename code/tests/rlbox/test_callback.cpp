@@ -102,3 +102,15 @@ TEST_CASE("callback sig checks", "[sandbox_callback]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("callback assignment check", "[sandbox_callback]")
+{
+  RL sandbox;
+  sandbox.create_sandbox();
+
+  auto p_fnPtr = sandbox.malloc_in_sandbox<int (*)(int)>();
+  REQUIRE_NO_COMPILE_ERR(p_fnPtr = nullptr);
+
+  sandbox.destroy_sandbox();
+}

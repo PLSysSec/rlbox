@@ -76,6 +76,7 @@ public:
   using T_LongType = int32_t;
   using T_IntType = int32_t;
   using T_PointerType = uint32_t;
+  using T_ShortType = int16_t;
 
   inline static const uint32_t SandboxMemorySize = 0xFFF;
   inline static const uintptr_t SandboxMemoryBaseMask =
@@ -186,7 +187,7 @@ protected:
 #define rlbox_test_sandbox_lookup_symbol(sandbox, func_name)                   \
   []() {                                                                       \
     static_assert(std::is_same_v<std::remove_reference_t<decltype(sandbox)>,   \
-                                 rlbox::rlbox_sandbox<TestSandbox>>,            \
+                                 rlbox::rlbox_sandbox<TestSandbox>>,           \
                   "Forwarding another sandboxes calls to rlbox_test_sandbox. " \
                   "Please check the use of RLBOX_USE_STATIC_CALLS.");          \
     return reinterpret_cast<void*>(&func_name);                                \

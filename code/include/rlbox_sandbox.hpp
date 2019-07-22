@@ -65,7 +65,12 @@ private:
     {
       return param.UNSAFE_sandboxed();
     }
-    else if_constexpr_named(cond2, detail::is_fundamental_or_enum_v<T_NoRef>)
+    else if_constexpr_named(cond2, std::is_null_pointer_v<T_NoRef>)
+    {
+      tainted<void*, T_Sbx> ret = nullptr;
+      return ret.UNSAFE_sandboxed();
+    }
+    else if_constexpr_named(cond3, detail::is_fundamental_or_enum_v<T_NoRef>)
     {
       // For unwrapped primitives, assign to a tainted var and then unwrap so
       // that we adjust for machine model
@@ -74,7 +79,7 @@ private:
     }
     else
     {
-      constexpr auto unknownCase = !(cond1 || cond2);
+      constexpr auto unknownCase = !(cond1 || cond2 || cond3);
       rlbox_detail_static_fail_because(
         unknownCase,
         "Arguments to a sandbox function call should be primitives  or wrapped "
@@ -160,6 +165,7 @@ public:
   template<typename T>
   using convert_to_sandbox_equivalent_nonclass_t =
     detail::convert_base_types_t<T,
+                                 typename T_Sbx::T_ShortType,
                                  typename T_Sbx::T_IntType,
                                  typename T_Sbx::T_LongType,
                                  typename T_Sbx::T_LongLongType,
@@ -508,15 +514,15 @@ public:
     sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), sandbox, func_name)
 #else
 #  define sandbox_lookup_symbol(sandbox, func_name)                            \
-    sandbox.lookup_symbol(#func_name)
+    (sandbox).lookup_symbol(#func_name)
 #endif
 
 #define sandbox_invoke(sandbox, func_name, ...)                                \
-  sandbox.template invoke_with_func_ptr<decltype(func_name)>(                  \
+  (sandbox).template invoke_with_func_ptr<decltype(func_name)>(                \
     sandbox_lookup_symbol(sandbox, func_name), ##__VA_ARGS__)
 
 #define sandbox_function_address(sandbox, func_name)                           \
-  sandbox.template INTERNAL_get_sandbox_function<decltype(func_name)>(         \
+  (sandbox).template INTERNAL_get_sandbox_function<decltype(func_name)>(       \
     sandbox_lookup_symbol(sandbox, func_name))
 
 #if defined(__clang__)
