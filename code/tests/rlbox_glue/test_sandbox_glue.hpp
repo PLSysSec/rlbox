@@ -13,4 +13,4 @@
 // IWYU pragma: no_include "rlbox_struct_support.hpp"
 
 #include "libtest_structs_for_cpp_api.h"
-rlbox_load_structs_from_library(libtest) // NOLINT
+rlbox_load_structs_from_library(libtest); // NOLINT

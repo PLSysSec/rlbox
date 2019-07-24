@@ -6,6 +6,7 @@
 #include <type_traits>
 
 #include "rlbox_conversion.hpp"
+#include "rlbox_helpers.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -306,6 +307,7 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     sandbox_fields_reflection_##libId##_allClasses(                            \
       tainted_data_specialization)                                             \
-  }
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
 
 // clang-format on
