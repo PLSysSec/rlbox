@@ -620,6 +620,11 @@ public:
     data = val;
   }
 
+  inline tainted_opaque<T, T_Sbx> to_opaque()
+  {
+    return *reinterpret_cast<tainted_opaque<T, T_Sbx>*>(this);
+  }
+
   // In general comparison operators are unsafe.
   // However comparing tainted with nullptr is fine because
   // 1) tainted values are in application memory and thus cannot change the
@@ -715,6 +720,12 @@ public:
     }
   }
 };
+
+template<typename T, typename T_Sbx>
+inline tainted<T, T_Sbx> from_opaque(tainted_opaque<T, T_Sbx> val)
+{
+  return *reinterpret_cast<tainted<T, T_Sbx>*>(&val);
+}
 
 template<typename T, typename T_Sbx>
 class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>

@@ -44,12 +44,20 @@ TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
   auto result = sandbox_invoke(sandbox, test_func_int, TestFuncVal); // NOLINT
   REQUIRE(result.UNSAFE_unverified() == TestFuncVal);                // NOLINT
 
-  auto result2 =
-    sandbox_invoke(sandbox, test_func_enum, testBasicEnumVal1); // NOLINT
-  REQUIRE(result2.UNSAFE_unverified() == testBasicEnumVal1);    // NOLINT
+  auto t = tainted<int, rlbox_noop_sandbox>(TestFuncVal);
+  auto result2 = sandbox_invoke(sandbox, test_func_int, t); // NOLINT
+  REQUIRE(result2.UNSAFE_unverified() == TestFuncVal);      // NOLINT
 
-  auto result3 = sandbox_invoke(sandbox, test_func_ptr, nullptr); // NOLINT
-  REQUIRE(result3.UNSAFE_unverified() == nullptr);                // NOLINT
+  auto result3 =
+    sandbox_invoke(sandbox, test_func_int, t.to_opaque()); // NOLINT
+  REQUIRE(result3.UNSAFE_unverified() == TestFuncVal);     // NOLINT
+
+  auto result4 =
+    sandbox_invoke(sandbox, test_func_enum, testBasicEnumVal1); // NOLINT
+  REQUIRE(result4.UNSAFE_unverified() == testBasicEnumVal1);    // NOLINT
+
+  auto result5 = sandbox_invoke(sandbox, test_func_ptr, nullptr); // NOLINT
+  REQUIRE(result5.UNSAFE_unverified() == nullptr);                // NOLINT
 
   sandbox.destroy_sandbox();
 }

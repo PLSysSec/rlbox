@@ -57,33 +57,46 @@ private:
       std::declval<T>()));
 
   template<typename T>
-  inline auto invoke_process_param(T&& param)
+  inline constexpr void check_invoke_param_type_is_ok()
   {
     using T_NoRef = std::remove_reference_t<T>;
-
-    if_constexpr_named(cond1, detail::rlbox_is_wrapper_v<T_NoRef>)
-    {
-      return param.UNSAFE_sandboxed();
-    }
-    else if_constexpr_named(cond2, std::is_null_pointer_v<T_NoRef>)
-    {
-      tainted<void*, T_Sbx> ret = nullptr;
-      return ret.UNSAFE_sandboxed();
-    }
-    else if_constexpr_named(cond3, detail::is_fundamental_or_enum_v<T_NoRef>)
-    {
-      // For unwrapped primitives, assign to a tainted var and then unwrap so
-      // that we adjust for machine model
-      tainted<T_NoRef, T_Sbx> copy = param;
-      return copy.UNSAFE_sandboxed();
-    }
+    if_constexpr_named(cond1,
+                       detail::rlbox_is_wrapper_v<T_NoRef> ||
+                         std::is_null_pointer_v<T_NoRef> ||
+                         detail::is_fundamental_or_enum_v<T_NoRef>)
+    {}
     else
     {
-      constexpr auto unknownCase = !(cond1 || cond2 || cond3);
+      constexpr auto unknownCase = !(cond1);
       rlbox_detail_static_fail_because(
         unknownCase,
         "Arguments to a sandbox function call should be primitives  or wrapped "
         "types like tainted, callbacks etc.");
+    }
+  }
+
+  template<typename T>
+  inline auto invoke_process_param(T&& param)
+  {
+    check_invoke_param_type_is_ok<T>();
+
+    using T_NoRef = std::remove_reference_t<T>;
+
+    if constexpr (detail::rlbox_is_tainted_opaque_v<T_NoRef>) {
+      auto ret = from_opaque(param);
+      return ret.UNSAFE_sandboxed();
+    } else if constexpr (detail::rlbox_is_wrapper_v<T_NoRef>) {
+      return param.UNSAFE_sandboxed();
+    } else if constexpr (std::is_null_pointer_v<T_NoRef>) {
+      tainted<void*, T_Sbx> ret = nullptr;
+      return ret.UNSAFE_sandboxed();
+    } else if constexpr (detail::is_fundamental_or_enum_v<T_NoRef>) {
+      // For unwrapped primitives, assign to a tainted var and then unwrap so
+      // that we adjust for machine model
+      tainted<T_NoRef, T_Sbx> copy = param;
+      return copy.UNSAFE_sandboxed();
+    } else {
+      rlbox_detail_static_fail_because(detail::true_v<T_NoRef>, "Unknown case");
     }
   }
 
@@ -339,6 +352,8 @@ public:
   template<typename T, typename... T_Args>
   auto invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
   {
+    (check_invoke_param_type_is_ok<T_Args>(), ...);
+
     static_assert(
       std::is_invocable_v<
         T,
@@ -370,6 +385,19 @@ public:
         example_unsandboxed_ptr);
       return wrapped_result;
     }
+  }
+
+  // Useful in the porting stage to temporarily allow non tainted pointers to go
+  // through. This will only ever work in the rlbox_noop_sandbox. Any sandbox
+  // that actually enforces isolation will crash here.
+  template<typename T2>
+  tainted<T2, T_Sbx> UNSAFE_accept_pointer(T2 ptr)
+  {
+    static_assert(std::is_pointer_v<T2>,
+                  "UNSAFE_accept_pointer expects a pointer param");
+    tainted<T2, T_Sbx> ret;
+    ret.assign_raw_pointer(*this, ptr);
+    return ret;
   }
 
   template<typename T_Ret, typename... T_Args>
@@ -409,11 +437,13 @@ public:
         "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
-    else if_constexpr_named(cond2, !(detail::rlbox_is_wrapper_v<T_Args> && ...))
+    else if_constexpr_named(
+      cond2, !(detail::rlbox_is_tainted_or_opaque_v<T_Args> && ...))
     {
       rlbox_detail_static_fail_because(
         cond2,
-        "Change all arguments to the callback have to be tainted."
+        "Change all arguments to the callback have to be tainted or "
+        "tainted_opaque."
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
@@ -433,11 +463,13 @@ public:
         "tainted<int*, T_Sbx> a) {...}\n");
     }
     else if_constexpr_named(
-      cond4, !(std::is_void_v<T_Ret> || detail::rlbox_is_wrapper_v<T_Ret>))
+      cond4,
+      !(std::is_void_v<T_Ret> || detail::rlbox_is_tainted_or_opaque_v<T_Ret>))
     {
       rlbox_detail_static_fail_because(
         cond4,
-        "Change the callback return type to be tainted if it is not void."
+        "Change the callback return type to be tainted or tainted_opaque if it "
+        "is not void."
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
@@ -476,8 +508,17 @@ public:
         detail::rlbox_remove_wrapper_t<T_Args>...>(
         unique_key, reinterpret_cast<void*>(callback_interceptor));
 
+      auto tainted_func_ptr = reinterpret_cast<
+        detail::rlbox_tainted_opaque_to_tainted_t<T_Ret, T_Sbx> (*)(
+          T_RL, detail::rlbox_tainted_opaque_to_tainted_t<T_Args, T_Sbx>...)>(
+        func_ptr);
+
       auto ret = sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx>(
-        this, func_ptr, callback_interceptor, callback_trampoline, unique_key);
+        this,
+        tainted_func_ptr,
+        callback_interceptor,
+        callback_trampoline,
+        unique_key);
       return ret;
     }
   }

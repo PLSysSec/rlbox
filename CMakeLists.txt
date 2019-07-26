@@ -164,6 +164,7 @@ add_executable(test_rlbox
                code/tests/rlbox/test_sandbox_ptr_conversion.cpp
                code/tests/rlbox/test_stdlib.cpp
                code/tests/rlbox/test_tainted_assignment.cpp
+               code/tests/rlbox/test_tainted_opaque.cpp
                code/tests/rlbox/test_tainted_sizes.cpp
                code/tests/rlbox/test_tainted_structs.cpp
                code/tests/rlbox/test_type_traits.cpp

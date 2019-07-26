@@ -1,3 +1,4 @@
+#include <array>
 #include <cstring>
 
 #include "test_include.hpp"
@@ -22,13 +23,15 @@ TEST_CASE("Tainted struct assignment", "[tainted_struct]")
   ps->fieldLong = fieldLong;
   ps->fieldString = sandbox_reinterpret_cast<const char*>(fieldString);
   ps->fieldBool = fieldBool;
-  // char* temp = ps->fieldFixedArr.UNSAFE_unverified();
-  // std::strncpy(temp, "Bye", sizeof(ps->fieldFixedArr));
+  char* temp = (&(ps->fieldFixedArr[0])).UNSAFE_unverified();
+  std::strncpy(temp, "Bye", sizeof(ps->fieldFixedArr));
   ps->voidPtr = nullptr;
 
   REQUIRE(ps->fieldLong.UNSAFE_unverified() == fieldLong);
   REQUIRE(std::strcmp(ps->fieldString.UNSAFE_unverified(), "Hello") == 0);
   REQUIRE(ps->fieldBool.UNSAFE_unverified() == fieldBool);
+  auto fixedArr = ps->fieldFixedArr.UNSAFE_unverified();
+  REQUIRE(std::strcmp(&fixedArr[0], "Bye") == 0);
 
   // check that we can't test a tainted_volatile directly
   REQUIRE_COMPILE_ERR(ps->voidPtr == nullptr);

@@ -1,6 +1,7 @@
 #include "test_include.hpp"
 
 using rlbox::tainted;
+using rlbox::tainted_opaque;
 using RL = rlbox::rlbox_sandbox<TestSandbox>;
 
 // NOLINTNEXTLINE
@@ -82,6 +83,14 @@ static tainted<int, TestSandbox> good_callback_4(
   return test_val;
 }
 
+static tainted_opaque<int, TestSandbox> good_callback_5(
+  RL&,                              // NOLINT
+  tainted_opaque<int, TestSandbox>) // NOLINT
+{
+  const int test_val = 5;
+  return tainted<int, TestSandbox>(test_val).to_opaque();
+}
+
 // NOLINTNEXTLINE
 TEST_CASE("callback sig checks", "[sandbox_callback]")
 {
@@ -99,6 +108,7 @@ TEST_CASE("callback sig checks", "[sandbox_callback]")
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_2));
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_3));
   REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_4));
+  REQUIRE_NO_COMPILE_ERR(sandbox.register_callback(good_callback_5));
 
   sandbox.destroy_sandbox();
 }

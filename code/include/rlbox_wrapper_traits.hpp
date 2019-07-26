@@ -11,22 +11,23 @@ namespace rlbox::detail {
 #define rlbox_generate_wrapper_check(name)                                     \
   namespace detail_rlbox_is_##name                                             \
   {                                                                            \
+    template<typename T>                                                       \
+    struct unwrapper : std::false_type                                         \
+    {};                                                                        \
                                                                                \
     template<typename T, typename T_Sbx>                                       \
-    std::true_type helper(name<T, T_Sbx>*);                                    \
-                                                                               \
-    template<typename T>                                                       \
-    std::false_type helper(T*);                                                \
+    struct unwrapper<name<T, T_Sbx>> : std::true_type                          \
+    {};                                                                        \
   }                                                                            \
                                                                                \
   template<typename T>                                                         \
   constexpr bool rlbox_is_##name##_v =                                         \
-    decltype(detail_rlbox_is_##name::helper(                                   \
-      std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()))::value;  \
+    detail_rlbox_is_##name::unwrapper<T>::value;                               \
   RLBOX_REQUIRE_SEMI_COLON
 
 rlbox_generate_wrapper_check(tainted);
 rlbox_generate_wrapper_check(tainted_volatile);
+rlbox_generate_wrapper_check(tainted_opaque);
 rlbox_generate_wrapper_check(sandbox_callback);
 rlbox_generate_wrapper_check(sandbox_function);
 
@@ -37,41 +38,62 @@ constexpr bool rlbox_is_tainted_or_vol_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T>;
 
 template<typename T>
+constexpr bool rlbox_is_tainted_or_opaque_v =
+  rlbox_is_tainted_v<T> || rlbox_is_tainted_opaque_v<T>;
+
+template<typename T>
 constexpr bool rlbox_is_wrapper_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T> ||
-  rlbox_is_sandbox_callback_v<T> || rlbox_is_sandbox_function_v<T>;
+  rlbox_is_tainted_opaque_v<T> || rlbox_is_sandbox_callback_v<T> ||
+  rlbox_is_sandbox_function_v<T>;
 
 namespace detail_rlbox_remove_wrapper {
-
-  template<class TData>
+  template<typename T>
   struct unwrapper
   {
-    using type = TData;
+    using type = T;
   };
 
   template<typename T, typename T_Sbx>
-  unwrapper<T> helper(tainted<T, T_Sbx>*);
+  struct unwrapper<tainted<T, T_Sbx>>
+  {
+    using type = T;
+  };
 
   template<typename T, typename T_Sbx>
-  unwrapper<T> helper(tainted_volatile<T, T_Sbx>*);
+  struct unwrapper<tainted_volatile<T, T_Sbx>>
+  {
+    using type = T;
+  };
 
   template<typename T, typename T_Sbx>
-  unwrapper<T> helper(sandbox_callback<T, T_Sbx>*);
+  struct unwrapper<tainted_opaque<T, T_Sbx>>
+  {
+    using type = T;
+  };
 
   template<typename T, typename T_Sbx>
-  unwrapper<T> helper(sandbox_function<T, T_Sbx>*);
+  struct unwrapper<sandbox_callback<T, T_Sbx>>
+  {
+    using type = T;
+  };
 
-  template<typename T>
-  unwrapper<T> helper(T*);
-
-  template<typename T>
-  using rlbox_remove_wrapper_helper = decltype(
-    helper(std::declval<std::remove_cv_t<std::remove_reference_t<T>>*>()));
+  template<typename T, typename T_Sbx>
+  struct unwrapper<sandbox_function<T, T_Sbx>>
+  {
+    using type = T;
+  };
 }
 
 template<typename T>
 using rlbox_remove_wrapper_t =
-  typename detail_rlbox_remove_wrapper::rlbox_remove_wrapper_helper<T>::type;
+  typename detail_rlbox_remove_wrapper::unwrapper<T>::type;
+
+template<typename T, typename T_Sbx>
+using rlbox_tainted_opaque_to_tainted_t =
+  std::conditional_t<rlbox_is_tainted_opaque_v<T>,
+                     tainted<rlbox_remove_wrapper_t<T>, T_Sbx>,
+                     T>;
 
 // https://stackoverflow.com/questions/34974844/check-if-a-type-is-from-a-particular-namespace
 namespace detail_is_member_of_rlbox_detail {

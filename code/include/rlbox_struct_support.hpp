@@ -226,6 +226,11 @@ using convert_to_sandbox_equivalent_t =
                                                     helper_no_op)              \
     }                                                                          \
                                                                                \
+    inline tainted_opaque<T, T_Sbx> to_opaque()                                \
+    {                                                                          \
+      return *reinterpret_cast<tainted_opaque<T, T_Sbx>*>(this);               \
+    }                                                                          \
+                                                                               \
     inline auto UNSAFE_unverified() { return get_raw_value(); }                \
     inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
