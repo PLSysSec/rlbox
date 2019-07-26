@@ -1,9 +1,11 @@
+#include <cstdint>
 #include <memory>
 #include <utility>
 
 #include "test_include.hpp"
 
 using rlbox::tainted;
+using rlbox::tainted_volatile;
 
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test basic verification", "[verification]")
@@ -54,4 +56,21 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   REQUIRE(*result1 == testVal);
 
   sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("RLBox test pointer address verification", "[verification]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();
+
+  tainted_volatile<int, TestSandbox>* ret =
+    pa.verify_only_pointer_address([](uintptr_t /* addr */) { return true; });
+  REQUIRE(ret != nullptr);
+
+  tainted_volatile<int, TestSandbox>* ret2 =
+    pa.verify_only_pointer_address([](uintptr_t /* addr */) { return false; });
+  REQUIRE(ret2 == nullptr);
 }

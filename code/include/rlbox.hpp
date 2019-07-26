@@ -505,29 +505,48 @@ public:
       get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
   }
 
-  // Initializing with a pointer is dangerous and permitted only internally
+  // Initializing with a pointer in general is dangerous and permitted only
+  // internally. We allow this in only scenario - when we are assigning a
+  // tainted_volatile<remove_ptr<T>>*. This is because the construction of types
+  // in RLBox is such that this is a subtyping relationship. The
+  // tainted_volatile<int>* means "we have a pointer, whose address is verified,
+  // whose contents are in sandbox memory and is untrusted". The tainted<int*>
+  // means "we have a pointer, whose address is NOT verified, whose contents are
+  // in sandbox memory and is untrusted"
   template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>
   tainted(T2 val)
-    : data(val)
   {
-    rlbox_detail_static_fail_because(
-      std::is_pointer_v<T2>,
-      "Assignment of pointers is not safe as it could\n "
-      "1) Leak pointers from the appliction to the sandbox which may break "
-      "ASLR\n "
-      "2) Pass inaccessible pointers to the sandbox leading to crash\n "
-      "3) Break sandboxes that require pointers to be swizzled first\n "
-      "\n "
-      "Instead, if you want to pass in a pointer, do one of the following\n "
-      "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
-      "2) For pointers that point to functions in the application, register "
-      "with sandbox.register_callback(\"foo\"), and pass in the registered "
-      "value\n "
-      "3) For pointers that point to functions in the sandbox, get the "
-      "address with sandbox_function_address(sandbox, foo), and pass in the "
-      "address\n "
-      "4) For raw pointers, use assign_raw_pointer which performs required "
-      "safety checks\n ");
+    if_constexpr_named(
+      cond1, detail::rlbox_is_tainted_volatile_v<std::remove_pointer_t<T2>>)
+    {
+      using T_Unwrapped = std::add_pointer_t<
+        detail::rlbox_remove_wrapper_t<std::remove_pointer_t<T2>>>;
+      static_assert(std::is_assignable_v<T&, T_Unwrapped>,
+                    "Assigning incompatible types");
+      get_raw_value_ref() = reinterpret_cast<T_AppType>(val);
+    }
+    else
+    {
+      constexpr bool unknownCase = !(cond1);
+      rlbox_detail_static_fail_because(
+        unknownCase,
+        "Assignment of pointers is not safe as it could\n "
+        "1) Leak pointers from the appliction to the sandbox which may break "
+        "ASLR\n "
+        "2) Pass inaccessible pointers to the sandbox leading to crash\n "
+        "3) Break sandboxes that require pointers to be swizzled first\n "
+        "\n "
+        "Instead, if you want to pass in a pointer, do one of the following\n "
+        "1) Allocate with malloc_in_sandbox, and pass in a tainted pointer\n "
+        "2) For pointers that point to functions in the application, register "
+        "with sandbox.register_callback(\"foo\"), and pass in the registered "
+        "value\n "
+        "3) For pointers that point to functions in the sandbox, get the "
+        "address with sandbox_function_address(sandbox, foo), and pass in the "
+        "address\n "
+        "4) For raw pointers, use assign_raw_pointer which performs required "
+        "safety checks\n ");
+    }
   }
 
   tainted(
@@ -618,6 +637,23 @@ public:
       "address with sandbox_function_address(sandbox, foo), and pass in the "
       "address\n ");
     data = val;
+  }
+
+  template<typename T_Dummy = void>
+  tainted_volatile<std::remove_pointer_t<T>, T_Sbx>*
+  verify_only_pointer_address(std::function<bool(uintptr_t)> verifier)
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "validate_only_pointer_address callable only on pointers");
+    auto bits = reinterpret_cast<uintptr_t>(get_raw_value());
+    if (verifier(bits)) {
+      auto ret =
+        reinterpret_cast<tainted_volatile<std::remove_pointer_t<T>, T_Sbx>*>(
+          bits);
+      return ret;
+    } else {
+      return nullptr;
+    }
   }
 
   inline tainted_opaque<T, T_Sbx> to_opaque()
