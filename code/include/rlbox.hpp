@@ -37,11 +37,22 @@ private:
 
 public:
   inline auto UNSAFE_unverified() { return impl().get_raw_value(); }
-  inline auto UNSAFE_sandboxed() { return impl().get_raw_sandbox_value(); }
   inline auto UNSAFE_unverified() const { return impl().get_raw_value(); }
+  inline auto UNSAFE_sandboxed() { return impl().get_raw_sandbox_value(); }
   inline auto UNSAFE_sandboxed() const
   {
     return impl().get_raw_sandbox_value();
+  }
+
+  inline auto unverified_safe_because(const char*&& reason)
+  {
+    RLBOX_UNUSED(reason);
+    return UNSAFE_unverified();
+  }
+  inline auto unverified_safe_because(const char*&& reason) const
+  {
+    RLBOX_UNUSED(reason);
+    return UNSAFE_unverified();
   }
 
 #define BinaryOpValAndPtr(opSymbol)                                            \
@@ -53,10 +64,10 @@ public:
                   " only supported for primitive and pointer types");          \
                                                                                \
     auto raw_rhs = detail::unwrap_value(rhs);                                  \
-    static_assert(std::is_integral_v<decltype(raw_rhs)>,                       \
-                  "Can only operate on numeric types");                        \
                                                                                \
     if constexpr (std::is_pointer_v<T>) {                                      \
+      static_assert(std::is_integral_v<decltype(raw_rhs)>,                     \
+                    "Can only operate on numeric types");                      \
       auto ptr = impl().get_raw_value();                                       \
       detail::dynamic_check(ptr != nullptr,                                    \
                             "Pointer arithmetic on a null pointer");           \
@@ -238,6 +249,33 @@ public:
     rlbox_detail_forward_to_const(operator->, T_Ret);
   }
 
+  template<typename T_Rhs>
+  inline auto operator!=(T_Rhs&& arg) const
+  {
+    return !(impl() == arg);
+  }
+
+  inline auto operator!()
+  {
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      return impl() == nullptr;
+    }
+    else if_constexpr_named(cond2, std::is_same_v<std::remove_cv_t<T>, bool>)
+    {
+      return impl() == false;
+    }
+    else
+    {
+      auto unknownCase = !(cond1 || cond2);
+      rlbox_detail_static_fail_because(
+        unknownCase,
+        "Operator ! only permitted for pointer or boolean types. For other"
+        "types, unwrap the tainted value with the copy_and_verify API and then"
+        "use operator !");
+    }
+  }
+
   // The verifier should have the following signature for the given types
   // If tainted type is simple such as int
   //      using T_Func = T_Ret(*)(int)
@@ -399,6 +437,18 @@ public:
     target[str_len - 1] = '\0';
 
     return verifier(std::move(target));
+  }
+
+  // The verifier should have the following signature.
+  //      using T_Func = T_Ret(*)(uintptr_t)
+  // T_Ret is not constrained, and can be anything the caller chooses.
+  template<typename T_Func>
+  inline auto copy_and_verify_address(T_Func verifier)
+  {
+    static_assert(std::is_pointer_v<T>,
+                  "copy_and_verify_address must be used on pointers");
+    auto val = reinterpret_cast<uintptr_t>(impl().get_raw_value());
+    return verifier(val);
   }
 };
 
@@ -632,72 +682,52 @@ public:
   // 2) Checking that a pointer is null doesn't "really" taint the result as
   // the result is always safe
   template<typename T_Rhs>
-  inline bool operator==(T_Rhs&& arg) const
+  inline auto operator==(T_Rhs&& arg) const
   {
+    using T_RhsNoRef = std::remove_reference_t<T_Rhs>;
     if_constexpr_named(
-      cond1,
-      !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>,
-                      std::nullptr_t>)
+      cond1, std::is_same_v<std::remove_cv_t<T_RhsNoRef>, std::nullptr_t>)
     {
-      rlbox_detail_static_fail_because(
-        cond1,
-        "Only comparisons to nullptr are allowed. All other comparisons to "
-        "tainted types create many antipatterns. Rather than comparing tainted "
-        "values directly, unwrap the values with the copy_and_verify API and "
-        "then perform the comparisons.");
+      if_constexpr_named(subcond1, !std::is_pointer_v<T>)
+      {
+        rlbox_detail_static_fail_because(
+          cond1 && subcond1,
+          "Comparisons to nullptr only allowed for pointer types");
+        return false;
+      }
+      else
+      {
+        // We return this without the tainted wrapper as the checking for null
+        // doesn't really "induce" tainting in the application If the
+        // application is checking this pointer for null, then it is robust to
+        // this pointer being null or not null
+        return get_raw_value() == arg;
+      }
     }
-    else if_constexpr_named(cond2, std::is_pointer_v<T>)
+    else if_constexpr_named(cond2, detail::rlbox_is_tainted_v<T_RhsNoRef>)
     {
-      return get_raw_value() == arg;
+      tainted<bool, T_Sbx> ret = get_raw_value() == arg.get_raw_value();
+      return ret;
     }
-    else
+    else if_constexpr_named(cond3,
+                            detail::rlbox_is_tainted_volatile_v<T_RhsNoRef>)
     {
-      rlbox_detail_static_fail_because(
-        !cond2, "Comparisons to nullptr only permitted for pointer types");
+      tainted_boolean_hint ret(get_raw_value() == arg.get_raw_value());
+      return ret;
     }
-  }
-
-  template<typename T_Rhs>
-  inline bool operator!=(T_Rhs&& arg) const
-  {
-    if_constexpr_named(
-      cond1,
-      !std::is_same_v<std::remove_const_t<std::remove_reference_t<T_Rhs>>,
-                      std::nullptr_t>)
+    else if_constexpr_named(cond4, !detail::rlbox_is_wrapper_v<T_RhsNoRef>)
     {
-      rlbox_detail_static_fail_because(
-        cond1,
-        "Only comparisons to nullptr are allowed. All other comparisons to "
-        "tainted types create many antipatterns. Rather than comparing tainted "
-        "values directly, unwrap the values with the copy_and_verify API and "
-        "then perform the comparisons.");
-    }
-    else if_constexpr_named(cond2, std::is_pointer_v<T>)
-    {
-      return get_raw_value() != arg;
+      tainted<bool, T_Sbx> ret = get_raw_value() == arg;
+      return ret;
     }
     else
     {
-      rlbox_detail_static_fail_because(
-        !cond2, "Comparisons to nullptr only permitted for pointer types");
-    }
-  }
-
-  inline bool operator!()
-  {
-    if_constexpr_named(cond1, std::is_pointer_v<T>)
-    {
-      // Checking for null pointer
-      return get_raw_value() == nullptr;
-    }
-    else
-    {
-      auto unknownCase = !(cond1);
+      auto unknownCase = !(cond1 || cond2 || cond3 || cond4);
       rlbox_detail_static_fail_because(
         unknownCase,
-        "Operator ! only permitted for pointer types. For other types, unwrap "
-        "the tainted value with the copy_and_verify API and then use operator "
-        "!");
+        "Unknown comparison requested. Comparisons supported only with "
+        "tainted_types, nullptr and non wrapped types such as int, float, "
+        "struct etc.");
     }
   }
 
@@ -706,7 +736,10 @@ public:
   {
     if_constexpr_named(cond1, std::is_pointer_v<T>)
     {
-      // Checking for null pointer
+      // We return this without the tainted wrapper as the checking for null
+      // doesn't really "induce" tainting in the application If the
+      // application is checking this pointer for null, then it is robust to
+      // this pointer being null or not null
       return get_raw_value() != nullptr;
     }
     else
@@ -942,54 +975,15 @@ public:
       sandbox.template get_sandboxed_pointer<T_Rhs>(cast_val);
   }
 
-  // ==, != and ! are not supported for tainted_volatile, however, we implement
-  // this to ensure the user doesn't see a confusing error message
+  // All comparisons with a tainted_volatile return only a "hint" to the right
+  // answer, i.e. something that could be wrong or change. This is because a
+  // compromised sandbox can malicously modify tainted_volatile data at any
+  // time.
   template<typename T_Rhs>
-  inline bool operator==(T_Rhs&&) const
+  inline tainted_boolean_hint operator==(T_Rhs&& arg) const
   {
-    rlbox_detail_static_fail_because(
-      detail::true_v<T_Rhs>,
-      "Cannot compare values that are located in sandbox memory. This error "
-      "occurs if you compare a dereferenced value such as the code shown "
-      "below\n\n"
-      "tainted<int**> a = ...;\n"
-      "assert(*a == nullptr);\n\n"
-      "Instead you can write this code as \n"
-      "tainted<int*> temp = *a;\n"
-      "assert(temp == nullptr);\n");
-    return false;
-  }
-
-  template<typename T_Rhs>
-  inline bool operator!=(const std::nullptr_t&) const
-  {
-    rlbox_detail_static_fail_because(
-      detail::true_v<T_Rhs>,
-      "Cannot compare values that are located in sandbox memory. This error "
-      "occurs if you compare a dereferenced value such as the code shown "
-      "below\n\n"
-      "tainted<int**> a = ...;\n"
-      "assert(*a != nullptr);\n\n"
-      "Instead you can write this code as \n"
-      "tainted<int*> temp = *a;\n"
-      "assert(temp != nullptr);\n");
-    return false;
-  }
-
-  template<typename T_Dummy = void>
-  inline bool operator!()
-  {
-    rlbox_detail_static_fail_because(
-      detail::true_v<T_Dummy>,
-      "Cannot apply 'operator not' on values that are located in sandbox "
-      "memory. This error occurs if you compare a dereferenced value such as "
-      "the code shown below\n\n"
-      "tainted<int**> a = ...;\n"
-      "assert(!(*a));\n\n"
-      "Instead you can write this code as \n"
-      "tainted<int*> temp = *a;\n"
-      "assert(!temp);\n");
-    return false;
+    tainted_boolean_hint ret(get_raw_value() == detail::unwrap_value(arg));
+    return ret;
   }
 
   template<typename T_Dummy = void>

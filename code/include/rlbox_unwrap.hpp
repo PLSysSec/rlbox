@@ -10,9 +10,10 @@
 namespace rlbox::detail {
 
 template<typename T_Rhs>
-inline auto unwrap_value(const T_Rhs& rhs) noexcept
+inline auto unwrap_value(T_Rhs&& rhs) noexcept
 {
-  if constexpr (detail::rlbox_is_wrapper_v<T_Rhs>) {
+  using T_RhsNoRef = std::remove_reference_t<T_Rhs>;
+  if constexpr (detail::rlbox_is_wrapper_v<T_RhsNoRef>) {
     return rhs.UNSAFE_unverified();
   } else {
     return rhs;

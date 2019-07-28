@@ -57,28 +57,31 @@ using convert_to_sandbox_equivalent_t =
     };                                                                         \
   }
 
-#define helper_create_tainted_field(fieldType, fieldName, isFrozen)            \
-  tainted<fieldType, T_Sbx> fieldName;
+#define helper_create_tainted_field(                                           \
+  fieldType, fieldName, isFrozen, MaybeConst)                                  \
+  MaybeConst tainted<fieldType, T_Sbx> fieldName;
 
-#define helper_create_tainted_v_field(fieldType, fieldName, isFrozen)          \
-  tainted_volatile<fieldType, T_Sbx> fieldName;
+#define helper_create_tainted_vol_field(                                       \
+  fieldType, fieldName, isFrozen, MaybeConst)                                  \
+  MaybeConst tainted_volatile<fieldType, T_Sbx> fieldName;
 
 #define helper_convert_type(fieldType, fieldName, isFrozen)                    \
   ::rlbox::detail::convert_type<T_Sbx, Direction>(                             \
     lhs.fieldName, rhs.fieldName, example_unsandboxed_ptr);
 
-#define tainted_data_specialization(T, libId)                                  \
+#define tainted_data_specialization_helper(MaybeConst, T, libId)               \
                                                                                \
   template<typename T_Sbx>                                                     \
-  class tainted_volatile<T, T_Sbx>                                             \
+  class tainted_volatile<MaybeConst T, T_Sbx>                                  \
   {                                                                            \
     KEEP_CLASSES_FRIENDLY                                                      \
     KEEP_CAST_FRIENDLY                                                         \
                                                                                \
   private:                                                                     \
-    inline Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref() noexcept          \
+    inline MaybeConst Sbx_##libId##_##T<T_Sbx>&                                \
+    get_sandbox_value_ref() noexcept                                           \
     {                                                                          \
-      return *reinterpret_cast<Sbx_##libId##_##T<T_Sbx>*>(this);               \
+      return *reinterpret_cast<MaybeConst Sbx_##libId##_##T<T_Sbx>*>(this);    \
     }                                                                          \
                                                                                \
     inline const Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref() const       \
@@ -90,7 +93,7 @@ using convert_to_sandbox_equivalent_t =
     inline T get_raw_value() const noexcept                                    \
     {                                                                          \
       T lhs;                                                                   \
-      auto& rhs = get_sandbox_value_ref();                                     \
+      const auto& rhs = get_sandbox_value_ref();                               \
       constexpr auto Direction =                                               \
         detail::adjust_type_direction::TO_APPLICATION;                         \
       /* This is a tainted_volatile, so its address is a valid for use as */   \
@@ -123,25 +126,39 @@ using convert_to_sandbox_equivalent_t =
     }                                                                          \
                                                                                \
     tainted_volatile() = default;                                              \
-    tainted_volatile(const tainted_volatile<T, T_Sbx>& p) = default;           \
+    tainted_volatile(const tainted_volatile<MaybeConst T, T_Sbx>& p) =         \
+      default;                                                                 \
                                                                                \
   public:                                                                      \
     sandbox_fields_reflection_##libId##_class_##T(                             \
-      helper_create_tainted_v_field,                                           \
-      helper_no_op)                                                            \
+      helper_create_tainted_vol_field,                                         \
+      helper_no_op,                                                            \
+      MaybeConst)                                                              \
                                                                                \
-      inline tainted<T*, T_Sbx>                                                \
+      inline tainted<MaybeConst T*, T_Sbx>                                     \
       operator&() noexcept                                                     \
     {                                                                          \
-      auto ref_cast = reinterpret_cast<T*>(&get_sandbox_value_ref());          \
-      auto ret = tainted<T*, T_Sbx>::internal_factory(ref_cast);               \
+      auto ref_cast =                                                          \
+        reinterpret_cast<MaybeConst T*>(&get_sandbox_value_ref());             \
+      auto ret = tainted<MaybeConst T*, T_Sbx>::internal_factory(ref_cast);    \
       return ret;                                                              \
     }                                                                          \
                                                                                \
     inline auto UNSAFE_unverified() { return get_raw_value(); }                \
-    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
+                                                                               \
+    inline auto unverified_safe_because(const char*&& reason)                  \
+    {                                                                          \
+      RLBOX_UNUSED(reason);                                                    \
+      return UNSAFE_unverified();                                              \
+    }                                                                          \
+    inline auto unverified_safe_because(const char*&& reason) const            \
+    {                                                                          \
+      RLBOX_UNUSED(reason);                                                    \
+      return UNSAFE_unverified();                                              \
+    }                                                                          \
                                                                                \
     T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
     {                                                                          \
@@ -151,20 +168,20 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     /* Can't define this yet due, to mutually dependent definition between     \
     tainted and tainted_volatile for structs */                                \
-    inline tainted_volatile<T, T_Sbx>& operator=(                              \
+    inline tainted_volatile<MaybeConst T, T_Sbx>& operator=(                   \
       const tainted<T, T_Sbx>&& rhs);                                          \
   };                                                                           \
                                                                                \
   template<typename T_Sbx>                                                     \
-  class tainted<T, T_Sbx>                                                      \
+  class tainted<MaybeConst T, T_Sbx>                                           \
   {                                                                            \
     KEEP_CLASSES_FRIENDLY                                                      \
     KEEP_CAST_FRIENDLY                                                         \
                                                                                \
   private:                                                                     \
-    inline T& get_raw_value_ref() noexcept                                     \
+    inline MaybeConst T& get_raw_value_ref() noexcept                          \
     {                                                                          \
-      return *reinterpret_cast<T*>(this);                                      \
+      return *reinterpret_cast<MaybeConst T*>(this);                           \
     }                                                                          \
                                                                                \
     inline const T& get_raw_value_ref() const noexcept                         \
@@ -183,7 +200,7 @@ using convert_to_sandbox_equivalent_t =
     inline Sbx_##libId##_##T<T_Sbx> get_raw_sandbox_value() const noexcept     \
     {                                                                          \
       Sbx_##libId##_##T<T_Sbx> lhs;                                            \
-      auto& rhs = get_raw_value_ref();                                         \
+      const auto& rhs = get_raw_value_ref();                                   \
       constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;    \
       /* Since direction is TO_SANDBOX, we don't need a */                     \
       /* example_unsandboxed_ptr */                                            \
@@ -208,10 +225,11 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
   public:                                                                      \
     sandbox_fields_reflection_##libId##_class_##T(helper_create_tainted_field, \
-                                                  helper_no_op)                \
+                                                  helper_no_op,                \
+                                                  MaybeConst)                  \
                                                                                \
       tainted() = default;                                                     \
-    tainted(const tainted<T, T_Sbx>& p) = default;                             \
+    tainted(const tainted<MaybeConst T, T_Sbx>& p) = default;                  \
                                                                                \
     tainted(const tainted_volatile<T, T_Sbx>& p)                               \
     {                                                                          \
@@ -226,15 +244,26 @@ using convert_to_sandbox_equivalent_t =
                                                     helper_no_op)              \
     }                                                                          \
                                                                                \
-    inline tainted_opaque<T, T_Sbx> to_opaque()                                \
+    inline tainted_opaque<MaybeConst T, T_Sbx> to_opaque()                     \
     {                                                                          \
-      return *reinterpret_cast<tainted_opaque<T, T_Sbx>*>(this);               \
+      return *reinterpret_cast<tainted_opaque<MaybeConst T, T_Sbx>*>(this);    \
     }                                                                          \
                                                                                \
     inline auto UNSAFE_unverified() { return get_raw_value(); }                \
-    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
+                                                                               \
+    inline auto unverified_safe_because(const char*&& reason)                  \
+    {                                                                          \
+      RLBOX_UNUSED(reason);                                                    \
+      return UNSAFE_unverified();                                              \
+    }                                                                          \
+    inline auto unverified_safe_because(const char*&& reason) const            \
+    {                                                                          \
+      RLBOX_UNUSED(reason);                                                    \
+      return UNSAFE_unverified();                                              \
+    }                                                                          \
                                                                                \
     T copy_and_verify(std::function<T(tainted<T, T_Sbx>)> verifier)            \
     {                                                                          \
@@ -245,7 +274,8 @@ using convert_to_sandbox_equivalent_t =
   /* Had to delay the definition due, to mutually dependence between           \
     tainted and tainted_volatile for structs */                                \
   template<typename T_Sbx>                                                     \
-  inline tainted_volatile<T, T_Sbx>& tainted_volatile<T, T_Sbx>::operator=(    \
+  inline tainted_volatile<MaybeConst T, T_Sbx>&                                \
+  tainted_volatile<MaybeConst T, T_Sbx>::operator=(                            \
     const tainted<T, T_Sbx>&& rhs_wrap)                                        \
   {                                                                            \
     auto& lhs = get_sandbox_value_ref();                                       \
@@ -258,8 +288,13 @@ using convert_to_sandbox_equivalent_t =
                                                   helper_no_op)                \
                                                                                \
       return *this;                                                            \
-  }                                                                            \
-                                                                               \
+  }
+
+#define tainted_data_specialization(T, libId)                                  \
+  tainted_data_specialization_helper(, T, libId)                               \
+    tainted_data_specialization_helper(const, T, libId)
+
+#define convert_type_specialization(T, libId)                                  \
   namespace detail {                                                           \
     template<typename T_Sbx,                                                   \
              detail::adjust_type_direction Direction,                          \
@@ -312,6 +347,9 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     sandbox_fields_reflection_##libId##_allClasses(                            \
       tainted_data_specialization)                                             \
+                                                                               \
+    sandbox_fields_reflection_##libId##_allClasses(                            \
+      convert_type_specialization)                                             \
   }                                                                            \
   RLBOX_REQUIRE_SEMI_COLON
 

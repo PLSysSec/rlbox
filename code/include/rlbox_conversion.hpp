@@ -14,7 +14,8 @@
 namespace rlbox::detail {
 
 template<typename T_To, typename T_From>
-inline constexpr void convert_type_fundamental(T_To& to, const T_From& from)
+inline constexpr void convert_type_fundamental(T_To& to,
+                                               const volatile T_From& from)
 {
   using namespace std;
 

@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <memory>
 #include <utility>
 
@@ -53,5 +54,21 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   REQUIRE(result1 != nullptr);
   REQUIRE(*result1 == testVal);
 
+  auto result2 = pa.copy_and_verify_address([](uintptr_t val) { return val; });
+  REQUIRE(pa.UNSAFE_unverified() == reinterpret_cast<int*>(result2)); // NOLINT
+
   sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("RLBox test unverified", "[verification]")
+{
+  const auto testVal = 5;
+  tainted<int, TestSandbox> test = testVal;
+  auto result1 = test.UNSAFE_unverified();
+  auto result2 = test.copy_and_verify([](int val) { return val; });
+  auto result3 = test.unverified_safe_because("Reason: testing");
+  REQUIRE(result1 == testVal);
+  REQUIRE(result2 == testVal);
+  REQUIRE(result3 == testVal);
 }
