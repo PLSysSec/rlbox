@@ -83,7 +83,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const int val1 = 20;
     const int val2 = 22;
     tainted<int, TestType> a = val1;
-    auto ret2 = sandbox_invoke(sandbox, simpleAddTest, a, val2);
+    auto ret2 = sandbox.sandbox_invoke(simpleAddTest, a, val2);
     REQUIRE(ret2.UNSAFE_unverified() == (val1 + val2));
   }
 
@@ -91,7 +91,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   {
     const uint32_t val1 = 20;
     const auto u32Max = std::numeric_limits<std::uint32_t>::max();
-    auto ret2 = sandbox_invoke(sandbox, simpleU64AddTest, u32Max, val1);
+    auto ret2 = sandbox.sandbox_invoke(simpleU64AddTest, u32Max, val1);
     uint64_t result = static_cast<uint64_t>(u32Max) + val1;
     REQUIRE(ret2.UNSAFE_unverified() == result);
   }
@@ -100,7 +100,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   {
     const int val1 = 2;
     const int val2 = 3;
-    auto result1 = sandbox_invoke(sandbox, simpleAddTest, val1, val2)
+    auto result1 = sandbox.sandbox_invoke(simpleAddTest, val1, val2)
                      .copy_and_verify([](int val) {
                        return val > 0 && val < upper_bound ? val : -1;
                      });
@@ -114,14 +114,14 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     tainted<int*, TestType> pa = sandbox.template malloc_in_sandbox<int>();
     *pa = val1;
 
-    auto result1 = sandbox_invoke(sandbox, echoPointer, pa)
+    auto result1 = sandbox.sandbox_invoke(echoPointer, pa)
                      .copy_and_verify([](std::unique_ptr<const int> val) {
                        return *val > 0 && *val < upper_bound ? *val : -1;
                      });
     REQUIRE(result1 == val1);
 
     auto result2 =
-      sandbox_invoke(sandbox, echoPointer, pa)
+      sandbox.sandbox_invoke(echoPointer, pa)
         .copy_and_verify([](std::unique_ptr<const int> val) {
           return *val > 0 && *val < upper_bound ? std::move(val) : nullptr;
         });
@@ -136,8 +136,8 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto cb_callback_param =
       sandbox.register_callback(exampleCallback<rlbox::rlbox_noop_sandbox>);
 
-    auto resultT = sandbox_invoke(
-      sandbox, simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
+    auto resultT = sandbox.sandbox_invoke(
+      simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
 
     auto result = resultT.copy_and_verify(
       [](int val) { return val > 0 && val < upper_bound ? val : -1; });
@@ -150,7 +150,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
       sandbox.register_callback(exampleCallback2<rlbox::rlbox_noop_sandbox>);
 
     auto resultT =
-      sandbox_invoke(sandbox, simpleCallbackTest2, 4, cb_callback_param);
+      sandbox.sandbox_invoke(simpleCallbackTest2, 4, cb_callback_param);
 
     auto result = resultT.copy_and_verify([](int val) { return val; });
     REQUIRE(result == 11);
@@ -158,14 +158,14 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   SECTION("test callback to an internal function") // NOLINT
   {
-    auto fnPtr = sandbox_function_address(sandbox, internalCallback);
+    auto fnPtr = sandbox.sandbox_function_address(internalCallback);
 
     tainted<testStruct*, TestType> pFoo =
       sandbox.template malloc_in_sandbox<testStruct>();
     pFoo->fieldFnPtr = fnPtr;
 
-    auto resultT = sandbox_invoke(
-      sandbox, simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
+    auto resultT = sandbox.sandbox_invoke(
+      simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
 
     auto result = resultT.copy_and_verify(
       [](int val) { return val > 0 && val < upper_bound ? val : -1; });
@@ -190,7 +190,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
     std::strcpy(str_in_sbx, str);
 
-    auto retStrRaw = sandbox_invoke(sandbox, simpleEchoTest, temp);
+    auto retStrRaw = sandbox.sandbox_invoke(simpleEchoTest, temp);
     // test some modifications of the string
     *retStrRaw = 'g';
     char* retStr = retStrRaw.copy_and_verify_string(
@@ -221,20 +221,20 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const double dVal2 = 2.0;
     const auto defaultVal = -1.0;
 
-    auto resultF = sandbox_invoke(sandbox, simpleFloatAddTest, fVal1, fVal2)
+    auto resultF = sandbox.sandbox_invoke(simpleFloatAddTest, fVal1, fVal2)
                      .copy_and_verify([&](float val) {
                        return val > 0 && val < upper_bound ? val : defaultVal;
                      });
     REQUIRE(resultF == fVal1 + fVal2);
 
-    auto resultD = sandbox_invoke(sandbox, simpleDoubleAddTest, dVal1, dVal2)
+    auto resultD = sandbox.sandbox_invoke(simpleDoubleAddTest, dVal1, dVal2)
                      .copy_and_verify([&](double val) {
                        return val > 0 && val < upper_bound ? val : defaultVal;
                      });
     REQUIRE(resultD == dVal1 + dVal2);
 
     // test float to double conversions
-    auto resultFD = sandbox_invoke(sandbox, simpleFloatAddTest, dVal1, dVal2)
+    auto resultFD = sandbox.sandbox_invoke(simpleFloatAddTest, dVal1, dVal2)
                       .copy_and_verify([&](double val) {
                         return val > 0 && val < upper_bound ? val : defaultVal;
                       });
@@ -250,7 +250,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     tainted<double*, TestType> p = sandbox.template malloc_in_sandbox<double>();
     *p = d1;
 
-    auto resultD = sandbox_invoke(sandbox, simplePointerValAddTest, p, d2)
+    auto resultD = sandbox.sandbox_invoke(simplePointerValAddTest, p, d2)
                      .copy_and_verify([&](double val) {
                        return val > 0 && val < upper_bound ? val : defaultVal;
                      });
@@ -259,7 +259,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   SECTION("test structures") // NOLINT
   {
-    auto resultT = sandbox_invoke(sandbox, simpleTestStructVal);
+    auto resultT = sandbox.sandbox_invoke(simpleTestStructVal);
     auto result = resultT.copy_and_verify([](
                                             tainted<testStruct, TestType> val) {
       testStruct ret{};
@@ -289,7 +289,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
 
   SECTION("test structure pointer") // NOLINT
   {
-    auto resultT = sandbox_invoke(sandbox, simpleTestStructPtr);
+    auto resultT = sandbox.sandbox_invoke(simpleTestStructPtr);
 
     auto result = resultT.copy_and_verify(
       [](std::unique_ptr<tainted<testStruct, TestType>> val) {
@@ -330,7 +330,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   SECTION("test pointers in struct") // NOLINT
   {
     auto initVal = sandbox.template malloc_in_sandbox<char>();
-    auto resultT = sandbox_invoke(sandbox, initializePointerStruct, initVal);
+    auto resultT = sandbox.sandbox_invoke(initializePointerStruct, initVal);
     auto result =
       resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) {
         pointersStruct ret{};
@@ -359,7 +359,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     auto initVal3 = initVal + 3; // NOLINT
     *initVal3 = 'v';
 
-    auto resultT = sandbox_invoke(sandbox, initializePointerStructPtr, initVal);
+    auto resultT = sandbox.sandbox_invoke(initializePointerStructPtr, initVal);
 
     char* initValRaw = initVal.UNSAFE_unverified();
     // check that reading a pointer in an array doesn't read neighboring

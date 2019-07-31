@@ -60,14 +60,36 @@ private:
   inline constexpr void check_invoke_param_type_is_ok()
   {
     using T_NoRef = std::remove_reference_t<T>;
-    if_constexpr_named(cond1,
-                       detail::rlbox_is_wrapper_v<T_NoRef> ||
-                         std::is_null_pointer_v<T_NoRef> ||
-                         detail::is_fundamental_or_enum_v<T_NoRef>)
+
+    if_constexpr_named(cond1, detail::rlbox_is_wrapper_v<T_NoRef>)
+    {
+      if_constexpr_named(
+        subcond1,
+        !std::is_same_v<T_Sbx, detail::rlbox_get_wrapper_sandbox_t<T_NoRef>>)
+      {
+        rlbox_detail_static_fail_because(
+          cond1 && subcond1,
+          "Mixing tainted data from a different sandbox types. This could "
+          "happen due to couple of different reasons.\n"
+          "1. You are using 2 sandbox types for example'rlbox_noop_sandbox' "
+          "and 'rlbox_lucet_sandbox', and are passing tainted data from one "
+          "sandbox as parameters into a function call to the other sandbox. "
+          "This is not allowed, unwrap the tainted data with copy_and_verify "
+          "or other unwrapping APIs first.\n"
+          "2. You have inadvertantly forgotten to set/remove "
+          "RLBOX_USE_STATIC_CALLS depending on the sandbox type. Some sandbox "
+          "types like rlbox_noop_sandbox require this to be set to a given "
+          "value, while other types like rlbox_lucet_sandbox, require this not "
+          "to be set.");
+      }
+    }
+    else if_constexpr_named(cond2,
+                            std::is_null_pointer_v<T_NoRef> ||
+                              detail::is_fundamental_or_enum_v<T_NoRef>)
     {}
     else
     {
-      constexpr auto unknownCase = !(cond1);
+      constexpr auto unknownCase = !(cond1 || cond2);
       rlbox_detail_static_fail_because(
         unknownCase,
         "Arguments to a sandbox function call should be primitives  or wrapped "
@@ -349,8 +371,22 @@ public:
     return func_ptr;
   }
 
+  // this is an internal function invoked from macros, so it has be public
   template<typename T, typename... T_Args>
-  auto invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
+  inline auto INTERNAL_invoke_with_func_name(const char* func_name,
+                                             T_Args&&... params)
+  {
+    return INTERNAL_invoke_with_func_ptr<T, T_Args...>(
+      lookup_symbol(func_name), std::forward<T_Args>(params)...);
+  }
+
+  // this is an internal function invoked from macros, so it has be public
+  // Explicitly don't use inline on this, as this adds a lot of instructions
+  // prior to function call. What's more, by not inlining, different function
+  // calls with the same signature can share the same code segments for
+  // sandboxed function execution in the binary
+  template<typename T, typename... T_Args>
+  auto INTERNAL_invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
   {
     (check_invoke_param_type_is_ok<T_Args>(), ...);
 
@@ -523,10 +559,17 @@ public:
     }
   }
 
-  // this is an internal function, but as it is invoked from macros it needs to
-  // be public
+  // this is an internal function invoked from macros, so it has be public
   template<typename T>
-  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function(
+  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function_name(
+    const char* func_name)
+  {
+    return INTERNAL_get_sandbox_function_ptr<T>(lookup_symbol(func_name));
+  }
+
+  // this is an internal function invoked from macros, so it has be public
+  template<typename T>
+  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function_ptr(
     void* func_ptr)
   {
     auto internal_func_ptr = get_sandboxed_pointer<T*>(func_ptr);
@@ -547,24 +590,28 @@ public:
 // Don't know the compiler... just let it go through
 #endif
 
-#if defined(RLBOX_USE_STATIC_CALLS)
-#  define sandbox_lookup_symbol_helper(prefix, sandbox, func_name)             \
-    prefix(sandbox, func_name)
+#ifdef RLBOX_USE_STATIC_CALLS
 
-#  define sandbox_lookup_symbol(sandbox, func_name)                            \
-    sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), sandbox, func_name)
+#  define sandbox_lookup_symbol_helper(prefix, func_name) prefix(func_name)
+
+#  define sandbox_invoke(func_name, ...)                                       \
+    template INTERNAL_invoke_with_func_ptr<decltype(func_name)>(               \
+      sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name),       \
+      ##__VA_ARGS__)
+
+#  define sandbox_function_address(func_name)                                  \
+    template INTERNAL_get_sandbox_function_ptr<decltype(func_name)>(           \
+      sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name))
+
 #else
-#  define sandbox_lookup_symbol(sandbox, func_name)                            \
-    (sandbox).lookup_symbol(#func_name)
+
+#  define sandbox_invoke(func_name, ...)                                       \
+    template INTERNAL_invoke_with_func_name<decltype(func_name)>(              \
+      #func_name, ##__VA_ARGS__)
+#  define sandbox_function_address(func_name)                                  \
+    template INTERNAL_get_sandbox_function_name<decltype(func_name)>(#func_name))
+
 #endif
-
-#define sandbox_invoke(sandbox, func_name, ...)                                \
-  (sandbox).template invoke_with_func_ptr<decltype(func_name)>(                \
-    sandbox_lookup_symbol(sandbox, func_name), ##__VA_ARGS__)
-
-#define sandbox_function_address(sandbox, func_name)                           \
-  (sandbox).template INTERNAL_get_sandbox_function<decltype(func_name)>(       \
-    sandbox_lookup_symbol(sandbox, func_name))
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

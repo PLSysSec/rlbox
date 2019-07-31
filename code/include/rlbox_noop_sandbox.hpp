@@ -127,15 +127,8 @@ protected:
     return nullptr;
   }
 
-#define rlbox_noop_sandbox_lookup_symbol(sandbox, func_name)                   \
-  []() {                                                                       \
-    static_assert(                                                             \
-      std::is_same_v<std::remove_reference_t<decltype(sandbox)>,               \
-                     rlbox::rlbox_sandbox<rlbox::rlbox_noop_sandbox>>,         \
-      "Forwarding another sandboxes calls to rlbox_noop_sandbox. "             \
-      "Please check the use of RLBOX_USE_STATIC_CALLS.");                      \
-    return reinterpret_cast<void*>(&func_name); /* NOLINT */                   \
-  }()
+#define rlbox_noop_sandbox_lookup_symbol(func_name)                            \
+  reinterpret_cast<void*>(&func_name) /* NOLINT */
 
   template<typename T, typename T_Converted, typename... T_Args>
   auto impl_invoke_with_func_ptr(T_Converted* func_ptr, T_Args&&... params)

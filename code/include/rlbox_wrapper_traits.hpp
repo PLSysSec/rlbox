@@ -52,42 +52,52 @@ namespace detail_rlbox_remove_wrapper {
   struct unwrapper
   {
     using type = T;
+    using type_sbx = void;
   };
 
   template<typename T, typename T_Sbx>
   struct unwrapper<tainted<T, T_Sbx>>
   {
     using type = T;
+    using type_sbx = T_Sbx;
   };
 
   template<typename T, typename T_Sbx>
   struct unwrapper<tainted_volatile<T, T_Sbx>>
   {
     using type = T;
+    using type_sbx = T_Sbx;
   };
 
   template<typename T, typename T_Sbx>
   struct unwrapper<tainted_opaque<T, T_Sbx>>
   {
     using type = T;
+    using type_sbx = T_Sbx;
   };
 
   template<typename T, typename T_Sbx>
   struct unwrapper<sandbox_callback<T, T_Sbx>>
   {
     using type = T;
+    using type_sbx = T_Sbx;
   };
 
   template<typename T, typename T_Sbx>
   struct unwrapper<sandbox_function<T, T_Sbx>>
   {
     using type = T;
+    using type_sbx = T_Sbx;
   };
 }
 
 template<typename T>
 using rlbox_remove_wrapper_t =
   typename detail_rlbox_remove_wrapper::unwrapper<T>::type;
+
+template<typename T>
+using rlbox_get_wrapper_sandbox_t =
+  typename detail_rlbox_remove_wrapper::unwrapper<T>::type_sbx;
 
 template<typename T, typename T_Sbx>
 using rlbox_tainted_opaque_to_tainted_t =

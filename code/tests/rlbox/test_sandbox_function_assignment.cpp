@@ -19,7 +19,7 @@ TEST_CASE("Test sandbox_function assignment", "[sandbox_function]")
   using T_F = int (*)(int);
 
   auto ptr = sandbox.malloc_in_sandbox<T_F>();
-  auto cb = sandbox_function_address(sandbox, test_fn); // NOLINT
+  auto cb = sandbox.sandbox_function_address(test_fn); // NOLINT
 
   tainted<T_F, TestSandbox> val = nullptr;
 

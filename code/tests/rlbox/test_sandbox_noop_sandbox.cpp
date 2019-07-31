@@ -34,30 +34,26 @@ TEST_CASE("invoke in no_op sandbox", "[no_op_sandbox]")
   RL sandbox;
   sandbox.create_sandbox();
 
-  void* a = sandbox_lookup_symbol(sandbox, test_func_void); // NOLINT
-  REQUIRE(a == reinterpret_cast<void*>(&test_func_void));   // NOLINT
-
   const int TestFuncVal = 3;
-  sandbox_invoke(sandbox, test_func_void, TestFuncVal); // NOLINT
-  REQUIRE(GlobalVal == TestFuncVal);                    // NOLINT
+  sandbox.sandbox_invoke(test_func_void, TestFuncVal); // NOLINT
+  REQUIRE(GlobalVal == TestFuncVal);                   // NOLINT
 
-  auto result = sandbox_invoke(sandbox, test_func_int, TestFuncVal); // NOLINT
-  REQUIRE(result.UNSAFE_unverified() == TestFuncVal);                // NOLINT
+  auto result = sandbox.sandbox_invoke(test_func_int, TestFuncVal); // NOLINT
+  REQUIRE(result.UNSAFE_unverified() == TestFuncVal);               // NOLINT
 
   auto t = tainted<int, rlbox_noop_sandbox>(TestFuncVal);
-  auto result2 = sandbox_invoke(sandbox, test_func_int, t); // NOLINT
-  REQUIRE(result2.UNSAFE_unverified() == TestFuncVal);      // NOLINT
+  auto result2 = sandbox.sandbox_invoke(test_func_int, t); // NOLINT
+  REQUIRE(result2.UNSAFE_unverified() == TestFuncVal);     // NOLINT
 
-  auto result3 =
-    sandbox_invoke(sandbox, test_func_int, t.to_opaque()); // NOLINT
-  REQUIRE(result3.UNSAFE_unverified() == TestFuncVal);     // NOLINT
+  auto result3 = sandbox.sandbox_invoke(test_func_int, t.to_opaque()); // NOLINT
+  REQUIRE(result3.UNSAFE_unverified() == TestFuncVal);                 // NOLINT
 
   auto result4 =
-    sandbox_invoke(sandbox, test_func_enum, testBasicEnumVal1); // NOLINT
-  REQUIRE(result4.UNSAFE_unverified() == testBasicEnumVal1);    // NOLINT
+    sandbox.sandbox_invoke(test_func_enum, testBasicEnumVal1); // NOLINT
+  REQUIRE(result4.UNSAFE_unverified() == testBasicEnumVal1);   // NOLINT
 
-  auto result5 = sandbox_invoke(sandbox, test_func_ptr, nullptr); // NOLINT
-  REQUIRE(result5.UNSAFE_unverified() == nullptr);                // NOLINT
+  auto result5 = sandbox.sandbox_invoke(test_func_ptr, nullptr); // NOLINT
+  REQUIRE(result5.UNSAFE_unverified() == nullptr);               // NOLINT
 
   sandbox.destroy_sandbox();
 }
@@ -87,7 +83,7 @@ TEST_CASE("callback in no_op sandbox", "[no_op_sandbox]")
 
   const int test_val = 5;
   tainted<int, rlbox_noop_sandbox> ret =
-    sandbox_invoke(sandbox, test_invoker, cb, test_val); // NOLINT
+    sandbox.sandbox_invoke(test_invoker, cb, test_val); // NOLINT
 
   REQUIRE(ret.UNSAFE_unverified() == test_val + 2);
 
