@@ -609,7 +609,7 @@ public:
     template INTERNAL_invoke_with_func_name<decltype(func_name)>(              \
       #func_name, ##__VA_ARGS__)
 #  define sandbox_function_address(func_name)                                  \
-    template INTERNAL_get_sandbox_function_name<decltype(func_name)>(#func_name))
+    template INTERNAL_get_sandbox_function_name<decltype(func_name)>(#func_name)
 
 #endif
 

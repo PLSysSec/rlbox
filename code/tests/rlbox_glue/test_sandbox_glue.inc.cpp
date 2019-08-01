@@ -6,12 +6,22 @@
 
 // IWYU pragma: no_forward_declare mpl_::na
 #include "libtest.h"
-#include "test_sandbox_glue.hpp"
+#include "catch2/catch.hpp"
+#include "rlbox.hpp"
+#include "libtest_structs_for_cpp_api.h"
+rlbox_load_structs_from_library(libtest); // NOLINT
 
 using rlbox::rlbox_sandbox;
 using rlbox::tainted;
 
-template<typename TestType>
+#ifndef CreateSandbox
+  #error "Define CreateSandbox before including this file"
+#endif
+
+#ifndef TestType
+  #error "Define TestType before including this file"
+#endif
+
 static tainted<int, TestType> exampleCallback(
   // NOLINTNEXTLINE(google-runtime-references)
   rlbox_sandbox<TestType>& sandbox,
@@ -42,7 +52,6 @@ static tainted<int, TestType> exampleCallback(
   return ret; // NOLINT
 }
 
-template<typename TestType>
 static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
   rlbox_sandbox<TestType>& /* sandbox */,
   tainted<unsigned long, TestType> val1, // NOLINT(google-runtime-int)
@@ -63,12 +72,10 @@ static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
 }
 
 // NOLINTNEXTLINE
-TEMPLATE_TEST_CASE("sandbox glue tests",
-                   "[sandbox_glue_tests]",
-                   rlbox::rlbox_noop_sandbox)
+TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
 {
   rlbox::rlbox_sandbox<TestType> sandbox;
-  sandbox.create_sandbox();
+  CreateSandbox(sandbox);
 
   const int upper_bound = 100;
 
@@ -134,7 +141,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
     const unsigned cb_val_param = 4;
 
     auto cb_callback_param =
-      sandbox.register_callback(exampleCallback<rlbox::rlbox_noop_sandbox>);
+      sandbox.register_callback(exampleCallback);
 
     auto resultT = sandbox.sandbox_invoke(
       simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
@@ -147,7 +154,7 @@ TEMPLATE_TEST_CASE("sandbox glue tests",
   SECTION("test callback 2") // NOLINT
   {
     auto cb_callback_param =
-      sandbox.register_callback(exampleCallback2<rlbox::rlbox_noop_sandbox>);
+      sandbox.register_callback(exampleCallback2);
 
     auto resultT =
       sandbox.sandbox_invoke(simpleCallbackTest2, 4, cb_callback_param);
