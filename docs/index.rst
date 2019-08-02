@@ -1,5 +1,5 @@
 Sandboxing libraries with RLBox
-=================================================
+===============================
 
 .. toctree::
    :maxdepth: 2
@@ -68,15 +68,16 @@ RLBox similarly copies simple return values and callback arguments. Larger data
 structures, however, must (again) be passed by *sandbox-reference*, i.e., via a
 reference/pointer to sandbox memory.
 
-
 Example
-------------------
+-------
+
+.. note:: TODO
 
 Core API
-==================
+========
 
 Creating (and destroying) sandboxes
-------------------
+-----------------------------------
 
 RLBox encapsulates sandboxes with :ref:`rlbox_sandbox <rlbox_sandbox>` class.
 For now, RLBox supports two sandboxes: a Wasm-based sandboxed and the *null*
@@ -88,6 +89,8 @@ with a particular library and only then switch over to the Wasm-based sandbox.
 .. _rlbox_sandbox:
 .. doxygenclass:: rlbox::rlbox_sandbox
 
+.. doxygenclass:: rlbox::rlbox_noop_sandbox
+
 .. _create_sandbox:
 .. doxygenfunction:: create_sandbox
 
@@ -96,7 +99,7 @@ you need to add a ``#define`` at the top of your entry file, before you include
 the RLBox headers::
 
   #define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol
-
+  ...
   rlbox::rlbox_sandbox<rlbox_noop_sandbox> sandbox;
   sandbox.create_sandbox();
 
@@ -108,13 +111,24 @@ that the memory footprint of sandboxing remains low. Once you destroy a sandbox
 though, it is an error to use the sandbox object.
 
 Calling sandboxed library functions
-------------------
+-----------------------------------
+
+RLBox disallows code from calling sandboxed library functions directly.
+Instead, application code must use the :ref:`sandbox_invoke() <sandbox_invoke>`
+method.
 
 .. _sandbox_invoke:
-.. doxygenfunction:: sandbox_invoke
+.. doxygendefine:: sandbox_invoke
+
+Though this function is defined via macros, RLBox uses some template and macro
+magic to make this look like a :ref:`sandbox <rlbox_sandbox>` method. So, in
+general, you can call sandboxed library functions as::
+
+  // call foo(4)
+  auto result = sandbox.sandbox_invoke(foo, 4);
 
 Exposing functions to sandboxed code
-------------------
+------------------------------------
 
 Application code can expose :ref:`callback functions <callback>` to sandbox via
 :ref:`register_callback() <register_callback>`.  These functions can be called
@@ -132,7 +146,7 @@ sandbox (e.g., via :ref:`sandbox_invoke() <sandbox_invoke>`).
 
 A *callback function* is a function that has a special type:
 
-* The first argument of the function must be a reference a `sandbox
+* The first argument of the function must be a reference a :ref:`sandbox
   <rlbox_sandbox>` object.
 * The remaining arguments must be :ref:`tainted <tainted>`.
 * The return value must be :ref:`tainted <tainted>` or ``void``. This ensures
@@ -146,14 +160,70 @@ ensures that the application cannot accidentally leak data to the sandbox.
 .. doxygenfunction:: unregister_callback
 
 Tainted values
-------------------
+--------------
+
+Values that originate in the sandbox are *tainted*. We use a special tainted
+type :ref:`tainted <tainted>` to encapsulate such values and prevent the
+application from using tainted values unsafely.
 
 .. _tainted:
 .. doxygenclass:: rlbox::tainted
-   :members:
+
+Unwrapping tainted values
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To use tainted values, the application can copy
+the value to application memory, verify the value, and unwrap it. RLBox
+provides several functions to do this.
+
+.. doxygenfunction:: copy_and_verify
+
+For a given tainted type, the verifier should have the following signature:
+
++------------------------+-----------------------+----------------------------------+
+| Tainted type kind      |  Example type         | Example verifier                 |
++========================+=======================+==================================+
+| Simple type            |  ``int``              | ``T_Ret(*)(int)``                |
++------------------------+-----------------------+----------------------------------+
+| Pointer to simple type |  ``int*``             | ``T_Ret(*)(unique_ptr<int>)``    |
++------------------------+-----------------------+----------------------------------+
+| Pointer to class type  |  ``Foo*``             | ``T_Ret(*)(unique_ptr<Foo>)``    |
++------------------------+-----------------------+----------------------------------+
+| Pointer to array       |  ``int[4]``           | ``T_Ret(*)(std::array<int, 4>)`` |
++------------------------+-----------------------+----------------------------------+
+| Class type             |  ``Foo``              | ``T_Ret(*)(tainted<Foo>)``       |
++------------------------+-----------------------+----------------------------------+
+
+In general, the return type of the verifier ``T_Ret`` is not constrained and can
+be anything the caller chooses.
+
+.. doxygenfunction:: copy_and_verify_range
+.. doxygenfunction:: copy_and_verify_string
+.. doxygenfunction:: copy_and_verify_address
+
+In some cases it's useful to unwrap tainted values without verification.
+Sometimes this is safe to do and RLBox provides a method for doing so:
+
+.. doxygenfunction:: unverified_safe_because(const char *&&)
+
+We however provide additional functions that are especially useful during
+migration:
+
+.. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_unverified()
+.. doxygenfunction:: rlbox::sandbox_callback::UNSAFE_unverified()
+.. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_sandboxed()
+.. doxygenfunction:: rlbox::sandbox_callback::UNSAFE_sandboxed()
+
+.. danger::  Unchecked unwrapped tainted values can be abused by a compromised
+   or malicious library to potentially compromise the application.
+
+
+Operating on tainted values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. note:: TODO
 
 Application-sandbox shared memory
-------------------
+---------------------------------
 
 Since sandboxed code cannot access application memory, to share objects across
 the boundary you need to explicitly allocate memory that both the application
@@ -163,19 +233,27 @@ and sandbox can access. To this end, :ref:`malloc_in_sandbox()
 sandbox (e.g., by passing the pointer as an argument to a function).
 
 .. _malloc_in_sandbox:
-.. doxygenfunction:: malloc_in_sandbox
+.. doxygenfunction:: malloc_in_sandbox()
 .. doxygenfunction:: malloc_in_sandbox(uint32_t)
 
 .. _free_in_sandbox:
 .. doxygenfunction:: free_in_sandbox
 
+To distinguish between different pointer types, RLBox also provides some helper functions:
+
+.. doxygenfunction:: is_pointer_in_app_memory
+.. doxygenfunction:: is_pointer_in_sandbox_memory
+.. doxygenfunction:: is_in_same_sandbox
+
 .. _stdlib:
 
 Standard library
-------------------
+----------------
+
+.. note:: TODO
 
 References
-==================
+==========
 
 .. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. 
 

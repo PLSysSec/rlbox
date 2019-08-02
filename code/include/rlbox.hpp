@@ -36,14 +36,30 @@ private:
   }
 
 public:
+  /**
+   * @brief Unwrap a tainted value without verification. This is an unsafe
+   * operation and should be used with care.
+   */
   inline auto UNSAFE_unverified() { return impl().get_raw_value(); }
   inline auto UNSAFE_unverified() const { return impl().get_raw_value(); }
+  /**
+   * @brief Like UNSAFE_unverified, but get the underlying sandbox representation.
+   *
+   * For the Wasm-based sandbox, this function additionally validates the
+   * unwrapped value against the machine model of the sandbox (LP32).
+   */
   inline auto UNSAFE_sandboxed() { return impl().get_raw_sandbox_value(); }
   inline auto UNSAFE_sandboxed() const
   {
     return impl().get_raw_sandbox_value();
   }
 
+  /**
+   * @brief Unwrap a tainted value without verification. This function should
+   * be used when unwrapping is safe.
+   *
+   * @param reason An explanation why the unverified unwrapping is safe.
+   */
   inline auto unverified_safe_because(const char*&& reason)
   {
     RLBOX_UNUSED(reason);
@@ -276,22 +292,13 @@ public:
     }
   }
 
-  // The verifier should have the following signature for the given types
-  // If tainted type is simple such as int
-  //      using T_Func = T_Ret(*)(int)
-  // If tainted type is a pointer to a simple type such as int*
-  //      using T_Func = T_Ret(*)(unique_ptr<int>)
-  // If tainted type is a pointer to class such as Foo*
-  //      using T_Func = T_Ret(*)(unique_ptr<Foo>)
-  // If tainted type is an array such as int[4]
-  //      using T_Func = T_Ret(*)(std::array<int, 4>)
-  // For completeness, if tainted_type is a class such as Foo, the
-  //  copy_and_verify is implemented in rlbox_struct_support.hpp. The verifier
-  //  should be
-  //      using T_Func = T_Ret(*)(tainted<Foo>)
-  //
-  // In the above signatures T_Ret is not constrained, and can be anything the
-  // caller chooses.
+  /**
+   * @brief Copy tainted value from sandbox and verify it.
+   *
+   * @param verifer Function used to verify the copied value.
+   * @tparam T_Func the type of the verifier.
+   * @return Whatever the verifier function returns.
+   */
   template<typename T_Func>
   inline auto copy_and_verify(T_Func verifier) const
   {
@@ -387,10 +394,15 @@ private:
   }
 
 public:
-  // The verifier should have the following signature.
-  // If the tainted type is int*
-  //      using T_Func = T_Ret(*)(unique_ptr<int[]>)
-  // T_Ret is not constrained, and can be anything the caller chooses.
+  /**
+   * @brief Copy a range of tainted values from sandbox and verify them.
+   *
+   * @param verifer Function used to verify the copied value.
+   * @param count Number of elements to copy.
+   * @tparam T_Func the type of the verifier. If the tainted type is ``int*``
+   * then ``T_Func = T_Ret(*)(unique_ptr<int[]>)``.
+   * @return Whatever the verifier function returns.
+   */
   template<typename T_Func>
   inline auto copy_and_verify_range(T_Func verifier, std::size_t count) const
   {
@@ -408,9 +420,13 @@ public:
     return verifier(std::move(target));
   }
 
-  // The verifier should have the following signature.
-  //      using T_Func = T_Ret(*)(unique_ptr<char[]>)
-  // T_Ret is not constrained, and can be anything the caller chooses.
+  /**
+   * @brief Copy a tainted string from sandbox and verify it.
+   *
+   * @param verifer Function used to verify the copied value.
+   * @tparam T_Func the type of the verifier ``T_Ret(*)(unique_ptr<char[]>)``
+   * @return Whatever the verifier function returns.
+   */
   template<typename T_Func>
   inline auto copy_and_verify_string(T_Func verifier) const
   {
@@ -439,9 +455,18 @@ public:
     return verifier(std::move(target));
   }
 
-  // The verifier should have the following signature.
-  //      using T_Func = T_Ret(*)(uintptr_t)
-  // T_Ret is not constrained, and can be anything the caller chooses.
+
+  /**
+   * @brief Copy a tainted pointer from sandbox and verify the address.
+   *
+   * This function is useful if you need to verify physical bits representing
+   * the address of a pointed to since copy_and_verify performs a deep copy and
+   * changes the address bits.
+   *
+   * @param verifer Function used to verify the copied value.
+   * @tparam T_Func the type of the verifier ``T_Ret(*)(uintptr_t)``
+   * @return Whatever the verifier function returns.
+   */
   template<typename T_Func>
   inline auto copy_and_verify_address(T_Func verifier)
   {
