@@ -33,7 +33,8 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
 /**
  * @brief Encapsulation for sandboxes.
  *
- * @tparam T_Sbx Type of sandbox. For the null sandbox this is `rlbox_noop_sandbox`
+ * @tparam T_Sbx Type of sandbox. For the null sandbox this is
+ * `rlbox_noop_sandbox`
  */
 template<typename T_Sbx>
 class rlbox_sandbox : protected T_Sbx
@@ -513,7 +514,8 @@ public:
    * @tparam T_Ret  Return type of callback. Must be tainted or void.
    * @tparam T_Args Types of remaining callback arguments. Must be tainted.
    *
-   * @return Wrapped callback function pointer that can be passed to the sandbox.
+   * @return Wrapped callback function pointer that can be passed to the
+   * sandbox.
    */
   template<typename T_RL, typename T_Ret, typename... T_Args>
   sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx> register_callback(
@@ -651,7 +653,7 @@ public:
 #endif
 
 /**
- * @def  sandbox_invoke
+ * @def  invoke_sandbox_function
  * @brief Call sandbox function.
  *
  * @param func_name The sandboxed library function to call.
@@ -662,7 +664,7 @@ public:
 
 #  define sandbox_lookup_symbol_helper(prefix, func_name) prefix(func_name)
 
-#  define sandbox_invoke(func_name, ...)                                       \
+#  define invoke_sandbox_function(func_name, ...)                              \
     template INTERNAL_invoke_with_func_ptr<decltype(func_name)>(               \
       sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name),       \
       ##__VA_ARGS__)
@@ -673,13 +675,17 @@ public:
 
 #else
 
-#  define sandbox_invoke(func_name, ...)                                       \
+#  define invoke_sandbox_function(func_name, ...)                              \
     template INTERNAL_invoke_with_func_name<decltype(func_name)>(              \
       #func_name, ##__VA_ARGS__)
+
 #  define sandbox_function_address(func_name)                                  \
     template INTERNAL_get_sandbox_function_name<decltype(func_name)>(#func_name)
 
 #endif
+
+#define sandbox_invoke(sandbox, func_name, ...)                                \
+  (sandbox).invoke_sandbox_function(func_name, ##__VA_ARGS__)
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

@@ -178,7 +178,8 @@ public:
    */
   inline auto UNSAFE_unverified() const noexcept { return get_raw_value(); }
   /**
-   * @brief Like UNSAFE_unverified, but get the underlying sandbox representation.
+   * @brief Like UNSAFE_unverified, but get the underlying sandbox
+   * representation.
    */
   inline auto UNSAFE_sandboxed() const noexcept
   {

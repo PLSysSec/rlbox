@@ -50,7 +50,7 @@ Memory isolation is enforced by the underlying sandboxing mechanism (from the
 start, when you create the sandbox with :ref:`create_sandbox() <create_sandbox>`). Explicit
 boundary crossings are enforced by RLBox (either at compile- or and run-time).
 For example, with RLBox you can't call library functions directly; instead, you
-must use the :ref:`sandbox_invoke() <sandbox_invoke>` method. Similarly, the library cannot
+must use the :ref:`invoke_sandbox_function() <invoke_sandbox_function>` method. Similarly, the library cannot
 call arbitrary Firefox functions; instead, it can only call functions that you
 expose with the :ref:`register_callback() <register_callback>` method. (To
 simplify the sandboxing task, though, RLBox does expose a standard library as
@@ -132,16 +132,16 @@ going to use the NULL sandbox) and call the ``hello`` function::
       sandbox.create_sandbox();
 
       // call the library hello function
-      sandbox.sandbox_invoke(hello);
+      sandbox.invoke_sandbox_function(hello);
    ...
 
 Note that we do not call ``hello()`` directly. Instead, we use the
-:ref:`sandbox_invoke() <sandbox_invoke>` method. We can similarly call the
+:ref:`invoke_sandbox_function() <invoke_sandbox_function>` method. We can similarly call the
 ``add`` function::
 
    ...
       // call the add function and check the result:
-      auto ok = sandbox.sandbox_invoke(add, 3, 4).copy_and_verify([](unsigned ret){
+      auto ok = sandbox.invoke_sandbox_function(add, 3, 4).copy_and_verify([](unsigned ret){
             printf("Adding... 3+4 = %d\n", ret);
             return ret == 7;
       });
@@ -192,7 +192,7 @@ to by ``taintedStr`` and crash when it tries to print it.
 Now, we can just call the function and free the allocated string::
 
    ...
-      sandbox.sandbox_invoke(echo, taintedStr);
+      sandbox.invoke_sandbox_function(echo, taintedStr);
       sandbox.free_in_sandbox(taintedStr);
    ...
 
@@ -231,7 +231,7 @@ disallow the library-application call -- and pass the callback to the
    ...
       // register callback and call it
       auto cb = sandbox.register_callback(hello_cb);
-      sandbox.sandbox_invoke(call_cb, cb);
+      sandbox.invoke_sandbox_function(call_cb, cb);
    ...
 
 Finally, let's destroy the sandbox and exit::
@@ -290,18 +290,18 @@ Calling sandboxed library functions
 -----------------------------------
 
 RLBox disallows code from calling sandboxed library functions directly.
-Instead, application code must use the :ref:`sandbox_invoke() <sandbox_invoke>`
+Instead, application code must use the :ref:`invoke_sandbox_function() <invoke_sandbox_function>`
 method.
 
-.. _sandbox_invoke:
-.. doxygendefine:: sandbox_invoke
+.. _invoke_sandbox_function:
+.. doxygendefine:: invoke_sandbox_function
 
 Though this function is defined via macros, RLBox uses some template and macro
 magic to make this look like a :ref:`sandbox <rlbox_sandbox>` method. So, in
 general, you can call sandboxed library functions as::
 
   // call foo(4)
-  auto result = sandbox.sandbox_invoke(foo, 4);
+  auto result = sandbox.invoke_sandbox_function(foo, 4);
 
 Exposing functions to sandboxed code
 ------------------------------------
@@ -316,7 +316,7 @@ by the sandboxed code until they are :ref:`unregistered <unregister_callback>`.
 The type signatures of :ref:`register_callback() <register_callback>`
 function is a bit daunting. In short, the function takes a :ref:`callback
 function <callback>` and returns a function pointer that can be passed to the
-sandbox (e.g., via :ref:`sandbox_invoke() <sandbox_invoke>`).
+sandbox (e.g., via :ref:`invoke_sandbox_function() <invoke_sandbox_function>`).
 
 .. _callback:
 

@@ -43,7 +43,8 @@ public:
   inline auto UNSAFE_unverified() { return impl().get_raw_value(); }
   inline auto UNSAFE_unverified() const { return impl().get_raw_value(); }
   /**
-   * @brief Like UNSAFE_unverified, but get the underlying sandbox representation.
+   * @brief Like UNSAFE_unverified, but get the underlying sandbox
+   * representation.
    *
    * For the Wasm-based sandbox, this function additionally validates the
    * unwrapped value against the machine model of the sandbox (LP32).
@@ -454,7 +455,6 @@ public:
 
     return verifier(std::move(target));
   }
-
 
   /**
    * @brief Copy a tainted pointer from sandbox and verify the address.

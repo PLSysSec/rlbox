@@ -17,7 +17,7 @@ TEST_CASE("sandbox_lookup_symbol on no_op sandbox without #define causes error",
   sandbox.create_sandbox();
 
   // Error due to the missing #define described above
-  REQUIRE_COMPILE_ERR(sandbox.sandbox_invoke(test_func)); // NOLINT
+  REQUIRE_COMPILE_ERR(sandbox.invoke_sandbox_function(test_func)); // NOLINT
   UNUSED(test_func);
 
   sandbox.destroy_sandbox();

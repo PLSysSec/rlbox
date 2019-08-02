@@ -22,10 +22,10 @@ int main(int argc, char const *argv[]) {
   sandbox.create_sandbox();
 
   // call the library hello function
-  sandbox.sandbox_invoke(hello);
+  sandbox.invoke_sandbox_function(hello);
 
   // call the add function and check the result:
-  auto ok = sandbox.sandbox_invoke(add, 3, 4).copy_and_verify([](unsigned ret){
+  auto ok = sandbox.invoke_sandbox_function(add, 3, 4).copy_and_verify([](unsigned ret){
       printf("Adding... 3+4 = %d\n", ret);
       return ret == 7;
   });
@@ -35,13 +35,13 @@ int main(int argc, char const *argv[]) {
   const char* helloStr = "hi hi!";
   size_t helloSize = strlen(helloStr);
   auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
-  std::strncpy(taintedStr.unverified_safe_because("writint to region"), helloStr, helloSize);
-  sandbox.sandbox_invoke(echo, taintedStr);
+  std::strncpy(taintedStr.unverified_safe_because("writing to region"), helloStr, helloSize);
+  sandbox.invoke_sandbox_function(echo, taintedStr);
   sandbox.free_in_sandbox(taintedStr);
 
   // register callback and call it
   auto cb = sandbox.register_callback(hello_cb);
-  sandbox.sandbox_invoke(call_cb, cb);
+  sandbox.invoke_sandbox_function(call_cb, cb);
 
   // destroy sandbox
   sandbox.destroy_sandbox();
