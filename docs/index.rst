@@ -220,7 +220,45 @@ migration:
 
 Operating on tainted values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. note:: TODO
+Unwrapping tainted values requires care -- getting a verifier wrong could lead
+to a security vulnerability. It's also not cheap: we need to copy data to the
+application memory to ensure that the sandboxed code cannot modify the data
+we're tyring to verify. Lucikly, it's not always necessary to copy and verify:
+sometimes we can compute on tainted values directly. To this end, RLBox defines
+different kinds of operators on tainted values, which produce tainted values.
+This allows you to perform some computations on tainted values, pass the values
+back into the sandbox, and only later unwrap a tainted value when you need to.
+operators like ``+`` and ``-`` on tainted values.
+
++-----------------------+-----------------------------------+
+| Class of operator     |  Supported operators              |
++=======================+===================================+
+| Arithmetic operators  |  ``+``,``-``,``*``,``/``,``%``    |
++-----------------------+-----------------------------------+
+| Logical opators       |  ``^``,``&``,``|``,``<<``,``>>``  |
++-----------------------+-----------------------------------+
+| Unary operators       |  ``-``,``~``                      |
++-----------------------+-----------------------------------+
+| Pointer operators     |  ``[]``,``*``,``&``,``->``        |
++-----------------------+-----------------------------------+
+
+When applying a binary operator like ``<<`` to a tainted value and an untainted
+values the result is always tainted.
+
+RLBox also defines several comparison operators on tainted values that sometime
+unwrap the result:
+
+* Operators ``==``,``!=`` on tainted pointers is allowed if the rhs is ``nullptr_t`` and return unwrapped ``bool``s.
+* Operator ``!`` on tainted pointers retruns an unwrapped ``bool``.
+* Operators ``==``,``!=``,``!`` on non-pointer tainted values return a ``tainted<bool>``
+* Operators ``==``,``!=``,``!`` on `tainted_volatile <tainted_volatile>` values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
+
+.. _tainted_volatile:
+A *tainted_volatile* 
+
+.. _tainted_boolean_hint:
+A *tainted_boolean_hint*
+
 
 Application-sandbox shared memory
 ---------------------------------
