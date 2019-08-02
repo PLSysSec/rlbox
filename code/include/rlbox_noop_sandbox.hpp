@@ -10,6 +10,11 @@
 
 namespace rlbox {
 
+/**
+* @brief Class that implements the null sandbox. This sandbox doesn't actually
+* provide any isolation and only serves as a stepping stone towards migrating
+* an application to use the RLBox API.
+*/
 class rlbox_noop_sandbox
 {
 public:

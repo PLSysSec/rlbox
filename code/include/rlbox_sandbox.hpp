@@ -30,6 +30,11 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
     T_Ret (*)(T_Args...));
 }
 
+/**
+ * @brief Encapsulation for sandboxes.
+ *
+ * @tparam T_Sbx Type of sandbox. For the null sandbox this is `rlbox_noop_sandbox`
+ */
 template<typename T_Sbx>
 class rlbox_sandbox : protected T_Sbx
 {
@@ -172,6 +177,10 @@ private:
     }
   }
 
+  /**
+   * @brief Unregister a callback function and disallow the sandbox from
+   * calling this function henceforth.
+   */
   template<typename T_Ret, typename... T_Args>
   inline void unregister_callback(void* key)
   {
@@ -208,6 +217,12 @@ public:
 
   T_Sbx* get_sandbox_impl() { return this; }
 
+  /**
+   * @brief Create a new sandbox.
+   *
+   * @tparam T_args Arguments passed to the underlying sandbox
+   * implementation. For the null sandbox, no arguments are necessary.
+   */
   template<typename... T_Args>
   inline auto create_sandbox(T_Args... args)
   {
@@ -221,6 +236,9 @@ public:
       });
   }
 
+  /**
+   * @brief Destroy sandbox and reclaim any memory.
+   */
   inline auto destroy_sandbox()
   {
     {
@@ -278,13 +296,14 @@ public:
   }
 
   /**
-   * @brief Create a pointer accessible to the sandbox. The pointer is allocated
-   * in sandbox memory.
+   * @brief Allocate a new pointer that is accessible to both the application
+   * and sandbox. The pointer is allocated in sandbox memory.
    *
-   * @tparam T - the type of the pointer you want to create. If T=int, this
-   * would return a pointer to an int, accessible to the sandbox which is
-   * tainted.
-   * @return tainted<T*, T_Sbx> - Tainted pointer accessible to the sandbox.
+   * @tparam T The type of the pointer you want to create. If T=int, this
+   * would return a pointer to an int.
+   *
+   * @return tainted<T*, T_Sbx> Tainted pointer accessible to the application
+   * and sandbox.
    */
   template<typename T>
   inline tainted<T*, T_Sbx> malloc_in_sandbox()
@@ -292,6 +311,19 @@ public:
     const uint32_t defaultCount = 1;
     return malloc_in_sandbox<T>(defaultCount);
   }
+
+  /**
+   * @brief Allocate an array that is accessible to both the application
+   * and sandbox. The pointer is allocated in sandbox memory.
+   *
+   * @tparam T The type of the array elements you want to create. If T=int, this
+   * would return a pointer to an array of ints.
+   *
+   * @param count The number of array elements to allocate.
+   *
+   * @return tainted<T*, T_Sbx> Tainted pointer accessible to the application
+   * and sandbox.
+   */
   template<typename T>
   inline tainted<T*, T_Sbx> malloc_in_sandbox(uint32_t count)
   {
@@ -317,6 +349,11 @@ public:
     return tainted<T*, T_Sbx>::internal_factory(cast_ptr);
   }
 
+  /**
+   * @brief Free the memory referenced by the tainted pointer.
+   *
+   * @param ptr Pointer to sandbox memory to free.
+   */
   template<typename T>
   inline void free_in_sandbox(tainted<T*, T_Sbx> ptr)
   {
@@ -332,16 +369,28 @@ public:
     this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
   }
 
+  /**
+   * @brief Check if two pointers are in the same sandbox.
+   * For the null-sandbox, this always returns true.
+   */
   static inline bool is_in_same_sandbox(const void* p1, const void* p2)
   {
     return T_Sbx::impl_is_in_same_sandbox(p1, p2);
   }
 
+  /**
+   * @brief Check if the pointer points to this sandbox's memory.
+   * For the null-sandbox, this always returns true.
+   */
   inline bool is_pointer_in_sandbox_memory(const void* p)
   {
     return this->impl_is_pointer_in_sandbox_memory(p);
   }
 
+  /**
+   * @brief Check if the pointer points to application memory.
+   * For the null-sandbox, this always returns true.
+   */
   inline bool is_pointer_in_app_memory(const void* p)
   {
     return this->impl_is_pointer_in_app_memory(p);
@@ -455,6 +504,17 @@ public:
     std::abort();
   }
 
+  /**
+   * @brief Expose a callback function to the sandboxed code.
+   *
+   * @param func_ptr The callback to expose.
+   *
+   * @tparam T_RL   Sandbox reference type (first argument).
+   * @tparam T_Ret  Return type of callback. Must be tainted or void.
+   * @tparam T_Args Types of remaining callback arguments. Must be tainted.
+   *
+   * @return Wrapped callback function pointer that can be passed to the sandbox.
+   */
   template<typename T_RL, typename T_Ret, typename... T_Args>
   sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx> register_callback(
     T_Ret (*func_ptr)(T_RL, T_Args...))
@@ -590,6 +650,14 @@ public:
 // Don't know the compiler... just let it go through
 #endif
 
+/**
+ * @def  sandbox_invoke
+ * @brief Call sandbox function.
+ *
+ * @param func_name The sandboxed library function to call.
+ * @param ... Arguments to function should be simple or tainted values.
+ * @return Tainted value or void.
+ */
 #ifdef RLBOX_USE_STATIC_CALLS
 
 #  define sandbox_lookup_symbol_helper(prefix, func_name) prefix(func_name)

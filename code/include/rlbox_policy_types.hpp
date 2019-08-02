@@ -172,7 +172,14 @@ public:
 
   ~sandbox_callback() { unregister(); }
 
+  /**
+   * @brief Unwrap a callback without verification. This is an unsafe operation
+   * and should be used with care.
+   */
   inline auto UNSAFE_unverified() const noexcept { return get_raw_value(); }
+  /**
+   * @brief Like UNSAFE_unverified, but get the underlying sandbox representation.
+   */
   inline auto UNSAFE_sandboxed() const noexcept
   {
     return get_raw_sandbox_value();
