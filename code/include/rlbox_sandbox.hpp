@@ -374,6 +374,7 @@ public:
 
   /**
    * @brief Check if the pointer points to this sandbox's memory.
+   * For the null-sandbox, this always returns true.
    */
   inline bool is_pointer_in_sandbox_memory(const void* p)
   {
@@ -382,6 +383,7 @@ public:
 
   /**
    * @brief Check if the pointer points to application memory.
+   * For the null-sandbox, this always returns true.
    */
   inline bool is_pointer_in_app_memory(const void* p)
   {
@@ -501,9 +503,9 @@ public:
    *
    * @param func_ptr - The callback to expose.
    *
-   * @tparam T_RL   - Reference to sandbox.
+   * @tparam T_RL   - Sandbox reference type (first argument).
    * @tparam T_Ret  - Return type of callback. Must be tainted or void.
-   * @tparam T_Args - Callback argument types. Must be tainted.
+   * @tparam T_Args - Types of remaining callback arguments. Must be tainted.
    *
    * @return - Wrapped callback function pointer that can be passed to the sandbox.
    */
