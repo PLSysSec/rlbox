@@ -43,8 +43,8 @@ would leak its ASLR).
 
    Sandboxed libraries are isolated from the application and all communication
    between the sandboxed library and application code is mediated. This ensures
-   that the application code is robust and does not use untrusted values
-   without checking them.
+   that the application code is robust and does not use untrusted,
+   :ref:`tainted values <tainted>` without checking them.
 
 Memory isolation is enforced by the underlying sandboxing mechanism (from the
 start, when you create the sandbox with :ref:`create_sandbox() <create_sandbox>`). Explicit
@@ -68,13 +68,189 @@ RLBox similarly copies simple return values and callback arguments. Larger data
 structures, however, must (again) be passed by *sandbox-reference*, i.e., via a
 reference/pointer to sandbox memory.
 
+To ensure that application code doesn't use values that originate in the
+sandbox -- and may thus be under the control of an attacker -- unsafely, RLBox
+considers all such values as untrusted and :ref:`taints <tainted>` them.
+Tainted values are essentially opaque values (though RLBox does provide some
+:ref:`basic operators on tainted values <tainted_ops>`). To use a tainted
+value, you must unwrap it by copying the value into application memory -- and
+thus out of the reach of the attacker -- and *verifying* it. Indeed, RLBox
+forces application code to perform the copy and verification in sync using
+:ref:`verifiction functions <verification>`.
+
 Example
 -------
 
-.. note:: TODO
+To get a feel for what it's like to use RLBox, we're going to sandbox a tiny
+library ``mylib`` that has four functions::
+
+   // mylib.c:
+
+   void hello() {
+      printf("Hello world from mylib\n");
+   }
+
+   unsigned add(unsigned a, unsigned b) {
+      return a + b;
+   }
+
+   void echo(const char* str) {
+      printf("> mylib: %s\n", str);
+   }
+
+   void call_cb(void (*cb) (const char* str)) {
+      cb("hi again!");
+   }
+
+This is not the most interesting library, security-wise, but it is complicated
+enough to demonstrate various RLBox features.
+
+To get started, in our main application file let's first import the RLBox
+library::
+
+   // main.cpp:
+
+   #define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol
+
+   #include <stdio.h>
+   #include "mylib.h"
+   #include "rlbox.hpp"
+   #include "rlbox_noop_sandbox.hpp"
+
+   using namespace rlbox;
+   ...
+
+
+In our main function, let's now create a new sandbox (for this example we're
+going to use the NULL sandbox) and call the ``hello`` function::
+
+   ...
+   int main(int argc, char const *argv[]) {
+
+      // Create a new sandbox
+      rlbox::rlbox_sandbox<rlbox_noop_sandbox> sandbox;
+      sandbox.create_sandbox();
+
+      // call the library hello function
+      sandbox.sandbox_invoke(hello);
+   ...
+
+Note that we do not call ``hello()`` directly. Instead, we use the
+:ref:`sandbox_invoke() <sandbox_invoke>` method. We can similarly call the
+``add`` function::
+
+   ...
+      // call the add function and check the result:
+      auto ok = sandbox.sandbox_invoke(add, 3, 4).copy_and_verify([](unsigned ret){
+            printf("Adding... 3+4 = %d\n", ret);
+            return ret == 7;
+      });
+      printf("OK? = %d\n", ok);
+   ...
+
+This invocation is a bit more interesting. First, we call ``add`` with
+arguments. Second, RLBox ensures that the ``unsigned`` return value that
+``add`` returns is :ref:`tainted <tainted>` and thus cannot be used without
+verification. Here, we call the :ref:`copy_and_verify <copy_and_verify >`
+function which copies the value into application memory and runs our verifier
+function::
+
+      [](unsigned ret){
+            printf("Adding... 3+4 = %d\n", ret);
+            return ret == 7;
+      }
+
+This lambda simply prints the tainted value and returns ``true`` if it is
+``7``. A compromised library could return any value and if we use this value
+to, say, index an array this could potentially introduce an out-of-bounds
+memory access.
+
+Let's now call the ``echo`` function which takes a slightly more interesting
+argument: a string. Here, we can't simply pass a string literal as an argument:
+the sandbox cannot access application memory where this would be allocated.
+Instead, we must allocate a buffer in sandbox memory and copy the string we
+want to pass to ``echo`` into this region::
+
+   ...
+      const char* helloStr = "hi hi!";
+      size_t helloSize = strlen(helloStr);
+      // allocate memory in the sandbox:
+      auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
+      // copy helloStr into the sandbox:
+      std::strncpy(taintedStr.unverified_safe_because("writint to region"), helloStr, helloSize);
+   ...
+
+Note that ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
+lives in the sandbox memory and could be written to by the (compromised)
+library code concurrently. As such, it's unsafe for us to use this value
+without verification. Above, we use the :ref:`unverified_safe_because
+<unverified_safe_because>` verifier which basically removes the taint without
+any verification. This is safe because we copy the ``helloStr`` to sandbox
+memory: at worst, the sandboxed library can overwrite the memory region pointed
+to by ``taintedStr`` and crash when it tries to print it.
+
+Now, we can just call the function and free the allocated string::
+
+   ...
+      sandbox.sandbox_invoke(echo, taintedStr);
+      sandbox.free_in_sandbox(taintedStr);
+   ...
+
+Finally, let's call the ``call_cb`` function. To do this, let's first define a
+callback for the function to call. We define this function above the ``main``
+function::
+   
+   ...
+   void hello_cb(rlbox_sandbox<rlbox_noop_sandbox>& _,
+               tainted<const char*, rlbox_noop_sandbox> str) {
+      auto checked_string =
+         str.copy_and_verify_string([](std::unique_ptr<char[]> val) {
+            return std::strlen(val.get()) < 1024 ? std::move(val) : nullptr;
+         });
+      printf("hello_cb: %s\n", checked_string.get());
+   }
+   ...
+
+This callback is called with a string. We thus call the :ref:`string
+verification function <copy_and_verify_string>` with a simple verifier::
+
+   ...
+      [](std::unique_ptr<char[]> val) {
+           return std::strlen(val.get()) < 1024 ? std::move(val) : nullptr;
+       }
+   ...
+
+This verifier moves the string if it's length is less than 1KB and otherwise
+returns the ``nullptr``. In the callback we simply print this (potentially
+null) string.
+
+Let's now continue in ``main``, register the callback -- otherwise RLBox will
+disallow the library-application call -- and pass the callback to the
+``call_cb`` function::
+
+   ...
+      // register callback and call it
+      auto cb = sandbox.register_callback(hello_cb);
+      sandbox.sandbox_invoke(call_cb, cb);
+   ...
+
+Finally, let's destroy the sandbox and exit::
+
+   ...
+      // destroy sandbox
+      sandbox.destroy_sandbox();
+
+      return 0;
+   }
 
 Core API
 ========
+
+In this section we describe a large part of the RLBox API you are likely to
+encounter when porting libraries. The API has some more advanced features and
+types that are necessary but not as commonly used and will be described
+elsewhere. In most cases the RLBox type system will give you an informative
+error if and how to use these features.
 
 Creating (and destroying) sandboxes
 -----------------------------------
@@ -138,7 +314,7 @@ by the sandboxed code until they are :ref:`unregistered <unregister_callback>`.
 .. doxygenfunction:: register_callback(T_Ret (*)T_RL, T_Args...)
 
 The type signatures of :ref:`register_callback() <register_callback>`
-functions is a bit daunting. In short, the function takes a :ref:`callback
+function is a bit daunting. In short, the function takes a :ref:`callback
 function <callback>` and returns a function pointer that can be passed to the
 sandbox (e.g., via :ref:`sandbox_invoke() <sandbox_invoke>`).
 
@@ -169,6 +345,17 @@ application from using tainted values unsafely.
 .. _tainted:
 .. doxygenclass:: rlbox::tainted
 
+RLBox has several kinds of tainted values, beyond :ref:`tainted <tainted>`.
+Thse, however, are slightly less pervasive in the surface API.
+
+.. _tainted_volatile:
+.. doxygenclass:: rlbox::tainted_volatile
+
+.. _tainted_boolean_hint:
+.. doxygenclass:: rlbox::tainted_boolean_hint
+
+.. _verification:
+
 Unwrapping tainted values
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -180,35 +367,38 @@ provides several functions to do this.
 
 For a given tainted type, the verifier should have the following signature:
 
-+------------------------+-----------------------+----------------------------------+
-| Tainted type kind      |  Example type         | Example verifier                 |
-+========================+=======================+==================================+
-| Simple type            |  ``int``              | ``T_Ret(*)(int)``                |
-+------------------------+-----------------------+----------------------------------+
-| Pointer to simple type |  ``int*``             | ``T_Ret(*)(unique_ptr<int>)``    |
-+------------------------+-----------------------+----------------------------------+
-| Pointer to class type  |  ``Foo*``             | ``T_Ret(*)(unique_ptr<Foo>)``    |
-+------------------------+-----------------------+----------------------------------+
-| Pointer to array       |  ``int[4]``           | ``T_Ret(*)(std::array<int, 4>)`` |
-+------------------------+-----------------------+----------------------------------+
-| Class type             |  ``Foo``              | ``T_Ret(*)(tainted<Foo>)``       |
-+------------------------+-----------------------+----------------------------------+
++------------------------+---------------+----------------------------------+
+| Tainted type kind      |  Example type | Example verifier                 |
++========================+===============+==================================+
+| Simple type            |  ``int``      | ``T_Ret(*)(int)``                |
++------------------------+---------------+----------------------------------+
+| Pointer to simple type |  ``int*``     | ``T_Ret(*)(unique_ptr<int>)``    |
++------------------------+---------------+----------------------------------+
+| Pointer to class type  |  ``Foo*``     | ``T_Ret(*)(unique_ptr<Foo>)``    |
++------------------------+---------------+----------------------------------+
+| Pointer to array       |  ``int[4]``   | ``T_Ret(*)(std::array<int, 4>)`` |
++------------------------+---------------+----------------------------------+
+| Class type             |  ``Foo``      | ``T_Ret(*)(tainted<Foo>)``       |
++------------------------+---------------+----------------------------------+
 
 In general, the return type of the verifier ``T_Ret`` is not constrained and can
 be anything the caller chooses.
 
 .. doxygenfunction:: copy_and_verify_range
+.. _copy_and_verify_string:
 .. doxygenfunction:: copy_and_verify_string
 .. doxygenfunction:: copy_and_verify_address
 
 In some cases it's useful to unwrap tainted values without verification.
 Sometimes this is safe to do and RLBox provides a method for doing so:
 
+.. _unverified_safe_because:
 .. doxygenfunction:: unverified_safe_because(const char *&&)
 
 We however provide additional functions that are especially useful during
 migration:
 
+.. _UNSAFE_unverified:
 .. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_unverified()
 .. doxygenfunction:: rlbox::sandbox_callback::UNSAFE_unverified()
 .. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_sandboxed()
@@ -217,6 +407,7 @@ migration:
 .. danger::  Unchecked unwrapped tainted values can be abused by a compromised
    or malicious library to potentially compromise the application.
 
+.. _tainted_ops:
 
 Operating on tainted values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -230,17 +421,17 @@ This allows you to perform some computations on tainted values, pass the values
 back into the sandbox, and only later unwrap a tainted value when you need to.
 operators like ``+`` and ``-`` on tainted values.
 
-+-----------------------+-----------------------------------+
-| Class of operator     |  Supported operators              |
-+=======================+===================================+
-| Arithmetic operators  |  ``+``,``-``,``*``,``/``,``%``    |
-+-----------------------+-----------------------------------+
-| Logical opators       |  ``^``,``&``,``|``,``<<``,``>>``  |
-+-----------------------+-----------------------------------+
-| Unary operators       |  ``-``,``~``                      |
-+-----------------------+-----------------------------------+
-| Pointer operators     |  ``[]``,``*``,``&``,``->``        |
-+-----------------------+-----------------------------------+
++-------------------------+--------------------------------------+
+|  Class of operator      |  Supported operators                 |
++=========================+======================================+
+|  Arithmetic operators   |  ``+``, ``-``, ``*``, ``/``, ``%``   |
++-------------------------+--------------------------------------+
+|  Logical opators        |  ``^``, ``&``, ``|``, ``<<``, ``>>`` |
++-------------------------+--------------------------------------+
+|   Unary operators       |  ``-``, ``~``                        |
++-------------------------+--------------------------------------+
+|   Pointer operators     |  ``[]``, ``*``, ``&``, ``->``        |
++-------------------------+--------------------------------------+
 
 When applying a binary operator like ``<<`` to a tainted value and an untainted
 values the result is always tainted.
@@ -248,16 +439,10 @@ values the result is always tainted.
 RLBox also defines several comparison operators on tainted values that sometime
 unwrap the result:
 
-* Operators ``==``,``!=`` on tainted pointers is allowed if the rhs is ``nullptr_t`` and return unwrapped ``bool``s.
+* Operators ``==``, ``!=`` on tainted pointers is allowed if the rhs is ``nullptr_t`` and return unwrapped ``bool``.
 * Operator ``!`` on tainted pointers retruns an unwrapped ``bool``.
-* Operators ``==``,``!=``,``!`` on non-pointer tainted values return a ``tainted<bool>``
-* Operators ``==``,``!=``,``!`` on `tainted_volatile <tainted_volatile>` values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
-
-.. _tainted_volatile:
-A *tainted_volatile* 
-
-.. _tainted_boolean_hint:
-A *tainted_boolean_hint*
+* Operators ``==``, ``!=``, ``!`` on non-pointer tainted values return a ``tainted<bool>``
+* Operators ``==``, ``!=``, ``!`` on :ref:`tainted_volatile <tainted_volatile>` values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
 
 
 Application-sandbox shared memory
@@ -288,12 +473,21 @@ To distinguish between different pointer types, RLBox also provides some helper 
 Standard library
 ----------------
 
-.. note:: TODO
+RLBox provides several helper functions to application for handling sandboxed
+memory regions and values.
+
+.. doxygenfunction:: memset
+.. doxygenfunction:: memcpy
+.. doxygenfunction:: sandbox_reinterpret_cast
+.. doxygenfunction:: sandbox_const_cast
+
+RLBox also provides a standard C-library for the sandboxed code. We will
+describe this library in future version of this document.
 
 References
 ==========
 
-.. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. 
+.. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.
 
 
 Indices and tables

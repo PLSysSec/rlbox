@@ -28,6 +28,9 @@ namespace rlbox {
   friend inline tainted<T_C_Lhs, T_C_Sbx> sandbox_const_cast(                  \
     const T_C_Wrap<T_C_Rhs, T_C_Sbx>& rhs) noexcept;
 
+/**
+ * @brief The equivalent of a reinterpret_cast but operates on sandboxed values.
+ */
 template<typename T_Lhs,
          typename T_Rhs,
          typename T_Sbx,
@@ -46,6 +49,9 @@ inline tainted<T_Lhs, T_Sbx> sandbox_reinterpret_cast(
   return ret;
 }
 
+/**
+ * @brief The equivalent of a const_cast but operates on sandboxed values.
+ */
 template<typename T_Lhs,
          typename T_Rhs,
          typename T_Sbx,
@@ -63,6 +69,9 @@ inline tainted<T_Lhs, T_Sbx> sandbox_const_cast(
   return ret;
 }
 
+/**
+ * @brief Fill sandbox memory with a constant byte.
+ */
 template<typename T_Sbx,
          typename T_Rhs,
          typename T_Val,
@@ -92,6 +101,9 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(rlbox_sandbox<T_Sbx>& sandbox,
   return ptr;
 }
 
+/**
+ * @brief Copy to sandbox memory area.
+ */
 template<typename T_Sbx,
          typename T_Rhs,
          typename T_Lhs,

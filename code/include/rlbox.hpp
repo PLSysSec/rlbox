@@ -487,6 +487,9 @@ namespace tainted_detail {
       T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>>;
 }
 
+/**
+ * @brief Tainted values represent untrusted values that originate from the sandbox.
+ */
 template<typename T, typename T_Sbx>
 class tainted : public tainted_base_impl<tainted, T, T_Sbx>
 {
@@ -785,6 +788,10 @@ inline tainted<T, T_Sbx> from_opaque(tainted_opaque<T, T_Sbx> val)
   return *reinterpret_cast<tainted<T, T_Sbx>*>(&val);
 }
 
+/**
+ * @brief Tainted volatile values are like tainted values but still point to
+ * sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile.
+ */
 template<typename T, typename T_Sbx>
 class tainted_volatile : public tainted_base_impl<tainted_volatile, T, T_Sbx>
 {
@@ -1000,10 +1007,12 @@ public:
       sandbox.template get_sandboxed_pointer<T_Rhs>(cast_val);
   }
 
-  // All comparisons with a tainted_volatile return only a "hint" to the right
-  // answer, i.e. something that could be wrong or change. This is because a
-  // compromised sandbox can malicously modify tainted_volatile data at any
-  // time.
+  /**
+   * @brief Comparisons with a tainted_volatile return only a "hint" to the
+   * right answer, i.e., something that could be wrong or change. This is
+   * because a compromised sandbox can modify tainted_volatile data at any
+   * time.
+   */
   template<typename T_Rhs>
   inline tainted_boolean_hint operator==(T_Rhs&& arg) const
   {

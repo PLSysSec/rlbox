@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
   sandbox.sandbox_invoke(hello);
 
   // call the add function and check the result:
-  auto ok = sandbox.sandbox_invoke(add, 3, 4).copy_and_verify([](int ret){
+  auto ok = sandbox.sandbox_invoke(add, 3, 4).copy_and_verify([](unsigned ret){
       printf("Adding... 3+4 = %d\n", ret);
       return ret == 7;
   });
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
   const char* helloStr = "hi hi!";
   size_t helloSize = strlen(helloStr);
   auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
-  std::strncpy(taintedStr.UNSAFE_unverified(), helloStr, helloSize);
+  std::strncpy(taintedStr.unverified_safe_because("writint to region"), helloStr, helloSize);
   sandbox.sandbox_invoke(echo, taintedStr);
   sandbox.free_in_sandbox(taintedStr);
 

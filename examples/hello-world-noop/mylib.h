@@ -4,8 +4,8 @@
 extern "C" {
 #endif
     void hello();
-    void echo(const char* str);
     unsigned add(unsigned, unsigned);
+    void echo(const char* str);
     void call_cb(void (*cb) (const char* str));
 #ifdef __cplusplus
 }

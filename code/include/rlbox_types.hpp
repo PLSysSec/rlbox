@@ -17,6 +17,12 @@ class tainted;
 template<typename T, typename T_Sbx>
 class tainted_volatile;
 
+/**
+ * @brief Tainted boolean value that serves as a "hint" and not a definite
+ * answer.  Comparisons with a tainted_volatile return such hints.  They are
+ * not `tainted<bool>` values because a compromised sandbox can modify
+ * tainted_volatile data at any time.
+ */
 class tainted_boolean_hint
 {
 private:
