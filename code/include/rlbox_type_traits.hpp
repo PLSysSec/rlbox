@@ -32,9 +32,12 @@ using valid_array_el_t =
   std::conditional_t<std::is_void_v<T> || std::is_function_v<T>, int, T>;
 
 template<typename T>
-constexpr bool is_func_or_func_ptr =
-  std::is_function_v<T> || std::is_function_v<std::remove_pointer_t<T>> ||
-  std::is_member_function_pointer_v<T>;
+constexpr bool is_func_ptr_v = (std::is_pointer_v<T> &&
+                                std::is_function_v<std::remove_pointer_t<T>>) ||
+                               std::is_member_function_pointer_v<T>;
+
+template<typename T>
+constexpr bool is_func_or_func_ptr = std::is_function_v<T> || is_func_ptr_v<T>;
 
 template<typename T>
 constexpr bool is_one_level_ptr_v =

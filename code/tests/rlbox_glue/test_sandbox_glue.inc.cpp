@@ -8,7 +8,7 @@
 #include "catch2/catch.hpp"
 #include "libtest.h"
 #include "libtest_structs_for_cpp_api.h"
-#include "rlbox.hpp"
+
 rlbox_load_structs_from_library(libtest); // NOLINT
 
 using rlbox::rlbox_sandbox;

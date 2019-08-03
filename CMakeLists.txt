@@ -136,7 +136,7 @@ if(DOXYGEN_FOUND)
                        MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
                        COMMENT "Generating Sphinx documentation")
 
-    add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
+    add_custom_target(docs ALL DEPENDS ${SPHINX_INDEX_FILE})
   endif()
 
 endif()
@@ -197,3 +197,8 @@ target_link_libraries(test_rlbox_glue
                       rlbox_glue_lib_static)
 
 catch_discover_tests(test_rlbox_glue)
+
+# Shortcuts ###################
+
+add_custom_target(tests)
+add_dependencies(tests test_rlbox test_rlbox_glue)

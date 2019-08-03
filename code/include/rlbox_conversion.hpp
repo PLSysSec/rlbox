@@ -176,8 +176,10 @@ inline constexpr void convert_type_non_class(
     } else if constexpr (Direction == adjust_type_direction::TO_SANDBOX) {
 
       static_assert(is_pointer_v<T_From_C>);
+      // Maybe a function pointer, so convert
+      auto from_c = reinterpret_cast<const void*>(from);
       to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
-        remove_pointer_t<T_From_C>>(from);
+        remove_pointer_t<T_From_C>>(from_c);
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
 

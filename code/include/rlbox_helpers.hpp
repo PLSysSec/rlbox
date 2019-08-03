@@ -74,7 +74,8 @@ namespace detail {
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name());                         \
   } else if constexpr (detail::is_fundamental_or_enum_v<result_type> ||        \
-                       detail::is_std_array_v<result_type>) {                  \
+                       detail::is_std_array_v<result_type> ||                  \
+                       detail::is_func_ptr_v<result_type>) {                   \
     return const_cast<T_ConstClassPtr>(this)->func_name();                     \
   } else {                                                                     \
     return const_cast<result_type>(                                            \
@@ -90,7 +91,8 @@ namespace detail {
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
   } else if constexpr (detail::is_fundamental_or_enum_v<result_type> ||        \
-                       detail::is_std_array_v<result_type>) {                  \
+                       detail::is_std_array_v<result_type> ||                  \
+                       detail::is_func_ptr_v<result_type>) {                   \
     return const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__);          \
   } else {                                                                     \
     return const_cast<result_type>(                                            \

@@ -315,23 +315,43 @@ public:
     else if_constexpr_named(
       cond2, detail::is_one_level_ptr_v<T> && !std::is_class_v<T_Deref>)
     {
-      static_assert(!std::is_void_v<T_Deref>,
-                    "copy_and_verify not recommended for void* as it could "
-                    "lead to some anti-patterns in verifiers. Cast it to a "
-                    "different tainted pointer with sandbox_reinterpret_cast "
-                    "and then call copy_and_verify. Alternately, you can use "
-                    "the UNSAFE_unverified API to do this without casting.");
+      // Some paths don't use the verifier
+      RLBOX_UNUSED(verifier);
 
-      auto val = impl().get_raw_value();
-      if (val == nullptr) {
-        return verifier(nullptr);
-      } else {
-        // Important to assign to a local variable (i.e. make a copy)
-        // Else, for tainted_volatile, this will allow a
-        // time-of-check-time-of-use attack
-        auto val_copy = std::make_unique<T_Deref>();
-        *val_copy = *val;
-        return verifier(std::move(val_copy));
+      if_constexpr_named(subcond1, std::is_void_v<T_Deref>)
+      {
+        rlbox_detail_static_fail_because(
+          subcond1,
+          "copy_and_verify not recommended for void* as it could lead to some "
+          "anti-patterns in verifiers. Cast it to a different tainted pointer "
+          "with sandbox_reinterpret_cast and then call copy_and_verify. "
+          "Alternately, you can use the UNSAFE_unverified API to do this "
+          "without casting.");
+        return nullptr;
+      }
+      // Test with detail::is_func_ptr_v to check for member funcs also
+      else if_constexpr_named(subcond2, detail::is_func_ptr_v<T>)
+      {
+        rlbox_detail_static_fail_because(
+          subcond2,
+          "copy_and_verify cannot be applied to function pointers as this "
+          "makes a deep copy. This is not possible for function pointers. "
+          "Consider copy_and_verify_address instead.");
+        return nullptr;
+      }
+      else
+      {
+        auto val = impl().get_raw_value();
+        if (val == nullptr) {
+          return verifier(nullptr);
+        } else {
+          // Important to assign to a local variable (i.e. make a copy)
+          // Else, for tainted_volatile, this will allow a
+          // time-of-check-time-of-use attack
+          auto val_copy = std::make_unique<T_Deref>();
+          *val_copy = *val;
+          return verifier(std::move(val_copy));
+        }
       }
     }
     else if_constexpr_named(

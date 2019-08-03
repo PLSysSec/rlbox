@@ -61,6 +61,28 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
 }
 
 // NOLINTNEXTLINE
+TEST_CASE("RLBox test function pointer verification", "[verification]")
+{
+  using T_Func = int (*)(int);
+
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  tainted<T_Func, TestSandbox> a = nullptr;
+  REQUIRE(a.UNSAFE_unverified() == nullptr);
+  REQUIRE_COMPILE_ERR(
+    a.copy_and_verify([](std::unique_ptr<T_Func> val) { return val; }));
+  REQUIRE(a.copy_and_verify_address([](uintptr_t val) {
+    return reinterpret_cast<void*>(val); // NOLINT
+  }) == nullptr);
+
+  auto b = sandbox.malloc_in_sandbox<T_Func>();
+  *b = a;
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
 TEST_CASE("RLBox test unverified", "[verification]")
 {
   const auto testVal = 5;
