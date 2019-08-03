@@ -50,7 +50,7 @@ if(CLANG_FORMAT)
 endif()
 
 find_program(IWYU "iwyu")
-if(IWYU)
+if("")#IWYU)
   # TODO: Still have to ensure this checks .hpp files, which it doesn't right
   # now. See bug below about "check_also"... which doesn't seem to work
   # https://github.com/include-what-you-use/include-what-you-use/issues/633

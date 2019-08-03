@@ -61,12 +61,14 @@ public:
    *
    * @param reason An explanation why the unverified unwrapping is safe.
    */
-  inline auto unverified_safe_because(const char*&& reason)
+  template<size_t N>
+  inline auto unverified_safe_because(const char(&reason)[N])
   {
     RLBOX_UNUSED(reason);
     return UNSAFE_unverified();
   }
-  inline auto unverified_safe_because(const char*&& reason) const
+  template<size_t N>
+  inline auto unverified_safe_because(const char(&reason)[N]) const
   {
     RLBOX_UNUSED(reason);
     return UNSAFE_unverified();

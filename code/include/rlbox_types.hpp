@@ -39,7 +39,8 @@ public:
     return *this;
   }
   inline tainted_boolean_hint operator!() { return tainted_boolean_hint(!val); }
-  inline bool get_value_safe_because(const char*&& reason) const
+  template<size_t N>
+  inline bool get_value_safe_because(const char(&reason)[N]) const
   {
     (void)reason; /* unused */
     return val;

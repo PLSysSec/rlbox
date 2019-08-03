@@ -177,7 +177,7 @@ want to pass to ``echo`` into this region::
       // allocate memory in the sandbox:
       auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
       // copy helloStr into the sandbox:
-      std::strncpy(taintedStr.unverified_safe_because("writint to region"), helloStr, helloSize);
+      std::strncpy(taintedStr.unverified_safe_because("writing to region"), helloStr, helloSize);
    ...
 
 Note that ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
@@ -393,7 +393,7 @@ In some cases it's useful to unwrap tainted values without verification.
 Sometimes this is safe to do and RLBox provides a method for doing so:
 
 .. _unverified_safe_because:
-.. doxygenfunction:: unverified_safe_because(const char *&&)
+.. doxygenfunction:: unverified_safe_because(const char (&)[N])
 
 We however provide additional functions that are especially useful during
 migration:
