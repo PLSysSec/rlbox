@@ -70,14 +70,17 @@ protected:
   }
 
   template<typename T>
-  static inline void* impl_get_unsandboxed_pointer_no_ctx(T_PointerType p,
-                                                          const void*)
+  static inline void* impl_get_unsandboxed_pointer_no_ctx(
+    T_PointerType p,
+    const void* /* example_unsandboxed_ptr */)
   {
     return reinterpret_cast<void*>(static_cast<uintptr_t>(p));
   }
 
   template<typename T>
-  static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(const void* p)
+  static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
+    const void* p,
+    const void* /* example_unsandboxed_ptr */)
   {
     return static_cast<T_PointerType>(reinterpret_cast<uintptr_t>(p));
   }

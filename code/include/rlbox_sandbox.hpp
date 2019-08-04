@@ -173,7 +173,7 @@ private:
 
       detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx> ret;
       detail::convert_type<T_Sbx, detail::adjust_type_direction::TO_SANDBOX>(
-        ret, tainted_ret.get_raw_value_ref());
+        ret, tainted_ret.get_raw_value_ref(), example_unsandboxed_ptr);
       return ret;
     }
   }
@@ -288,12 +288,14 @@ public:
 
   template<typename T>
   static inline convert_to_sandbox_equivalent_nonclass_t<T*>
-  get_sandboxed_pointer_no_ctx(const void* p)
+  get_sandboxed_pointer_no_ctx(const void* p,
+                               const void* example_unsandboxed_ptr)
   {
     if (p == nullptr) {
       return 0;
     }
-    return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(p);
+    return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(
+      p, example_unsandboxed_ptr);
   }
 
   /**

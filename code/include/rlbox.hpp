@@ -62,13 +62,13 @@ public:
    * @param reason An explanation why the unverified unwrapping is safe.
    */
   template<size_t N>
-  inline auto unverified_safe_because(const char(&reason)[N])
+  inline auto unverified_safe_because(const char (&reason)[N])
   {
     RLBOX_UNUSED(reason);
     return UNSAFE_unverified();
   }
   template<size_t N>
-  inline auto unverified_safe_because(const char(&reason)[N]) const
+  inline auto unverified_safe_because(const char (&reason)[N]) const
   {
     RLBOX_UNUSED(reason);
     return UNSAFE_unverified();
@@ -507,10 +507,32 @@ namespace tainted_detail {
   using tainted_vol_repr_t =
     detail::c_to_std_array_t<std::add_volatile_t<typename rlbox_sandbox<
       T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>>;
+
+  template<typename T, size_t N>
+  inline const void* find_non_null_pointer_in_array(T (&a)[N]) noexcept
+  {
+    for (size_t i = 0; i < N; i++) {
+      if constexpr (std::is_array_v<std::remove_reference_t<decltype(a[0])>>) {
+        // Nested array
+        const void* ret = find_non_null_pointer_in_array(a[i]);
+        if (ret != nullptr) {
+          return ret;
+        }
+      } else {
+        if (a[i] != nullptr) {
+          return a;
+        }
+      }
+    }
+
+    return nullptr;
+  }
+
 }
 
 /**
- * @brief Tainted values represent untrusted values that originate from the sandbox.
+ * @brief Tainted values represent untrusted values that originate from the
+ * sandbox.
  */
 template<typename T, typename T_Sbx>
 class tainted : public tainted_base_impl<tainted, T, T_Sbx>
@@ -550,9 +572,35 @@ private:
   inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() const
   {
     std::remove_cv_t<T_SandboxedType> ret;
+    // We need an example_unsandboxed_ptr for cases where we are converting
+    // pointers.
+    const void* example_unsandboxed_ptr;
+    if_constexpr_named(cond1, std::is_pointer_v<T>)
+    {
+      // pointer type - We can use the value itself as an
+      // example_unsandboxed_ptr. Normally example_unsandboxed_ptr needs to be
+      // non-null, however we cannot be sure here. However,
+      // example_unsandboxed_ptr is only needed when converting non null
+      // pointers. Thus we should be OK.
+      example_unsandboxed_ptr = data;
+    }
+    else if_constexpr_named(cond2,
+                            std::is_array_v<T> &&
+                              std::is_pointer_v<std::remove_all_extents_t<T>>)
+    {
+      // convert from std::array to c style array
+      auto data_ref = reinterpret_cast<std::add_pointer_t<T>>(&data);
+      example_unsandboxed_ptr = find_non_null_pointer_in_array(*data_ref);
+    }
+    else
+    {
+      // we don't deal with pointers in these other cases
+      example_unsandboxed_ptr = nullptr;
+    }
+
     detail::convert_type_non_class<T_Sbx,
                                    detail::adjust_type_direction::TO_SANDBOX>(
-      ret, data);
+      ret, data, example_unsandboxed_ptr);
     return ret;
   };
 
@@ -905,6 +953,15 @@ public:
     using T_Rhs = std::remove_reference_t<T_RhsRef>;
     using T_Rhs_El = std::remove_all_extents_t<T_Rhs>;
 
+    // Need to construct an example_unsandboxed_ptr for pointers or arrays of
+    // pointers. Since tainted_volatile is the type of data in sandbox memory,
+    // the address of data (&data) refers to a location in sandbox memory and
+    // can thus be the example_unsandboxed_ptr
+    const volatile void* data_ref = &get_sandbox_value_ref();
+    const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
+    // Some branches don't use this
+    RLBOX_UNUSED(example_unsandboxed_ptr);
+
     if_constexpr_named(
       cond1, std::is_same_v<std::remove_const_t<T_Rhs>, std::nullptr_t>)
     {
@@ -916,12 +973,6 @@ public:
     }
     else if_constexpr_named(cond2, detail::rlbox_is_tainted_v<T_Rhs>)
     {
-      // Need to construct an example_unsandboxed_ptr for pointers or arrays of
-      // pointers. Since tainted_volatile is the type of data in sandbox memory,
-      // the address of data (&data) refers to a location in sandbox memory and
-      // can thus be the example_unsandboxed_ptr
-      const volatile void* data_ref = &get_sandbox_value_ref();
-      const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
       detail::convert_type_non_class<T_Sbx,
                                      detail::adjust_type_direction::TO_SANDBOX>(
         get_sandbox_value_ref(),
@@ -932,7 +983,9 @@ public:
     {
       detail::convert_type_non_class<T_Sbx,
                                      detail::adjust_type_direction::NO_CHANGE>(
-        get_sandbox_value_ref(), val.get_sandbox_value_ref());
+        get_sandbox_value_ref(),
+        val.get_sandbox_value_ref(),
+        example_unsandboxed_ptr);
     }
     else if_constexpr_named(cond4,
                             detail::rlbox_is_sandbox_callback_v<T_Rhs> ||

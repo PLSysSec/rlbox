@@ -124,7 +124,9 @@ protected:
   }
 
   template<typename T>
-  static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(const void* p)
+  static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
+    const void* p,
+    const void* /* example_unsandboxed_ptr */)
   {
     auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
     return static_cast<T_PointerType>(ret);

@@ -149,14 +149,14 @@ using convert_to_sandbox_equivalent_t =
     inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
-    template<size_t N> \
-    inline auto unverified_safe_because(const char(&reason)[N])                  \
+    template<size_t N>                                                         \
+    inline auto unverified_safe_because(const char (&reason)[N])               \
     {                                                                          \
       RLBOX_UNUSED(reason);                                                    \
       return UNSAFE_unverified();                                              \
     }                                                                          \
-    template<size_t N> \
-    inline auto unverified_safe_because(const char(&reason)[N]) const            \
+    template<size_t N>                                                         \
+    inline auto unverified_safe_because(const char (&reason)[N]) const         \
     {                                                                          \
       RLBOX_UNUSED(reason);                                                    \
       return UNSAFE_unverified();                                              \
@@ -256,14 +256,14 @@ using convert_to_sandbox_equivalent_t =
     inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
     inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
                                                                                \
-    template<size_t N> \
-    inline auto unverified_safe_because(const char(&reason)[N])                  \
+    template<size_t N>                                                         \
+    inline auto unverified_safe_because(const char (&reason)[N])               \
     {                                                                          \
       RLBOX_UNUSED(reason);                                                    \
       return UNSAFE_unverified();                                              \
     }                                                                          \
-    template<size_t N> \
-    inline auto unverified_safe_because(const char(&reason)[N]) const            \
+    template<size_t N>                                                         \
+    inline auto unverified_safe_because(const char (&reason)[N]) const         \
     {                                                                          \
       RLBOX_UNUSED(reason);                                                    \
       return UNSAFE_unverified();                                              \

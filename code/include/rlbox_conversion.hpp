@@ -179,7 +179,7 @@ inline constexpr void convert_type_non_class(
       // Maybe a function pointer, so convert
       auto from_c = reinterpret_cast<const void*>(from);
       to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
-        remove_pointer_t<T_From_C>>(from_c);
+        remove_pointer_t<T_From_C>>(from_c, example_unsandboxed_ptr);
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
 
@@ -205,20 +205,6 @@ inline constexpr void convert_type_non_class(
   } else {
     convert_type_fundamental_or_array(to, from);
   }
-}
-
-template<typename T_Sbx,
-         adjust_type_direction Direction,
-         typename T_To,
-         typename T_From>
-inline constexpr void convert_type_non_class(T_To& to, const T_From& from)
-{
-  static_assert(
-    Direction == adjust_type_direction::NO_CHANGE ||
-      Direction == adjust_type_direction::TO_SANDBOX,
-    "Example pointer cannot be ommitted for direction TO_APPLICATION");
-  convert_type_non_class<T_Sbx, Direction>(
-    to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
 // Structs implement their own convert_type by specializing this class
@@ -253,20 +239,6 @@ inline void convert_type(T_To& to,
   } else {
     convert_type_non_class<T_Sbx, Direction>(to, from, example_unsandboxed_ptr);
   }
-}
-
-template<typename T_Sbx,
-         adjust_type_direction Direction,
-         typename T_To,
-         typename T_From>
-inline constexpr void convert_type(T_To& to, const T_From& from)
-{
-  static_assert(
-    Direction == adjust_type_direction::NO_CHANGE ||
-      Direction == adjust_type_direction::TO_SANDBOX,
-    "Example pointer cannot be ommitted for direction TO_APPLICATION");
-  convert_type<T_Sbx, Direction>(
-    to, from, nullptr /* example_unsandboxed_ptr */);
 }
 
 }
