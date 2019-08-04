@@ -1,9 +1,13 @@
-Sandboxing libraries with RLBox
-===============================
+
+.. contents::
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+Overview
+========
+
 
 RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
@@ -36,9 +40,8 @@ cannot inadvertently expose sensitive data to the library (e.g., pointers that
 would leak its ASLR).
 
 .. _arch-fig:
-.. figure:: architecture.png
-   :scale: 50%
-   :align: left
+.. figure:: _static/images/arch.png
+   :align: center
    :alt: RLBox architecture
 
    Sandboxed libraries are isolated from the application and all communication
@@ -78,8 +81,8 @@ thus out of the reach of the attacker -- and *verifying* it. Indeed, RLBox
 forces application code to perform the copy and verification in sync using
 :ref:`verifiction functions <verification>`.
 
-Example
--------
+Example library sandboxing
+--------------------------
 
 To get a feel for what it's like to use RLBox, we're going to sandbox a tiny
 library ``mylib`` that has four functions::
