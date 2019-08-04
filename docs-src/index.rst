@@ -491,7 +491,7 @@ References
 ==========
 
 .. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.
-.. [Doxygen] `RLBox Class List <https://doxygen.rlbox.dev/annotated.html>`_
+.. [Doxygen] `RLBox Doxygen Documentation <https://doxygen.rlbox.dev/>`_
 
 
 Indices and tables
