@@ -150,13 +150,16 @@ endif()
 
 # Targets ###################
 
+find_package(Threads REQUIRED)
 add_library(rlbox-cpp17-lib INTERFACE)
 target_include_directories(rlbox-cpp17-lib INTERFACE code/include)
+target_link_libraries(rlbox-cpp17-lib INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 
 # Tests ###################
 
 include(CTest)
 include(Catch)
+
 
 # Test rlbox features
 add_executable(test_rlbox

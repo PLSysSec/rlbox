@@ -129,7 +129,7 @@ namespace detail {
   }
 
   template<typename T, typename T2>
-  inline auto return_first_result(T first_task, T2 second_task)
+  [[nodiscard]] inline auto return_first_result(T first_task, T2 second_task)
   {
     using T_Result = std::invoke_result_t<T>;
 

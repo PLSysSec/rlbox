@@ -3,9 +3,11 @@
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <cstdlib>
 #include <map>
 #include <mutex>
+#include <shared_mutex>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -42,17 +44,25 @@ class rlbox_sandbox : protected T_Sbx
   KEEP_CLASSES_FRIENDLY
 
 private:
-  std::mutex func_ptr_cache_lock;
+  std::shared_mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
 
-  std::mutex creation_lock;
   // This variable tracks of the sandbox has already been created/destroyed.
   // APIs in this class should be called only when the sandbox is created.
   // However, it is expensive to check in APIs such as invoke or in the callback
-  // interceptor. Instead we leave it up to the user to ensure these APIs are
-  // never called prior to sandbox construction. We perform checks, where they
-  // would not add too much overhead
-  bool sandbox_created = false;
+  // interceptor. What's more, there could be time of check time of use issues
+  // in the checks as well.
+  // In general, we leave it up to the user to ensure these APIs are never
+  // called prior to sandbox construction or after destruction. We perform some
+  // conservative sanity checks, where they would not add too much overhead.
+  enum class Sandbox_Status
+  {
+    NOT_CREATED,
+    INITIALIZING,
+    CREATED,
+    CLEANING_UP
+  };
+  std::atomic<Sandbox_Status> sandbox_created = Sandbox_Status::NOT_CREATED;
 
   std::mutex callback_lock;
   std::vector<void*> callback_keys;
@@ -185,13 +195,10 @@ private:
   template<typename T_Ret, typename... T_Args>
   inline void unregister_callback(void* key)
   {
-    {
-      std::lock_guard<std::mutex> lock(creation_lock);
-      // Silent failure is better here as RAII types may try to invoke this
-      // after destruction
-      if (!sandbox_created) {
-        return;
-      }
+    // Silently swallowing the failure is better here as RAII types may try to
+    // cleanup callbacks after sandbox destruction
+    if (sandbox_created.load() != Sandbox_Status::CREATED) {
+      return;
     }
 
     this->template impl_unregister_callback<T_Ret, T_Args...>(key);
@@ -227,14 +234,19 @@ public:
   template<typename... T_Args>
   inline auto create_sandbox(T_Args... args)
   {
-    detail::return_first_result(
+    auto expected = Sandbox_Status::NOT_CREATED;
+    bool success = sandbox_created.compare_exchange_strong(
+      expected, Sandbox_Status::INITIALIZING /* desired */);
+    detail::dynamic_check(
+      success,
+      "create_sandbox called when sandbox already created/is being "
+      "created concurrently");
+
+    return detail::return_first_result(
       [&]() {
         return this->impl_create_sandbox(std::forward<T_Args>(args)...);
       },
-      [&]() {
-        std::lock_guard<std::mutex> lock(creation_lock);
-        sandbox_created = true;
-      });
+      [&]() { sandbox_created.store(Sandbox_Status::CREATED); });
   }
 
   /**
@@ -242,14 +254,18 @@ public:
    */
   inline auto destroy_sandbox()
   {
-    {
-      std::lock_guard<std::mutex> lock(creation_lock);
-      detail::dynamic_check(sandbox_created,
-                            "destroy_sandbox called without sandbox creation");
-      sandbox_created = false;
-    }
+    auto expected = Sandbox_Status::CREATED;
+    bool success = sandbox_created.compare_exchange_strong(
+      expected, Sandbox_Status::CLEANING_UP /* desired */);
 
-    return this->impl_destroy_sandbox();
+    detail::dynamic_check(
+      success,
+      "destroy_sandbox called without sandbox creation/is being "
+      "destroyed concurrently");
+
+    return detail::return_first_result(
+      [&]() { return this->impl_destroy_sandbox(); },
+      [&]() { sandbox_created.store(Sandbox_Status::NOT_CREATED); });
   }
 
   template<typename T>
@@ -330,13 +346,10 @@ public:
   template<typename T>
   inline tainted<T*, T_Sbx> malloc_in_sandbox(uint32_t count)
   {
-    {
-      std::lock_guard<std::mutex> lock(creation_lock);
-      // Silent failure is better here as RAII types may try to invoke this
-      // after destruction
-      if (!sandbox_created) {
-        return tainted<T*, T_Sbx>::internal_factory(nullptr);
-      }
+    // Silently swallowing the failure is better here as RAII types may try to
+    // malloc after sandbox destruction
+    if (sandbox_created.load() != Sandbox_Status::CREATED) {
+      return tainted<T*, T_Sbx>::internal_factory(nullptr);
     }
 
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
@@ -360,13 +373,10 @@ public:
   template<typename T>
   inline void free_in_sandbox(tainted<T*, T_Sbx> ptr)
   {
-    {
-      std::lock_guard<std::mutex> lock(creation_lock);
-      // Silent failure is better here as RAII types may try to invoke this
-      // after destruction
-      if (!sandbox_created) {
-        return;
-      }
+    // Silently swallowing the failure is better here as RAII types may try to
+    // free after sandbox destruction
+    if (sandbox_created.load() != Sandbox_Status::CREATED) {
+      return;
     }
 
     this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
@@ -408,18 +418,18 @@ public:
 
   void* lookup_symbol(const char* func_name)
   {
-    std::lock_guard<std::mutex> lock(func_ptr_cache_lock);
+    {
+      std::shared_lock lock(func_ptr_cache_lock);
 
-    auto func_ptr_ref = func_ptr_map.find(func_name);
-
-    void* func_ptr;
-    if (func_ptr_ref == func_ptr_map.end()) {
-      func_ptr = this->impl_lookup_symbol(func_name);
-      func_ptr_map[func_name] = func_ptr;
-    } else {
-      func_ptr = func_ptr_ref->second;
+      auto func_ptr_ref = func_ptr_map.find(func_name);
+      if (func_ptr_ref != func_ptr_map.end()) {
+        return func_ptr_ref->second;
+      }
     }
 
+    void* func_ptr = this->impl_lookup_symbol(func_name);
+    std::unique_lock lock(func_ptr_cache_lock);
+    func_ptr_map[func_name] = func_ptr;
     return func_ptr;
   }
 
@@ -578,11 +588,10 @@ public:
     }
     else
     {
-      {
-        std::lock_guard<std::mutex> lock(creation_lock);
-        detail::dynamic_check(
-          sandbox_created, "register_callback called without sandbox creation");
-      }
+      detail::dynamic_check(
+        sandbox_created.load() == Sandbox_Status::CREATED,
+        "register_callback called without sandbox creation");
+
       // Need unique key for each callback we register - just use the func addr
       void* unique_key = reinterpret_cast<void*>(func_ptr);
 
