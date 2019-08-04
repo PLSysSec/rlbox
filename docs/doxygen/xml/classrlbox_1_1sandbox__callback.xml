@@ -1,0 +1,396 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classrlbox_1_1sandbox__callback" kind="class" language="C++" prot="public">
+    <compoundname>rlbox::sandbox_callback</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+      <param>
+        <type>typename T_Sbx</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classrlbox_1_1sandbox__callback_1acdf03310deac0be193c94186bfd2d989" prot="private" static="no">
+        <type>decltype(callback_detail::callback_type_helper&lt; T_Sbx &gt;(std::declval&lt; T &gt;()))</type>
+        <definition>using rlbox::sandbox_callback&lt; T, T_Sbx &gt;::T_Callback =  decltype(callback_detail::callback_type_helper&lt;T_Sbx&gt;(std::declval&lt;T&gt;()))</definition>
+        <argsstring></argsstring>
+        <name>T_Callback</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="71" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classrlbox_1_1sandbox__callback_1a8ce3c31a4ac0e38480e79a6c72dd6a84" prot="private" static="no">
+        <type>decltype(callback_detail::interceptor_type_helper&lt; T_Sbx &gt;(std::declval&lt; T &gt;()))</type>
+        <definition>using rlbox::sandbox_callback&lt; T, T_Sbx &gt;::T_Interceptor =  decltype( callback_detail::interceptor_type_helper&lt;T_Sbx&gt;(std::declval&lt;T&gt;()))</definition>
+        <argsstring></argsstring>
+        <name>T_Interceptor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="79" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classrlbox_1_1sandbox__callback_1a9e1e0dfdc9fbd1bfe4ad923349c713e8" prot="private" static="no">
+        <type>detail::convert_to_sandbox_equivalent_t&lt; T, T_Sbx &gt;</type>
+        <definition>using rlbox::sandbox_callback&lt; T, T_Sbx &gt;::T_Trampoline =  detail::convert_to_sandbox_equivalent_t&lt;T, T_Sbx&gt;</definition>
+        <argsstring></argsstring>
+        <name>T_Trampoline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="86" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__callback_1a5f90f6d66b8dad7a40394f5ff83f604a" prot="private" static="no" mutable="no">
+        <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; *</type>
+        <definition>rlbox_sandbox&lt;T_Sbx&gt;* rlbox::sandbox_callback&lt; T, T_Sbx &gt;::sandbox</definition>
+        <argsstring></argsstring>
+        <name>sandbox</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="69" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__callback_1a98c8667613c794661c7398a74a8ae0ce" prot="private" static="no" mutable="no">
+        <type>T_Callback</type>
+        <definition>T_Callback rlbox::sandbox_callback&lt; T, T_Sbx &gt;::callback</definition>
+        <argsstring></argsstring>
+        <name>callback</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="73" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__callback_1a22ba7a273103adfdefa7aea31c5f79a8" prot="private" static="no" mutable="no">
+        <type>T_Interceptor</type>
+        <definition>T_Interceptor rlbox::sandbox_callback&lt; T, T_Sbx &gt;::callback_interceptor</definition>
+        <argsstring></argsstring>
+        <name>callback_interceptor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="81" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__callback_1a34399e7a42798f1d840e1dc466d5ef4e" prot="private" static="no" mutable="no">
+        <type>T_Trampoline</type>
+        <definition>T_Trampoline rlbox::sandbox_callback&lt; T, T_Sbx &gt;::callback_trampoline</definition>
+        <argsstring></argsstring>
+        <name>callback_trampoline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="87" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__callback_1a4a49a8d63345764ddde4dc3c0552aef6" prot="private" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* rlbox::sandbox_callback&lt; T, T_Sbx &gt;::key</definition>
+        <argsstring></argsstring>
+        <name>key</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="91" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a848ba6767b7e3b7a4f4b1d5247801e89" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void rlbox::sandbox_callback&lt; T, T_Sbx &gt;::move_obj</definition>
+        <argsstring>(sandbox_callback &amp;&amp;other)</argsstring>
+        <name>move_obj</name>
+        <param>
+          <type><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="93" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="93" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a8070ea8fa083f2dcf1c84741d9373818" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Ret</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>T_Args</declname>
+            <defname>T_Args</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::sandbox_callback&lt; T, T_Sbx &gt;::unregister_helper</definition>
+        <argsstring>(T_Ret(*)(T_Args...))</argsstring>
+        <name>unregister_helper</name>
+        <param>
+          <type>T_Ret(*)(T_Args...)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="108" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="108" bodyend="123"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1ab5a304f02011f0a4385c149bc7619e54" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Callback</type>
+        <definition>T_Callback rlbox::sandbox_callback&lt; T, T_Sbx &gt;::get_raw_value</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>get_raw_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="125" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="125" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a94693a8e6c2b78e7ef97dc7b75725dd0" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Trampoline</type>
+        <definition>T_Trampoline rlbox::sandbox_callback&lt; T, T_Sbx &gt;::get_raw_sandbox_value</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>get_raw_sandbox_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="126" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="126" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a0ce763c5aa54385263a3f40055e3ef76" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Callback</type>
+        <definition>T_Callback rlbox::sandbox_callback&lt; T, T_Sbx &gt;::get_raw_value</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>get_raw_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="130" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="130" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a72090fc430b1b20349a3b40437f73d4e" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Trampoline</type>
+        <definition>T_Trampoline rlbox::sandbox_callback&lt; T, T_Sbx &gt;::get_raw_sandbox_value</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>get_raw_sandbox_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="131" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="131" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1ab6886f593df13c2aa282aff54c14b374" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::sandbox_callback&lt; T, T_Sbx &gt;::sandbox_callback</definition>
+        <argsstring>(rlbox_sandbox&lt; T_Sbx &gt; *p_sandbox, T_Callback p_callback, T_Interceptor p_callback_interceptor, T_Trampoline p_callback_trampoline, void *p_key)</argsstring>
+        <name>sandbox_callback</name>
+        <param>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; *</type>
+          <declname>p_sandbox</declname>
+        </param>
+        <param>
+          <type>T_Callback</type>
+          <declname>p_callback</declname>
+        </param>
+        <param>
+          <type>T_Interceptor</type>
+          <declname>p_callback_interceptor</declname>
+        </param>
+        <param>
+          <type>T_Trampoline</type>
+          <declname>p_callback_trampoline</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>p_key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="138" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="138" bodyend="151"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1af9453a813aa03d7b817b31f4ff82ce69" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::sandbox_callback&lt; T, T_Sbx &gt;::sandbox_callback</definition>
+        <argsstring>(sandbox_callback &amp;&amp;other)</argsstring>
+        <name>sandbox_callback</name>
+        <param>
+          <type><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="154" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="154" bodyend="157"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1ac20b4643ac1c7f887e47e80f73e81ebb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref> &amp;</type>
+        <definition>sandbox_callback&amp; rlbox::sandbox_callback&lt; T, T_Sbx &gt;::operator=</definition>
+        <argsstring>(sandbox_callback &amp;&amp;other)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="159" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="159" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a533080e1c309f61779c132037c232c8d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void rlbox::sandbox_callback&lt; T, T_Sbx &gt;::unregister</definition>
+        <argsstring>()</argsstring>
+        <name>unregister</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="167" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="167" bodyend="171"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a12a483d0f7051a1f9d8226161a9e5f6f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::sandbox_callback&lt; T, T_Sbx &gt;::~sandbox_callback</definition>
+        <argsstring>()</argsstring>
+        <name>~sandbox_callback</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="173" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="173" bodyend="173"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_callback&lt; T, T_Sbx &gt;::UNSAFE_unverified</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+<para>Unwrap a callback without verification. This is an unsafe operation and should be used with care. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="179" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="179" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a6824744f81cf277e55d020f388419a47" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_callback&lt; T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+<para>Like UNSAFE_unverified, but get the underlying sandbox representation. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="184" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="184" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_callback&lt; T, T_Sbx &gt;::UNSAFE_unverified</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="188" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="188" bodyend="188"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__callback_1a7b7969533129c9a5132c6e2b9454b145" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_callback&lt; T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="189" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="189" bodyend="189"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="65" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="64" bodyend="190"/>
+    <listofallmembers>
+      <member refid="classrlbox_1_1sandbox__callback_1a98c8667613c794661c7398a74a8ae0ce" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>callback</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a22ba7a273103adfdefa7aea31c5f79a8" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>callback_interceptor</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a34399e7a42798f1d840e1dc466d5ef4e" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>callback_trampoline</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a94693a8e6c2b78e7ef97dc7b75725dd0" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>get_raw_sandbox_value</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a72090fc430b1b20349a3b40437f73d4e" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>get_raw_sandbox_value</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1ab5a304f02011f0a4385c149bc7619e54" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>get_raw_value</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a0ce763c5aa54385263a3f40055e3ef76" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>get_raw_value</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a4a49a8d63345764ddde4dc3c0552aef6" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>key</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a848ba6767b7e3b7a4f4b1d5247801e89" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>move_obj</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1ac20b4643ac1c7f887e47e80f73e81ebb" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>operator=</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a5f90f6d66b8dad7a40394f5ff83f604a" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>sandbox</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1ab6886f593df13c2aa282aff54c14b374" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>sandbox_callback</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1af9453a813aa03d7b817b31f4ff82ce69" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>sandbox_callback</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1acdf03310deac0be193c94186bfd2d989" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>T_Callback</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a8ce3c31a4ac0e38480e79a6c72dd6a84" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>T_Interceptor</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a9e1e0dfdc9fbd1bfe4ad923349c713e8" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>T_Trampoline</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a533080e1c309f61779c132037c232c8d" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>unregister</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a8070ea8fa083f2dcf1c84741d9373818" prot="private" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>unregister_helper</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a6824744f81cf277e55d020f388419a47" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>UNSAFE_sandboxed</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a7b7969533129c9a5132c6e2b9454b145" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>UNSAFE_sandboxed</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1sandbox__callback_1a12a483d0f7051a1f9d8226161a9e5f6f" prot="public" virt="non-virtual"><scope>rlbox::sandbox_callback</scope><name>~sandbox_callback</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

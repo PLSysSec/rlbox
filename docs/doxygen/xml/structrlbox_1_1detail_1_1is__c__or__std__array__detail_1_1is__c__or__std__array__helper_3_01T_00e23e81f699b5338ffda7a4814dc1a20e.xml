@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00e23e81f699b5338ffda7a4814dc1a20e" kind="struct" language="C++" prot="public">
+    <compoundname>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; std::is_array_v&lt; T &gt; &gt; &gt;</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">true_type</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="57">
+        <label>true_type</label>
+      </node>
+      <node id="56">
+        <label>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; std::is_array_v&lt; T &gt; &gt; &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00e23e81f699b5338ffda7a4814dc1a20e"/>
+        <childnode refid="57" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="59">
+        <label>true_type</label>
+      </node>
+      <node id="58">
+        <label>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; std::is_array_v&lt; T &gt; &gt; &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00e23e81f699b5338ffda7a4814dc1a20e"/>
+        <childnode refid="59" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="118" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="116" bodyend="118"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

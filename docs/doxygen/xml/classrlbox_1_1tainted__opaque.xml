@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classrlbox_1_1tainted__opaque" kind="class" language="C++" prot="public">
+    <compoundname>rlbox::tainted_opaque</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T_Sbx</declname>
+        <defname>T_Sbx</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" prot="private" static="no" mutable="no">
+        <type>T</type>
+        <definition>T rlbox::tainted_opaque&lt; T, T_Sbx &gt;::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <initializer>{ 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="11" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="9" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="8" bodyend="12"/>
+    <listofallmembers>
+      <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" prot="private" virt="non-virtual"><scope>rlbox::tainted_opaque</scope><name>data</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

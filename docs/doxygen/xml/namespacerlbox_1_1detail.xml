@@ -1,0 +1,1092 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="namespacerlbox_1_1detail" kind="namespace" language="C++">
+    <compoundname>rlbox::detail</compoundname>
+    <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper_3_01T_00_01T__Sbx_00_01std_1_1201f48555b4b2007b214b5f3cfa39c9f" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper&lt; T, T_Sbx, std::enable_if_t&lt;!std::is_class_v&lt; T &gt; &gt; &gt;</innerclass>
+    <innerclass refid="classrlbox_1_1detail_1_1convert__type__class" prot="public">rlbox::detail::convert_type_class</innerclass>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1all__extents__same__detail">rlbox::detail::all_extents_same_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1base__type__detail">rlbox::detail::base_type_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1compile__time__for__detail">rlbox::detail::compile_time_for_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1convert__detail">rlbox::detail::convert_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1detail__is__member__of__rlbox__detail">rlbox::detail::detail_is_member_of_rlbox_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1detail__rlbox__remove__wrapper">rlbox::detail::detail_rlbox_remove_wrapper</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1is__c__or__std__array__detail">rlbox::detail::is_c_or_std_array_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1remove__all__pointers__detail">rlbox::detail::remove_all_pointers_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1std__array__el__detail">rlbox::detail::std_array_el_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1std__array__to__c__arr__detail">rlbox::detail::std_array_to_c_arr_detail</innernamespace>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="rlbox__conversion_8hpp_1acd204e77f742a7cf5215f456a2677b62" prot="public" static="no">
+        <name>adjust_type_direction</name>
+        <enumvalue id="dummy_1acd204e77f742a7cf5215f456a2677b62a0c41fec6212c7ed07f6595c0a2e4a521" prot="public">
+          <name>TO_SANDBOX</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="dummy_1acd204e77f742a7cf5215f456a2677b62a11cc93bb5791b5984b50753170096eae" prot="public">
+          <name>TO_APPLICATION</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="dummy_1acd204e77f742a7cf5215f456a2677b62a1b7e0a590f9d0878bcc4b725e2998cb1" prot="public">
+          <name>NO_CHANGE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="143" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="142" bodyend="147"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="rlbox__struct__support_8hpp_1a6893d831ac11c4bdfa351ad53dce439d" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper" kindref="compound">convert_to_sandbox_equivalent_helper</ref>&lt; T, T_Sbx &gt;::type</type>
+        <definition>using rlbox::detail::convert_to_sandbox_equivalent_t = typedef typename convert_to_sandbox_equivalent_helper&lt;T, T_Sbx&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>convert_to_sandbox_equivalent_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="29" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a3ddffb884929ee28827b8779abac9e78" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_function_v&lt; T &gt;, void *, std::decay_t&lt; T &gt; &gt;</type>
+        <definition>using rlbox::detail::valid_return_t = typedef std::conditional_t&lt;std::is_function_v&lt;T&gt;, void*, std::decay_t&lt;T&gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>valid_return_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="24" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1aa4f754ad333ab2dd478227edd4fd468f" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_void_v&lt; T &gt;, void *, T &gt;</type>
+        <definition>using rlbox::detail::valid_param_t = typedef std::conditional_t&lt;std::is_void_v&lt;T&gt;, void*, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>valid_param_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="28" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a0f30760a533e8239d169766210b12dd1" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_void_v&lt; T &gt;||std::is_function_v&lt; T &gt;, int, T &gt;</type>
+        <definition>using rlbox::detail::valid_array_el_t = typedef std::conditional_t&lt;std::is_void_v&lt;T&gt; || std::is_function_v&lt;T&gt;, int, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>valid_array_el_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="31" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1aba3f190638685e7c6f6145f65b5bdf30" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_const_v&lt; std::remove_pointer_t&lt; T_This &gt; &gt;, std::add_const_t&lt; T_Target &gt;, T_Target &gt;</type>
+        <definition>using rlbox::detail::add_const_if_this_const_t = typedef std::conditional_t&lt;std::is_const_v&lt;std::remove_pointer_t&lt;T_This&gt; &gt;, std::add_const_t&lt;T_Target&gt;, T_Target&gt;</definition>
+        <argsstring></argsstring>
+        <name>add_const_if_this_const_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="51" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a4cec78036c032a6deb55336f269714c3" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_pointer_v&lt; T &gt;, std::add_pointer_t&lt; std::remove_const_t&lt; std::remove_pointer_t&lt; T &gt; &gt;&gt;, T &gt;</type>
+        <definition>using rlbox::detail::remove_const_from_pointer = typedef std::conditional_t&lt; std::is_pointer_v&lt;T&gt;, std::add_pointer_t&lt;std::remove_const_t&lt;std::remove_pointer_t&lt;T&gt; &gt;&gt;, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>remove_const_from_pointer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="57" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1ab03c765217996e646529468379d30cc4" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_pointer_v&lt; T &gt;, std::remove_pointer_t&lt; std::add_const_t&lt; std::remove_pointer_t&lt; T &gt; &gt;&gt;, T &gt;</type>
+        <definition>using rlbox::detail::add_const_from_pointer = typedef std::conditional_t&lt; std::is_pointer_v&lt;T&gt;, std::remove_pointer_t&lt;std::add_const_t&lt;std::remove_pointer_t&lt;T&gt; &gt;&gt;, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>add_const_from_pointer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="63" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1adb80814450ea92c6d877a99fd1b138d0" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_array_v&lt; T &gt;, std::array&lt; std::remove_extent_t&lt; T &gt;, std::extent_v&lt; T &gt; &gt;, T &gt;</type>
+        <definition>using rlbox::detail::c_to_std_array_t = typedef std::conditional_t&lt;std::is_array_v&lt;T&gt;, std::array&lt;std::remove_extent_t&lt;T&gt;, std::extent_v&lt;T&gt; &gt;, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>c_to_std_array_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="69" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a1b54029c2063ff88a71cabe5f2633ba4" prot="public" static="no">
+        <type>typename decltype(std_array_to_c_arr_detail::std_array_to_c_arr_helper(std::declval&lt; T &gt;()))::type</type>
+        <definition>using rlbox::detail::std_array_to_c_arr_t = typedef typename decltype(std_array_to_c_arr_detail::std_array_to_c_arr_helper( std::declval&lt;T&gt;()))::type</definition>
+        <argsstring></argsstring>
+        <name>std_array_to_c_arr_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="89" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1afbe695604973be987bd55e56a235bfbb" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_pointer_v&lt; T &gt;, std::remove_pointer_t&lt; T &gt;, std::remove_extent_t&lt; std_array_to_c_arr_t&lt; T &gt; &gt; &gt;</type>
+        <definition>using rlbox::detail::dereference_result_t = typedef std::conditional_t&lt;std::is_pointer_v&lt;T&gt;, std::remove_pointer_t&lt;T&gt;, std::remove_extent_t&lt;std_array_to_c_arr_t&lt;T&gt; &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>dereference_result_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="94" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1add86f8df1ec7457702933d9fe53ef52f" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_array_v&lt; T &gt;, c_to_std_array_t&lt; T &gt;, T &gt;</type>
+        <definition>using rlbox::detail::value_type_t = typedef std::conditional_t&lt;std::is_array_v&lt;T&gt;, c_to_std_array_t&lt;T&gt;, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>value_type_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="101" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a03a219a0058078816f9b595c10d5af26" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_pointer_v&lt; T &gt; &amp;&amp;std::is_function_v&lt; std::remove_pointer_t&lt; T &gt; &gt;, T, int(*)(int)&gt;</type>
+        <definition>using rlbox::detail::function_ptr_t = typedef std::conditional_t&lt;std::is_pointer_v&lt;T&gt; &amp;&amp; std::is_function_v&lt;std::remove_pointer_t&lt;T&gt; &gt;, T, int (*)(int)&gt;</definition>
+        <argsstring></argsstring>
+        <name>function_ptr_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="105" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1aff9c18e4487bc381bcf77d98d6973178" prot="public" static="no">
+        <type>typename std_array_el_detail::std_array_el_t&lt; T &gt;::type</type>
+        <definition>using rlbox::detail::std_array_el_t = typedef typename std_array_el_detail::std_array_el_t&lt;T&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>std_array_el_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="169" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="169" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a88be7d2f69ff3a534c2a0b9802d5ef79" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1remove__all__pointers__detail_1_1remove__all__pointers" kindref="compound">remove_all_pointers_detail::remove_all_pointers</ref>&lt; T &gt;::type</type>
+        <definition>using rlbox::detail::remove_all_pointers_t = typedef typename remove_all_pointers_detail::remove_all_pointers&lt;T&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>remove_all_pointers_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="235" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="236" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a413a5bcc7e682f77c4529ea0d0b143d0" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1base__type__detail_1_1base__type" kindref="compound">base_type_detail::base_type</ref>&lt; T &gt;::type</type>
+        <definition>using rlbox::detail::base_type_t = typedef typename base_type_detail::base_type&lt;T&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>base_type_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="266" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="266" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a8f7e6622aaee6e5e6bcb0127af71675d" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper" kindref="compound">convert_detail::convert_base_types_t_helper</ref>&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType &gt;::type</type>
+        <definition>using rlbox::detail::convert_base_types_t = typedef typename convert_detail::convert_base_types_t_helper&lt;T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>convert_base_types_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="468" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="474" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__wrapper__traits_8hpp_1abe73eda33d45ebd5cd9107718f1f5c1c" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper" kindref="compound">detail_rlbox_remove_wrapper::unwrapper</ref>&lt; T &gt;::type</type>
+        <definition>using rlbox::detail::rlbox_remove_wrapper_t = typedef typename detail_rlbox_remove_wrapper::unwrapper&lt;T&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>rlbox_remove_wrapper_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="95" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__wrapper__traits_8hpp_1a72f687be1a639c4249116242903974bb" prot="public" static="no">
+        <type>typename <ref refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper" kindref="compound">detail_rlbox_remove_wrapper::unwrapper</ref>&lt; T &gt;::type_sbx</type>
+        <definition>using rlbox::detail::rlbox_get_wrapper_sandbox_t = typedef typename detail_rlbox_remove_wrapper::unwrapper&lt;T&gt;::type_sbx</definition>
+        <argsstring></argsstring>
+        <name>rlbox_get_wrapper_sandbox_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="99" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__wrapper__traits_8hpp_1acf5680044762b2e2db5e93bb4a9a6acc" prot="public" static="no">
+        <type>std::conditional_t&lt; rlbox_is_tainted_opaque_v&lt; T &gt;, <ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; rlbox_remove_wrapper_t&lt; T &gt;, T_Sbx &gt;, T &gt;</type>
+        <definition>using rlbox::detail::rlbox_tainted_opaque_to_tainted_t = typedef std::conditional_t&lt;rlbox_is_tainted_opaque_v&lt;T&gt;, tainted&lt;rlbox_remove_wrapper_t&lt;T&gt;, T_Sbx&gt;, T&gt;</definition>
+        <argsstring></argsstring>
+        <name>rlbox_tainted_opaque_to_tainted_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="103" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rlbox__helpers_8hpp_1a8b2badb20415eb80ac3040d08550b7da" prot="public" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int rlbox::detail::CompileErrorCode</definition>
+        <argsstring></argsstring>
+        <name>CompileErrorCode</name>
+        <initializer>= 42</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="13" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a7df0dd3978a900fd9627282050110d54" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::true_v</definition>
+        <argsstring></argsstring>
+        <name>true_v</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="13" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a136e9e656f07e76c14defc3557744c5c" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_fundamental_or_enum_v</definition>
+        <argsstring></argsstring>
+        <name>is_fundamental_or_enum_v</name>
+        <initializer>=
+  std::is_fundamental_v&lt;T&gt; || std::is_enum_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="16" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1abb4de55de8298478e4921c9d02adab96" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_basic_type_v</definition>
+        <argsstring></argsstring>
+        <name>is_basic_type_v</name>
+        <initializer>=
+  std::is_fundamental_v&lt;T&gt; || std::is_enum_v&lt;T&gt; || std::is_pointer_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="20" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1ac02f19c6b30af9596f03c6235e3c8a51" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_func_ptr_v</definition>
+        <argsstring></argsstring>
+        <name>is_func_ptr_v</name>
+        <initializer>= (std::is_pointer_v&lt;T&gt; &amp;&amp;
+                                std::is_function_v&lt;std::remove_pointer_t&lt;T&gt;&gt;) ||
+                               std::is_member_function_pointer_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="35" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a14ea6dc070575d4a210ea1b99101f863" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_func_or_func_ptr</definition>
+        <argsstring></argsstring>
+        <name>is_func_or_func_ptr</name>
+        <initializer>= std::is_function_v&lt;T&gt; || is_func_ptr_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="40" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1ad97a4bf610b072e8dec3c208318763da" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_one_level_ptr_v</definition>
+        <argsstring></argsstring>
+        <name>is_one_level_ptr_v</name>
+        <initializer>=
+  std::is_pointer_v&lt;T&gt; &amp;&amp; !std::is_pointer_v&lt;std::remove_pointer_t&lt;T&gt;&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="43" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a811ea71e36d2c22d3427721e5225b8d8" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_same_or_same_ref_v</definition>
+        <argsstring></argsstring>
+        <name>is_same_or_same_ref_v</name>
+        <initializer>=
+  std::is_same_v&lt;T_To, T_From&gt;&amp;&amp; std::is_reference_v&lt;T_To&amp;, T_From&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="47" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a38a3217aae41c870be3e1c15e82f9d43" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_std_array_v</definition>
+        <argsstring></argsstring>
+        <name>is_std_array_v</name>
+        <initializer>= is_c_or_std_array_detail::is_std_array_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="144" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1ae1e5b38244f3334ce9cce348c910cae0" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::is_c_or_std_array_v</definition>
+        <argsstring></argsstring>
+        <name>is_c_or_std_array_v</name>
+        <initializer>=
+  <ref refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper" kindref="compound">is_c_or_std_array_detail::is_c_or_std_array_helper</ref>&lt;T&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="147" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="147" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a45ed24e94fe880e164e02e5b7a7d07e2" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T1</type>
+          </param>
+          <param>
+            <type>typename T2</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::all_extents_same</definition>
+        <argsstring></argsstring>
+        <name>all_extents_same</name>
+        <initializer>=
+  <ref refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper" kindref="compound">all_extents_same_detail::all_extents_same_helper</ref>&lt;T1, T2&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="216" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="216" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__wrapper__traits_8hpp_1a057b71227e31a443ab39a1daab7a4b73" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::rlbox_is_tainted_or_vol_v</definition>
+        <argsstring></argsstring>
+        <name>rlbox_is_tainted_or_vol_v</name>
+        <initializer>=
+  rlbox_is_tainted_v&lt;T&gt; || rlbox_is_tainted_volatile_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="37" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__wrapper__traits_8hpp_1a8c9dbd7d17f5684ccadcfceccf80572c" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::rlbox_is_tainted_or_opaque_v</definition>
+        <argsstring></argsstring>
+        <name>rlbox_is_tainted_or_opaque_v</name>
+        <initializer>=
+  rlbox_is_tainted_v&lt;T&gt; || rlbox_is_tainted_opaque_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="41" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__wrapper__traits_8hpp_1add309ec62a6f0b5387fc8bf31ecdce61" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr bool</type>
+        <definition>constexpr bool rlbox::detail::rlbox_is_wrapper_v</definition>
+        <argsstring></argsstring>
+        <name>rlbox_is_wrapper_v</name>
+        <initializer>=
+  rlbox_is_tainted_v&lt;T&gt; || rlbox_is_tainted_volatile_v&lt;T&gt; ||
+  rlbox_is_tainted_opaque_v&lt;T&gt; || rlbox_is_sandbox_callback_v&lt;T&gt; ||
+  rlbox_is_sandbox_function_v&lt;T&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="45" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rlbox__wrapper__traits_8hpp_1a409b86a11a1b49a27d1ab3de6f9996c0" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr auto</type>
+        <definition>constexpr auto rlbox::detail::is_member_of_rlbox_detail</definition>
+        <argsstring></argsstring>
+        <name>is_member_of_rlbox_detail</name>
+        <initializer>=
+  <ref refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper" kindref="compound">detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper</ref>&lt;T&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="126" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1aa47f69d8d61fdb7f3b04359499132cb8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr void</type>
+        <definition>constexpr void rlbox::detail::convert_type_fundamental</definition>
+        <argsstring>(T_To &amp;to, const volatile T_From &amp;from)</argsstring>
+        <name>convert_type_fundamental</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const volatile T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="17" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="17" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1ac870100ac9bbc092e7d30fcf5027b0bf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr void</type>
+        <definition>constexpr void rlbox::detail::convert_type_fundamental_or_array</definition>
+        <argsstring>(T_To &amp;to, const T_From &amp;from)</argsstring>
+        <name>convert_type_fundamental_or_array</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="94" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="94" bodyend="140"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1a2ed80f830da97410e14f5125d705a326" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>adjust_type_direction</type>
+            <declname>Direction</declname>
+            <defname>Direction</defname>
+          </param>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr void</type>
+        <definition>constexpr void rlbox::detail::convert_type_non_class</definition>
+        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr)</argsstring>
+        <name>convert_type_non_class</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>example_unsandboxed_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="153" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="153" bodyend="208"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1a7baced3855f0d4daf1aacec5202b0d23" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>adjust_type_direction</type>
+            <declname>Direction</declname>
+            <defname>Direction</defname>
+          </param>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr void</type>
+        <definition>constexpr void rlbox::detail::convert_type_non_class</definition>
+        <argsstring>(T_To &amp;to, const T_From &amp;from)</argsstring>
+        <name>convert_type_non_class</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="214" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="214" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1af92540ff61212d0b1b32c9688274b992" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>adjust_type_direction</type>
+            <declname>Direction</declname>
+            <defname>Direction</defname>
+          </param>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::detail::convert_type</definition>
+        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr)</argsstring>
+        <name>convert_type</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>example_unsandboxed_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="242" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="242" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1a78ceb1b1bca845af4e166acd38cfa967" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>adjust_type_direction</type>
+            <declname>Direction</declname>
+            <defname>Direction</defname>
+          </param>
+          <param>
+            <type>typename T_To</type>
+          </param>
+          <param>
+            <type>typename T_From</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr void</type>
+        <definition>constexpr void rlbox::detail::convert_type</definition>
+        <argsstring>(T_To &amp;to, const T_From &amp;from)</argsstring>
+        <name>convert_type</name>
+        <param>
+          <type>T_To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type>const T_From &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="262" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="262" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1a08adddb7654716b5b85fa91f0e7f27cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void rlbox::detail::dynamic_check</definition>
+        <argsstring>(bool check, const char *const msg)</argsstring>
+        <name>dynamic_check</name>
+        <param>
+          <type>bool</type>
+          <declname>check</declname>
+        </param>
+        <param>
+          <type>const char *const</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="15" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="15" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1a4b876f895c98f2bc7f4d820462002482" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename...</type>
+            <declname>TArgs</declname>
+            <defname>TArgs</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::detail::printTypes</definition>
+        <argsstring>()</argsstring>
+        <name>printTypes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="49" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="49" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1ac1cb27fdc5cead24eebfac5d97ffb208" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::detail::remove_volatile_from_ptr_cast</definition>
+        <argsstring>(T *ptr)</argsstring>
+        <name>remove_volatile_from_ptr_cast</name>
+        <param>
+          <type>T *</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="103" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="103" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1a459e96f592f5ddb4067da56441373d54" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>std::size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+          <param>
+            <type>typename F</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::detail::compile_time_for</definition>
+        <argsstring>(F func)</argsstring>
+        <name>compile_time_for</name>
+        <param>
+          <type>F</type>
+          <declname>func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="125" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="125" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1ada946cbeddac61199d28701c5a3e251a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename T2</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::detail::return_first_result</definition>
+        <argsstring>(T first_task, T2 second_task)</argsstring>
+        <name>return_first_result</name>
+        <param>
+          <type>T</type>
+          <declname>first_task</declname>
+        </param>
+        <param>
+          <type>T2</type>
+          <declname>second_task</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="132" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="132" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__range_8hpp_1aa16bb3815e90212d3f756f037abb933e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::detail::check_range_doesnt_cross_app_sbx_boundary</definition>
+        <argsstring>(const void *ptr, size_t size)</argsstring>
+        <name>check_range_doesnt_cross_app_sbx_boundary</name>
+        <param>
+          <type>const void *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp" line="15" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp" bodystart="15" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__unwrap_8hpp_1a405f2af348c8d91411e4822e4c58c0ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::detail::unwrap_value</definition>
+        <argsstring>(T_Rhs &amp;&amp;rhs) noexcept</argsstring>
+        <name>unwrap_value</name>
+        <param>
+          <type>T_Rhs &amp;&amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_unwrap.hpp" line="13" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_unwrap.hpp" bodystart="13" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a84ff21aac9edff694c01a03516354079" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::detail::rlbox_generate_wrapper_check</definition>
+        <argsstring>(tainted)</argsstring>
+        <name>rlbox_generate_wrapper_check</name>
+        <param>
+          <type><ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a5eae14a6636fc4ecf27e26b7a1949160" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::detail::rlbox_generate_wrapper_check</definition>
+        <argsstring>(tainted_volatile)</argsstring>
+        <name>rlbox_generate_wrapper_check</name>
+        <param>
+          <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a7b9bf51d724ad90c81229d274327b20e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::detail::rlbox_generate_wrapper_check</definition>
+        <argsstring>(tainted_opaque)</argsstring>
+        <name>rlbox_generate_wrapper_check</name>
+        <param>
+          <type><ref refid="classrlbox_1_1tainted__opaque" kindref="compound">tainted_opaque</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a2a79e6802dd47b2b6a0f2675e99eb9c1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::detail::rlbox_generate_wrapper_check</definition>
+        <argsstring>(sandbox_callback)</argsstring>
+        <name>rlbox_generate_wrapper_check</name>
+        <param>
+          <type><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a67cd67d36187e6745022668230cfb8d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::detail::rlbox_generate_wrapper_check</definition>
+        <argsstring>(sandbox_function)</argsstring>
+        <name>rlbox_generate_wrapper_check</name>
+        <param>
+          <type><ref refid="classrlbox_1_1sandbox__function" kindref="compound">sandbox_function</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__wrapper__traits_8hpp_1a189dcab932823fa8ef0140d7454a9952" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::detail::struct_is_member_of_rlbox_detail</definition>
+        <argsstring>(T &amp;&amp;)</argsstring>
+        <name>struct_is_member_of_rlbox_detail</name>
+        <param>
+          <type>T &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="123" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="14" column="1"/>
+  </compounddef>
+</doxygen>

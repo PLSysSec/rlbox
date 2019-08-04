@@ -1,0 +1,69 @@
+\hypertarget{classrlbox_1_1tainted__volatile}{}\section{rlbox\+:\+:tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$ Class Template Reference}
+\label{classrlbox_1_1tainted__volatile}\index{rlbox\+::tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$@{rlbox\+::tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$}}
+
+
+Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile}.  
+
+
+
+
+{\ttfamily \#include $<$rlbox.\+hpp$>$}
+
+
+
+Inheritance diagram for rlbox\+:\+:tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{classrlbox_1_1tainted__volatile__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for rlbox\+:\+:tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{classrlbox_1_1tainted__volatile__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_a6cfb61db0c20522d8f9f33d111ae4d5c}\label{classrlbox_1_1tainted__volatile_a6cfb61db0c20522d8f9f33d111ae4d5c}} 
+\hyperlink{classrlbox_1_1tainted}{tainted}$<$ const T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries operator \&} () const noexcept
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_ace5c231dd34dd457c5780711f659a262}\label{classrlbox_1_1tainted__volatile_ace5c231dd34dd457c5780711f659a262}} 
+\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries operator \&} () noexcept
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_a03de23a9e3db2a7ec1c392544c704988}\label{classrlbox_1_1tainted__volatile_a03de23a9e3db2a7ec1c392544c704988}} 
+{\footnotesize template$<$typename T\+\_\+\+Rhs\+Ref $>$ }\\\hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile}$<$ T, T\+\_\+\+Sbx $>$ \& {\bfseries operator=} (T\+\_\+\+Rhs\+Ref \&\&val)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_adc112be01be78aff6187e845e2e3ee5f}\label{classrlbox_1_1tainted__volatile_adc112be01be78aff6187e845e2e3ee5f}} 
+{\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\void {\bfseries assign\+\_\+raw\+\_\+pointer} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox, T\+\_\+\+Rhs val)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}\label{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}} 
+{\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\\hyperlink{classrlbox_1_1tainted__boolean__hint}{tainted\+\_\+boolean\+\_\+hint} \hyperlink{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}{operator==} (T\+\_\+\+Rhs \&\&arg) const
+\begin{DoxyCompactList}\small\item\em Comparisons with a \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile} return only a \char`\"{}hint\char`\"{} to the right answer, i.\+e., something that could be wrong or change. This is because a compromised sandbox can modify \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile} data at any time. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_ad6b318608ffa3306c230b8043b33091d}\label{classrlbox_1_1tainted__volatile_ad6b318608ffa3306c230b8043b33091d}} 
+{\footnotesize template$<$typename T\+\_\+\+Dummy  = void$>$ }\\{\bfseries operator bool} () const
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_a41f8c034554f4dff986b2209bdc45b4e}\label{classrlbox_1_1tainted__volatile_a41f8c034554f4dff986b2209bdc45b4e}} 
+rlbox\+\_\+detail\+\_\+forward\+\_\+binop\+\_\+to\+\_\+base \& {\bfseries T\+\_\+\+Class\+Base}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T, typename T\+\_\+\+Sbx$>$\newline
+class rlbox\+::tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>$}
+
+Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile}. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox.\+hpp\end{DoxyCompactItemize}

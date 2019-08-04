@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classrlbox_1_1sandbox__function" kind="class" language="C++" prot="public">
+    <compoundname>rlbox::sandbox_function</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T_Sbx</declname>
+        <defname>T_Sbx</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classrlbox_1_1sandbox__function_1a94e12e8d9909307371ee570ab98a7e1c" prot="private" static="no">
+        <type>detail::convert_to_sandbox_equivalent_t&lt; T, T_Sbx &gt;</type>
+        <definition>using rlbox::sandbox_function&lt; T, T_Sbx &gt;::T_Func =  detail::convert_to_sandbox_equivalent_t&lt;T, T_Sbx&gt;</definition>
+        <argsstring></argsstring>
+        <name>T_Func</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="19" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classrlbox_1_1sandbox__function_1ab2838753314cf9114bde6f27740ff201" prot="private" static="no" mutable="no">
+        <type>T_Func</type>
+        <definition>T_Func rlbox::sandbox_function&lt; T, T_Sbx &gt;::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="20" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1a664584c5dd911280dfd3494fa804f894" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::sandbox_function&lt; T, T_Sbx &gt;::sandbox_function</definition>
+        <argsstring>(T_Func p_data)</argsstring>
+        <name>sandbox_function</name>
+        <param>
+          <type>T_Func</type>
+          <declname>p_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="24" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="24" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1a69334d7553ab0ee7dbfd5a15996727c1" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Func</type>
+        <definition>T_Func rlbox::sandbox_function&lt; T, T_Sbx &gt;::get_raw_sandbox_value</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>get_raw_sandbox_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="28" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1a0c11000dd6b79827479a460a242e1ce7" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T_Func</type>
+        <definition>T_Func rlbox::sandbox_function&lt; T, T_Sbx &gt;::get_raw_sandbox_value</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>get_raw_sandbox_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="30" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="30" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1a97d573b01f258b6917d389a77903a714" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::sandbox_function&lt; T, T_Sbx &gt;::sandbox_function</definition>
+        <argsstring>(const sandbox_function&lt; T, T_Sbx &gt; &amp;p)=default</argsstring>
+        <name>sandbox_function</name>
+        <param>
+          <type>const <ref refid="classrlbox_1_1sandbox__function" kindref="compound">sandbox_function</ref>&lt; T, T_Sbx &gt; &amp;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="33" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1ac1f134d8ddb67fd125a87473a24a0876" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_function&lt; T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="35" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="35" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1sandbox__function_1a62c3e3a78fb0dc0ab87f0aed3a871e51" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::sandbox_function&lt; T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="39" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="39" bodyend="39"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="16" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="15" bodyend="40"/>
+    <listofallmembers>
+      <member refid="classrlbox_1_1sandbox__function_1ab2838753314cf9114bde6f27740ff201" prot="private" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>data</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a69334d7553ab0ee7dbfd5a15996727c1" prot="private" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>get_raw_sandbox_value</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a0c11000dd6b79827479a460a242e1ce7" prot="private" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>get_raw_sandbox_value</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a664584c5dd911280dfd3494fa804f894" prot="private" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>sandbox_function</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a97d573b01f258b6917d389a77903a714" prot="public" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>sandbox_function</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a94e12e8d9909307371ee570ab98a7e1c" prot="private" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>T_Func</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1ac1f134d8ddb67fd125a87473a24a0876" prot="public" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>UNSAFE_sandboxed</name></member>
+      <member refid="classrlbox_1_1sandbox__function_1a62c3e3a78fb0dc0ab87f0aed3a871e51" prot="public" virt="non-virtual"><scope>rlbox::sandbox_function</scope><name>UNSAFE_sandboxed</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -95,7 +95,7 @@ if(DOXYGEN_FOUND)
   # -documentation-with-sphinx-breathe-doxygen-cmake/
   set(DOXYGEN_PROJECT_NAME "RLBox")
   set(DOXYGEN_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code/include)
-  set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/docs/doxygen)
+  set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen)
   set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
   set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
   set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
@@ -124,8 +124,8 @@ if(DOXYGEN_FOUND)
 
   find_package(Sphinx QUIET)
   if(SPHINX_FOUND)
-    set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/docs)
-    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/docs/sphinx)
+    set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/docs-src)
+    set(SPHINX_BUILD ${CMAKE_CURRENT_SOURCE_DIR}/docs/sphinx)
     set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
 
     # Only regenerate Sphinx when:

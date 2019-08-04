@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="namespacerlbox" kind="namespace" language="C++">
+    <compoundname>rlbox</compoundname>
+    <innerclass refid="classrlbox_1_1rlbox__noop__sandbox" prot="public">rlbox::rlbox_noop_sandbox</innerclass>
+    <innerclass refid="classrlbox_1_1rlbox__sandbox" prot="public">rlbox::rlbox_sandbox</innerclass>
+    <innerclass refid="classrlbox_1_1sandbox__callback" prot="public">rlbox::sandbox_callback</innerclass>
+    <innerclass refid="classrlbox_1_1sandbox__function" prot="public">rlbox::sandbox_function</innerclass>
+    <innerclass refid="classrlbox_1_1tainted" prot="public">rlbox::tainted</innerclass>
+    <innerclass refid="classrlbox_1_1tainted__base__impl" prot="public">rlbox::tainted_base_impl</innerclass>
+    <innerclass refid="classrlbox_1_1tainted__boolean__hint" prot="public">rlbox::tainted_boolean_hint</innerclass>
+    <innerclass refid="classrlbox_1_1tainted__opaque" prot="public">rlbox::tainted_opaque</innerclass>
+    <innerclass refid="classrlbox_1_1tainted__volatile" prot="public">rlbox::tainted_volatile</innerclass>
+    <innernamespace refid="namespacerlbox_1_1callback__detail">rlbox::callback_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1convert__fn__ptr__to__sandbox__equivalent__detail">rlbox::convert_fn_ptr_to_sandbox_equivalent_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1tainted__detail">rlbox::tainted_detail</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox_8hpp_1a7328c5d63ec45929e4842d951ab247fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; T, T_Sbx &gt;</type>
+        <definition>tainted&lt;T, T_Sbx&gt; rlbox::from_opaque</definition>
+        <argsstring>(tainted_opaque&lt; T, T_Sbx &gt; val)</argsstring>
+        <name>from_opaque</name>
+        <param>
+          <type><ref refid="classrlbox_1_1tainted__opaque" kindref="compound">tainted_opaque</ref>&lt; T, T_Sbx &gt;</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="808" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="808" bodyend="811"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__stdlib_8hpp_1aac1552a010c926f4211a3b73d04fb23d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Lhs</type>
+          </param>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>template&lt; typename, typename &gt; typename</type>
+            <declname>T_Wrap</declname>
+            <defname>T_Wrap</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; T_Lhs, T_Sbx &gt;</type>
+        <definition>tainted&lt;T_Lhs, T_Sbx&gt; rlbox::sandbox_reinterpret_cast</definition>
+        <argsstring>(const T_Wrap&lt; T_Rhs, T_Sbx &gt; &amp;rhs) noexcept</argsstring>
+        <name>sandbox_reinterpret_cast</name>
+        <param>
+          <type>const T_Wrap&lt; T_Rhs, T_Sbx &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>The equivalent of a reinterpret_cast but operates on sandboxed values. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="39" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="39" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__stdlib_8hpp_1a449504c5212429fce9c27ab5535b4cef" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Lhs</type>
+          </param>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>template&lt; typename, typename &gt; typename</type>
+            <declname>T_Wrap</declname>
+            <defname>T_Wrap</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; T_Lhs, T_Sbx &gt;</type>
+        <definition>tainted&lt;T_Lhs, T_Sbx&gt; rlbox::sandbox_const_cast</definition>
+        <argsstring>(const T_Wrap&lt; T_Rhs, T_Sbx &gt; &amp;rhs) noexcept</argsstring>
+        <name>sandbox_const_cast</name>
+        <param>
+          <type>const T_Wrap&lt; T_Rhs, T_Sbx &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>The equivalent of a const_cast but operates on sandboxed values. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="60" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="60" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__stdlib_8hpp_1ae2491d69e8718e121cc6898dba56c97b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+          <param>
+            <type>typename T_Val</type>
+          </param>
+          <param>
+            <type>typename T_Num</type>
+          </param>
+          <param>
+            <type>template&lt; typename, typename &gt; typename</type>
+            <declname>T_Wrap</declname>
+            <defname>T_Wrap</defname>
+          </param>
+        </templateparamlist>
+        <type>T_Wrap&lt; T_Rhs *, T_Sbx &gt;</type>
+        <definition>T_Wrap&lt;T_Rhs*, T_Sbx&gt; rlbox::memset</definition>
+        <argsstring>(rlbox_sandbox&lt; T_Sbx &gt; &amp;sandbox, T_Wrap&lt; T_Rhs *, T_Sbx &gt; ptr, T_Val value, T_Num num)</argsstring>
+        <name>memset</name>
+        <param>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; &amp;</type>
+          <declname>sandbox</declname>
+        </param>
+        <param>
+          <type>T_Wrap&lt; T_Rhs *, T_Sbx &gt;</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>T_Val</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>T_Num</type>
+          <declname>num</declname>
+        </param>
+        <briefdescription>
+<para>Fill sandbox memory with a constant byte. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="81" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="81" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__stdlib_8hpp_1a0b0d9db8aa78955e71974e5bf1545f3c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+          <param>
+            <type>typename T_Lhs</type>
+          </param>
+          <param>
+            <type>typename T_Num</type>
+          </param>
+          <param>
+            <type>template&lt; typename, typename &gt; typename</type>
+            <declname>T_Wrap</declname>
+            <defname>T_Wrap</defname>
+          </param>
+        </templateparamlist>
+        <type>T_Wrap&lt; T_Rhs *, T_Sbx &gt;</type>
+        <definition>T_Wrap&lt;T_Rhs*, T_Sbx&gt; rlbox::memcpy</definition>
+        <argsstring>(rlbox_sandbox&lt; T_Sbx &gt; &amp;sandbox, T_Wrap&lt; T_Rhs *, T_Sbx &gt; dest, T_Lhs src, T_Num num)</argsstring>
+        <name>memcpy</name>
+        <param>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; &amp;</type>
+          <declname>sandbox</declname>
+        </param>
+        <param>
+          <type>T_Wrap&lt; T_Rhs *, T_Sbx &gt;</type>
+          <declname>dest</declname>
+        </param>
+        <param>
+          <type>T_Lhs</type>
+          <declname>src</declname>
+        </param>
+        <param>
+          <type>T_Num</type>
+          <declname>num</declname>
+        </param>
+        <briefdescription>
+<para>Copy to sandbox memory area. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="113" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="113" bodyend="141"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="21" column="1"/>
+  </compounddef>
+</doxygen>

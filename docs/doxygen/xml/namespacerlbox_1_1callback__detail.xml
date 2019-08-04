@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="namespacerlbox_1_1callback__detail" kind="namespace" language="C++">
+    <compoundname>rlbox::callback_detail</compoundname>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="rlbox__policy__types_8hpp_1aa06719daa4b902f61960b7374e9c3357" prot="public" static="no">
+        <type>std::conditional_t&lt; std::is_void_v&lt; T_Ret &gt;, void, <ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; T_Ret, T_Sbx &gt; &gt;(*)(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; &amp;, <ref refid="classrlbox_1_1tainted" kindref="compound">tainted</ref>&lt; T_Args, T_Sbx &gt;...)</type>
+        <definition>using rlbox::callback_detail::T_Cb = typedef std::conditional_t&lt;std::is_void_v&lt;T_Ret&gt;, void, tainted&lt;T_Ret, T_Sbx&gt; &gt; (*)( rlbox_sandbox&lt;T_Sbx&gt;&amp;, tainted&lt;T_Args, T_Sbx&gt;...)</definition>
+        <argsstring></argsstring>
+        <name>T_Cb</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="46" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="rlbox__policy__types_8hpp_1a3fb0b250ebb514660f91616ece3f4db4" prot="public" static="no">
+        <type>detail::convert_to_sandbox_equivalent_t&lt; T_Ret, T_Sbx &gt;(*)(detail::convert_to_sandbox_equivalent_t&lt; T_Args, T_Sbx &gt;...)</type>
+        <definition>using rlbox::callback_detail::T_I = typedef detail::convert_to_sandbox_equivalent_t&lt;T_Ret, T_Sbx&gt; (*)( detail::convert_to_sandbox_equivalent_t&lt;T_Args, T_Sbx&gt;...)</definition>
+        <argsstring></argsstring>
+        <name>T_I</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="56" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox__policy__types_8hpp_1a413b73b4bcaacd907424ca1e8a99f31b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>typename T_Ret</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>T_Args</declname>
+            <defname>T_Args</defname>
+          </param>
+        </templateparamlist>
+        <type>T_Cb&lt; T_Sbx, T_Ret, T_Args... &gt;</type>
+        <definition>T_Cb&lt;T_Sbx, T_Ret, T_Args...&gt; rlbox::callback_detail::callback_type_helper</definition>
+        <argsstring>(T_Ret(*)(T_Args...))</argsstring>
+        <name>callback_type_helper</name>
+        <param>
+          <type>T_Ret(*)(T_Args...)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="52" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__policy__types_8hpp_1ab2673944306ab39c38713a6e231c082d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>typename T_Ret</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>T_Args</declname>
+            <defname>T_Args</defname>
+          </param>
+        </templateparamlist>
+        <type>T_I&lt; T_Sbx, T_Ret, T_Args... &gt;</type>
+        <definition>T_I&lt;T_Sbx, T_Ret, T_Args...&gt; rlbox::callback_detail::interceptor_type_helper</definition>
+        <argsstring>(T_Ret(*)(T_Args...))</argsstring>
+        <name>interceptor_type_helper</name>
+        <param>
+          <type>T_Ret(*)(T_Args...)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="60" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp" line="42" column="1"/>
+  </compounddef>
+</doxygen>

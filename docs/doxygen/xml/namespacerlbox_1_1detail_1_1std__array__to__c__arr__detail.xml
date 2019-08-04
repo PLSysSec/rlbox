@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="namespacerlbox_1_1detail_1_1std__array__to__c__arr__detail" kind="namespace" language="C++">
+    <compoundname>rlbox::detail::std_array_to_c_arr_detail</compoundname>
+    <innerclass refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" prot="public">rlbox::detail::std_array_to_c_arr_detail::W</innerclass>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1acb4d29f0c49fdcca664dbb6d59ed7590" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kindref="compound">W</ref>&lt; T[N]&gt;</type>
+        <definition>W&lt;T[N]&gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper(std::array&lt; T, N &gt;)</definition>
+        <argsstring>(std::array&lt; T, N &gt;)</argsstring>
+        <name>std_array_to_c_arr_helper</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="82" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox__type__traits_8hpp_1a233d900a31a4e947c74e13cb90d467a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kindref="compound">W</ref>&lt; T &gt;</type>
+        <definition>W&lt;T&gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper</definition>
+        <argsstring>(T &amp;&amp;)</argsstring>
+        <name>std_array_to_c_arr_helper</name>
+        <param>
+          <type>T &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="85" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="74" column="1"/>
+  </compounddef>
+</doxygen>

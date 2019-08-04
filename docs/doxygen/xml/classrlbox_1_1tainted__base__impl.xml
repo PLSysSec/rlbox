@@ -1,0 +1,692 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classrlbox_1_1tainted__base__impl" kind="class" language="C++" prot="public">
+    <compoundname>rlbox::tainted_base_impl</compoundname>
+    <templateparamlist>
+      <param>
+        <type>template&lt; typename, typename &gt; typename</type>
+        <declname>T_Wrap</declname>
+        <defname>T_Wrap</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T_Sbx</declname>
+        <defname>T_Sbx</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classrlbox_1_1tainted__base__impl_1af9ac82d1c1266df3f280f8b53c2ea815" prot="private" static="no">
+        <type>std::conditional_t&lt; std::is_pointer_v&lt; T &gt;, <ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref>&lt; detail::dereference_result_t&lt; T &gt;, T_Sbx &gt;, T_Wrap&lt; detail::dereference_result_t&lt; T &gt;, T_Sbx &gt; &gt;</type>
+        <definition>using rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::T_OpSubscriptArrRet =  std::conditional_t&lt; std::is_pointer_v&lt;T&gt;, tainted_volatile&lt;detail::dereference_result_t&lt;T&gt;, T_Sbx&gt;, T_Wrap&lt;detail::dereference_result_t&lt;T&gt;, T_Sbx&gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>T_OpSubscriptArrRet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="167" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="171" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classrlbox_1_1tainted__base__impl_1ab367db1429d5326c9684d2eef6364fa9" prot="private" static="no">
+        <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref>&lt; std::remove_pointer_t&lt; T &gt;, T_Sbx &gt;</type>
+        <definition>using rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::T_OpDerefRet =  tainted_volatile&lt;std::remove_pointer_t&lt;T&gt;, T_Sbx&gt;</definition>
+        <argsstring></argsstring>
+        <name>T_OpDerefRet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="231" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="231" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classrlbox_1_1tainted__base__impl_1ac70f724530042010d1366ab44ae6117a" prot="private" static="no">
+        <type>detail::valid_array_el_t&lt; std::remove_cv_t&lt; std::remove_pointer_t&lt; T &gt; &gt;&gt;</type>
+        <definition>using rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::T_CopyAndVerifyRangeEl =  detail::valid_array_el_t&lt;std::remove_cv_t&lt;std::remove_pointer_t&lt;T&gt; &gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>T_CopyAndVerifyRangeEl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="384" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="385" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a7c1c8a81e0c89fc20607c3021bf711dd" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto &amp;</type>
+        <definition>auto&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::impl</definition>
+        <argsstring>()</argsstring>
+        <name>impl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="32" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aebf64332a129c6782da259efee237dff" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto &amp;</type>
+        <definition>auto&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::impl</definition>
+        <argsstring>() const</argsstring>
+        <name>impl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="33" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="33" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T2</type>
+            <defval>T</defval>
+          </param>
+        </templateparamlist>
+        <type>std::unique_ptr&lt; T_CopyAndVerifyRangeEl[]&gt;</type>
+        <definition>std::unique_ptr&lt;T_CopyAndVerifyRangeEl[]&gt; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_range_helper</definition>
+        <argsstring>(std::size_t count) const</argsstring>
+        <name>copy_and_verify_range_helper</name>
+        <param>
+          <type>std::size_t</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="390" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="390" bodyend="417"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UNSAFE_unverified</definition>
+        <argsstring>()</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+<para>Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="43" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UNSAFE_unverified</definition>
+        <argsstring>() const</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="44" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="44" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1adb4270e907768562120dc32cf955424e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>()</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+<para>Like UNSAFE_unverified, but get the underlying sandbox representation. </para>        </briefdescription>
+        <detaileddescription>
+<para>For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="52" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="52" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a4ce9db12dd3745b6fd7b3e52e41ef3f2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UNSAFE_sandboxed</definition>
+        <argsstring>() const</argsstring>
+        <name>UNSAFE_sandboxed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="53" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="53" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a1292132a467d30150be6d4e2b72ff6b2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::unverified_safe_because</definition>
+        <argsstring>(const char(&amp;reason)[N])</argsstring>
+        <name>unverified_safe_because</name>
+        <param>
+          <type>const char(&amp;)</type>
+          <declname>reason</declname>
+          <array>[N]</array>
+        </param>
+        <briefdescription>
+<para>Unwrap a tainted value without verification. This function should be used when unwrapping is safe. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>reason</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An explanation why the unverified unwrapping is safe. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="65" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="65" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a88d4ea11a08ad91cb7ead1b80908f7f2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::unverified_safe_because</definition>
+        <argsstring>(const char(&amp;reason)[N]) const</argsstring>
+        <name>unverified_safe_because</name>
+        <param>
+          <type>const char(&amp;)</type>
+          <declname>reason</declname>
+          <array>[N]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="71" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="71" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac11254da0346088f7e2ccfdccf87deb1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOpValAndPtr</definition>
+        <argsstring>(+)</argsstring>
+        <name>BinaryOpValAndPtr</name>
+        <param>
+          <type>+</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="113" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ab64e73357c9a9387ca281d31e17bc490" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOpValAndPtr</definition>
+        <argsstring>(-)</argsstring>
+        <name>BinaryOpValAndPtr</name>
+        <param>
+          <type>-</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="114" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>BinaryOp *</type>
+        <definition>BinaryOp* rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOp</definition>
+        <argsstring>(/);BinaryOp(%</argsstring>
+        <name>BinaryOp</name>
+        <param>
+          <type>/</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="137" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>BinaryOp^</type>
+        <definition>BinaryOp^ rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOp</definition>
+        <argsstring>(&amp;);BinaryOp(|</argsstring>
+        <name>BinaryOp</name>
+        <param>
+          <type>&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="140" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a100c45337a0ad48eb18ac977edb8cc48" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOp</definition>
+        <argsstring>(&lt;&lt;)</argsstring>
+        <name>BinaryOp</name>
+        <param>
+          <type>&lt;&lt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="143" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a60f6d9cc0d8462291f461e4183d90ec7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::BinaryOp</definition>
+        <argsstring>(&gt;&gt;)</argsstring>
+        <name>BinaryOp</name>
+        <param>
+          <type>&gt;&gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="144" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a30945c75dace33aa34d77c839e50d49a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UnaryOp</definition>
+        <argsstring>(-)</argsstring>
+        <name>UnaryOp</name>
+        <param>
+          <type>-</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="161" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac450c85ec8fa3c5046bcf3fb7aeca2d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::UnaryOp</definition>
+        <argsstring>(~)</argsstring>
+        <name>UnaryOp</name>
+        <param>
+          <type>~</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="162" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad71e3e71f23ee730d9c6a9f9fc4d557e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+        </templateparamlist>
+        <type>const T_OpSubscriptArrRet &amp;</type>
+        <definition>const T_OpSubscriptArrRet&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator[]</definition>
+        <argsstring>(T_Rhs &amp;&amp;rhs) const</argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>T_Rhs &amp;&amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="175" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="175" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a6fd9a75009eee8738dd0a7625bb2b1fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+        </templateparamlist>
+        <type>T_OpSubscriptArrRet &amp;</type>
+        <definition>T_OpSubscriptArrRet&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator[]</definition>
+        <argsstring>(T_Rhs &amp;&amp;rhs)</argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>T_Rhs &amp;&amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="225" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="225" bodyend="228"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ae308e3faece4fe51254f38814220bcef" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">T_OpDerefRet</ref> &amp;</type>
+        <definition>T_OpDerefRet&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator*</definition>
+        <argsstring>() const</argsstring>
+        <name>operator*</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="234" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="234" bodyend="244"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a8fd7566680b44852f260d8431ee4d196" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">T_OpDerefRet</ref> &amp;</type>
+        <definition>T_OpDerefRet&amp; rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator*</definition>
+        <argsstring>()</argsstring>
+        <name>operator*</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="246" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="246" bodyend="249"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3e8fdb261d771cb7b5c9af33fe52ff35" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator-&gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator-&gt;</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="255" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="255" bodyend="263"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a52c2403f1851a0e2d295a712d8d10029" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator-&gt;</definition>
+        <argsstring>()</argsstring>
+        <name>operator-&gt;</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="265" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="265" bodyend="269"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad22f860fd026994b29fbfe619d1cce36" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator!=</definition>
+        <argsstring>(T_Rhs &amp;&amp;arg) const</argsstring>
+        <name>operator!=</name>
+        <param>
+          <type>T_Rhs &amp;&amp;</type>
+          <declname>arg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="272" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="272" bodyend="275"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a05eaec33cccaad9bc15e014d6c25d695" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::operator!</definition>
+        <argsstring>()</argsstring>
+        <name>operator!</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="277" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="277" bodyend="296"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a701759aedd637f48cc97a0e6ada1c8a6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Func</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify</definition>
+        <argsstring>(T_Func verifier) const</argsstring>
+        <name>copy_and_verify</name>
+        <param>
+          <type>T_Func</type>
+          <declname>verifier</declname>
+        </param>
+        <briefdescription>
+<para>Copy tainted value from sandbox and verify it. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verifer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T_Func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of the verifier. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="306" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="306" bodyend="381"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Func</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_range</definition>
+        <argsstring>(T_Func verifier, std::size_t count) const</argsstring>
+        <name>copy_and_verify_range</name>
+        <param>
+          <type>T_Func</type>
+          <declname>verifier</declname>
+        </param>
+        <param>
+          <type>std::size_t</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+<para>Copy a range of tainted values from sandbox and verify them. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verifer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of elements to copy. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T_Func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of the verifier. If the tainted type is <computeroutput>int*</computeroutput> then <computeroutput>T_Func = T_Ret(*)(unique_ptr&lt;int[]&gt;)</computeroutput>. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="430" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="430" bodyend="444"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Func</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_string</definition>
+        <argsstring>(T_Func verifier) const</argsstring>
+        <name>copy_and_verify_string</name>
+        <param>
+          <type>T_Func</type>
+          <declname>verifier</declname>
+        </param>
+        <briefdescription>
+<para>Copy a tainted string from sandbox and verify it. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verifer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T_Func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(unique_ptr&lt;char[]&gt;)</computeroutput> </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="454" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="454" bodyend="479"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Func</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_address</definition>
+        <argsstring>(T_Func verifier)</argsstring>
+        <name>copy_and_verify_address</name>
+        <param>
+          <type>T_Func</type>
+          <declname>verifier</declname>
+        </param>
+        <briefdescription>
+<para>Copy a tainted pointer from sandbox and verify the address. </para>        </briefdescription>
+        <detaileddescription>
+<para>This function is useful if you need to verify physical bits representing the address of a pointed to since copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verifer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T_Func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="493" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="493" bodyend="499"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="500"/>
+    <listofallmembers>
+      <member refid="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a100c45337a0ad48eb18ac977edb8cc48" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a60f6d9cc0d8462291f461e4183d90ec7" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ac11254da0346088f7e2ccfdccf87deb1" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOpValAndPtr</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ab64e73357c9a9387ca281d31e17bc490" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOpValAndPtr</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a701759aedd637f48cc97a0e6ada1c8a6" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_address</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_range</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_range_helper</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_string</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a7c1c8a81e0c89fc20607c3021bf711dd" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>impl</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1aebf64332a129c6782da259efee237dff" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>impl</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a05eaec33cccaad9bc15e014d6c25d695" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator!</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ad22f860fd026994b29fbfe619d1cce36" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator!=</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ae308e3faece4fe51254f38814220bcef" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator*</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a8fd7566680b44852f260d8431ee4d196" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator*</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a3e8fdb261d771cb7b5c9af33fe52ff35" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator-&gt;</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a52c2403f1851a0e2d295a712d8d10029" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator-&gt;</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ad71e3e71f23ee730d9c6a9f9fc4d557e" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator[]</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a6fd9a75009eee8738dd0a7625bb2b1fc" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>operator[]</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ac70f724530042010d1366ab44ae6117a" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>T_CopyAndVerifyRangeEl</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ab367db1429d5326c9684d2eef6364fa9" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>T_OpDerefRet</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1af9ac82d1c1266df3f280f8b53c2ea815" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>T_OpSubscriptArrRet</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a30945c75dace33aa34d77c839e50d49a" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UnaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1ac450c85ec8fa3c5046bcf3fb7aeca2d1" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UnaryOp</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1adb4270e907768562120dc32cf955424e" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_sandboxed</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a4ce9db12dd3745b6fd7b3e52e41ef3f2" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_sandboxed</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a1292132a467d30150be6d4e2b72ff6b2" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>unverified_safe_because</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a88d4ea11a08ad91cb7ead1b80908f7f2" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>unverified_safe_because</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

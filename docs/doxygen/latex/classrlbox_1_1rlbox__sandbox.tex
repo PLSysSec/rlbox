@@ -1,0 +1,239 @@
+\hypertarget{classrlbox_1_1rlbox__sandbox}{}\section{rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$ Class Template Reference}
+\label{classrlbox_1_1rlbox__sandbox}\index{rlbox\+::rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$@{rlbox\+::rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$}}
+
+
+Encapsulation for sandboxes.  
+
+
+
+
+{\ttfamily \#include $<$rlbox\+\_\+sandbox.\+hpp$>$}
+
+
+
+Inheritance diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{classrlbox_1_1rlbox__sandbox__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{classrlbox_1_1rlbox__sandbox__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a2236c8f780e2fbb505b616a05d632298}\label{classrlbox_1_1rlbox__sandbox_a2236c8f780e2fbb505b616a05d632298}} 
+{\footnotesize template$<$typename T $>$ }\\using {\bfseries convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t} = detail\+::convert\+\_\+base\+\_\+types\+\_\+t$<$ T, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Short\+Type, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Int\+Type, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Long\+Type, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Long\+Long\+Type, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Pointer\+Type $>$
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a09c972acd976ab264478c3abd32f8383}\label{classrlbox_1_1rlbox__sandbox_a09c972acd976ab264478c3abd32f8383}} 
+{\footnotesize template$<$typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ }\\using {\bfseries T\+\_\+\+Cb\+\_\+no\+\_\+wrap} = detail\+::rlbox\+\_\+remove\+\_\+wrapper\+\_\+t$<$ T\+\_\+\+Ret $>$(detail\+::rlbox\+\_\+remove\+\_\+wrapper\+\_\+t$<$ T\+\_\+\+Args $>$...)
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a32de91755a582024dc43b879ef192b2c}\label{classrlbox_1_1rlbox__sandbox_a32de91755a582024dc43b879ef192b2c}} 
+T\+\_\+\+Sbx $\ast$ {\bfseries get\+\_\+sandbox\+\_\+impl} ()
+\item 
+{\footnotesize template$<$typename... T\+\_\+\+Args$>$ }\\auto \hyperlink{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}{create\+\_\+sandbox} (T\+\_\+\+Args... args)
+\begin{DoxyCompactList}\small\item\em Create a new sandbox. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}\label{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}} 
+auto \hyperlink{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}{destroy\+\_\+sandbox} ()
+\begin{DoxyCompactList}\small\item\em Destroy sandbox and reclaim any memory. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a76a853547e516435fe4536d6d5bd4c0d}\label{classrlbox_1_1rlbox__sandbox_a76a853547e516435fe4536d6d5bd4c0d}} 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ {\bfseries get\+\_\+unsandboxed\+\_\+pointer} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$$>$ p) const
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a3069e9c6c67a12aff85af0e7b7068b98}\label{classrlbox_1_1rlbox__sandbox_a3069e9c6c67a12aff85af0e7b7068b98}} 
+{\footnotesize template$<$typename T $>$ }\\convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$ $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer} (const void $\ast$p) const
+\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \hyperlink{classrlbox_1_1rlbox__sandbox_ab6ecbc8d0d69a3305912fe92882ef6b9}{malloc\+\_\+in\+\_\+sandbox} ()
+\begin{DoxyCompactList}\small\item\em Allocate a new pointer that is accessible to both the application and sandbox. The pointer is allocated in sandbox memory. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \hyperlink{classrlbox_1_1rlbox__sandbox_a967ee4efa3c49a4493eaeda65b338e70}{malloc\+\_\+in\+\_\+sandbox} (uint32\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Allocate an array that is accessible to both the application and sandbox. The pointer is allocated in sandbox memory. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\+\_\+in\+\_\+sandbox} (\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$ ptr)
+\begin{DoxyCompactList}\small\item\em Free the memory referenced by the tainted pointer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}\label{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}} 
+bool \hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\+\_\+pointer\+\_\+in\+\_\+sandbox\+\_\+memory} (const void $\ast$p)
+\begin{DoxyCompactList}\small\item\em Check if the pointer points to this sandbox\textquotesingle{}s memory. For the null-\/sandbox, this always returns true. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_afc6c3f229b2807517c54cc120dfda941}\label{classrlbox_1_1rlbox__sandbox_afc6c3f229b2807517c54cc120dfda941}} 
+bool \hyperlink{classrlbox_1_1rlbox__sandbox_afc6c3f229b2807517c54cc120dfda941}{is\+\_\+pointer\+\_\+in\+\_\+app\+\_\+memory} (const void $\ast$p)
+\begin{DoxyCompactList}\small\item\em Check if the pointer points to application memory. For the null-\/sandbox, this always returns true. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a9bfda00c80c73e70ddbc3f2419066cb8}\label{classrlbox_1_1rlbox__sandbox_a9bfda00c80c73e70ddbc3f2419066cb8}} 
+size\+\_\+t {\bfseries get\+\_\+total\+\_\+memory} ()
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_af682f225ef74ad07cfa5c25e7c8ed42c}\label{classrlbox_1_1rlbox__sandbox_af682f225ef74ad07cfa5c25e7c8ed42c}} 
+void $\ast$ {\bfseries get\+\_\+memory\+\_\+location} ()
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a38b2f18b1db0dbd789477a93d0dc40eb}\label{classrlbox_1_1rlbox__sandbox_a38b2f18b1db0dbd789477a93d0dc40eb}} 
+void $\ast$ {\bfseries lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a9f9e13680f09205f25a520fc04ef3f9a}\label{classrlbox_1_1rlbox__sandbox_a9f9e13680f09205f25a520fc04ef3f9a}} 
+{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+invoke\+\_\+with\+\_\+func\+\_\+name} (const char $\ast$func\+\_\+name, T\+\_\+\+Args \&\&... params)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_aa9949431e81241554f6b54fa7bcaca19}\label{classrlbox_1_1rlbox__sandbox_aa9949431e81241554f6b54fa7bcaca19}} 
+{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+invoke\+\_\+with\+\_\+func\+\_\+ptr} (void $\ast$func\+\_\+ptr, T\+\_\+\+Args \&\&... params)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_acd10ff63b848c01690ba1f8977621a72}\label{classrlbox_1_1rlbox__sandbox_acd10ff63b848c01690ba1f8977621a72}} 
+{\footnotesize template$<$typename T2 $>$ }\\\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T2, T\+\_\+\+Sbx $>$ {\bfseries U\+N\+S\+A\+F\+E\+\_\+accept\+\_\+pointer} (T2 ptr)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ad2cf7d6b28eca1cdc04cb3cbee338189}\label{classrlbox_1_1rlbox__sandbox_ad2cf7d6b28eca1cdc04cb3cbee338189}} 
+{\footnotesize template$<$typename T\+\_\+\+Ret $>$ }\\\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\+\_\+callback}$<$ T\+\_\+\+Cb\+\_\+no\+\_\+wrap$<$ T\+\_\+\+Ret $>$ $\ast$, T\+\_\+\+Sbx $>$ {\bfseries register\+\_\+callback} (T\+\_\+\+Ret($\ast$)())
+\item 
+{\footnotesize template$<$typename T\+\_\+\+RL , typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ }\\\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\+\_\+callback}$<$ T\+\_\+\+Cb\+\_\+no\+\_\+wrap$<$ T\+\_\+\+Ret, T\+\_\+\+Args... $>$ $\ast$, T\+\_\+\+Sbx $>$ \hyperlink{classrlbox_1_1rlbox__sandbox_ae4f4cc7825bcb613ab5405e0f6cae7f3}{register\+\_\+callback} (T\+\_\+\+Ret($\ast$func\+\_\+ptr)(T\+\_\+\+RL, T\+\_\+\+Args...))
+\begin{DoxyCompactList}\small\item\em Expose a callback function to the sandboxed code. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a5bee54535b32114c36b56672cb1996d2}\label{classrlbox_1_1rlbox__sandbox_a5bee54535b32114c36b56672cb1996d2}} 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classrlbox_1_1sandbox__function}{sandbox\+\_\+function}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+name} (const char $\ast$func\+\_\+name)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_aa0585f98cac7d66c4ed0616fe7f80d79}\label{classrlbox_1_1rlbox__sandbox_aa0585f98cac7d66c4ed0616fe7f80d79}} 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classrlbox_1_1sandbox__function}{sandbox\+\_\+function}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+ptr} (void $\ast$func\+\_\+ptr)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a2fbafbb1cb567e11a869b0080e431d06}\label{classrlbox_1_1rlbox__sandbox_a2fbafbb1cb567e11a869b0080e431d06}} 
+{\footnotesize template$<$typename T $>$ }\\static T $\ast$ {\bfseries get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$$>$ p, const void $\ast$example\+\_\+unsandboxed\+\_\+ptr)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a78289528bb404a0624b9bfc3675f3c58}\label{classrlbox_1_1rlbox__sandbox_a78289528bb404a0624b9bfc3675f3c58}} 
+{\footnotesize template$<$typename T $>$ }\\static convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$ $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (const void $\ast$p)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}\label{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}} 
+static bool \hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\+\_\+in\+\_\+same\+\_\+sandbox} (const void $\ast$p1, const void $\ast$p2)
+\begin{DoxyCompactList}\small\item\em Check if two pointers are in the same sandbox. For the null-\/sandbox, this always returns true. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T\+\_\+\+Sbx$>$\newline
+class rlbox\+::rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$}
+
+Encapsulation for sandboxes. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T\+\_\+\+Sbx} & Type of sandbox. For the null sandbox this is {\ttfamily \hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox}} \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}\label{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}} 
+\index{rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}!create\+\_\+sandbox@{create\+\_\+sandbox}}
+\index{create\+\_\+sandbox@{create\+\_\+sandbox}!rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}}
+\subsubsection{\texorpdfstring{create\+\_\+sandbox()}{create\_sandbox()}}
+{\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx$>$ \\
+template$<$typename... T\+\_\+\+Args$>$ \\
+auto \hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$\+::create\+\_\+sandbox (\begin{DoxyParamCaption}\item[{T\+\_\+\+Args...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a new sandbox. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T\+\_\+args} & Arguments passed to the underlying sandbox implementation. For the null sandbox, no arguments are necessary. \\
+\hline
+\end{DoxyTemplParams}
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}\label{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}} 
+\index{rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}!free\+\_\+in\+\_\+sandbox@{free\+\_\+in\+\_\+sandbox}}
+\index{free\+\_\+in\+\_\+sandbox@{free\+\_\+in\+\_\+sandbox}!rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}}
+\subsubsection{\texorpdfstring{free\+\_\+in\+\_\+sandbox()}{free\_in\_sandbox()}}
+{\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx$>$ \\
+template$<$typename T $>$ \\
+void \hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$\+::free\+\_\+in\+\_\+sandbox (\begin{DoxyParamCaption}\item[{\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$}]{ptr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Free the memory referenced by the tainted pointer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to sandbox memory to free. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ab6ecbc8d0d69a3305912fe92882ef6b9}\label{classrlbox_1_1rlbox__sandbox_ab6ecbc8d0d69a3305912fe92882ef6b9}} 
+\index{rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}!malloc\+\_\+in\+\_\+sandbox@{malloc\+\_\+in\+\_\+sandbox}}
+\index{malloc\+\_\+in\+\_\+sandbox@{malloc\+\_\+in\+\_\+sandbox}!rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}}
+\subsubsection{\texorpdfstring{malloc\+\_\+in\+\_\+sandbox()}{malloc\_in\_sandbox()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx$>$ \\
+template$<$typename T $>$ \\
+\hyperlink{classrlbox_1_1tainted}{tainted}$<$T$\ast$, T\+\_\+\+Sbx$>$ \hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$\+::malloc\+\_\+in\+\_\+sandbox (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocate a new pointer that is accessible to both the application and sandbox. The pointer is allocated in sandbox memory. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of the pointer you want to create. If T=int, this would return a pointer to an int.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+tainted$<$\+T$\ast$, T\+\_\+\+Sbx$>$ Tainted pointer accessible to the application and sandbox. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a967ee4efa3c49a4493eaeda65b338e70}\label{classrlbox_1_1rlbox__sandbox_a967ee4efa3c49a4493eaeda65b338e70}} 
+\index{rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}!malloc\+\_\+in\+\_\+sandbox@{malloc\+\_\+in\+\_\+sandbox}}
+\index{malloc\+\_\+in\+\_\+sandbox@{malloc\+\_\+in\+\_\+sandbox}!rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}}
+\subsubsection{\texorpdfstring{malloc\+\_\+in\+\_\+sandbox()}{malloc\_in\_sandbox()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx$>$ \\
+template$<$typename T $>$ \\
+\hyperlink{classrlbox_1_1tainted}{tainted}$<$T$\ast$, T\+\_\+\+Sbx$>$ \hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$\+::malloc\+\_\+in\+\_\+sandbox (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{count }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocate an array that is accessible to both the application and sandbox. The pointer is allocated in sandbox memory. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of the array elements you want to create. If T=int, this would return a pointer to an array of ints.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em count} & The number of array elements to allocate.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+tainted$<$\+T$\ast$, T\+\_\+\+Sbx$>$ Tainted pointer accessible to the application and sandbox. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ae4f4cc7825bcb613ab5405e0f6cae7f3}\label{classrlbox_1_1rlbox__sandbox_ae4f4cc7825bcb613ab5405e0f6cae7f3}} 
+\index{rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}!register\+\_\+callback@{register\+\_\+callback}}
+\index{register\+\_\+callback@{register\+\_\+callback}!rlbox\+::rlbox\+\_\+sandbox@{rlbox\+::rlbox\+\_\+sandbox}}
+\subsubsection{\texorpdfstring{register\+\_\+callback()}{register\_callback()}}
+{\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx$>$ \\
+template$<$typename T\+\_\+\+RL , typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ \\
+\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\+\_\+callback}$<$T\+\_\+\+Cb\+\_\+no\+\_\+wrap$<$T\+\_\+\+Ret, T\+\_\+\+Args...$>$$\ast$, T\+\_\+\+Sbx$>$ \hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$\+::register\+\_\+callback (\begin{DoxyParamCaption}\item[{T\+\_\+\+Ret($\ast$)(T\+\_\+\+RL, T\+\_\+\+Args...)}]{func\+\_\+ptr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Expose a callback function to the sandboxed code. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+ptr} & The callback to expose.\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T\+\_\+\+RL} & Sandbox reference type (first argument). \\
+\hline
+{\em T\+\_\+\+Ret} & Return type of callback. Must be tainted or void. \\
+\hline
+{\em T\+\_\+\+Args} & Types of remaining callback arguments. Must be tainted.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+Wrapped callback function pointer that can be passed to the sandbox. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}

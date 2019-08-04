@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num" kind="struct" language="C++" prot="public">
+    <compoundname>rlbox::detail::compile_time_for_detail::num</compoundname>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num_1a3ebecc6d20c6b147ad13c12b152999a7" prot="public" static="yes" mutable="no">
+        <type>const constexpr auto</type>
+        <definition>const constexpr auto rlbox::detail::compile_time_for_detail::num&lt; N &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <initializer>= N</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="114" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="113" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="112" bodyend="115"/>
+    <listofallmembers>
+      <member refid="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num_1a3ebecc6d20c6b147ad13c12b152999a7" prot="public" virt="non-virtual"><scope>rlbox::detail::compile_time_for_detail::num</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
