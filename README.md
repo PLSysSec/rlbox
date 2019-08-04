@@ -67,7 +67,7 @@ firefox `pwd`/docs/sphinx/index.html
 development. To do this, adjust your build settings as shown below
 
 ```bash
-cmake -SWERR=ON -S . -B ./build
+cmake -DWERR=ON -S . -B ./build
 ```
 
 2. After making changes to the source, add any new required tests and run all
