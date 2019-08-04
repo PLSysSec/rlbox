@@ -1,6 +1,6 @@
 # RLBox API
 
-RLBox sandboxing API (in C++ 17). See [docs](./docs/sphinx/index.html) for now.
+RLBox sandboxing API (in C++ 17). See the [oneline docs](https://docs.rlbox.dev).
 
 ## Setup
 

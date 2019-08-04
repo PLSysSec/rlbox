@@ -13,7 +13,7 @@ RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
 application code to interface with a sandboxed library.  The Wasm-based sandbox
 is documented in its `corresponding repository
-<https://wasm-sandbox.programming.systems>`_.  This documentation focuses on
+<https://wasm-sandbox.rlbox.dev>`_.  This documentation focuses on
 the API and the interface you will use when sandboxing code, independent of the
 underlying sandboxing mechanism.
 
@@ -251,9 +251,9 @@ Core API
 
 In this section we describe a large part of the RLBox API you are likely to
 encounter when porting libraries. The API has some more advanced features and
-types that are necessary but not as commonly used and will be described
-elsewhere. In most cases the RLBox type system will give you an informative
-error if and how to use these features.
+types that are necessary but not as commonly used (see [Doxygen]_).  In most
+cases the RLBox type system will give you an informative error if and how to
+use these features.
 
 Creating (and destroying) sandboxes
 -----------------------------------
@@ -491,6 +491,7 @@ References
 ==========
 
 .. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.
+.. [Doxygen] `RLBox Class List <https://docs.rlbox.dev/doxygen/html/annotated.html>`_
 
 
 Indices and tables
