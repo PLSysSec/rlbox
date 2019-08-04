@@ -1,0 +1,8 @@
+dist: bionic
+language: cpp
+script:
+  - mkdir ./build
+  - cd ./build
+  - cmake -S ..
+  - make
+  - make test
