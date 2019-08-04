@@ -609,7 +609,7 @@ public:
       auto tainted_func_ptr = reinterpret_cast<
         detail::rlbox_tainted_opaque_to_tainted_t<T_Ret, T_Sbx> (*)(
           T_RL, detail::rlbox_tainted_opaque_to_tainted_t<T_Args, T_Sbx>...)>(
-        func_ptr);
+        reinterpret_cast<void*>(func_ptr));
 
       auto ret = sandbox_callback<T_Cb_no_wrap<T_Ret, T_Args...>*, T_Sbx>(
         this,

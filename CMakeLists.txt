@@ -13,13 +13,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(WERR "Enable warnings as errors" OFF)
+
 if(MSVC)
   add_compile_options(/W4 /WX)
+  if (WERR)
+    add_compile_options(/W4)
+  endif()
 else()
   add_compile_options(-Wall
                       -Wextra
-                      -pedantic
-                      -Werror)
+                      -pedantic)
+  if (WERR)
+    add_compile_options(-Werror)
+  endif()
 endif()
 
 # Dev Tools ###################
