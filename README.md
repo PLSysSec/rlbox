@@ -66,10 +66,11 @@ firefox `pwd`/docs/sphinx/index.html
 ## Contributing Code/Docs
 
 1. To contribute code, it is recommended you treat warnings as errors during
-development. To do this, adjust your build settings as shown below
+development. Also, you probably want to use the debug build. To do this, adjust
+your build settings as shown below
 
 ```bash
-cmake -DWERR=ON -S . -B ./build
+cmake -DCMAKE_BUILD_TYPE=Debug -DWERR=ON -S . -B ./build
 ```
 
 2. After making changes to the source, add any new required tests and run all
