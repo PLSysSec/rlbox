@@ -37,16 +37,6 @@ TEST_CASE("convert_type_fundamental_or_array compile time checks for "
           "[convert]")
 {
   const int32_t randValue = 5;
-  // dont go across signs
-  {
-    uint64_t dest;
-    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, randValue));
-  }
-  {
-    int64_t dest;
-    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, randValue));
-  }
-
   Foo a{ randValue };
   // does not support classes
   {
@@ -118,22 +108,12 @@ TEST_CASE("convert_type_fundamental_or_array for arrays operates correctly",
   }
 }
 
-TEST_CASE("convert_type_fundamental_or_array compile time checks for "
-          "arrays operate correctly",
-          "[convert]")
+TEST_CASE(
+  "convert_type_fundamental_or_array checks for arrays operate correctly",
+  "[convert]")
 {
-  const int32_t c_arr_1[4]{ 1, 2, 3, 4 }; // NOLINT
-
-  {
-    uint32_t dest[4]{}; // NOLINT
-    REQUIRE_COMPILE_ERR(convert_type_fundamental_or_array(dest, c_arr_1));
-  }
-
   // NOLINTNEXTLINE
-  const int64_t c_arr_2[4]{ 1, std::numeric_limits<int64_t>::max(), 3, 4 };
-
-  {
-    int32_t dest[4]{}; // NOLINT
-    REQUIRE_THROWS(convert_type_fundamental_or_array(dest, c_arr_2));
-  }
+  const int64_t c_arr[4]{ 1, std::numeric_limits<int64_t>::max(), 3, 4 };
+  int32_t dest[4]{}; // NOLINT
+  REQUIRE_THROWS(convert_type_fundamental_or_array(dest, c_arr));
 }

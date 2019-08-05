@@ -3,7 +3,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <map>
+#include <mutex>
 #include <utility>
+#include <vector>
 
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
@@ -71,6 +74,11 @@ private:
   }
 
   size_t CurrFreeAddress = 4; // NOLINT
+  // Some sandboxed encode functions as regular pointers, others use an
+  // indirection table. Using an indirection table here as this is the more
+  // complicated case
+  mutable std::mutex function_table_mutex;
+  mutable std::vector<const void*> function_table;
 
 public:
   using T_LongLongType = int64_t;
@@ -103,15 +111,27 @@ protected:
   template<typename T>
   inline void* impl_get_unsandboxed_pointer(T_PointerType p) const
   {
-    return reinterpret_cast<void*>(SandboxMemoryBase +
-                                   static_cast<uintptr_t>(p));
+    if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
+      std::lock_guard<std::mutex> lock(function_table_mutex);
+      return const_cast<void*>(function_table[p]);
+    } else {
+      return reinterpret_cast<void*>(SandboxMemoryBase +
+                                     static_cast<uintptr_t>(p));
+    }
   }
 
   template<typename T>
   inline T_PointerType impl_get_sandboxed_pointer(const void* p) const
   {
-    return static_cast<T_PointerType>(reinterpret_cast<uintptr_t>(p) -
-                                      SandboxMemoryBase);
+    if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
+      std::lock_guard<std::mutex> lock(function_table_mutex);
+      int len = function_table.size();
+      function_table.push_back(p);
+      return static_cast<T_PointerType>(len);
+    } else {
+      return static_cast<T_PointerType>(reinterpret_cast<uintptr_t>(p) -
+                                        SandboxMemoryBase);
+    }
   }
 
   template<typename T>
@@ -121,9 +141,14 @@ protected:
   {
     RLBOX_UNUSED(example_unsandboxed_ptr);
     RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
-    auto mask = SandboxMemoryBaseMask &
-                reinterpret_cast<uintptr_t>(example_unsandboxed_ptr);
-    return reinterpret_cast<void*>(mask + static_cast<uintptr_t>(p));
+    if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
+      static_assert(!rlbox::detail::true_v<T>,
+                    "No context swizzling for a function pointer.");
+    } else {
+      auto mask = SandboxMemoryBaseMask &
+                  reinterpret_cast<uintptr_t>(example_unsandboxed_ptr);
+      return reinterpret_cast<void*>(mask + static_cast<uintptr_t>(p));
+    }
   }
 
   template<typename T>
@@ -133,8 +158,13 @@ protected:
   {
     RLBOX_UNUSED(example_unsandboxed_ptr);
     RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
-    auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
-    return static_cast<T_PointerType>(ret);
+    if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
+      static_assert(!rlbox::detail::true_v<T>,
+                    "No context swizzling for a function pointer.");
+    } else {
+      auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
+      return static_cast<T_PointerType>(ret);
+    }
   }
 
   inline T_PointerType impl_malloc_in_sandbox(size_t size)

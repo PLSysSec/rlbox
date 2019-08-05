@@ -507,27 +507,6 @@ namespace tainted_detail {
   using tainted_vol_repr_t =
     detail::c_to_std_array_t<std::add_volatile_t<typename rlbox_sandbox<
       T_Sbx>::template convert_to_sandbox_equivalent_nonclass_t<T>>>;
-
-  template<typename T, size_t N>
-  inline const void* find_non_null_pointer_in_array(T (&a)[N]) noexcept
-  {
-    for (size_t i = 0; i < N; i++) {
-      if constexpr (std::is_array_v<std::remove_reference_t<decltype(a[0])>>) {
-        // Nested array
-        const void* ret = find_non_null_pointer_in_array(a[i]);
-        if (ret != nullptr) {
-          return ret;
-        }
-      } else {
-        if (a[i] != nullptr) {
-          return a;
-        }
-      }
-    }
-
-    return nullptr;
-  }
-
 }
 
 /**
@@ -574,29 +553,7 @@ private:
     std::remove_cv_t<T_SandboxedType> ret;
     // We need an example_unsandboxed_ptr for cases where we are converting
     // pointers.
-    const void* example_unsandboxed_ptr;
-    if_constexpr_named(cond1, std::is_pointer_v<T>)
-    {
-      // pointer type - We can use the value itself as an
-      // example_unsandboxed_ptr. Normally example_unsandboxed_ptr needs to be
-      // non-null, however we cannot be sure here. However,
-      // example_unsandboxed_ptr is only needed when converting non null
-      // pointers. Thus we should be OK.
-      example_unsandboxed_ptr = data;
-    }
-    else if_constexpr_named(cond2,
-                            std::is_array_v<T> &&
-                              std::is_pointer_v<std::remove_all_extents_t<T>>)
-    {
-      // convert from std::array to c style array
-      auto data_ref = reinterpret_cast<std::add_pointer_t<T>>(&data);
-      example_unsandboxed_ptr = find_non_null_pointer_in_array(*data_ref);
-    }
-    else
-    {
-      // we don't deal with pointers in these other cases
-      example_unsandboxed_ptr = nullptr;
-    }
+    const void* example_unsandboxed_ptr = find_example_pointer_or_null();
 
     using namespace detail;
     convert_type_non_class<T_Sbx,
@@ -616,6 +573,24 @@ private:
     rlbox_detail_forward_to_const(get_raw_sandbox_value,
                                   std::remove_cv_t<T_SandboxedType>);
   };
+
+  inline const void* find_example_pointer_or_null() const noexcept
+  {
+    if constexpr (std::is_array_v<T>) {
+      auto& data_ref = get_raw_value_ref();
+
+      for (size_t i = 0; i < std::extent_v<T>; i++) {
+        const void* ret = data[i].find_example_pointer_or_null();
+        if (ret != nullptr) {
+          return ret;
+        }
+      }
+    } else if constexpr (std::is_pointer_v<T> && !detail::is_func_ptr_v<T>) {
+      auto data = get_raw_value();
+      return data;
+    }
+    return nullptr;
+  }
 
   // Initializing with a pointer is dangerous and permitted only internally
   template<typename T2 = T, RLBOX_ENABLE_IF(std::is_pointer_v<T2>)>

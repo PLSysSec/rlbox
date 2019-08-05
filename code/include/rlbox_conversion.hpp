@@ -193,8 +193,9 @@ inline constexpr void convert_type_non_class(
       } else {
         RLBOX_DEBUG_ASSERT(from_c == nullptr ||
                            example_unsandboxed_ptr != nullptr);
-        to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
-          T_From_C>(from_c, example_unsandboxed_ptr);
+        to =
+          rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<T_From_C>(
+            from_c, example_unsandboxed_ptr);
       }
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
@@ -205,8 +206,9 @@ inline constexpr void convert_type_non_class(
         to = sandbox_ptr->template get_unsandboxed_pointer<T_To_C>(from);
       } else {
         RLBOX_DEBUG_ASSERT(from == 0 || example_unsandboxed_ptr != nullptr);
-        to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
-          T_To_C>(from, example_unsandboxed_ptr);
+        to =
+          rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<T_To_C>(
+            from, example_unsandboxed_ptr);
       }
     }
 
