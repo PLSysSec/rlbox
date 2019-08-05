@@ -146,19 +146,28 @@ enum class adjust_type_direction
   NO_CHANGE
 };
 
+enum class adjust_type_context
+{
+  EXAMPLE,
+  SANDBOX
+};
+
 template<typename T_Sbx,
          adjust_type_direction Direction,
+         adjust_type_context Context,
          typename T_To,
          typename T_From>
 inline constexpr void convert_type_non_class(
   T_To& to,
   const T_From& from,
-  const void* example_unsandboxed_ptr)
+  const void* example_unsandboxed_ptr,
+  rlbox_sandbox<T_Sbx>* sandbox_ptr)
 {
   using namespace std;
 
   // Some branches don't use the param
   RLBOX_UNUSED(example_unsandboxed_ptr);
+  RLBOX_UNUSED(sandbox_ptr);
 
   using T_To_C = std_array_to_c_arr_t<T_To>;
   using T_From_C = std_array_to_c_arr_t<T_From>;
@@ -178,14 +187,31 @@ inline constexpr void convert_type_non_class(
       static_assert(is_pointer_v<T_From_C>);
       // Maybe a function pointer, so convert
       auto from_c = reinterpret_cast<const void*>(from);
-      to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
-        remove_pointer_t<T_From_C>>(from_c, example_unsandboxed_ptr);
+      if constexpr (Context == adjust_type_context::SANDBOX) {
+        RLBOX_DEBUG_ASSERT(sandbox_ptr != nullptr);
+        to = sandbox_ptr
+               ->template get_sandboxed_pointer<remove_pointer_t<T_From_C>>(
+                 from_c);
+      } else {
+        RLBOX_DEBUG_ASSERT(from_c == nullptr ||
+                           example_unsandboxed_ptr != nullptr);
+        to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
+          remove_pointer_t<T_From_C>>(from_c, example_unsandboxed_ptr);
+      }
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
 
       static_assert(is_pointer_v<T_To_C>);
-      to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
-        remove_pointer_t<T_To_C>>(from, example_unsandboxed_ptr);
+      if constexpr (Context == adjust_type_context::SANDBOX) {
+        RLBOX_DEBUG_ASSERT(sandbox_ptr != nullptr);
+        to =
+          sandbox_ptr->template get_unsandboxed_pointer<remove_pointer_t<T_To_C>>(
+            from);
+      } else {
+        RLBOX_DEBUG_ASSERT(from == 0 || example_unsandboxed_ptr != nullptr);
+        to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
+          remove_pointer_t<T_To_C>>(from, example_unsandboxed_ptr);
+      }
     }
 
   } else if constexpr (is_pointer_v<T_To_El> || is_pointer_v<T_From_El>) {
@@ -197,8 +223,8 @@ inline constexpr void convert_type_non_class(
       memcpy(&to, &from, sizeof(T_To_C));
     } else {
       for (size_t i = 0; i < std::extent_v<T_To_C>; i++) {
-        convert_type_non_class<T_Sbx, Direction>(
-          to[i], from[i], example_unsandboxed_ptr);
+        convert_type_non_class<T_Sbx, Direction, Context>(
+          to[i], from[i], example_unsandboxed_ptr, sandbox_ptr);
       }
     }
 
@@ -211,6 +237,7 @@ inline constexpr void convert_type_non_class(
 // Have to do this via a class, as functions can't be partially specialized
 template<typename T_Sbx,
          adjust_type_direction Direction,
+         adjust_type_context Context,
          typename T_To,
          typename T_From>
 class convert_type_class;
@@ -223,21 +250,24 @@ class convert_type_class;
 
 template<typename T_Sbx,
          adjust_type_direction Direction,
+         adjust_type_context Context,
          typename T_To,
          typename T_From>
 inline void convert_type(T_To& to,
                          const T_From& from,
-                         const void* example_unsandboxed_ptr)
+                         const void* example_unsandboxed_ptr,
+                         rlbox_sandbox<T_Sbx>* sandbox_ptr)
 {
   if constexpr ((std::is_class_v<T_To> ||
                  std::is_class_v<T_From>)&&!detail::is_std_array_v<T_To> &&
                 !detail::is_std_array_v<T_From>) {
     // Sanity check
     static_assert(std::is_class_v<T_From> && std::is_class_v<T_To>);
-    convert_type_class<T_Sbx, Direction, T_To, T_From>::run(
-      to, from, example_unsandboxed_ptr);
+    convert_type_class<T_Sbx, Direction, Context, T_To, T_From>::run(
+      to, from, example_unsandboxed_ptr, sandbox_ptr);
   } else {
-    convert_type_non_class<T_Sbx, Direction>(to, from, example_unsandboxed_ptr);
+    convert_type_non_class<T_Sbx, Direction, Context>(
+      to, from, example_unsandboxed_ptr, sandbox_ptr);
   }
 }
 

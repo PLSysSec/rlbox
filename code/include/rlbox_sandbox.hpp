@@ -140,12 +140,18 @@ private:
 
   template<typename T, typename T_Arg>
   inline tainted<T, T_Sbx> sandbox_callback_intercept_convert_param(
-    const T_Arg& arg,
-    const void* example_unsandboxed_ptr)
+    rlbox_sandbox<T_Sbx>& sandbox,
+    const T_Arg& arg)
   {
     tainted<T, T_Sbx> ret;
-    detail::convert_type<T_Sbx, detail::adjust_type_direction::TO_APPLICATION>(
-      ret.get_raw_value_ref(), arg, example_unsandboxed_ptr);
+    using namespace detail;
+    convert_type<T_Sbx,
+                 adjust_type_direction::TO_APPLICATION,
+                 adjust_type_context::SANDBOX>(
+      ret.get_raw_value_ref(),
+      arg,
+      nullptr /* example_unsandboxed_ptr */,
+      &sandbox);
     return ret;
   }
 
@@ -164,26 +170,28 @@ private:
     using T_Func =
       T_Func_Ret (*)(rlbox_sandbox<T_Sbx>&, tainted<T_Args, T_Sbx>...);
     auto target_fn_ptr = reinterpret_cast<T_Func>(key);
-    const void* example_unsandboxed_ptr = sandbox.get_memory_location();
-
-    // Some branches (after inlining function calls) don't use the param
-    RLBOX_UNUSED(example_unsandboxed_ptr);
 
     if constexpr (std::is_void_v<T_Func_Ret>) {
       (*target_fn_ptr)(
         sandbox,
         sandbox.template sandbox_callback_intercept_convert_param<T_Args>(
-          args, example_unsandboxed_ptr)...);
+          sandbox, args)...);
       return;
     } else {
       auto tainted_ret = (*target_fn_ptr)(
         sandbox,
         sandbox.template sandbox_callback_intercept_convert_param<T_Args>(
-          args, example_unsandboxed_ptr)...);
+          sandbox, args)...);
 
-      detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx> ret;
-      detail::convert_type<T_Sbx, detail::adjust_type_direction::TO_SANDBOX>(
-        ret, tainted_ret.get_raw_value_ref(), example_unsandboxed_ptr);
+      using namespace detail;
+      convert_to_sandbox_equivalent_t<T_Ret, T_Sbx> ret;
+      convert_type<T_Sbx,
+                   adjust_type_direction::TO_SANDBOX,
+                   adjust_type_context::SANDBOX>(
+        ret,
+        tainted_ret.get_raw_value_ref(),
+        nullptr /* example_unsandboxed_ptr */,
+        &sandbox);
       return ret;
     }
   }
@@ -475,12 +483,14 @@ public:
         reinterpret_cast<T_Converted*>(func_ptr),
         invoke_process_param(params)...);
       tainted<T_Result, T_Sbx> wrapped_result;
-      const void* example_unsandboxed_ptr = get_memory_location();
-      detail::convert_type<T_Sbx,
-                           detail::adjust_type_direction::TO_APPLICATION>(
+      using namespace detail;
+      convert_type<T_Sbx,
+                   adjust_type_direction::TO_APPLICATION,
+                   adjust_type_context::SANDBOX>(
         wrapped_result.get_raw_value_ref(),
         raw_result,
-        example_unsandboxed_ptr);
+        nullptr /* example_unsandboxed_ptr */,
+        this /* sandbox_ptr */);
       return wrapped_result;
     }
   }

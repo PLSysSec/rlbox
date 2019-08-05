@@ -38,6 +38,13 @@ namespace detail {
     static_assert(!(CondExpr), Message)
 #endif
 
+#ifdef RLBOX_ENABLE_DEBUG_ASSERTIONS
+#  define RLBOX_DEBUG_ASSERT(...)                                              \
+    ::rlbox::detail::dynamic_check(__VA_ARGS__, "Debug assertion failed")
+#else
+#  define RLBOX_DEBUG_ASSERT(...) (void)0
+#endif
+
 #define RLBOX_UNUSED(...) (void)__VA_ARGS__
 
 #define RLBOX_REQUIRE_SEMI_COLON static_assert(true)

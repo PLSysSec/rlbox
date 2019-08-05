@@ -598,9 +598,11 @@ private:
       example_unsandboxed_ptr = nullptr;
     }
 
-    detail::convert_type_non_class<T_Sbx,
-                                   detail::adjust_type_direction::TO_SANDBOX>(
-      ret, data, example_unsandboxed_ptr);
+    using namespace detail;
+    convert_type_non_class<T_Sbx,
+                           adjust_type_direction::TO_SANDBOX,
+                           adjust_type_context::EXAMPLE>(
+      ret, data, example_unsandboxed_ptr, nullptr /* sandbox_ptr */);
     return ret;
   };
 
@@ -647,10 +649,14 @@ public:
     // can thus be the example_unsandboxed_ptr
     const volatile void* p_data_ref = &p.get_sandbox_value_ref();
     const void* example_unsandboxed_ptr = const_cast<const void*>(p_data_ref);
-    detail::convert_type_non_class<
-      T_Sbx,
-      detail::adjust_type_direction::TO_APPLICATION>(
-      get_raw_value_ref(), p.get_sandbox_value_ref(), example_unsandboxed_ptr);
+    using namespace detail;
+    convert_type_non_class<T_Sbx,
+                           adjust_type_direction::TO_APPLICATION,
+                           adjust_type_context::EXAMPLE>(
+      get_raw_value_ref(),
+      p.get_sandbox_value_ref(),
+      example_unsandboxed_ptr,
+      nullptr /* sandbox_ptr */);
   }
 
   // Initializing with a pointer is dangerous and permitted only internally
@@ -901,10 +907,11 @@ private:
     // can thus be the example_unsandboxed_ptr
     const volatile void* data_ref = &data;
     const void* example_unsandboxed_ptr = const_cast<const void*>(data_ref);
-    detail::convert_type_non_class<
-      T_Sbx,
-      detail::adjust_type_direction::TO_APPLICATION>(
-      ret, data, example_unsandboxed_ptr);
+    using namespace detail;
+    convert_type_non_class<T_Sbx,
+                           adjust_type_direction::TO_APPLICATION,
+                           adjust_type_context::EXAMPLE>(
+      ret, data, example_unsandboxed_ptr, nullptr /* sandbox_ptr */);
     return ret;
   }
 
@@ -973,19 +980,25 @@ public:
     }
     else if_constexpr_named(cond2, detail::rlbox_is_tainted_v<T_Rhs>)
     {
-      detail::convert_type_non_class<T_Sbx,
-                                     detail::adjust_type_direction::TO_SANDBOX>(
+      using namespace detail;
+      convert_type_non_class<T_Sbx,
+                             adjust_type_direction::TO_SANDBOX,
+                             adjust_type_context::EXAMPLE>(
         get_sandbox_value_ref(),
         val.get_raw_value_ref(),
-        example_unsandboxed_ptr);
+        example_unsandboxed_ptr,
+        nullptr /* sandbox_ptr */);
     }
     else if_constexpr_named(cond3, detail::rlbox_is_tainted_volatile_v<T_Rhs>)
     {
-      detail::convert_type_non_class<T_Sbx,
-                                     detail::adjust_type_direction::NO_CHANGE>(
+      using namespace detail;
+      convert_type_non_class<T_Sbx,
+                             adjust_type_direction::NO_CHANGE,
+                             adjust_type_context::EXAMPLE>(
         get_sandbox_value_ref(),
         val.get_sandbox_value_ref(),
-        example_unsandboxed_ptr);
+        example_unsandboxed_ptr,
+        nullptr /* sandbox_ptr */);
     }
     else if_constexpr_named(cond4,
                             detail::rlbox_is_sandbox_callback_v<T_Rhs> ||

@@ -66,8 +66,8 @@ using convert_to_sandbox_equivalent_t =
   MaybeConst tainted_volatile<fieldType, T_Sbx> fieldName;
 
 #define helper_convert_type(fieldType, fieldName, isFrozen)                    \
-  ::rlbox::detail::convert_type<T_Sbx, Direction>(                             \
-    lhs.fieldName, rhs.fieldName, example_unsandboxed_ptr);
+  ::rlbox::detail::convert_type<T_Sbx, Direction, Context>(                    \
+    lhs.fieldName, rhs.fieldName, example_unsandboxed_ptr, sandbox_ptr);
 
 #define tainted_data_specialization_helper(MaybeConst, T, libId)               \
                                                                                \
@@ -96,9 +96,11 @@ using convert_to_sandbox_equivalent_t =
       const auto& rhs = get_sandbox_value_ref();                               \
       constexpr auto Direction =                                               \
         detail::adjust_type_direction::TO_APPLICATION;                         \
+      constexpr auto Context = detail::adjust_type_context::EXAMPLE;           \
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
+      rlbox_sandbox<T_Sbx>* sandbox_ptr = nullptr;                             \
       sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
                                                                                \
@@ -204,9 +206,12 @@ using convert_to_sandbox_equivalent_t =
       Sbx_##libId##_##T<T_Sbx> lhs;                                            \
       const auto& rhs = get_raw_value_ref();                                   \
       constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;    \
+      constexpr auto Context = detail::adjust_type_context::EXAMPLE;           \
       /* Since direction is TO_SANDBOX, we don't need a */                     \
       /* example_unsandboxed_ptr */                                            \
+      /* FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */                                 \
       const void* example_unsandboxed_ptr = nullptr;                           \
+      rlbox_sandbox<T_Sbx>* sandbox_ptr = nullptr;                             \
       sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
                                                                                \
@@ -239,9 +244,11 @@ using convert_to_sandbox_equivalent_t =
       auto& rhs = p.get_sandbox_value_ref();                                   \
       constexpr auto Direction =                                               \
         detail::adjust_type_direction::TO_APPLICATION;                         \
+      constexpr auto Context = detail::adjust_type_context::EXAMPLE;           \
       /* This is a tainted_volatile, so its address is a valid for use as */   \
       /* example_unsandboxed_ptr */                                            \
       const void* example_unsandboxed_ptr = &rhs;                              \
+      rlbox_sandbox<T_Sbx>* sandbox_ptr = nullptr;                             \
       sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
     }                                                                          \
@@ -285,9 +292,12 @@ using convert_to_sandbox_equivalent_t =
     auto& lhs = get_sandbox_value_ref();                                       \
     auto& rhs = rhs_wrap.get_raw_value_ref();                                  \
     constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;      \
+    constexpr auto Context = detail::adjust_type_context::EXAMPLE;             \
+    /* FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */                                   \
     /* Since direction is TO_SANDBOX, we don't need a */                       \
     /* example_unsandboxed_ptr*/                                               \
     const void* example_unsandboxed_ptr = nullptr;                             \
+    rlbox_sandbox<T_Sbx>* sandbox_ptr = nullptr;                               \
     sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,         \
                                                   helper_no_op)                \
                                                                                \
@@ -302,13 +312,15 @@ using convert_to_sandbox_equivalent_t =
   namespace detail {                                                           \
     template<typename T_Sbx,                                                   \
              detail::adjust_type_direction Direction,                          \
+             adjust_type_context Context,                                      \
              typename T_From>                                                  \
-    class convert_type_class<T_Sbx, Direction, T, T_From>                      \
+    class convert_type_class<T_Sbx, Direction, Context, T, T_From>             \
     {                                                                          \
     public:                                                                    \
       static inline void run(T& lhs,                                           \
                              const T_From& rhs,                                \
-                             const void* example_unsandboxed_ptr)              \
+                             const void* example_unsandboxed_ptr,              \
+                             rlbox_sandbox<T_Sbx>* sandbox_ptr)                \
       {                                                                        \
         sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,     \
                                                       helper_no_op)            \
@@ -317,16 +329,19 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     template<typename T_Sbx,                                                   \
              detail::adjust_type_direction Direction,                          \
+             adjust_type_context Context,                                      \
              typename T_From>                                                  \
     class convert_type_class<T_Sbx,                                            \
                              Direction,                                        \
+                             Context,                                          \
                              Sbx_##libId##_##T<T_Sbx>,                         \
                              T_From>                                           \
     {                                                                          \
     public:                                                                    \
       static inline void run(Sbx_##libId##_##T<T_Sbx>& lhs,                    \
                              const T_From& rhs,                                \
-                             const void* example_unsandboxed_ptr)              \
+                             const void* example_unsandboxed_ptr,              \
+                             rlbox_sandbox<T_Sbx>* sandbox_ptr)                \
       {                                                                        \
         sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,     \
                                                       helper_no_op)            \

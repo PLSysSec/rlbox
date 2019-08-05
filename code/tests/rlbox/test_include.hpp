@@ -11,6 +11,7 @@
 // Convert rlbox's compile time errors to exceptions throws for easy testing
 #define RLBOX_NO_COMPILE_CHECKS
 #define RLBOX_USE_EXCEPTIONS
+#define RLBOX_ENABLE_DEBUG_ASSERTIONS
 #include "rlbox.hpp"
 #include "rlbox_noop_sandbox.hpp"
 
@@ -118,6 +119,8 @@ protected:
     T_PointerType p,
     const void* example_unsandboxed_ptr)
   {
+    RLBOX_UNUSED(example_unsandboxed_ptr);
+    RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
     auto mask = SandboxMemoryBaseMask &
                 reinterpret_cast<uintptr_t>(example_unsandboxed_ptr);
     return reinterpret_cast<void*>(mask + static_cast<uintptr_t>(p));
@@ -126,8 +129,10 @@ protected:
   template<typename T>
   static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
     const void* p,
-    const void* /* example_unsandboxed_ptr */)
+    const void* example_unsandboxed_ptr)
   {
+    RLBOX_UNUSED(example_unsandboxed_ptr);
+    RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
     auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
     return static_cast<T_PointerType>(ret);
   }
