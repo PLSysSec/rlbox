@@ -99,8 +99,9 @@ TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
   {
     const uint32_t val1 = 20;
     const auto u32Max = std::numeric_limits<std::uint32_t>::max();
-    auto ret2 = sandbox.invoke_sandbox_function(simpleU64AddTest, u32Max, val1);
-    uint64_t result = static_cast<uint64_t>(u32Max) + val1;
+    auto ret2 =
+      sandbox.invoke_sandbox_function(simpleLongAddTest, u32Max, val1);
+    auto result = static_cast<long>(u32Max) + val1; // NOLINT
     REQUIRE(ret2.UNSAFE_unverified() == result);
   }
 

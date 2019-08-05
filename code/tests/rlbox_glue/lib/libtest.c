@@ -65,9 +65,9 @@ double simpleDoubleAddTest(const double a, const double b)
   return a + b;
 }
 
-uint64_t simpleU64AddTest(uint64_t a, uint64_t b)
+unsigned long simpleLongAddTest(unsigned long a, unsigned long b)
 {
-  printf("simpleU64AddTest\n");
+  printf("simpleLongAddTest\n");
   fflush(stdout);
   return a + b;
 }

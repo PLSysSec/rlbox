@@ -50,7 +50,7 @@ extern "C"
   char* simpleEchoTest(char* str);
   float simpleFloatAddTest(const float a, const float b);
   double simpleDoubleAddTest(const double a, const double b);
-  uint64_t simpleU64AddTest(uint64_t a, uint64_t b);
+  unsigned long simpleLongAddTest(unsigned long a, unsigned long b);
   struct testStruct simpleTestStructVal();
   struct testStruct* simpleTestStructPtr();
   struct testStruct simpleTestStructValBadPtr();

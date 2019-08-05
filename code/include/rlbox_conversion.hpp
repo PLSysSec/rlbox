@@ -205,8 +205,8 @@ inline constexpr void convert_type_non_class(
       if constexpr (Context == adjust_type_context::SANDBOX) {
         RLBOX_DEBUG_ASSERT(sandbox_ptr != nullptr);
         to =
-          sandbox_ptr->template get_unsandboxed_pointer<remove_pointer_t<T_To_C>>(
-            from);
+          sandbox_ptr
+            ->template get_unsandboxed_pointer<remove_pointer_t<T_To_C>>(from);
       } else {
         RLBOX_DEBUG_ASSERT(from == 0 || example_unsandboxed_ptr != nullptr);
         to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
