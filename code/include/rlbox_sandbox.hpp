@@ -277,20 +277,22 @@ public:
   }
 
   template<typename T>
-  inline T* get_unsandboxed_pointer(
-    convert_to_sandbox_equivalent_nonclass_t<T*> p) const
+  inline T get_unsandboxed_pointer(
+    convert_to_sandbox_equivalent_nonclass_t<T> p) const
   {
+    static_assert(std::is_pointer_v<T>);
     if (p == 0) {
       return nullptr;
     }
     auto ret = this->template impl_get_unsandboxed_pointer<T>(p);
-    return reinterpret_cast<T*>(ret);
+    return reinterpret_cast<T>(ret);
   }
 
   template<typename T>
-  inline convert_to_sandbox_equivalent_nonclass_t<T*> get_sandboxed_pointer(
+  inline convert_to_sandbox_equivalent_nonclass_t<T> get_sandboxed_pointer(
     const void* p) const
   {
+    static_assert(std::is_pointer_v<T>);
     if (p == nullptr) {
       return 0;
     }
@@ -298,23 +300,25 @@ public:
   }
 
   template<typename T>
-  static inline T* get_unsandboxed_pointer_no_ctx(
-    convert_to_sandbox_equivalent_nonclass_t<T*> p,
+  static inline T get_unsandboxed_pointer_no_ctx(
+    convert_to_sandbox_equivalent_nonclass_t<T> p,
     const void* example_unsandboxed_ptr)
   {
+    static_assert(std::is_pointer_v<T>);
     if (p == 0) {
       return nullptr;
     }
     auto ret = T_Sbx::template impl_get_unsandboxed_pointer_no_ctx<T>(
       p, example_unsandboxed_ptr);
-    return reinterpret_cast<T*>(ret);
+    return reinterpret_cast<T>(ret);
   }
 
   template<typename T>
-  static inline convert_to_sandbox_equivalent_nonclass_t<T*>
+  static inline convert_to_sandbox_equivalent_nonclass_t<T>
   get_sandboxed_pointer_no_ctx(const void* p,
                                const void* example_unsandboxed_ptr)
   {
+    static_assert(std::is_pointer_v<T>);
     if (p == nullptr) {
       return 0;
     }
@@ -362,7 +366,7 @@ public:
 
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
-    auto ptr = get_unsandboxed_pointer<T>(ptr_in_sandbox);
+    auto ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
     detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
                           "Malloc returned pointer outside the sandbox memory");
     auto ptr_end = reinterpret_cast<uintptr_t>(ptr + (count - 1));

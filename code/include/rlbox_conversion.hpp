@@ -189,14 +189,12 @@ inline constexpr void convert_type_non_class(
       auto from_c = reinterpret_cast<const void*>(from);
       if constexpr (Context == adjust_type_context::SANDBOX) {
         RLBOX_DEBUG_ASSERT(sandbox_ptr != nullptr);
-        to = sandbox_ptr
-               ->template get_sandboxed_pointer<remove_pointer_t<T_From_C>>(
-                 from_c);
+        to = sandbox_ptr->template get_sandboxed_pointer<T_From_C>(from_c);
       } else {
         RLBOX_DEBUG_ASSERT(from_c == nullptr ||
                            example_unsandboxed_ptr != nullptr);
         to = rlbox_sandbox<T_Sbx>::template get_sandboxed_pointer_no_ctx<
-          remove_pointer_t<T_From_C>>(from_c, example_unsandboxed_ptr);
+          T_From_C>(from_c, example_unsandboxed_ptr);
       }
 
     } else if constexpr (Direction == adjust_type_direction::TO_APPLICATION) {
@@ -204,13 +202,11 @@ inline constexpr void convert_type_non_class(
       static_assert(is_pointer_v<T_To_C>);
       if constexpr (Context == adjust_type_context::SANDBOX) {
         RLBOX_DEBUG_ASSERT(sandbox_ptr != nullptr);
-        to =
-          sandbox_ptr
-            ->template get_unsandboxed_pointer<remove_pointer_t<T_To_C>>(from);
+        to = sandbox_ptr->template get_unsandboxed_pointer<T_To_C>(from);
       } else {
         RLBOX_DEBUG_ASSERT(from == 0 || example_unsandboxed_ptr != nullptr);
         to = rlbox_sandbox<T_Sbx>::template get_unsandboxed_pointer_no_ctx<
-          remove_pointer_t<T_To_C>>(from, example_unsandboxed_ptr);
+          T_To_C>(from, example_unsandboxed_ptr);
       }
     }
 
