@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 #include <utility>
 
 #include "rlbox_helpers.hpp"
@@ -26,7 +27,7 @@ public:
   using T_ShortType = short;
 
 private:
-  std::mutex callback_mutex;
+  std::shared_mutex callback_mutex;
   static inline const uint32_t MAX_CALLBACKS = 64;
   void* callback_unique_keys[MAX_CALLBACKS]{ 0 };
   void* callbacks[MAX_CALLBACKS]{ 0 };
@@ -45,7 +46,11 @@ private:
   {
     thread_data->last_callback_invoked = N;
     using T_Func = T_Ret (*)(T_Args...);
-    T_Func func = reinterpret_cast<T_Func>(thread_data->sandbox->callbacks[N]);
+    T_Func func;
+    {
+      std::shared_lock lock(thread_data->sandbox->callback_mutex);
+      func = reinterpret_cast<T_Func>(thread_data->sandbox->callbacks[N]);
+    }
     // Callbacks are invoked through function pointers, cannot use std::forward
     // as we don't have caller context for T_Args, which means they are all
     // effectively passed by value
@@ -148,7 +153,7 @@ protected:
   template<typename T_Ret, typename... T_Args>
   inline T_PointerType impl_register_callback(void* key, void* callback)
   {
-    std::lock_guard<std::mutex> lock(callback_mutex);
+    std::unique_lock lock(callback_mutex);
 
     void* chosen_trampoline = nullptr;
 
@@ -178,7 +183,7 @@ protected:
   template<typename T_Ret, typename... T_Args>
   inline void impl_unregister_callback(void* key)
   {
-    std::lock_guard<std::mutex> lock(callback_mutex);
+    std::unique_lock lock(callback_mutex);
     for (uint32_t i = 0; i < MAX_CALLBACKS; i++) {
       if (callback_unique_keys[i] == key) {
         callback_unique_keys[i] = nullptr;

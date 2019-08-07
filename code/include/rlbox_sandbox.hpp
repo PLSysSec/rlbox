@@ -209,7 +209,9 @@ private:
       return;
     }
 
-    this->template impl_unregister_callback<T_Ret, T_Args...>(key);
+    this->template impl_unregister_callback<
+      detail::convert_to_sandbox_equivalent_t<T_Ret, T_Sbx>,
+      detail::convert_to_sandbox_equivalent_t<T_Args, T_Sbx>...>(key);
 
     std::lock_guard<std::mutex> lock(callback_lock);
     auto el_ref = std::find(callback_keys.begin(), callback_keys.end(), key);
@@ -627,9 +629,12 @@ public:
                                      detail::rlbox_remove_wrapper_t<T_Args>...>;
 
       auto callback_trampoline = this->template impl_register_callback<
-        detail::rlbox_remove_wrapper_t<T_Ret>,
-        detail::rlbox_remove_wrapper_t<T_Args>...>(
-        unique_key, reinterpret_cast<void*>(callback_interceptor));
+        detail::convert_to_sandbox_equivalent_t<
+          detail::rlbox_remove_wrapper_t<T_Ret>,
+          T_Sbx>,
+        detail::convert_to_sandbox_equivalent_t<
+          detail::rlbox_remove_wrapper_t<T_Args>,
+          T_Sbx>...>(unique_key, reinterpret_cast<void*>(callback_interceptor));
 
       auto tainted_func_ptr = reinterpret_cast<
         detail::rlbox_tainted_opaque_to_tainted_t<T_Ret, T_Sbx> (*)(
