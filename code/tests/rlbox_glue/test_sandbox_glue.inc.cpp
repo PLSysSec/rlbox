@@ -278,8 +278,9 @@ TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
       ret.fieldLong = val.fieldLong.UNSAFE_unverified();
 
       ret.fieldString = val.fieldString.copy_and_verify_string(
-        [](std::unique_ptr<const char[]> val) { // NOLINT
-          return std::strlen(val.get()) < upper_bound ? val.release() : nullptr;
+        [](std::unique_ptr<const char[]> s_val) { // NOLINT
+          return std::strlen(s_val.get()) < upper_bound ? s_val.release()
+                                                        : nullptr;
         });
 
       ret.fieldBool = val.fieldBool.UNSAFE_unverified();
@@ -309,9 +310,9 @@ TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
         ret.fieldLong = val->fieldLong.UNSAFE_unverified();
 
         ret.fieldString = val->fieldString.copy_and_verify_string(
-          [](std::unique_ptr<const char[]> val) { // NOLINT
-            return std::strlen(val.get()) < upper_bound ? val.release()
-                                                        : nullptr;
+          [](std::unique_ptr<const char[]> s_val) { // NOLINT
+            return std::strlen(s_val.get()) < upper_bound ? s_val.release()
+                                                          : nullptr;
           });
 
         ret.fieldBool = val->fieldBool.UNSAFE_unverified();
