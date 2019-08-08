@@ -22,14 +22,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="114" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="114" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="121" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="121" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="113" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="112" bodyend="115"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="120" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="119" bodyend="122"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num_1a3ebecc6d20c6b147ad13c12b152999a7" prot="public" virt="non-virtual"><scope>rlbox::detail::compile_time_for_detail::num</scope><name>value</name></member>
     </listofallmembers>

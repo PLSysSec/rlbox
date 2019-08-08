@@ -47,6 +47,30 @@
         </inbodydescription>
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="143" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="142" bodyend="147"/>
       </memberdef>
+      <memberdef kind="enum" id="rlbox__conversion_8hpp_1a5a3b9c76c19b206d201bb40587dd6541" prot="public" static="no">
+        <name>adjust_type_context</name>
+        <enumvalue id="dummy_1a5a3b9c76c19b206d201bb40587dd6541a8e3b72508e05135569ace4ed9b96d137" prot="public">
+          <name>EXAMPLE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="dummy_1a5a3b9c76c19b206d201bb40587dd6541a439d8eeff1670efd5d1eb2a4232254e8" prot="public">
+          <name>SANDBOX</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="150" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="149" bodyend="153"/>
+      </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="rlbox__struct__support_8hpp_1a6893d831ac11c4bdfa351ad53dce439d" prot="public" static="no">
@@ -658,7 +682,7 @@
         </inbodydescription>
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="94" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="94" bodyend="140"/>
       </memberdef>
-      <memberdef kind="function" id="rlbox__conversion_8hpp_1a2ed80f830da97410e14f5125d705a326" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1ae51d34c3bc1a5c02d613f4d822307700" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T_Sbx</type>
@@ -669,6 +693,11 @@
             <defname>Direction</defname>
           </param>
           <param>
+            <type>adjust_type_context</type>
+            <declname>Context</declname>
+            <defname>Context</defname>
+          </param>
+          <param>
             <type>typename T_To</type>
           </param>
           <param>
@@ -677,7 +706,7 @@
         </templateparamlist>
         <type>constexpr void</type>
         <definition>constexpr void rlbox::detail::convert_type_non_class</definition>
-        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr)</argsstring>
+        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr, rlbox_sandbox&lt; T_Sbx &gt; *sandbox_ptr)</argsstring>
         <name>convert_type_non_class</name>
         <param>
           <type>T_To &amp;</type>
@@ -691,15 +720,19 @@
           <type>const void *</type>
           <declname>example_unsandboxed_ptr</declname>
         </param>
+        <param>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; *</type>
+          <declname>sandbox_ptr</declname>
+        </param>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="153" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="153" bodyend="208"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="160" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="160" bodyend="232"/>
       </memberdef>
-      <memberdef kind="function" id="rlbox__conversion_8hpp_1a7baced3855f0d4daf1aacec5202b0d23" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="rlbox__conversion_8hpp_1a432ec36a1ee45ecd65269f1fb1239b74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T_Sbx</type>
@@ -710,41 +743,9 @@
             <defname>Direction</defname>
           </param>
           <param>
-            <type>typename T_To</type>
-          </param>
-          <param>
-            <type>typename T_From</type>
-          </param>
-        </templateparamlist>
-        <type>constexpr void</type>
-        <definition>constexpr void rlbox::detail::convert_type_non_class</definition>
-        <argsstring>(T_To &amp;to, const T_From &amp;from)</argsstring>
-        <name>convert_type_non_class</name>
-        <param>
-          <type>T_To &amp;</type>
-          <declname>to</declname>
-        </param>
-        <param>
-          <type>const T_From &amp;</type>
-          <declname>from</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="214" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="214" bodyend="222"/>
-      </memberdef>
-      <memberdef kind="function" id="rlbox__conversion_8hpp_1af92540ff61212d0b1b32c9688274b992" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <templateparamlist>
-          <param>
-            <type>typename T_Sbx</type>
-          </param>
-          <param>
-            <type>adjust_type_direction</type>
-            <declname>Direction</declname>
-            <defname>Direction</defname>
+            <type>adjust_type_context</type>
+            <declname>Context</declname>
+            <defname>Context</defname>
           </param>
           <param>
             <type>typename T_To</type>
@@ -755,7 +756,7 @@
         </templateparamlist>
         <type>void</type>
         <definition>void rlbox::detail::convert_type</definition>
-        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr)</argsstring>
+        <argsstring>(T_To &amp;to, const T_From &amp;from, const void *example_unsandboxed_ptr, rlbox_sandbox&lt; T_Sbx &gt; *sandbox_ptr)</argsstring>
         <name>convert_type</name>
         <param>
           <type>T_To &amp;</type>
@@ -769,42 +770,9 @@
           <type>const void *</type>
           <declname>example_unsandboxed_ptr</declname>
         </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="242" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="242" bodyend="256"/>
-      </memberdef>
-      <memberdef kind="function" id="rlbox__conversion_8hpp_1a78ceb1b1bca845af4e166acd38cfa967" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <templateparamlist>
-          <param>
-            <type>typename T_Sbx</type>
-          </param>
-          <param>
-            <type>adjust_type_direction</type>
-            <declname>Direction</declname>
-            <defname>Direction</defname>
-          </param>
-          <param>
-            <type>typename T_To</type>
-          </param>
-          <param>
-            <type>typename T_From</type>
-          </param>
-        </templateparamlist>
-        <type>constexpr void</type>
-        <definition>constexpr void rlbox::detail::convert_type</definition>
-        <argsstring>(T_To &amp;to, const T_From &amp;from)</argsstring>
-        <name>convert_type</name>
         <param>
-          <type>T_To &amp;</type>
-          <declname>to</declname>
-        </param>
-        <param>
-          <type>const T_From &amp;</type>
-          <declname>from</declname>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; *</type>
+          <declname>sandbox_ptr</declname>
         </param>
         <briefdescription>
         </briefdescription>
@@ -812,7 +780,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="262" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="262" bodyend="270"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" line="254" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp" bodystart="254" bodyend="270"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1a08adddb7654716b5b85fa91f0e7f27cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -853,7 +821,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="49" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="49" bodyend="58"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="56" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="56" bodyend="65"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1ac1cb27fdc5cead24eebfac5d97ffb208" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -875,7 +843,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="103" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="103" bodyend="107"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="110" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="110" bodyend="114"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1a459e96f592f5ddb4067da56441373d54" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -902,7 +870,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="125" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="125" bodyend="129"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="132" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="132" bodyend="136"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1ada946cbeddac61199d28701c5a3e251a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -931,7 +899,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="132" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="132" bodyend="144"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="139" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="139" bodyend="151"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__range_8hpp_1aa16bb3815e90212d3f756f037abb933e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>

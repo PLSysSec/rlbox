@@ -11,8 +11,7 @@ Encapsulation for sandboxes.
 
 
 
-Inheritance diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:
-\nopagebreak
+Inheritance diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -21,8 +20,7 @@ Inheritance diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:
 \end{figure}
 
 
-Collaboration diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:
-\nopagebreak
+Collaboration diagram for rlbox\+:\+:rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -49,11 +47,11 @@ T\+\_\+\+Sbx $\ast$ {\bfseries get\+\_\+sandbox\+\_\+impl} ()
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}\label{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}} 
 auto \hyperlink{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}{destroy\+\_\+sandbox} ()
 \begin{DoxyCompactList}\small\item\em Destroy sandbox and reclaim any memory. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a76a853547e516435fe4536d6d5bd4c0d}\label{classrlbox_1_1rlbox__sandbox_a76a853547e516435fe4536d6d5bd4c0d}} 
-{\footnotesize template$<$typename T $>$ }\\T $\ast$ {\bfseries get\+\_\+unsandboxed\+\_\+pointer} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$$>$ p) const
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a4776bcab38dc24395657d2c437e36fc8}\label{classrlbox_1_1rlbox__sandbox_a4776bcab38dc24395657d2c437e36fc8}} 
+{\footnotesize template$<$typename T $>$ }\\T {\bfseries get\+\_\+unsandboxed\+\_\+pointer} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $>$ p) const
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a3069e9c6c67a12aff85af0e7b7068b98}\label{classrlbox_1_1rlbox__sandbox_a3069e9c6c67a12aff85af0e7b7068b98}} 
-{\footnotesize template$<$typename T $>$ }\\convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$ $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer} (const void $\ast$p) const
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_aaef51e55536f08aa4c642f21d0de8008}\label{classrlbox_1_1rlbox__sandbox_aaef51e55536f08aa4c642f21d0de8008}} 
+{\footnotesize template$<$typename T $>$ }\\convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer} (const void $\ast$p) const
 \item 
 {\footnotesize template$<$typename T $>$ }\\\hyperlink{classrlbox_1_1tainted}{tainted}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \hyperlink{classrlbox_1_1rlbox__sandbox_ab6ecbc8d0d69a3305912fe92882ef6b9}{malloc\+\_\+in\+\_\+sandbox} ()
 \begin{DoxyCompactList}\small\item\em Allocate a new pointer that is accessible to both the application and sandbox. The pointer is allocated in sandbox memory. \end{DoxyCompactList}\item 
@@ -99,11 +97,11 @@ void $\ast$ {\bfseries lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a2fbafbb1cb567e11a869b0080e431d06}\label{classrlbox_1_1rlbox__sandbox_a2fbafbb1cb567e11a869b0080e431d06}} 
-{\footnotesize template$<$typename T $>$ }\\static T $\ast$ {\bfseries get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$$>$ p, const void $\ast$example\+\_\+unsandboxed\+\_\+ptr)
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a030d5e296cdeb24cd4ca99a5cbe0ea39}\label{classrlbox_1_1rlbox__sandbox_a030d5e296cdeb24cd4ca99a5cbe0ea39}} 
+{\footnotesize template$<$typename T $>$ }\\static T {\bfseries get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $>$ p, const void $\ast$example\+\_\+unsandboxed\+\_\+ptr)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a78289528bb404a0624b9bfc3675f3c58}\label{classrlbox_1_1rlbox__sandbox_a78289528bb404a0624b9bfc3675f3c58}} 
-{\footnotesize template$<$typename T $>$ }\\static convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $\ast$ $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (const void $\ast$p)
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a37e1e1468b883faf8a878b3c0a221d39}\label{classrlbox_1_1rlbox__sandbox_a37e1e1468b883faf8a878b3c0a221d39}} 
+{\footnotesize template$<$typename T $>$ }\\static convert\+\_\+to\+\_\+sandbox\+\_\+equivalent\+\_\+nonclass\+\_\+t$<$ T $>$ {\bfseries get\+\_\+sandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (const void $\ast$p, const void $\ast$example\+\_\+unsandboxed\+\_\+ptr)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}\label{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}} 
 static bool \hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\+\_\+in\+\_\+same\+\_\+sandbox} (const void $\ast$p1, const void $\ast$p2)

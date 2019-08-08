@@ -86,7 +86,7 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1aad50443cb7733460ca536ffd553aad08" kind="typedef"><name>T_IntType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a909dbb8c3226fbcd19171c0548f21acf" kind="typedef"><name>T_PointerType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a0bacaced018f138bf097b8e854c3ad5f" kind="typedef"><name>T_ShortType</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a451470911790f1e6568dd425dd7f328b" kind="variable"><name>callback_mutex</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a1f803a3a07b80d3ed3ebac5ccf8a6e35" kind="variable"><name>callback_mutex</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a90051b6a6df7ba775ec917cd9cc8d029" kind="variable"><name>callback_unique_keys</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9350bc978320601504c5ae747ba35596" kind="variable"><name>callbacks</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1abe0dfb0cde9dbc85eee3fc37cac7a6e5" kind="variable"><name>MAX_CALLBACKS</name></member>
@@ -106,8 +106,8 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a0833932a29d618a1ab9d047e4a215657" kind="function"><name>impl_invoke_with_func_ptr</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1ae787e181a8d293b115c0890e8036f03e" kind="function"><name>impl_register_callback</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a2949f30bdc7cdc297042465818357ca0" kind="function"><name>impl_unregister_callback</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1afae688a22b4d5e7f83dca0bf7fa41d9a" kind="function"><name>impl_get_unsandboxed_pointer_no_ctx</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1aaa067f45504c3f37642d202562dbaa30" kind="function"><name>impl_get_sandboxed_pointer_no_ctx</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1ad8e4d197b5da2ed5028b96ebe03c81dd" kind="function"><name>impl_get_unsandboxed_pointer_no_ctx</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a267c49ce62893a37fc138d7a26c30123" kind="function"><name>impl_get_sandboxed_pointer_no_ctx</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a5f720e5813f800fe573b028ce363760a" kind="function"><name>impl_is_in_same_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a4166590503035668cd74a63755cd1167" kind="function"><name>impl_get_executed_callback_sandbox_and_key</name></member>
   </compound>
@@ -116,25 +116,32 @@
     <member refid="structrlbox_1_1rlbox__noop__sandbox_1_1rlbox__noop__sandbox__thread__local_1aafc9e163c9e2409eb16bdcf2b74470dd" kind="variable"><name>last_callback_invoked</name></member>
   </compound>
   <compound refid="classrlbox_1_1rlbox__sandbox" kind="class"><name>rlbox::rlbox_sandbox</name>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72c" kind="enum"><name>Sandbox_Status</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72ca2187e848d98cc04d522fc140d2d0d4a0" kind="enumvalue"><name>NOT_CREATED</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72ca86bf8c89d85949f8f45cde2f73fce113" kind="enumvalue"><name>INITIALIZING</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72ca98690bf632c29c17c9e4c5a64069903c" kind="enumvalue"><name>CREATED</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72ca60a404d7387c1de8c46e179446aa6536" kind="enumvalue"><name>CLEANING_UP</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a24201ea4d4fa6923d41cc3916466095e" kind="typedef"><name>convert_fn_ptr_to_sandbox_equivalent_t</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a2236c8f780e2fbb505b616a05d632298" kind="typedef"><name>convert_to_sandbox_equivalent_nonclass_t</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a09c972acd976ab264478c3abd32f8383" kind="typedef"><name>T_Cb_no_wrap</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1ac0e9d8fb184c64298d2e5270dca4711c" kind="variable"><name>func_ptr_cache_lock</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a3a288e0198ccb541eeef0e9b93983de9" kind="variable"><name>sandbox_list_lock</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1ab052abf0169e7efc9a6cb38a3b5b9cf1" kind="variable"><name>sandbox_list</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a7d54aef4415ae791c298f1ee38fa080e" kind="variable"><name>func_ptr_cache_lock</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a2518efbb4e7c12d050fa555f121ee165" kind="variable"><name>func_ptr_map</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a5d18fb23cde7778463c2972dae098ab6" kind="variable"><name>creation_lock</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a65dd92494f48d9f7b7b49c488455f0fc" kind="variable"><name>sandbox_created</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1ae9542cd3cc19b7655958aa4332adbe60" kind="variable"><name>sandbox_created</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a08803ef5d6b029a8b31c34df70322f51" kind="variable"><name>callback_lock</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ae65aee474d232b3737e07638df545f3d" kind="variable"><name>callback_keys</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a29b5ec5468651f2ac34eb5107163b93b" kind="function"><name>check_invoke_param_type_is_ok</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a9d7fe6306db467d3949862346084aeed" kind="function"><name>invoke_process_param</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1aeda5e48d6689c40ad43701d2f102ac15" kind="function"><name>sandbox_callback_intercept_convert_param</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a4c4c49f996b6cc9040fb9e09a8cc4ae8" kind="function"><name>sandbox_callback_intercept_convert_param</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1abded0a7d6c2b1c5505be3d0c87817c96" kind="function"><name>unregister_callback</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ac6a40ac359d24d397bdfa65c95e04351" kind="function"><name>sandbox_callback_interceptor</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a0695cfcf47345344e02d1d4ba058337d" kind="function"><name>find_sandbox_from_example</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a32de91755a582024dc43b879ef192b2c" kind="function"><name>get_sandbox_impl</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a7b938866462f607bcc069770c1bc1ba6" kind="function"><name>create_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ac2be161ed2183fa8bc319232a8d74da6" kind="function"><name>destroy_sandbox</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a76a853547e516435fe4536d6d5bd4c0d" kind="function"><name>get_unsandboxed_pointer</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a3069e9c6c67a12aff85af0e7b7068b98" kind="function"><name>get_sandboxed_pointer</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a4776bcab38dc24395657d2c437e36fc8" kind="function"><name>get_unsandboxed_pointer</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1aaef51e55536f08aa4c642f21d0de8008" kind="function"><name>get_sandboxed_pointer</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ab6ecbc8d0d69a3305912fe92882ef6b9" kind="function"><name>malloc_in_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a967ee4efa3c49a4493eaeda65b338e70" kind="function"><name>malloc_in_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a775b1828f996dc8f14f24a296096e0e3" kind="function"><name>free_in_sandbox</name></member>
@@ -150,8 +157,8 @@
     <member refid="classrlbox_1_1rlbox__sandbox_1ae4f4cc7825bcb613ab5405e0f6cae7f3" kind="function"><name>register_callback</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a5bee54535b32114c36b56672cb1996d2" kind="function"><name>INTERNAL_get_sandbox_function_name</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1aa0585f98cac7d66c4ed0616fe7f80d79" kind="function"><name>INTERNAL_get_sandbox_function_ptr</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a2fbafbb1cb567e11a869b0080e431d06" kind="function"><name>get_unsandboxed_pointer_no_ctx</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a78289528bb404a0624b9bfc3675f3c58" kind="function"><name>get_sandboxed_pointer_no_ctx</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a030d5e296cdeb24cd4ca99a5cbe0ea39" kind="function"><name>get_unsandboxed_pointer_no_ctx</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a37e1e1468b883faf8a878b3c0a221d39" kind="function"><name>get_sandboxed_pointer_no_ctx</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a3257ffc0e7eb6022c05a049b8b36271f" kind="function"><name>is_in_same_sandbox</name></member>
   </compound>
   <compound refid="classrlbox_1_1sandbox__callback" kind="class"><name>rlbox::sandbox_callback</name>
@@ -201,6 +208,7 @@
     <member refid="classrlbox_1_1tainted_1aa6c4d2757435b392e7cbe1439a207906" kind="function"><name>get_raw_sandbox_value</name></member>
     <member refid="classrlbox_1_1tainted_1a147158d7886e87739fb9b33a0eb04fb6" kind="function"><name>get_raw_value</name></member>
     <member refid="classrlbox_1_1tainted_1a84213fa99947b164c38bf48907ad4e38" kind="function"><name>get_raw_sandbox_value</name></member>
+    <member refid="classrlbox_1_1tainted_1a663eecfe40c7e2b035f053e5be2c4205" kind="function"><name>find_example_pointer_or_null</name></member>
     <member refid="classrlbox_1_1tainted_1a36c62c03a01b8103002454cc51668f7b" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a3b9616dc9cc5cbb68adc03fed4bcd03f" kind="function"><name>internal_factory</name></member>
     <member refid="classrlbox_1_1tainted_1a14b6619ffb3dd7c53981ec46de1d42a6" kind="function"><name>tainted</name></member>
@@ -336,6 +344,9 @@
     <member refid="dummy_1acd204e77f742a7cf5215f456a2677b62a0c41fec6212c7ed07f6595c0a2e4a521" kind="enumvalue"><name>TO_SANDBOX</name></member>
     <member refid="dummy_1acd204e77f742a7cf5215f456a2677b62a11cc93bb5791b5984b50753170096eae" kind="enumvalue"><name>TO_APPLICATION</name></member>
     <member refid="dummy_1acd204e77f742a7cf5215f456a2677b62a1b7e0a590f9d0878bcc4b725e2998cb1" kind="enumvalue"><name>NO_CHANGE</name></member>
+    <member refid="rlbox__conversion_8hpp_1a5a3b9c76c19b206d201bb40587dd6541" kind="enum"><name>adjust_type_context</name></member>
+    <member refid="dummy_1a5a3b9c76c19b206d201bb40587dd6541a8e3b72508e05135569ace4ed9b96d137" kind="enumvalue"><name>EXAMPLE</name></member>
+    <member refid="dummy_1a5a3b9c76c19b206d201bb40587dd6541a439d8eeff1670efd5d1eb2a4232254e8" kind="enumvalue"><name>SANDBOX</name></member>
     <member refid="rlbox__struct__support_8hpp_1a6893d831ac11c4bdfa351ad53dce439d" kind="typedef"><name>convert_to_sandbox_equivalent_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1a3ddffb884929ee28827b8779abac9e78" kind="typedef"><name>valid_return_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1aa4f754ad333ab2dd478227edd4fd468f" kind="typedef"><name>valid_param_t</name></member>
@@ -372,10 +383,8 @@
     <member refid="rlbox__wrapper__traits_8hpp_1a409b86a11a1b49a27d1ab3de6f9996c0" kind="variable"><name>is_member_of_rlbox_detail</name></member>
     <member refid="rlbox__conversion_8hpp_1aa47f69d8d61fdb7f3b04359499132cb8" kind="function"><name>convert_type_fundamental</name></member>
     <member refid="rlbox__conversion_8hpp_1ac870100ac9bbc092e7d30fcf5027b0bf" kind="function"><name>convert_type_fundamental_or_array</name></member>
-    <member refid="rlbox__conversion_8hpp_1a2ed80f830da97410e14f5125d705a326" kind="function"><name>convert_type_non_class</name></member>
-    <member refid="rlbox__conversion_8hpp_1a7baced3855f0d4daf1aacec5202b0d23" kind="function"><name>convert_type_non_class</name></member>
-    <member refid="rlbox__conversion_8hpp_1af92540ff61212d0b1b32c9688274b992" kind="function"><name>convert_type</name></member>
-    <member refid="rlbox__conversion_8hpp_1a78ceb1b1bca845af4e166acd38cfa967" kind="function"><name>convert_type</name></member>
+    <member refid="rlbox__conversion_8hpp_1ae51d34c3bc1a5c02d613f4d822307700" kind="function"><name>convert_type_non_class</name></member>
+    <member refid="rlbox__conversion_8hpp_1a432ec36a1ee45ecd65269f1fb1239b74" kind="function"><name>convert_type</name></member>
     <member refid="rlbox__helpers_8hpp_1a08adddb7654716b5b85fa91f0e7f27cf" kind="function"><name>dynamic_check</name></member>
     <member refid="rlbox__helpers_8hpp_1a4b876f895c98f2bc7f4d820462002482" kind="function"><name>printTypes</name></member>
     <member refid="rlbox__helpers_8hpp_1ac1cb27fdc5cead24eebfac5d97ffb208" kind="function"><name>remove_volatile_from_ptr_cast</name></member>
@@ -432,6 +441,7 @@
   </compound>
   <compound refid="rlbox__helpers_8hpp" kind="file"><name>rlbox_helpers.hpp</name>
     <member refid="rlbox__helpers_8hpp_1ad299627a1baea4d034db89313f2543a9" kind="define"><name>rlbox_detail_static_fail_because</name></member>
+    <member refid="rlbox__helpers_8hpp_1a9aeaa68e3fa8d629fd1676022e125efd" kind="define"><name>RLBOX_DEBUG_ASSERT</name></member>
     <member refid="rlbox__helpers_8hpp_1aa951ef1ac3c130c23dab718b23eb7f52" kind="define"><name>RLBOX_UNUSED</name></member>
     <member refid="rlbox__helpers_8hpp_1ae89c6b928ee7a5607cf555dcc7346b56" kind="define"><name>RLBOX_REQUIRE_SEMI_COLON</name></member>
     <member refid="rlbox__helpers_8hpp_1ae5ac8bd87a92fc820e651db0f6942f12" kind="define"><name>if_constexpr_named</name></member>
@@ -462,6 +472,7 @@
     <member refid="rlbox__struct__support_8hpp_1adfc1222dc6c153916e2ab3370425fbd1" kind="define"><name>helper_create_tainted_field</name></member>
     <member refid="rlbox__struct__support_8hpp_1ac300f7cdcd5fb3bdbe034465fbe2048f" kind="define"><name>helper_create_tainted_vol_field</name></member>
     <member refid="rlbox__struct__support_8hpp_1acf76d2e53d2e3c64e3fbbcde972b2cf7" kind="define"><name>helper_convert_type</name></member>
+    <member refid="rlbox__struct__support_8hpp_1ac961029f6961360f32b911c05c08a023" kind="define"><name>helper_find_example_pointer_or_null</name></member>
     <member refid="rlbox__struct__support_8hpp_1a011914c063f7799a917d1cd48bc54c3e" kind="define"><name>tainted_data_specialization_helper</name></member>
     <member refid="rlbox__struct__support_8hpp_1a004dfaa7b53941d083afe0e887cd4b8b" kind="define"><name>tainted_data_specialization</name></member>
     <member refid="rlbox__struct__support_8hpp_1acc5385061d624a4a66cdb2704a4c1aac" kind="define"><name>convert_type_specialization</name></member>
