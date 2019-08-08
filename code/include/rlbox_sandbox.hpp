@@ -44,6 +44,9 @@ class rlbox_sandbox : protected T_Sbx
   KEEP_CLASSES_FRIENDLY
 
 private:
+  static inline std::shared_mutex sandbox_list_lock;
+  static inline std::vector<rlbox_sandbox<T_Sbx>*> sandbox_list;
+
   std::shared_mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
 
@@ -221,6 +224,26 @@ private:
     callback_keys.erase(el_ref);
   }
 
+  static T_Sbx* find_sandbox_from_example(const void* example_sandbox_ptr)
+  {
+    detail::dynamic_check(
+      example_sandbox_ptr != nullptr,
+      "Internal error: received a null example pointer. Please file a bug.");
+
+    std::shared_lock lock(sandbox_list_lock);
+    for (rlbox_sandbox<T_Sbx>* sandbox : sandbox_list) {
+      if (sandbox->is_pointer_in_sandbox_memory(example_sandbox_ptr)) {
+        return sandbox;
+      }
+    }
+
+    detail::dynamic_check(
+      false,
+      "Internal error: Could not find the sandbox associated with example "
+      "pointer. Please file a bug.");
+    return nullptr;
+  }
+
 public:
   /***** Function to adjust for custom machine models *****/
 
@@ -256,7 +279,11 @@ public:
       [&]() {
         return this->impl_create_sandbox(std::forward<T_Args>(args)...);
       },
-      [&]() { sandbox_created.store(Sandbox_Status::CREATED); });
+      [&]() {
+        sandbox_created.store(Sandbox_Status::CREATED);
+        std::unique_lock lock(sandbox_list_lock);
+        sandbox_list.push_back(this);
+      });
   }
 
   /**
@@ -273,9 +300,17 @@ public:
       "destroy_sandbox called without sandbox creation/is being "
       "destroyed concurrently");
 
-    return detail::return_first_result(
-      [&]() { return this->impl_destroy_sandbox(); },
-      [&]() { sandbox_created.store(Sandbox_Status::NOT_CREATED); });
+    {
+      std::unique_lock lock(sandbox_list_lock);
+      auto el_ref = std::find(sandbox_list.begin(), sandbox_list.end(), this);
+      detail::dynamic_check(
+        el_ref != sandbox_list.end(),
+        "Unexpected state. Destroying a sandbox that was never initialized.");
+      sandbox_list.erase(el_ref);
+    }
+
+    sandbox_created.store(Sandbox_Status::NOT_CREATED);
+    return this->impl_destroy_sandbox();
   }
 
   template<typename T>
@@ -311,7 +346,7 @@ public:
       return nullptr;
     }
     auto ret = T_Sbx::template impl_get_unsandboxed_pointer_no_ctx<T>(
-      p, example_unsandboxed_ptr);
+      p, example_unsandboxed_ptr, find_sandbox_from_example);
     return reinterpret_cast<T>(ret);
   }
 
@@ -325,7 +360,7 @@ public:
       return 0;
     }
     return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(
-      p, example_unsandboxed_ptr);
+      p, example_unsandboxed_ptr, find_sandbox_from_example);
   }
 
   /**

@@ -137,13 +137,17 @@ protected:
   template<typename T>
   static inline void* impl_get_unsandboxed_pointer_no_ctx(
     T_PointerType p,
-    const void* example_unsandboxed_ptr)
+    const void* example_unsandboxed_ptr,
+    TestSandbox* (*expensive_sandbox_finder)(
+      const void* example_unsandboxed_ptr))
   {
-    RLBOX_UNUSED(example_unsandboxed_ptr);
     RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
     if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
-      static_assert(!rlbox::detail::true_v<T>,
-                    "No context swizzling for a function pointer.");
+      // swizzling function pointers needs access to the function pointer tables
+      // and thus cannot be done without context
+      RLBOX_UNUSED(example_unsandboxed_ptr);
+      auto sandbox = expensive_sandbox_finder(example_unsandboxed_ptr);
+      return sandbox->impl_get_unsandboxed_pointer<T>(p);
     } else {
       auto mask = SandboxMemoryBaseMask &
                   reinterpret_cast<uintptr_t>(example_unsandboxed_ptr);
@@ -154,13 +158,17 @@ protected:
   template<typename T>
   static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
     const void* p,
-    const void* example_unsandboxed_ptr)
+    const void* example_unsandboxed_ptr,
+    TestSandbox* (*expensive_sandbox_finder)(
+      const void* example_unsandboxed_ptr))
   {
-    RLBOX_UNUSED(example_unsandboxed_ptr);
     RLBOX_DEBUG_ASSERT(example_unsandboxed_ptr != nullptr);
     if constexpr (std::is_function_v<std::remove_pointer_t<T>>) {
-      static_assert(!rlbox::detail::true_v<T>,
-                    "No context swizzling for a function pointer.");
+      // swizzling function pointers needs access to the function pointer tables
+      // and thus cannot be done without context
+      RLBOX_UNUSED(example_unsandboxed_ptr);
+      auto sandbox = expensive_sandbox_finder(example_unsandboxed_ptr);
+      return sandbox->impl_get_sandboxed_pointer<T>(p);
     } else {
       auto ret = SandboxMemorySize & reinterpret_cast<uintptr_t>(p);
       return static_cast<T_PointerType>(ret);
