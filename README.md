@@ -65,22 +65,8 @@ firefox `pwd`/docs/sphinx/index.html
 
 ## Contributing Code/Docs
 
-1. To contribute code, it is recommended you treat warnings as errors during
-development. Also, you probably want to use the debug build. To do this, adjust
-your build settings as shown below
-
-```bash
-cmake -DCMAKE_BUILD_TYPE=Debug -DWERR=ON -S . -B ./build
-```
-
-2. After making changes to the source, add any new required tests and run all
-tests as described earlier.
-
-3. Modify the docs as appropriate and rebuild docs as described earlier.
-Rebuilding is required if you have added new APIs.
-
-4. To make sure all code/docs are formatted with, we use clang-tidy.
-Install using:
+1. To contribute code, it is recommended you install clang-tidy which the build
+uses if available. Install using:
 
    On Ubuntu:
 ```bash
@@ -91,9 +77,35 @@ sudo apt install clang-tidy
 sudo pacman -S clang-tidy
 ```
 
-5. Format code with the format-source target:
+2. It is recommended you treat warnings as errors during development. Also, you
+probably want to use the debug build. To do this, adjust your build settings as
+shown below
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug -DWERR=ON -S . -B ./build
+```
+
+3. After making changes to the source, add any new required tests and run all
+tests as described earlier.
+
+4. Modify the docs as appropriate and rebuild docs as described earlier.
+Rebuilding is required if you have added new APIs.
+
+5. To make sure all code/docs are formatted with, we use clang-format.
+Install using:
+
+   On Ubuntu:
+```bash
+sudo apt install clang-format
+```
+   On Arch Linux:
+```bash
+sudo pacman -S clang-format
+```
+
+6. Format code with the format-source target:
 ```bash
 cmake --build ./build --target format-source
 ```
 
-6. Submit the pull request.
+7. Submit the pull request.
