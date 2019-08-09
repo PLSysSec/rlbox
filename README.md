@@ -1,6 +1,6 @@
 # RLBox API
 
-[![Build Status](https://travis-ci.com/PLSysSec/rlbox_api_cpp17.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
+[![Build Status](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
 
 RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev).
 
