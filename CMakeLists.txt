@@ -16,9 +16,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(WERR "Enable warnings as errors" OFF)
 
 if(MSVC)
-  add_compile_options(/W4 /WX)
+  add_compile_options(/W4)
   if (WERR)
-    add_compile_options(/W4)
+    add_compile_options(/WX)
   endif()
 else()
   add_compile_options(-Wall
