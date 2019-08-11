@@ -46,13 +46,18 @@ public:
    * @brief Like UNSAFE_unverified, but get the underlying sandbox
    * representation.
    *
+   * @param sandbox Reference to sandbox.
+   *
    * For the Wasm-based sandbox, this function additionally validates the
    * unwrapped value against the machine model of the sandbox (LP32).
    */
-  inline auto UNSAFE_sandboxed() { return impl().get_raw_sandbox_value(); }
-  inline auto UNSAFE_sandboxed() const
+  inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox)
   {
-    return impl().get_raw_sandbox_value();
+    return impl().get_raw_sandbox_value(sandbox);
+  }
+  inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox) const
+  {
+    return impl().get_raw_sandbox_value(sandbox);
   }
 
   /**
@@ -248,7 +253,7 @@ public:
     rlbox_detail_forward_to_const(operator*, T_OpDerefRet&);
   }
 
-  // We need to implement the -> operator even though T is not a struct
+  // We need to implement the -> operator even if T is not a struct
   // So that we can support code patterns such as the below
   // tainted<T*> a;
   // a->UNSAFE_unverified();
@@ -548,18 +553,16 @@ private:
     return data;
   }
 
-  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() const
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(
+    rlbox_sandbox<T_Sbx>& sandbox) const
   {
     std::remove_cv_t<T_SandboxedType> ret;
-    // We need an example_unsandboxed_ptr for cases where we are converting
-    // pointers.
-    const void* example_unsandboxed_ptr = find_example_pointer_or_null();
 
     using namespace detail;
     convert_type_non_class<T_Sbx,
                            adjust_type_direction::TO_SANDBOX,
-                           adjust_type_context::EXAMPLE>(
-      ret, data, example_unsandboxed_ptr, nullptr /* sandbox_ptr */);
+                           adjust_type_context::SANDBOX>(
+      ret, data, nullptr /* example_unsandboxed_ptr */, &sandbox);
     return ret;
   };
 
@@ -568,10 +571,11 @@ private:
     rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T_AppType>);
   }
 
-  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value()
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(
+    rlbox_sandbox<T_Sbx>& sandbox)
   {
-    rlbox_detail_forward_to_const(get_raw_sandbox_value,
-                                  std::remove_cv_t<T_SandboxedType>);
+    rlbox_detail_forward_to_const_a(
+      get_raw_sandbox_value, std::remove_cv_t<T_SandboxedType>, sandbox);
   };
 
   inline const void* find_example_pointer_or_null() const noexcept
@@ -653,7 +657,8 @@ public:
       "with sandbox.register_callback(\"foo\"), and pass in the registered "
       "value\n "
       "3) For pointers that point to functions in the sandbox, get the "
-      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address with get_sandbox_function_address(sandbox, foo), and pass in "
+      "the "
       "address\n "
       "4) For raw pointers, use assign_raw_pointer which performs required "
       "safety checks\n ");
@@ -744,7 +749,8 @@ public:
       "with sandbox.register_callback(\"foo\"), and pass in the registered "
       "value\n "
       "3) For pointers that point to functions in the sandbox, get the "
-      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address with get_sandbox_function_address(sandbox, foo), and pass in "
+      "the "
       "address\n ");
     data = val;
   }
@@ -1024,7 +1030,8 @@ public:
         "with sandbox.register_callback(\"foo\"), and pass in the registered "
         "value\n "
         "3) For pointers that point to functions in the sandbox, get the "
-        "address with sandbox_function_address(sandbox, foo), and pass in the "
+        "address with get_sandbox_function_address(sandbox, foo), and pass in "
+        "the "
         "address\n "
         "4) For raw pointers, use assign_raw_pointer which performs required "
         "safety checks\n ");
@@ -1064,7 +1071,8 @@ public:
       "with sandbox.register_callback(\"foo\"), and pass in the registered "
       "value\n "
       "3) For pointers that point to functions in the sandbox, get the "
-      "address with sandbox_function_address(sandbox, foo), and pass in the "
+      "address with get_sandbox_function_address(sandbox, foo), and pass in "
+      "the "
       "address\n ");
     get_sandbox_value_ref() =
       sandbox.template get_sandboxed_pointer<T_Rhs>(cast_val);

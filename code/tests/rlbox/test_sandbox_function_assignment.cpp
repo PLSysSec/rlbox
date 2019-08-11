@@ -19,12 +19,12 @@ TEST_CASE("Test sandbox_function assignment", "[sandbox_function]")
   using T_F = int (*)(int);
 
   auto ptr = sandbox.malloc_in_sandbox<T_F>();
-  auto cb = sandbox.sandbox_function_address(test_fn); // NOLINT
+  auto cb = sandbox.get_sandbox_function_address(test_fn); // NOLINT
 
   tainted<T_F, TestSandbox> val = nullptr;
 
-  // Assignment to tainted is not ok
-  REQUIRE_COMPILE_ERR(val = cb);
+  // Assignment to another tainted is ok
+  REQUIRE_NO_COMPILE_ERR(val = cb);
 
   // Assignment to tainted_volatile is fine
   REQUIRE_NO_COMPILE_ERR(*ptr = cb);

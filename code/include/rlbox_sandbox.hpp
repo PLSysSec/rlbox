@@ -125,17 +125,17 @@ private:
 
     if constexpr (detail::rlbox_is_tainted_opaque_v<T_NoRef>) {
       auto ret = from_opaque(param);
-      return ret.UNSAFE_sandboxed();
+      return ret.UNSAFE_sandboxed(*this);
     } else if constexpr (detail::rlbox_is_wrapper_v<T_NoRef>) {
-      return param.UNSAFE_sandboxed();
+      return param.UNSAFE_sandboxed(*this);
     } else if constexpr (std::is_null_pointer_v<T_NoRef>) {
       tainted<void*, T_Sbx> ret = nullptr;
-      return ret.UNSAFE_sandboxed();
+      return ret.UNSAFE_sandboxed(*this);
     } else if constexpr (detail::is_fundamental_or_enum_v<T_NoRef>) {
       // For unwrapped primitives, assign to a tainted var and then unwrap so
       // that we adjust for machine model
-      tainted<T_NoRef, T_Sbx> copy = param;
-      return copy.UNSAFE_sandboxed();
+      tainted<T_NoRef, T_Sbx> ret = param;
+      return ret.UNSAFE_sandboxed(*this);
     } else {
       rlbox_detail_static_fail_because(detail::true_v<T_NoRef>, "Unknown case");
     }
@@ -428,7 +428,7 @@ public:
       return;
     }
 
-    this->impl_free_in_sandbox(ptr.get_raw_sandbox_value());
+    this->impl_free_in_sandbox(ptr.get_raw_sandbox_value(*this));
   }
 
   /**
@@ -688,7 +688,7 @@ public:
 
   // this is an internal function invoked from macros, so it has be public
   template<typename T>
-  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function_name(
+  inline tainted<T*, T_Sbx> INTERNAL_get_sandbox_function_name(
     const char* func_name)
   {
     return INTERNAL_get_sandbox_function_ptr<T>(lookup_symbol(func_name));
@@ -696,11 +696,9 @@ public:
 
   // this is an internal function invoked from macros, so it has be public
   template<typename T>
-  inline sandbox_function<T*, T_Sbx> INTERNAL_get_sandbox_function_ptr(
-    void* func_ptr)
+  inline tainted<T*, T_Sbx> INTERNAL_get_sandbox_function_ptr(void* func_ptr)
   {
-    auto internal_func_ptr = get_sandboxed_pointer<T*>(func_ptr);
-    return sandbox_function<T*, T_Sbx>(internal_func_ptr);
+    return tainted<T*, T_Sbx>::internal_factory(reinterpret_cast<T*>(func_ptr));
   }
 };
 
@@ -734,7 +732,7 @@ public:
       sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name),       \
       ##__VA_ARGS__)
 
-#  define sandbox_function_address(func_name)                                  \
+#  define get_sandbox_function_address(func_name)                              \
     template INTERNAL_get_sandbox_function_ptr<decltype(func_name)>(           \
       sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name))
 
@@ -744,13 +742,16 @@ public:
     template INTERNAL_invoke_with_func_name<decltype(func_name)>(              \
       #func_name, ##__VA_ARGS__)
 
-#  define sandbox_function_address(func_name)                                  \
+#  define get_sandbox_function_address(func_name)                              \
     template INTERNAL_get_sandbox_function_name<decltype(func_name)>(#func_name)
 
 #endif
 
 #define sandbox_invoke(sandbox, func_name, ...)                                \
   (sandbox).invoke_sandbox_function(func_name, ##__VA_ARGS__)
+
+#define sandbox_function_address(sandbox, func_name)                           \
+  (sandbox).get_sandbox_function_address(func_name)
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

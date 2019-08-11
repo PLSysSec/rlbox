@@ -166,7 +166,7 @@ TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
 
   SECTION("test callback to an internal function") // NOLINT
   {
-    auto fnPtr = sandbox.sandbox_function_address(internalCallback);
+    auto fnPtr = sandbox.get_sandbox_function_address(internalCallback);
 
     tainted<testStruct*, TestType> pFoo =
       sandbox.template malloc_in_sandbox<testStruct>();

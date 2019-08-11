@@ -156,8 +156,14 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     inline auto UNSAFE_unverified() { return get_raw_value(); }                \
     inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
-    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
-    inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
+    inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox)                \
+    {                                                                          \
+      return get_raw_sandbox_value(sandbox);                                   \
+    }                                                                          \
+    inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox) const          \
+    {                                                                          \
+      return get_raw_sandbox_value(sandbox);                                   \
+    }                                                                          \
                                                                                \
     template<size_t N>                                                         \
     inline auto unverified_safe_because(const char (&reason)[N])               \
@@ -209,14 +215,15 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     /* get_raw_sandbox_value has to return a custom struct to deal with the    \
      * adjusted machine model, to ensure */                                    \
-    inline Sbx_##libId##_##T<T_Sbx> get_raw_sandbox_value() const noexcept     \
+    inline Sbx_##libId##_##T<T_Sbx> get_raw_sandbox_value(                     \
+      rlbox_sandbox<T_Sbx>& sandbox) const noexcept                            \
     {                                                                          \
       Sbx_##libId##_##T<T_Sbx> lhs;                                            \
       const auto& rhs = get_raw_value_ref();                                   \
       constexpr auto Direction = detail::adjust_type_direction::TO_SANDBOX;    \
-      constexpr auto Context = detail::adjust_type_context::EXAMPLE;           \
-      const void* example_unsandboxed_ptr = find_example_pointer_or_null();    \
-      rlbox_sandbox<T_Sbx>* sandbox_ptr = nullptr;                             \
+      constexpr auto Context = detail::adjust_type_context::SANDBOX;           \
+      const void* example_unsandboxed_ptr = nullptr;                           \
+      rlbox_sandbox<T_Sbx>* sandbox_ptr = &sandbox;                            \
       sandbox_fields_reflection_##libId##_class_##T(helper_convert_type,       \
                                                     helper_no_op)              \
                                                                                \
@@ -228,11 +235,13 @@ using convert_to_sandbox_equivalent_t =
       rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T>);       \
     }                                                                          \
                                                                                \
-    inline std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>                          \
-    get_raw_sandbox_value() noexcept                                           \
+    inline std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>> get_raw_sandbox_value(   \
+      rlbox_sandbox<T_Sbx>& sandbox) noexcept                                  \
     {                                                                          \
-      rlbox_detail_forward_to_const(                                           \
-        get_raw_sandbox_value, std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>);    \
+      rlbox_detail_forward_to_const_a(                                         \
+        get_raw_sandbox_value,                                                 \
+        std::remove_cv_t<Sbx_##libId##_##T<T_Sbx>>,                            \
+        sandbox);                                                              \
     }                                                                          \
                                                                                \
     inline const void* find_example_pointer_or_null() const noexcept           \
@@ -273,8 +282,14 @@ using convert_to_sandbox_equivalent_t =
                                                                                \
     inline auto UNSAFE_unverified() { return get_raw_value(); }                \
     inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
-    inline auto UNSAFE_sandboxed() { return get_raw_sandbox_value(); }         \
-    inline auto UNSAFE_sandboxed() const { return get_raw_sandbox_value(); }   \
+    inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox)                \
+    {                                                                          \
+      return get_raw_sandbox_value(sandbox);                                   \
+    }                                                                          \
+    inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox) const          \
+    {                                                                          \
+      return get_raw_sandbox_value(sandbox);                                   \
+    }                                                                          \
                                                                                \
     template<size_t N>                                                         \
     inline auto unverified_safe_because(const char (&reason)[N])               \
