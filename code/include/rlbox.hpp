@@ -418,7 +418,7 @@ private:
       detail::convert_type_fundamental_or_array(target[i], *p_src_i);
     }
 
-    return std::move(target);
+    return target;
   }
 
 public:
