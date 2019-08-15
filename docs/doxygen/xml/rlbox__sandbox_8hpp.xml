@@ -205,10 +205,10 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="743" column="11" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="743" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="741" column="11" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="741" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="rlbox__sandbox_8hpp_1ad3a20f9560229433e2372c834aebf8ce" prot="public" static="no">
-        <name>sandbox_function_address</name>
+      <memberdef kind="define" id="rlbox__sandbox_8hpp_1a9deaada57360f2fb75e1c9792ca08595" prot="public" static="no">
+        <name>get_sandbox_function_address</name>
         <param><defname>func_name</defname></param>
         <initializer>template INTERNAL_get_sandbox_function_name&lt;decltype(func_name)&gt;(#func_name)</initializer>
         <briefdescription>
@@ -217,7 +217,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="747" column="11" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="747" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="745" column="11" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="745" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__sandbox_8hpp_1aa52ff900ff345b0a5d4b4de6f1a3330b" prot="public" static="no">
         <name>sandbox_invoke</name>
@@ -231,7 +231,20 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="752" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="752" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="750" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="750" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="rlbox__sandbox_8hpp_1a607b0e55176af483ddf1ca405c15dddb" prot="public" static="no">
+        <name>sandbox_function_address</name>
+        <param><defname>sandbox</defname></param>
+        <param><defname>func_name</defname></param>
+        <initializer>(sandbox).get_sandbox_function_address(func_name)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="753" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="753" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -279,10 +292,10 @@
 <codeline lineno="44"><highlight class="normal"><sp/><sp/>KEEP_CLASSES_FRIENDLY</highlight></codeline>
 <codeline lineno="45"><highlight class="normal"></highlight></codeline>
 <codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::shared_mutex<sp/>sandbox_list_lock;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::shared_timed_mutex<sp/>sandbox_list_lock;</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::vector&lt;rlbox_sandbox&lt;T_Sbx&gt;*&gt;<sp/>sandbox_list;</highlight></codeline>
 <codeline lineno="49"><highlight class="normal"></highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/>std::shared_mutex<sp/>func_ptr_cache_lock;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/>std::shared_timed_mutex<sp/>func_ptr_cache_lock;</highlight></codeline>
 <codeline lineno="51"><highlight class="normal"><sp/><sp/>std::map&lt;std::string,<sp/>void*&gt;<sp/>func_ptr_map;</highlight></codeline>
 <codeline lineno="52"><highlight class="normal"></highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>This<sp/>variable<sp/>tracks<sp/>of<sp/>the<sp/>sandbox<sp/>has<sp/>already<sp/>been<sp/>created/destroyed.</highlight><highlight class="normal"></highlight></codeline>
@@ -360,17 +373,17 @@
 <codeline lineno="125"><highlight class="normal"></highlight></codeline>
 <codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>constexpr<sp/>(detail::rlbox_is_tainted_opaque_v&lt;T_NoRef&gt;)<sp/>{</highlight></codeline>
 <codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>ret<sp/>=<sp/>from_opaque(param);</highlight></codeline>
-<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret.UNSAFE_sandboxed();</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret.UNSAFE_sandboxed(*</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>constexpr<sp/>(detail::rlbox_is_wrapper_v&lt;T_NoRef&gt;)<sp/>{</highlight></codeline>
-<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>param.UNSAFE_sandboxed();</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>param.UNSAFE_sandboxed(*</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>constexpr<sp/>(std::is_null_pointer_v&lt;T_NoRef&gt;)<sp/>{</highlight></codeline>
 <codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;void*, T_Sbx&gt;</ref><sp/>ret<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret.<ref refid="classrlbox_1_1tainted__base__impl_1adb4270e907768562120dc32cf955424e" kindref="member">UNSAFE_sandboxed</ref>();</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret.<ref refid="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214" kindref="member">UNSAFE_sandboxed</ref>(*</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>constexpr<sp/>(detail::is_fundamental_or_enum_v&lt;T_NoRef&gt;)<sp/>{</highlight></codeline>
 <codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>For<sp/>unwrapped<sp/>primitives,<sp/>assign<sp/>to<sp/>a<sp/>tainted<sp/>var<sp/>and<sp/>then<sp/>unwrap<sp/>so</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>that<sp/>we<sp/>adjust<sp/>for<sp/>machine<sp/>model</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T_NoRef, T_Sbx&gt;</ref><sp/>copy<sp/>=<sp/>param;</highlight></codeline>
-<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>copy.<ref refid="classrlbox_1_1tainted__base__impl_1adb4270e907768562120dc32cf955424e" kindref="member">UNSAFE_sandboxed</ref>();</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T_NoRef, T_Sbx&gt;</ref><sp/>ret<sp/>=<sp/>param;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret.<ref refid="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214" kindref="member">UNSAFE_sandboxed</ref>(*</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>rlbox_detail_static_fail_because(detail::true_v&lt;T_NoRef&gt;,<sp/></highlight><highlight class="stringliteral">&quot;Unknown<sp/>case&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
@@ -461,7 +474,7 @@
 <codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>example_sandbox_ptr<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,</highlight></codeline>
 <codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Internal<sp/>error:<sp/>received<sp/>a<sp/>null<sp/>example<sp/>pointer.<sp/>Please<sp/>file<sp/>a<sp/>bug.&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="232"><highlight class="normal"></highlight></codeline>
-<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_lock<sp/>lock(sandbox_list_lock);</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_lock&lt;std::shared_timed_mutex&gt;<sp/>lock(sandbox_list_lock);</highlight></codeline>
 <codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>*<sp/>sandbox<sp/>:<sp/>sandbox_list)<sp/>{</highlight></codeline>
 <codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sandbox-&gt;<ref refid="classrlbox_1_1rlbox__sandbox_1a55e48f0300c16d36ea7ed5a7e4750f64" kindref="member">is_pointer_in_sandbox_memory</ref>(example_sandbox_ptr))<sp/>{</highlight></codeline>
 <codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sandbox;</highlight></codeline>
@@ -506,7 +519,7 @@
 <codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
 <codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>[&amp;]()<sp/>{</highlight></codeline>
 <codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_created.store(Sandbox_Status::CREATED);</highlight></codeline>
-<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lock(sandbox_list_lock);</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock&lt;std::shared_timed_mutex&gt;<sp/>lock(sandbox_list_lock);</highlight></codeline>
 <codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_list.push_back(</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
 <codeline lineno="287"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
@@ -523,7 +536,7 @@
 <codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;destroyed<sp/>concurrently&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="302"><highlight class="normal"></highlight></codeline>
 <codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
-<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lock(sandbox_list_lock);</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock&lt;std::shared_timed_mutex&gt;<sp/>lock(sandbox_list_lock);</highlight></codeline>
 <codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>el_ref<sp/>=<sp/>std::find(sandbox_list.begin(),<sp/>sandbox_list.end(),<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>detail::dynamic_check(</highlight></codeline>
 <codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>el_ref<sp/>!=<sp/>sandbox_list.end(),</highlight></codeline>
@@ -623,7 +636,7 @@
 <codeline lineno="428"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="429"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="430"><highlight class="normal"></highlight></codeline>
-<codeline lineno="431"><highlight class="normal"><sp/><sp/><sp/><sp/>this-&gt;impl_free_in_sandbox(ptr.get_raw_sandbox_value());</highlight></codeline>
+<codeline lineno="431"><highlight class="normal"><sp/><sp/><sp/><sp/>this-&gt;impl_free_in_sandbox(ptr.get_raw_sandbox_value(*</highlight><highlight class="keyword">this</highlight><highlight class="normal">));</highlight></codeline>
 <codeline lineno="432"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="433"><highlight class="normal"></highlight></codeline>
 <codeline lineno="438" refid="classrlbox_1_1rlbox__sandbox_1a3257ffc0e7eb6022c05a049b8b36271f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1rlbox__sandbox_1a3257ffc0e7eb6022c05a049b8b36271f" kindref="member">is_in_same_sandbox</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>p1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>p2)</highlight></codeline>
@@ -651,7 +664,7 @@
 <codeline lineno="468"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>lookup_symbol(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>func_name)</highlight></codeline>
 <codeline lineno="469"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
 <codeline lineno="470"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
-<codeline lineno="471"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_lock<sp/>lock(func_ptr_cache_lock);</highlight></codeline>
+<codeline lineno="471"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_lock&lt;std::shared_timed_mutex&gt;<sp/>lock(func_ptr_cache_lock);</highlight></codeline>
 <codeline lineno="472"><highlight class="normal"></highlight></codeline>
 <codeline lineno="473"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>func_ptr_ref<sp/>=<sp/>func_ptr_map.find(func_name);</highlight></codeline>
 <codeline lineno="474"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(func_ptr_ref<sp/>!=<sp/>func_ptr_map.end())<sp/>{</highlight></codeline>
@@ -660,7 +673,7 @@
 <codeline lineno="477"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="478"><highlight class="normal"></highlight></codeline>
 <codeline lineno="479"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>func_ptr<sp/>=<sp/>this-&gt;impl_lookup_symbol(func_name);</highlight></codeline>
-<codeline lineno="480"><highlight class="normal"><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lock(func_ptr_cache_lock);</highlight></codeline>
+<codeline lineno="480"><highlight class="normal"><sp/><sp/><sp/><sp/>std::unique_lock&lt;std::shared_timed_mutex&gt;<sp/>lock(func_ptr_cache_lock);</highlight></codeline>
 <codeline lineno="481"><highlight class="normal"><sp/><sp/><sp/><sp/>func_ptr_map[func_name]<sp/>=<sp/>func_ptr;</highlight></codeline>
 <codeline lineno="482"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>func_ptr;</highlight></codeline>
 <codeline lineno="483"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
@@ -859,7 +872,7 @@
 <codeline lineno="688"><highlight class="normal"></highlight></codeline>
 <codeline lineno="689"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>this<sp/>is<sp/>an<sp/>internal<sp/>function<sp/>invoked<sp/>from<sp/>macros,<sp/>so<sp/>it<sp/>has<sp/>be<sp/>public</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="690"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
-<codeline lineno="691"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__function" kindref="compound">sandbox_function&lt;T*, T_Sbx&gt;</ref><sp/>INTERNAL_get_sandbox_function_name(</highlight></codeline>
+<codeline lineno="691"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T*, T_Sbx&gt;</ref><sp/>INTERNAL_get_sandbox_function_name(</highlight></codeline>
 <codeline lineno="692"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>func_name)</highlight></codeline>
 <codeline lineno="693"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
 <codeline lineno="694"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>INTERNAL_get_sandbox_function_ptr&lt;T&gt;(lookup_symbol(func_name));</highlight></codeline>
@@ -867,60 +880,61 @@
 <codeline lineno="696"><highlight class="normal"></highlight></codeline>
 <codeline lineno="697"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>this<sp/>is<sp/>an<sp/>internal<sp/>function<sp/>invoked<sp/>from<sp/>macros,<sp/>so<sp/>it<sp/>has<sp/>be<sp/>public</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="698"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
-<codeline lineno="699"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__function" kindref="compound">sandbox_function&lt;T*, T_Sbx&gt;</ref><sp/>INTERNAL_get_sandbox_function_ptr(</highlight></codeline>
-<codeline lineno="700"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>func_ptr)</highlight></codeline>
-<codeline lineno="701"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="702"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>internal_func_ptr<sp/>=<sp/>get_sandboxed_pointer&lt;T*&gt;(func_ptr);</highlight></codeline>
-<codeline lineno="703"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__function" kindref="compound">sandbox_function&lt;T*, T_Sbx&gt;</ref>(internal_func_ptr);</highlight></codeline>
-<codeline lineno="704"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="705"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="706"><highlight class="normal"></highlight></codeline>
-<codeline lineno="707"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__clang__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="708"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>push</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="709"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>ignored<sp/>&quot;-Wgnu-zero-variadic-macro-arguments&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="710"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(__GNUC__)<sp/>||<sp/>defined(__GNUG__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="711"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Can&apos;t<sp/>turn<sp/>off<sp/>the<sp/>variadic<sp/>macro<sp/>warning<sp/>emitted<sp/>from<sp/>-pedantic<sp/>so<sp/>use<sp/>a</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="712"><highlight class="normal"></highlight><highlight class="comment">//<sp/>hack<sp/>to<sp/>stop<sp/>GCC<sp/>emitting<sp/>warnings<sp/>for<sp/>the<sp/>reminder<sp/>of<sp/>this<sp/>file</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="713"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>GCC<sp/>system_header</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="714"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(_MSC_VER)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="715"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Doesn&apos;t<sp/>seem<sp/>to<sp/>emit<sp/>the<sp/>warning</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="716"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="717"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Don&apos;t<sp/>know<sp/>the<sp/>compiler...<sp/>just<sp/>let<sp/>it<sp/>go<sp/>through</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="718"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="719"><highlight class="normal"></highlight></codeline>
-<codeline lineno="728"><highlight class="preprocessor">#ifdef<sp/>RLBOX_USE_STATIC_CALLS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="699"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T*, T_Sbx&gt;</ref><sp/>INTERNAL_get_sandbox_function_ptr(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>func_ptr)</highlight></codeline>
+<codeline lineno="700"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="701"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T*, T_Sbx&gt;::internal_factory</ref>(reinterpret_cast&lt;T*&gt;(func_ptr));</highlight></codeline>
+<codeline lineno="702"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="703"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="704"><highlight class="normal"></highlight></codeline>
+<codeline lineno="705"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__clang__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="706"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>push</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="707"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>ignored<sp/>&quot;-Wgnu-zero-variadic-macro-arguments&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="708"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(__GNUC__)<sp/>||<sp/>defined(__GNUG__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="709"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Can&apos;t<sp/>turn<sp/>off<sp/>the<sp/>variadic<sp/>macro<sp/>warning<sp/>emitted<sp/>from<sp/>-pedantic<sp/>so<sp/>use<sp/>a</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="710"><highlight class="normal"></highlight><highlight class="comment">//<sp/>hack<sp/>to<sp/>stop<sp/>GCC<sp/>emitting<sp/>warnings<sp/>for<sp/>the<sp/>reminder<sp/>of<sp/>this<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="711"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>GCC<sp/>system_header</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="712"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(_MSC_VER)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="713"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Doesn&apos;t<sp/>seem<sp/>to<sp/>emit<sp/>the<sp/>warning</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="714"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="715"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Don&apos;t<sp/>know<sp/>the<sp/>compiler...<sp/>just<sp/>let<sp/>it<sp/>go<sp/>through</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="716"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="717"><highlight class="normal"></highlight></codeline>
+<codeline lineno="726"><highlight class="preprocessor">#ifdef<sp/>RLBOX_USE_STATIC_CALLS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="727"><highlight class="normal"></highlight></codeline>
+<codeline lineno="728"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>sandbox_lookup_symbol_helper(prefix,<sp/>func_name)<sp/>prefix(func_name)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="729"><highlight class="normal"></highlight></codeline>
-<codeline lineno="730"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>sandbox_lookup_symbol_helper(prefix,<sp/>func_name)<sp/>prefix(func_name)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="731"><highlight class="normal"></highlight></codeline>
-<codeline lineno="732"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>invoke_sandbox_function(func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="733"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_invoke_with_func_ptr&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="734"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(),<sp/>func_name),<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="735"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="736"><highlight class="normal"></highlight></codeline>
-<codeline lineno="737"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>sandbox_function_address(func_name)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="738"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_get_sandbox_function_ptr&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="739"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(),<sp/>func_name))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="730"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>invoke_sandbox_function(func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="731"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_invoke_with_func_ptr&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="732"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(),<sp/>func_name),<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="733"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="734"><highlight class="normal"></highlight></codeline>
+<codeline lineno="735"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>get_sandbox_function_address(func_name)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="736"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_get_sandbox_function_ptr&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="737"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(),<sp/>func_name))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="738"><highlight class="normal"></highlight></codeline>
+<codeline lineno="739"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="740"><highlight class="normal"></highlight></codeline>
-<codeline lineno="741"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="742"><highlight class="normal"></highlight></codeline>
-<codeline lineno="743"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>invoke_sandbox_function(func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="744"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_invoke_with_func_name&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="745"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>#func_name,<sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="746"><highlight class="normal"></highlight></codeline>
-<codeline lineno="747"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>sandbox_function_address(func_name)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="748"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_get_sandbox_function_name&lt;decltype(func_name)&gt;(#func_name)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="741"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>invoke_sandbox_function(func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="742"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_invoke_with_func_name&lt;decltype(func_name)&gt;(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="743"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>#func_name,<sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="744"><highlight class="normal"></highlight></codeline>
+<codeline lineno="745"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>define<sp/>get_sandbox_function_address(func_name)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="746"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>template<sp/>INTERNAL_get_sandbox_function_name&lt;decltype(func_name)&gt;(#func_name)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="747"><highlight class="normal"></highlight></codeline>
+<codeline lineno="748"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="749"><highlight class="normal"></highlight></codeline>
-<codeline lineno="750"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="751"><highlight class="normal"></highlight></codeline>
-<codeline lineno="752"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>sandbox_invoke(sandbox,<sp/>func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="753"><highlight class="preprocessor"><sp/><sp/>(sandbox).invoke_sandbox_function(func_name,<sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="754"><highlight class="normal"></highlight></codeline>
-<codeline lineno="755"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__clang__)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="756"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>pop</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="757"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="758"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="759"><highlight class="normal"></highlight></codeline>
-<codeline lineno="760"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="750"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>sandbox_invoke(sandbox,<sp/>func_name,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="751"><highlight class="preprocessor"><sp/><sp/>(sandbox).invoke_sandbox_function(func_name,<sp/>##__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="752"><highlight class="normal"></highlight></codeline>
+<codeline lineno="753"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>sandbox_function_address(sandbox,<sp/>func_name)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="754"><highlight class="preprocessor"><sp/><sp/>(sandbox).get_sandbox_function_address(func_name)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="755"><highlight class="normal"></highlight></codeline>
+<codeline lineno="756"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__clang__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="757"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/>pragma<sp/>clang<sp/>diagnostic<sp/>pop</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="758"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="759"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="760"><highlight class="normal"></highlight></codeline>
+<codeline lineno="761"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp"/>
   </compounddef>

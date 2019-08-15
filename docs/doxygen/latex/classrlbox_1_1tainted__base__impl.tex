@@ -9,10 +9,10 @@ auto \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b26788
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a41f8eed43072bf173cce34cd3351191e}\label{classrlbox_1_1tainted__base__impl_a41f8eed43072bf173cce34cd3351191e}} 
 auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+unverified} () const
 \item 
-auto \hyperlink{classrlbox_1_1tainted__base__impl_adb4270e907768562120dc32cf955424e}{U\+N\+S\+A\+F\+E\+\_\+sandboxed} ()
+auto \hyperlink{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}{U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox)
 \begin{DoxyCompactList}\small\item\em Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a4ce9db12dd3745b6fd7b3e52e41ef3f2}\label{classrlbox_1_1tainted__base__impl_a4ce9db12dd3745b6fd7b3e52e41ef3f2}} 
-auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} () const
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}\label{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}} 
+auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const
 \item 
 {\footnotesize template$<$size\+\_\+t N$>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}{unverified\+\_\+safe\+\_\+because} (const char(\&reason)\mbox{[}N\mbox{]})
 \begin{DoxyCompactList}\small\item\em Unwrap a tainted value without verification. This function should be used when unwrapping is safe. \end{DoxyCompactList}\item 
@@ -182,17 +182,22 @@ Copy a tainted string from sandbox and verify it.
 \begin{DoxyReturn}{Returns}
 Whatever the verifier function returns. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_adb4270e907768562120dc32cf955424e}\label{classrlbox_1_1tainted__base__impl_adb4270e907768562120dc32cf955424e}} 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}\label{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}} 
 \index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}}
 \index{U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
 \subsubsection{\texorpdfstring{U\+N\+S\+A\+F\+E\+\_\+sandboxed()}{UNSAFE\_sandboxed()}}
 {\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
 Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. 
 
+
+\begin{DoxyParams}{Parameters}
+{\em sandbox} & Reference to sandbox.\\
+\hline
+\end{DoxyParams}
 For the Wasm-\/based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (L\+P32). \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}\label{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}} 
 \index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!unverified\+\_\+safe\+\_\+because@{unverified\+\_\+safe\+\_\+because}}
 \index{unverified\+\_\+safe\+\_\+because@{unverified\+\_\+safe\+\_\+because}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}

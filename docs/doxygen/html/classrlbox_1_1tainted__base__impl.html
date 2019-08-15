@@ -79,12 +79,12 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a41f8eed43072bf173cce34cd3351191e"><td class="memItemLeft" align="right" valign="top"><a id="a41f8eed43072bf173cce34cd3351191e"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_unverified</b> () const</td></tr>
 <tr class="separator:a41f8eed43072bf173cce34cd3351191e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4270e907768562120dc32cf955424e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlbox_1_1tainted__base__impl.html#adb4270e907768562120dc32cf955424e">UNSAFE_sandboxed</a> ()</td></tr>
-<tr class="memdesc:adb4270e907768562120dc32cf955424e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like UNSAFE_unverified, but get the underlying sandbox representation.  <a href="#adb4270e907768562120dc32cf955424e">More...</a><br /></td></tr>
-<tr class="separator:adb4270e907768562120dc32cf955424e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ce9db12dd3745b6fd7b3e52e41ef3f2"><td class="memItemLeft" align="right" valign="top"><a id="a4ce9db12dd3745b6fd7b3e52e41ef3f2"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_sandboxed</b> () const</td></tr>
-<tr class="separator:a4ce9db12dd3745b6fd7b3e52e41ef3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2c69129cbb9344e7d2623129f031214"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlbox_1_1tainted__base__impl.html#ae2c69129cbb9344e7d2623129f031214">UNSAFE_sandboxed</a> (<a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;sandbox)</td></tr>
+<tr class="memdesc:ae2c69129cbb9344e7d2623129f031214"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like UNSAFE_unverified, but get the underlying sandbox representation.  <a href="#ae2c69129cbb9344e7d2623129f031214">More...</a><br /></td></tr>
+<tr class="separator:ae2c69129cbb9344e7d2623129f031214"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fb81eab8dc3839f351d6d89410c2350"><td class="memItemLeft" align="right" valign="top"><a id="a2fb81eab8dc3839f351d6d89410c2350"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_sandboxed</b> (<a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;sandbox) const</td></tr>
+<tr class="separator:a2fb81eab8dc3839f351d6d89410c2350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1292132a467d30150be6d4e2b72ff6b2"><td class="memTemplParams" colspan="2">template&lt;size_t N&gt; </td></tr>
 <tr class="memitem:a1292132a467d30150be6d4e2b72ff6b2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classrlbox_1_1tainted__base__impl.html#a1292132a467d30150be6d4e2b72ff6b2">unverified_safe_because</a> (const char(&amp;reason)[N])</td></tr>
 <tr class="memdesc:a1292132a467d30150be6d4e2b72ff6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwrap a tainted value without verification. This function should be used when unwrapping is safe.  <a href="#a1292132a467d30150be6d4e2b72ff6b2">More...</a><br /></td></tr>
@@ -354,8 +354,8 @@ template&lt;typename T_Func &gt; </div>
 
 </div>
 </div>
-<a id="adb4270e907768562120dc32cf955424e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb4270e907768562120dc32cf955424e">&#9670;&nbsp;</a></span>UNSAFE_sandboxed()</h2>
+<a id="ae2c69129cbb9344e7d2623129f031214"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2c69129cbb9344e7d2623129f031214">&#9670;&nbsp;</a></span>UNSAFE_sandboxed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,7 +368,8 @@ template&lt;template&lt; typename, typename &gt; typename T_Wrap, typename T, ty
         <tr>
           <td class="memname">auto <a class="el" href="classrlbox_1_1tainted__base__impl.html">rlbox::tainted_base_impl</a>&lt; T_Wrap, T, T_Sbx &gt;::UNSAFE_sandboxed </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sandbox</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -380,6 +381,12 @@ template&lt;template&lt; typename, typename &gt; typename T_Wrap, typename T, ty
 </div><div class="memdoc">
 
 <p>Like UNSAFE_unverified, but get the underlying sandbox representation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sandbox</td><td>Reference to sandbox.</td></tr>
+  </table>
+  </dd>
+</dl>
 <p>For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </p>
 
 </div>

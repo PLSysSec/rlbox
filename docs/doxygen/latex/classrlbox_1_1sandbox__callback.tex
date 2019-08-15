@@ -15,15 +15,33 @@ void {\bfseries unregister} ()
 \mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a9d7a4e08413d3989ce8633ea459b1110}\label{classrlbox_1_1sandbox__callback_a9d7a4e08413d3989ce8633ea459b1110}} 
 auto \hyperlink{classrlbox_1_1sandbox__callback_a9d7a4e08413d3989ce8633ea459b1110}{U\+N\+S\+A\+F\+E\+\_\+unverified} () const noexcept
 \begin{DoxyCompactList}\small\item\em Unwrap a callback without verification. This is an unsafe operation and should be used with care. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a6824744f81cf277e55d020f388419a47}\label{classrlbox_1_1sandbox__callback_a6824744f81cf277e55d020f388419a47}} 
-auto \hyperlink{classrlbox_1_1sandbox__callback_a6824744f81cf277e55d020f388419a47}{U\+N\+S\+A\+F\+E\+\_\+sandboxed} () const noexcept
+auto \hyperlink{classrlbox_1_1sandbox__callback_a0a71e99d85bd22cd642327017c863b26}{U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const noexcept
 \begin{DoxyCompactList}\small\item\em Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a8a9a501dd7e47030fabf84491303354f}\label{classrlbox_1_1sandbox__callback_a8a9a501dd7e47030fabf84491303354f}} 
 auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+unverified} () noexcept
 \item 
-\mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a7b7969533129c9a5132c6e2b9454b145}\label{classrlbox_1_1sandbox__callback_a7b7969533129c9a5132c6e2b9454b145}} 
-auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} () noexcept
+\mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a12f4b98341c36fa3eb97d9da82443bc8}\label{classrlbox_1_1sandbox__callback_a12f4b98341c36fa3eb97d9da82443bc8}} 
+auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox) noexcept
 \end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classrlbox_1_1sandbox__callback_a0a71e99d85bd22cd642327017c863b26}\label{classrlbox_1_1sandbox__callback_a0a71e99d85bd22cd642327017c863b26}} 
+\index{rlbox\+::sandbox\+\_\+callback@{rlbox\+::sandbox\+\_\+callback}!U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}}
+\index{U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}!rlbox\+::sandbox\+\_\+callback@{rlbox\+::sandbox\+\_\+callback}}
+\subsubsection{\texorpdfstring{U\+N\+S\+A\+F\+E\+\_\+sandboxed()}{UNSAFE\_sandboxed()}}
+{\footnotesize\ttfamily template$<$typename T , typename T\+\_\+\+Sbx $>$ \\
+auto \hyperlink{classrlbox_1_1sandbox__callback}{rlbox\+::sandbox\+\_\+callback}$<$ T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sandbox} & Reference to sandbox. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

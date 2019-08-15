@@ -85,17 +85,53 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unregister</b> ()</td
 auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlbox_1_1sandbox__callback.html#a9d7a4e08413d3989ce8633ea459b1110">UNSAFE_unverified</a> () const noexcept</td></tr>
 <tr class="memdesc:a9d7a4e08413d3989ce8633ea459b1110"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwrap a callback without verification. This is an unsafe operation and should be used with care. <br /></td></tr>
 <tr class="separator:a9d7a4e08413d3989ce8633ea459b1110"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6824744f81cf277e55d020f388419a47"><td class="memItemLeft" align="right" valign="top"><a id="a6824744f81cf277e55d020f388419a47"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlbox_1_1sandbox__callback.html#a6824744f81cf277e55d020f388419a47">UNSAFE_sandboxed</a> () const noexcept</td></tr>
-<tr class="memdesc:a6824744f81cf277e55d020f388419a47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like UNSAFE_unverified, but get the underlying sandbox representation. <br /></td></tr>
-<tr class="separator:a6824744f81cf277e55d020f388419a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a71e99d85bd22cd642327017c863b26"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlbox_1_1sandbox__callback.html#a0a71e99d85bd22cd642327017c863b26">UNSAFE_sandboxed</a> (<a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;sandbox) const noexcept</td></tr>
+<tr class="memdesc:a0a71e99d85bd22cd642327017c863b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like UNSAFE_unverified, but get the underlying sandbox representation.  <a href="#a0a71e99d85bd22cd642327017c863b26">More...</a><br /></td></tr>
+<tr class="separator:a0a71e99d85bd22cd642327017c863b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a9a501dd7e47030fabf84491303354f"><td class="memItemLeft" align="right" valign="top"><a id="a8a9a501dd7e47030fabf84491303354f"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_unverified</b> () noexcept</td></tr>
 <tr class="separator:a8a9a501dd7e47030fabf84491303354f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b7969533129c9a5132c6e2b9454b145"><td class="memItemLeft" align="right" valign="top"><a id="a7b7969533129c9a5132c6e2b9454b145"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_sandboxed</b> () noexcept</td></tr>
-<tr class="separator:a7b7969533129c9a5132c6e2b9454b145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12f4b98341c36fa3eb97d9da82443bc8"><td class="memItemLeft" align="right" valign="top"><a id="a12f4b98341c36fa3eb97d9da82443bc8"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_sandboxed</b> (<a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;sandbox) noexcept</td></tr>
+<tr class="separator:a12f4b98341c36fa3eb97d9da82443bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0a71e99d85bd22cd642327017c863b26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a71e99d85bd22cd642327017c863b26">&#9670;&nbsp;</a></span>UNSAFE_sandboxed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename T_Sbx &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classrlbox_1_1sandbox__callback.html">rlbox::sandbox_callback</a>&lt; T, T_Sbx &gt;::UNSAFE_sandboxed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classrlbox_1_1rlbox__sandbox.html">rlbox_sandbox</a>&lt; T_Sbx &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sandbox</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Like UNSAFE_unverified, but get the underlying sandbox representation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sandbox</td><td>Reference to sandbox. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/<a class="el" href="rlbox__policy__types_8hpp_source.html">rlbox_policy_types.hpp</a></li>
 </ul>

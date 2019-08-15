@@ -17,7 +17,6 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -26,8 +25,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="contents topic" id="contents">
@@ -597,18 +594,26 @@ migration:</p>
 <span id="_CPPv3N5rlbox16sandbox_callback17UNSAFE_unverifiedEv"></span><span id="_CPPv2N5rlbox16sandbox_callback17UNSAFE_unverifiedEv"></span><span id="rlbox::sandbox_callback::UNSAFE_unverified"></span><span class="target" id="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f"></span>auto <code class="sig-prename descclassname">rlbox::sandbox_callback<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">UNSAFE_unverified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv4N5rlbox17tainted_base_impl16UNSAFE_sandboxedEv">
-<span id="_CPPv3N5rlbox17tainted_base_impl16UNSAFE_sandboxedEv"></span><span id="_CPPv2N5rlbox17tainted_base_impl16UNSAFE_sandboxedEv"></span><span id="rlbox::tainted_base_impl::UNSAFE_sandboxed"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1adb4270e907768562120dc32cf955424e"></span>auto <code class="sig-prename descclassname">rlbox::tainted_base_impl<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">UNSAFE_sandboxed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Like UNSAFE_unverified, but get the underlying sandbox representation. </p>
-<p>For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4N5rlbox16sandbox_callback16UNSAFE_sandboxedEv">
-<span id="_CPPv3N5rlbox16sandbox_callback16UNSAFE_sandboxedEv"></span><span id="_CPPv2N5rlbox16sandbox_callback16UNSAFE_sandboxedEv"></span><span id="rlbox::sandbox_callback::UNSAFE_sandboxed"></span><span class="target" id="classrlbox_1_1sandbox__callback_1a7b7969533129c9a5132c6e2b9454b145"></span>auto <code class="sig-prename descclassname">rlbox::sandbox_callback<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">UNSAFE_sandboxed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
-<dd></dd></dl>
-
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function “rlbox::tainted_base_impl::UNSAFE_sandboxed” with arguments () in doxygen xml output for project “RLBox” from directory: /home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_base_impl</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_base_impl</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="n">const</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function “rlbox::sandbox_callback::UNSAFE_sandboxed” with arguments () in doxygen xml output for project “RLBox” from directory: /home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">sandbox_callback</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">sandbox_callback</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="n">const</span>
+</pre></div>
+</div>
+</div>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
 <p>Unchecked unwrapped tainted values can be abused by a compromised
@@ -791,7 +796,6 @@ describe this library in future version of this document.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -824,14 +828,6 @@ describe this library in future version of this document.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -841,7 +837,7 @@ describe this library in future version of this document.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/index.rst.txt"
