@@ -44,10 +44,10 @@ class rlbox_sandbox : protected T_Sbx
   KEEP_CLASSES_FRIENDLY
 
 private:
-  static inline std::shared_mutex sandbox_list_lock;
+  static inline std::shared_timed_mutex sandbox_list_lock;
   static inline std::vector<rlbox_sandbox<T_Sbx>*> sandbox_list;
 
-  std::shared_mutex func_ptr_cache_lock;
+  std::shared_timed_mutex func_ptr_cache_lock;
   std::map<std::string, void*> func_ptr_map;
 
   // This variable tracks of the sandbox has already been created/destroyed.
@@ -230,7 +230,7 @@ private:
       example_sandbox_ptr != nullptr,
       "Internal error: received a null example pointer. Please file a bug.");
 
-    std::shared_lock lock(sandbox_list_lock);
+    std::shared_lock<std::shared_timed_mutex> lock(sandbox_list_lock);
     for (rlbox_sandbox<T_Sbx>* sandbox : sandbox_list) {
       if (sandbox->is_pointer_in_sandbox_memory(example_sandbox_ptr)) {
         return sandbox;
@@ -281,7 +281,7 @@ public:
       },
       [&]() {
         sandbox_created.store(Sandbox_Status::CREATED);
-        std::unique_lock lock(sandbox_list_lock);
+        std::unique_lock<std::shared_timed_mutex> lock(sandbox_list_lock);
         sandbox_list.push_back(this);
       });
   }
@@ -301,7 +301,7 @@ public:
       "destroyed concurrently");
 
     {
-      std::unique_lock lock(sandbox_list_lock);
+      std::unique_lock<std::shared_timed_mutex> lock(sandbox_list_lock);
       auto el_ref = std::find(sandbox_list.begin(), sandbox_list.end(), this);
       detail::dynamic_check(
         el_ref != sandbox_list.end(),
@@ -468,7 +468,7 @@ public:
   void* lookup_symbol(const char* func_name)
   {
     {
-      std::shared_lock lock(func_ptr_cache_lock);
+      std::shared_lock<std::shared_timed_mutex> lock(func_ptr_cache_lock);
 
       auto func_ptr_ref = func_ptr_map.find(func_name);
       if (func_ptr_ref != func_ptr_map.end()) {
@@ -477,7 +477,7 @@ public:
     }
 
     void* func_ptr = this->impl_lookup_symbol(func_name);
-    std::unique_lock lock(func_ptr_cache_lock);
+    std::unique_lock<std::shared_timed_mutex> lock(func_ptr_cache_lock);
     func_ptr_map[func_name] = func_ptr;
     return func_ptr;
   }
