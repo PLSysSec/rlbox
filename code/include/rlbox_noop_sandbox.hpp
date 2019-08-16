@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <memory>
 #include <mutex>
 #include <shared_mutex>
 #include <utility>
@@ -38,19 +37,18 @@ private:
     uint32_t last_callback_invoked;
   };
 
-  static inline std::unique_ptr<rlbox_noop_sandbox_thread_local> thread_data =
-    std::make_unique<rlbox_noop_sandbox_thread_local>();
+  thread_local static inline rlbox_noop_sandbox_thread_local thread_data {0, 0};
 
   template<uint32_t N, typename T_Ret, typename... T_Args>
   static T_Ret callback_trampoline(T_Args... params)
   {
-    thread_data->last_callback_invoked = N;
+    thread_data.last_callback_invoked = N;
     using T_Func = T_Ret (*)(T_Args...);
     T_Func func;
     {
       std::shared_lock<std::shared_timed_mutex> lock(
-        thread_data->sandbox->callback_mutex);
-      func = reinterpret_cast<T_Func>(thread_data->sandbox->callbacks[N]);
+        thread_data.sandbox->callback_mutex);
+      func = reinterpret_cast<T_Func>(thread_data.sandbox->callbacks[N]);
     }
     // Callbacks are invoked through function pointers, cannot use std::forward
     // as we don't have caller context for T_Args, which means they are all
@@ -151,7 +149,7 @@ protected:
   template<typename T, typename T_Converted, typename... T_Args>
   auto impl_invoke_with_func_ptr(T_Converted* func_ptr, T_Args&&... params)
   {
-    thread_data->sandbox = this;
+    thread_data.sandbox = this;
     return (*func_ptr)(params...);
   }
 
@@ -179,8 +177,8 @@ protected:
   static inline std::pair<rlbox_noop_sandbox*, void*>
   impl_get_executed_callback_sandbox_and_key()
   {
-    auto sandbox = thread_data->sandbox;
-    auto callback_num = thread_data->last_callback_invoked;
+    auto sandbox = thread_data.sandbox;
+    auto callback_num = thread_data.last_callback_invoked;
     void* key = sandbox->callback_unique_keys[callback_num];
     return std::make_pair(sandbox, key);
   }
