@@ -37,7 +37,8 @@ private:
     uint32_t last_callback_invoked;
   };
 
-  thread_local static inline rlbox_noop_sandbox_thread_local thread_data {0, 0};
+  thread_local static inline rlbox_noop_sandbox_thread_local thread_data{ 0,
+                                                                          0 };
 
   template<uint32_t N, typename T_Ret, typename... T_Args>
   static T_Ret callback_trampoline(T_Args... params)

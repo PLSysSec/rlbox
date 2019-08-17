@@ -28,14 +28,13 @@ class tainted_base_impl
   KEEP_CLASSES_FRIENDLY
   KEEP_CAST_FRIENDLY
 
-private:
+public:
   inline auto& impl() { return *static_cast<T_Wrap<T, T_Sbx>*>(this); }
   inline auto& impl() const
   {
     return *static_cast<const T_Wrap<T, T_Sbx>*>(this);
   }
 
-public:
   /**
    * @brief Unwrap a tainted value without verification. This is an unsafe
    * operation and should be used with care.
@@ -81,7 +80,10 @@ public:
 
 #define BinaryOpValAndPtr(opSymbol)                                            \
   template<typename T_Rhs>                                                     \
-  inline auto operator opSymbol(T_Rhs&& rhs)                                   \
+  inline constexpr auto operator opSymbol(const T_Rhs& rhs)                    \
+    const->tainted<decltype(std::declval<T>() opSymbol std::declval<           \
+                            detail::rlbox_remove_wrapper_t<T_Rhs>>()),         \
+                   T_Sbx>                                                      \
   {                                                                            \
     static_assert(detail::is_basic_type_v<T>,                                  \
                   "Operator " #opSymbol                                        \
@@ -122,7 +124,10 @@ public:
 
 #define BinaryOp(opSymbol)                                                     \
   template<typename T_Rhs>                                                     \
-  inline auto operator opSymbol(T_Rhs&& rhs)                                   \
+  inline constexpr auto operator opSymbol(const T_Rhs& rhs)                    \
+    const->tainted<decltype(std::declval<T>() opSymbol std::declval<           \
+                            detail::rlbox_remove_wrapper_t<T_Rhs>>()),         \
+                   T_Sbx>                                                      \
   {                                                                            \
     static_assert(detail::is_basic_type_v<T>,                                  \
                   "Operator " #opSymbol                                        \
@@ -503,6 +508,44 @@ public:
     return verifier(val);
   }
 };
+
+#define BinaryOpWrappedRhs(opSymbol)                                           \
+  template<template<typename, typename> typename T_Wrap,                       \
+           typename T,                                                         \
+           typename T_Sbx,                                                     \
+           typename T_Lhs,                                                     \
+           RLBOX_ENABLE_IF(!detail::rlbox_is_wrapper_v<T_Lhs>)>                \
+  inline constexpr auto operator opSymbol(                                             \
+    const T_Lhs& lhs, const tainted_base_impl<T_Wrap, T, T_Sbx>& rhs)          \
+    ->tainted<decltype(std::declval<T_Lhs>() opSymbol std::declval<T>()),      \
+              T_Sbx>                                                           \
+  {                                                                            \
+    /* Handles the case for "3 + tainted" */                                   \
+    /* Technically pointer arithmetic can be performed as 3 + tainted_ptr */   \
+    /* as well. However, this is unusual and to keep the code simple we do */  \
+    /* not support this. */                                                    \
+    static_assert(                                                             \
+      std::is_arithmetic_v<T_Lhs>,                                             \
+      "Pointer arithmetic between an non tainted type and tainted"             \
+      "type is only permitted if the first value is the tainted type. Try "    \
+      "changing the order of the binary expression accordingly");              \
+    auto ret = tainted<T_Lhs, T_Sbx>(lhs) opSymbol rhs.impl();                 \
+    return ret;                                                                \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+BinaryOpWrappedRhs(+);
+BinaryOpWrappedRhs(-);
+BinaryOpWrappedRhs(*);
+BinaryOpWrappedRhs(/);
+BinaryOpWrappedRhs(%);
+BinaryOpWrappedRhs(^);
+BinaryOpWrappedRhs(&);
+BinaryOpWrappedRhs(|);
+BinaryOpWrappedRhs(<<);
+BinaryOpWrappedRhs(>>);
+
+#undef BinaryOpWrappedRhs
 
 namespace tainted_detail {
   template<typename T, typename T_Sbx>

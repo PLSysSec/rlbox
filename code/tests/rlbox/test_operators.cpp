@@ -11,15 +11,31 @@ TEST_CASE("Test operator + for numerics", "[operator]")
   tainted<int32_t, TestSandbox> a = 3;
   tainted<int32_t, TestSandbox> b = 3 + 4;
   tainted<int32_t, TestSandbox> c = a + 3;
-  tainted<int32_t, TestSandbox> d = a + b;
+  tainted<int32_t, TestSandbox> d = 3 + a;
+  tainted<int32_t, TestSandbox> e = a + b;
   REQUIRE(a.UNSAFE_unverified() == 3);
   REQUIRE(b.UNSAFE_unverified() == 7);
   REQUIRE(c.UNSAFE_unverified() == 6);
-  REQUIRE(d.UNSAFE_unverified() == 10);
+  REQUIRE(d.UNSAFE_unverified() == 6);
+  REQUIRE(e.UNSAFE_unverified() == 10);
 
   tainted<uint32_t, TestSandbox> ovWrap = std::numeric_limits<uint32_t>::max();
   ovWrap = ovWrap + 1;
   REQUIRE(ovWrap.UNSAFE_unverified() == 0);
+}
+
+struct test_tainted_struct_vals
+{
+  tainted<int32_t, TestSandbox> a{ 3 }; // NOLINT
+  tainted<int32_t, TestSandbox> b{ 7 }; // NOLINT
+};
+
+// NOLINTNEXTLINE
+TEST_CASE("Test operator + with const refs", "[operator]")
+{
+  test_tainted_struct_vals vals;
+  const auto& ref = vals;
+  REQUIRE((ref.a + ref.b).UNSAFE_unverified() == 10);
 }
 
 TEST_CASE("Test operators that produce new values for numerics", "[operator]")

@@ -12,7 +12,7 @@ namespace rlbox::detail {
 template<typename T_Rhs>
 inline auto unwrap_value(T_Rhs&& rhs) noexcept
 {
-  using T_RhsNoRef = std::remove_reference_t<T_Rhs>;
+  using T_RhsNoRef = std::remove_cv_t<std::remove_reference_t<T_Rhs>>;
   if constexpr (detail::rlbox_is_wrapper_v<T_RhsNoRef>) {
     return rhs.UNSAFE_unverified();
   } else {
