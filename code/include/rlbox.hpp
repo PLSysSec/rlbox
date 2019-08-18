@@ -129,9 +129,9 @@ public:
                             detail::rlbox_remove_wrapper_t<T_Rhs>>()),         \
                    T_Sbx>                                                      \
   {                                                                            \
-    static_assert(detail::is_basic_type_v<T>,                                  \
+    static_assert(detail::is_fundamental_or_enum_v<T>,                         \
                   "Operator " #opSymbol                                        \
-                  " only supported for primitive and pointer types");          \
+                  " only supported for primitive  types");                     \
                                                                                \
     auto raw = impl().get_raw_value();                                         \
     auto raw_rhs = detail::unwrap_value(rhs);                                  \
@@ -152,6 +152,8 @@ public:
   BinaryOp(|);
   BinaryOp(<<);
   BinaryOp(>>);
+  BinaryOp(&&);
+  BinaryOp(||);
 
 #undef BinaryOp
 
@@ -544,7 +546,8 @@ BinaryOpWrappedRhs(&);
 BinaryOpWrappedRhs(|);
 BinaryOpWrappedRhs(<<);
 BinaryOpWrappedRhs(>>);
-
+BinaryOpWrappedRhs(&&);
+BinaryOpWrappedRhs(||);
 #undef BinaryOpWrappedRhs
 
 namespace tainted_detail {
