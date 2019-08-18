@@ -18,10 +18,18 @@ TEST_CASE("Test comparisons to nullptr", "[tainted_compare]")
   REQUIRE(!(ptr == nullptr));
   REQUIRE(!!ptr);
 
-  // Comparisons to nullptr not allowed for non pointers
-  tainted<uint32_t, TestSandbox> val; // NOLINT
-  REQUIRE_COMPILE_ERR(val != nullptr);
-  REQUIRE_COMPILE_ERR(!(val == nullptr));
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("Test disallowed comparisons to tainted", "[tainted_compare]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
+  auto ptr2 = sandbox.malloc_in_sandbox<uint32_t>();
+  REQUIRE_COMPILE_ERR(ptr < ptr2);
 
   sandbox.destroy_sandbox();
 }
@@ -45,14 +53,27 @@ TEST_CASE("Test comparisons to tainted", "[tainted_compare]")
     REQUIRE((!result2).UNSAFE_unverified());
   }
 
-  SECTION("Tainted Tainted compare") // NOLINT
+  SECTION("Untainted Tainted compare") // NOLINT
   {
-    auto result = a == a;
+    auto result = testVal == a;
     REQUIRE(std::is_same_v<decltype(result), tainted<bool, TestSandbox>>);
     REQUIRE(result.UNSAFE_unverified());
     REQUIRE(!((!result).UNSAFE_unverified()));
 
-    auto result2 = a != a;
+    auto result2 = testVal != a;
+    REQUIRE(std::is_same_v<decltype(result2), tainted<bool, TestSandbox>>);
+    REQUIRE(!(result2.UNSAFE_unverified()));
+    REQUIRE((!result2).UNSAFE_unverified());
+  }
+
+  SECTION("Tainted Tainted compare") // NOLINT
+  {
+    auto result = a == a; // NOLINT(misc-redundant-expression)
+    REQUIRE(std::is_same_v<decltype(result), tainted<bool, TestSandbox>>);
+    REQUIRE(result.UNSAFE_unverified());
+    REQUIRE(!((!result).UNSAFE_unverified()));
+
+    auto result2 = a != a; // NOLINT(misc-redundant-expression)
     REQUIRE(std::is_same_v<decltype(result2), tainted<bool, TestSandbox>>);
     REQUIRE(!(result2.UNSAFE_unverified()));
     REQUIRE((!result2).UNSAFE_unverified());
@@ -90,8 +111,8 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
   }
   SECTION("tainted_volatile with tainted_volatile") // NOLINT
   {
-    auto result1 = (*t_ptr) == (*t_ptr);
-    auto result2 = (*t_ptr) != (*t_ptr);
+    auto result1 = (*t_ptr) == (*t_ptr); // NOLINT(misc-redundant-expression)
+    auto result2 = (*t_ptr) != (*t_ptr); // NOLINT(misc-redundant-expression)
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
     REQUIRE(result1.unverified_safe_because("Testing"));
@@ -101,6 +122,15 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
   {
     auto result1 = (*t_ptr) == testVal;
     auto result2 = (*t_ptr) != testVal;
+    REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
+    REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
+    REQUIRE(result1.unverified_safe_because("Testing"));
+    REQUIRE(!result2.unverified_safe_because("Testing"));
+  }
+  SECTION("unwrapped with tainted_volatile") // NOLINT
+  {
+    auto result1 = testVal == (*t_ptr);
+    auto result2 = testVal != (*t_ptr);
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
     REQUIRE(result1.unverified_safe_because("Testing"));

@@ -32,6 +32,20 @@ rlbox_generate_wrapper_check(sandbox_callback);
 
 #undef rlbox_generate_wrapper_check
 
+namespace detail_rlbox_is_tainted_boolean_hint {
+  template<typename T>
+  struct unwrapper : std::false_type
+  {};
+
+  template<>
+  struct unwrapper<tainted_boolean_hint> : std::true_type
+  {};
+}
+
+template<typename T>
+constexpr bool rlbox_is_tainted_boolean_hint_v =
+  detail_rlbox_is_tainted_boolean_hint::unwrapper<T>::value;
+
 template<typename T>
 constexpr bool rlbox_is_tainted_or_vol_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T>;
@@ -40,6 +54,8 @@ template<typename T>
 constexpr bool rlbox_is_tainted_or_opaque_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_opaque_v<T>;
 
+// tainted_hint is NOT considered a wrapper type... This carries no particular
+// significant and is just a convention choice
 template<typename T>
 constexpr bool rlbox_is_wrapper_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T> ||

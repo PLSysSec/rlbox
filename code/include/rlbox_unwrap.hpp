@@ -12,9 +12,11 @@ namespace rlbox::detail {
 template<typename T_Rhs>
 inline auto unwrap_value(T_Rhs&& rhs) noexcept
 {
-  using T_RhsNoRef = std::remove_cv_t<std::remove_reference_t<T_Rhs>>;
-  if constexpr (detail::rlbox_is_wrapper_v<T_RhsNoRef>) {
-    return rhs.UNSAFE_unverified();
+  using T_RhsNoQ = detail::remove_cv_ref_t<T_Rhs>;
+  if constexpr (detail::rlbox_is_wrapper_v<T_RhsNoQ>) {
+    return rhs.unverified_safe_because("internal use");
+  } else if constexpr (detail::rlbox_is_tainted_boolean_hint_v<T_RhsNoQ>) {
+    return rhs.unverified_safe_because("internal use");
   } else {
     return rhs;
   }

@@ -66,6 +66,9 @@ using add_const_from_pointer = std::conditional_t<
   T>;
 
 template<typename T>
+using remove_cv_ref_t = std::remove_cv_t<std::remove_reference_t<T>>;
+
+template<typename T>
 using c_to_std_array_t =
   std::conditional_t<std::is_array_v<T>,
                      std::array<std::remove_extent_t<T>, std::extent_v<T>>,

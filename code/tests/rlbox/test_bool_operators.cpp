@@ -22,8 +22,8 @@ TEST_CASE("Test bool operators", "[operator]")
     tainted<bool, TestSandbox> and_true = t && true;
     REQUIRE(and_true.UNSAFE_unverified());
 
-    REQUIRE_FALSE((t&&f).UNSAFE_unverified());
-    REQUIRE((t||f).UNSAFE_unverified());
+    REQUIRE_FALSE((t && f).UNSAFE_unverified());
+    REQUIRE((t || f).UNSAFE_unverified());
   }
 
   SECTION("tainted right") // NOLINT

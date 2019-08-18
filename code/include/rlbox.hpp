@@ -175,6 +175,63 @@ public:
 
 #undef UnaryOp
 
+  /**
+   * @brief Comparison operators. Comparisons to values in sandbox memory can
+   * only return a "tainted_boolean_hint" as the values in memory can be
+   * incorrect or malicously change in the future.
+   *
+   * @tparam T_Rhs
+   * @param rhs
+   * @return One of either a bool, tainted<bool>, or a tainted_boolean_hint
+   * depending on the arguments to the binary expression.
+   */
+#define CompareOp(opSymbol, permit_pointers)                                   \
+  template<typename T_Rhs>                                                     \
+  inline constexpr auto operator opSymbol(const T_Rhs& rhs) const              \
+  {                                                                            \
+    using T_RhsNoQ = detail::remove_cv_ref_t<T_Rhs>;                           \
+    constexpr bool check_rhs_hint =                                            \
+      detail::rlbox_is_tainted_volatile_v<T_RhsNoQ> ||                         \
+      detail::rlbox_is_tainted_boolean_hint_v<T_RhsNoQ>;                       \
+    constexpr bool check_lhs_hint =                                            \
+      detail::rlbox_is_tainted_volatile_v<T_Wrap<T, T_Sbx>>;                   \
+    constexpr bool is_hint = check_lhs_hint || check_rhs_hint;                 \
+                                                                               \
+    constexpr bool is_unwrapped =                                              \
+      detail::rlbox_is_tainted_v<T_Wrap<T, T_Sbx>> &&                          \
+      std::is_null_pointer_v<T_RhsNoQ>;                                        \
+                                                                               \
+    /* Sanity check - can't be a hint and unwrapped */                         \
+    static_assert(is_hint ? !is_unwrapped : true,                              \
+                  "Internal error: Could not deduce type for comparison. "     \
+                  "Please file a bug.");                                       \
+                                                                               \
+    if constexpr (!permit_pointers) {                                          \
+      rlbox_detail_static_fail_because(std::is_pointer_v<T>,                   \
+                    "Only == and != comparisons are allowed for pointers");    \
+    }                                                                          \
+                                                                               \
+    bool ret = (impl().get_raw_value() opSymbol detail::unwrap_value(rhs));    \
+                                                                               \
+    if constexpr (is_hint) {                                                   \
+      return tainted_boolean_hint(ret);                                        \
+    } else if constexpr (is_unwrapped) {                                       \
+      return ret;                                                              \
+    } else {                                                                   \
+      return tainted<bool, T_Sbx>(ret);                                        \
+    }                                                                          \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+  CompareOp(==, true /* permit_pointers */);
+  CompareOp(!=, true /* permit_pointers */);
+  CompareOp(<, false /* permit_pointers */);
+  CompareOp(<=, false /* permit_pointers */);
+  CompareOp(>, false /* permit_pointers */);
+  CompareOp(>=, false /* permit_pointers */);
+
+#undef CompareOp
+
 private:
   using T_OpSubscriptArrRet = std::conditional_t<
     std::is_pointer_v<T>,
@@ -278,12 +335,6 @@ public:
   {
     using T_Ret = tainted_volatile<std::remove_pointer_t<T>, T_Sbx>*;
     rlbox_detail_forward_to_const(operator->, T_Ret);
-  }
-
-  template<typename T_Rhs>
-  inline auto operator!=(T_Rhs&& arg) const
-  {
-    return !(impl() == arg);
   }
 
   inline auto operator!()
@@ -516,19 +567,18 @@ public:
            typename T,                                                         \
            typename T_Sbx,                                                     \
            typename T_Lhs,                                                     \
-           RLBOX_ENABLE_IF(!detail::rlbox_is_wrapper_v<T_Lhs>)>                \
-  inline constexpr auto operator opSymbol(                                             \
+           RLBOX_ENABLE_IF(!detail::rlbox_is_wrapper_v<T_Lhs> &&               \
+                           !detail::rlbox_is_tainted_boolean_hint_v<T_Lhs>)>   \
+  inline constexpr auto operator opSymbol(                                     \
     const T_Lhs& lhs, const tainted_base_impl<T_Wrap, T, T_Sbx>& rhs)          \
-    ->tainted<decltype(std::declval<T_Lhs>() opSymbol std::declval<T>()),      \
-              T_Sbx>                                                           \
   {                                                                            \
-    /* Handles the case for "3 + tainted" */                                   \
+    /* Handles the case for "3 + tainted", where + is a binary op */           \
     /* Technically pointer arithmetic can be performed as 3 + tainted_ptr */   \
     /* as well. However, this is unusual and to keep the code simple we do */  \
     /* not support this. */                                                    \
     static_assert(                                                             \
       std::is_arithmetic_v<T_Lhs>,                                             \
-      "Pointer arithmetic between an non tainted type and tainted"             \
+      "Binary expressions between an non tainted type and tainted"             \
       "type is only permitted if the first value is the tainted type. Try "    \
       "changing the order of the binary expression accordingly");              \
     auto ret = tainted<T_Lhs, T_Sbx>(lhs) opSymbol rhs.impl();                 \
@@ -548,6 +598,12 @@ BinaryOpWrappedRhs(<<);
 BinaryOpWrappedRhs(>>);
 BinaryOpWrappedRhs(&&);
 BinaryOpWrappedRhs(||);
+BinaryOpWrappedRhs(==);
+BinaryOpWrappedRhs(!=);
+BinaryOpWrappedRhs(<);
+BinaryOpWrappedRhs(<=);
+BinaryOpWrappedRhs(>);
+BinaryOpWrappedRhs(>=);
 #undef BinaryOpWrappedRhs
 
 namespace tainted_detail {
@@ -783,62 +839,6 @@ public:
   inline tainted_opaque<T, T_Sbx> to_opaque()
   {
     return *reinterpret_cast<tainted_opaque<T, T_Sbx>*>(this);
-  }
-
-  // In general comparison operators are unsafe.
-  // However comparing tainted with nullptr is fine because
-  // 1) tainted values are in application memory and thus cannot change the
-  // value after comparision
-  // 2) Checking that a pointer is null doesn't "really" taint the result as
-  // the result is always safe
-  template<typename T_Rhs>
-  inline auto operator==(T_Rhs&& arg) const
-  {
-    using T_RhsNoRef = std::remove_reference_t<T_Rhs>;
-    if_constexpr_named(
-      cond1, std::is_same_v<std::remove_cv_t<T_RhsNoRef>, std::nullptr_t>)
-    {
-      if_constexpr_named(subcond1, !std::is_pointer_v<T>)
-      {
-        rlbox_detail_static_fail_because(
-          cond1 && subcond1,
-          "Comparisons to nullptr only allowed for pointer types");
-        return false;
-      }
-      else
-      {
-        // We return this without the tainted wrapper as the checking for null
-        // doesn't really "induce" tainting in the application If the
-        // application is checking this pointer for null, then it is robust to
-        // this pointer being null or not null
-        return get_raw_value() == arg;
-      }
-    }
-    else if_constexpr_named(cond2, detail::rlbox_is_tainted_v<T_RhsNoRef>)
-    {
-      tainted<bool, T_Sbx> ret = get_raw_value() == arg.get_raw_value();
-      return ret;
-    }
-    else if_constexpr_named(cond3,
-                            detail::rlbox_is_tainted_volatile_v<T_RhsNoRef>)
-    {
-      tainted_boolean_hint ret(get_raw_value() == arg.get_raw_value());
-      return ret;
-    }
-    else if_constexpr_named(cond4, !detail::rlbox_is_wrapper_v<T_RhsNoRef>)
-    {
-      tainted<bool, T_Sbx> ret = get_raw_value() == arg;
-      return ret;
-    }
-    else
-    {
-      auto unknownCase = !(cond1 || cond2 || cond3 || cond4);
-      rlbox_detail_static_fail_because(
-        unknownCase,
-        "Unknown comparison requested. Comparisons supported only with "
-        "tainted_types, nullptr and non wrapped types such as int, float, "
-        "struct etc.");
-    }
   }
 
   template<typename T_Dummy = void>
@@ -1099,19 +1099,6 @@ public:
       "address\n ");
     get_sandbox_value_ref() =
       sandbox.template get_sandboxed_pointer<T_Rhs>(cast_val);
-  }
-
-  /**
-   * @brief Comparisons with a tainted_volatile return only a "hint" to the
-   * right answer, i.e., something that could be wrong or change. This is
-   * because a compromised sandbox can modify tainted_volatile data at any
-   * time.
-   */
-  template<typename T_Rhs>
-  inline tainted_boolean_hint operator==(T_Rhs&& arg) const
-  {
-    tainted_boolean_hint ret(get_raw_value() == detail::unwrap_value(arg));
-    return ret;
   }
 
   template<typename T_Dummy = void>
