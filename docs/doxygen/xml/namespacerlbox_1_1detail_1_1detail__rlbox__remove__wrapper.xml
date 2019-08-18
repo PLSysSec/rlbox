@@ -4,7 +4,6 @@
     <compoundname>rlbox::detail::detail_rlbox_remove_wrapper</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__callback_3_01T_00_01T__Sbx_01_4_01_4" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; sandbox_callback&lt; T, T_Sbx &gt; &gt;</innerclass>
-    <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__function_3_01T_00_01T__Sbx_01_4_01_4" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; sandbox_function&lt; T, T_Sbx &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted&lt; T, T_Sbx &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__opaque_3_01T_00_01T__Sbx_01_4_01_4" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted_opaque&lt; T, T_Sbx &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__volatile_3_01T_00_01T__Sbx_01_4_01_4" prot="public">rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted_volatile&lt; T, T_Sbx &gt; &gt;</innerclass>
@@ -12,6 +11,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="50" column="1"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="64" column="1"/>
   </compounddef>
 </doxygen>

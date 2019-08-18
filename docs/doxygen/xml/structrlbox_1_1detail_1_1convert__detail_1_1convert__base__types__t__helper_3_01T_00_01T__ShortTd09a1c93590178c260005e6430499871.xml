@@ -34,14 +34,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="294" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="294" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="297" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="297" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="293" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="285" bodyend="295"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="296" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="288" bodyend="298"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTd09a1c93590178c260005e6430499871_1acc928cabc40780bf019da1735727cd2a" prot="public" virt="non-virtual"><scope>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_same_v&lt; short, T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</scope><name>type</name></member>
     </listofallmembers>

@@ -5,7 +5,6 @@
     <innerclass refid="classrlbox_1_1rlbox__noop__sandbox" prot="public">rlbox::rlbox_noop_sandbox</innerclass>
     <innerclass refid="classrlbox_1_1rlbox__sandbox" prot="public">rlbox::rlbox_sandbox</innerclass>
     <innerclass refid="classrlbox_1_1sandbox__callback" prot="public">rlbox::sandbox_callback</innerclass>
-    <innerclass refid="classrlbox_1_1sandbox__function" prot="public">rlbox::sandbox_function</innerclass>
     <innerclass refid="classrlbox_1_1tainted" prot="public">rlbox::tainted</innerclass>
     <innerclass refid="classrlbox_1_1tainted__base__impl" prot="public">rlbox::tainted_base_impl</innerclass>
     <innerclass refid="classrlbox_1_1tainted__boolean__hint" prot="public">rlbox::tainted_boolean_hint</innerclass>
@@ -16,6 +15,179 @@
     <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1tainted__detail">rlbox::tainted_detail</innernamespace>
       <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox_8hpp_1a341a0f35f0f583144bd2cbf4cc2f701c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(+)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>+</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="589" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a1972fc855287b24964bcaab50d65e2b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(-)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>-</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="590" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a288fd230c8d87eba5d9bc0ea9a28330d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>BinaryOpWrappedRhs *</type>
+        <definition>BinaryOpWrappedRhs* rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(/);BinaryOpWrappedRhs(%</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>/</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="591" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a192484cdecb4068a8d15695d4efe89e9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>BinaryOpWrappedRhs^</type>
+        <definition>BinaryOpWrappedRhs^ rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&amp;);BinaryOpWrappedRhs(|</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="594" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a9554c25732e3460818aa2be9378f0253" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&lt;&lt;)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>&lt;&lt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="597" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a44ffb8305bfc2eac8c597365e09703e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&gt;&gt;)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>&gt;&gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="598" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1ad8244e93519dd5484f7b3532cdccd801" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>BinaryOpWrappedRhs &amp;&amp;</type>
+        <definition>BinaryOpWrappedRhs&amp;&amp; rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(||);BinaryOpWrappedRhs(==</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>||</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="599" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a82be7cb64ac0ead60044d77cece674c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(!=)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>!</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="602" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1afdf95930ff16e35df43d446160dcfd61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&lt;)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="603" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a8ccbcf9aa2a9f57e0274db6392509661" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&lt;=)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>&lt;=</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="604" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox_8hpp_1a1fea4b3c5ef01a34946902032a8f0815" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::BinaryOpWrappedRhs</definition>
+        <argsstring>(&gt;=)</argsstring>
+        <name>BinaryOpWrappedRhs</name>
+        <param>
+          <type>&gt;=</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="606" column="1"/>
+      </memberdef>
       <memberdef kind="function" id="rlbox_8hpp_1a7328c5d63ec45929e4842d951ab247fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
@@ -39,7 +211,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="843" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="843" bodyend="846"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="868" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="868" bodyend="871"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__stdlib_8hpp_1aac1552a010c926f4211a3b73d04fb23d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>

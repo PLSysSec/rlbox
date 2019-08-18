@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_3d_3d',['operator==',['../classrlbox_1_1tainted__volatile.html#a7edbf4fa582a5cedd158b9fe3d1d69b5',1,'rlbox::tainted_volatile']]]
+  ['register_5fcallback',['register_callback',['../classrlbox_1_1rlbox__sandbox.html#ae4f4cc7825bcb613ab5405e0f6cae7f3',1,'rlbox::rlbox_sandbox']]]
 ];

@@ -82,7 +82,7 @@
         </inbodydescription>
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="41" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="41" bodyend="41"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1af75b9abf5d1b842a630b040bbcb38182" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>size_t</type>
@@ -91,9 +91,9 @@
           </param>
         </templateparamlist>
         <type>bool</type>
-        <definition>bool rlbox::tainted_boolean_hint::get_value_safe_because</definition>
+        <definition>bool rlbox::tainted_boolean_hint::unverified_safe_because</definition>
         <argsstring>(const char(&amp;reason)[N]) const</argsstring>
-        <name>get_value_safe_because</name>
+        <name>unverified_safe_because</name>
         <param>
           <type>const char(&amp;)</type>
           <declname>reason</declname>
@@ -114,11 +114,11 @@
     </detaileddescription>
     <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="26" bodyend="48"/>
     <listofallmembers>
-      <member refid="classrlbox_1_1tainted__boolean__hint_1af75b9abf5d1b842a630b040bbcb38182" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>get_value_safe_because</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1ae47718163139bbc69009f5d853700690" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>operator!</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1accd26753a15b8c1510418a1b0ef6ac81" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>operator=</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1a14cea878f2d1cbf8722491cc0abe875f" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>tainted_boolean_hint</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1adea514e39039a1278dc00b59ec911ce2" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>tainted_boolean_hint</name></member>
+      <member refid="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>unverified_safe_because</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1ac56b1b2bb81216a563c6a65287c8b93d" prot="private" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>val</name></member>
     </listofallmembers>
   </compounddef>

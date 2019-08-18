@@ -3,6 +3,12 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a7c1c8a81e0c89fc20607c3021bf711dd}\label{classrlbox_1_1tainted__base__impl_a7c1c8a81e0c89fc20607c3021bf711dd}} 
+auto \& {\bfseries impl} ()
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_aebf64332a129c6782da259efee237dff}\label{classrlbox_1_1tainted__base__impl_aebf64332a129c6782da259efee237dff}} 
+auto \& {\bfseries impl} () const
+\item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}\label{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}} 
 auto \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified} ()
 \begin{DoxyCompactList}\small\item\em Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. \end{DoxyCompactList}\item 
@@ -37,11 +43,29 @@ Binary\+Op$^\wedge$ {\bfseries Binary\+Op} (\&);Binary\+Op($\vert$
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a60f6d9cc0d8462291f461e4183d90ec7}\label{classrlbox_1_1tainted__base__impl_a60f6d9cc0d8462291f461e4183d90ec7}} 
 {\bfseries Binary\+Op} ($>$$>$)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a30945c75dace33aa34d77c839e50d49a}\label{classrlbox_1_1tainted__base__impl_a30945c75dace33aa34d77c839e50d49a}} 
-{\bfseries Unary\+Op} (-\/)
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a6c9e47896f394949e92a4b24313d61cf}\label{classrlbox_1_1tainted__base__impl_a6c9e47896f394949e92a4b24313d61cf}} 
+Binary\+Op \&\& {\bfseries Binary\+Op} ($\vert$$\vert$);\#define Unary\+Op(op\+Symbol) Unary\+Op(-\/
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ac450c85ec8fa3c5046bcf3fb7aeca2d1}\label{classrlbox_1_1tainted__base__impl_ac450c85ec8fa3c5046bcf3fb7aeca2d1}} 
 {\bfseries Unary\+Op} ($\sim$)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a257ae6c0b4a0fe1b1639044a572a038b}\label{classrlbox_1_1tainted__base__impl_a257ae6c0b4a0fe1b1639044a572a038b}} 
+{\bfseries Compare\+Op} (==, true)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a3d04a736a337294fc02a13baef2d78db}\label{classrlbox_1_1tainted__base__impl_a3d04a736a337294fc02a13baef2d78db}} 
+{\bfseries Compare\+Op} (!=, true)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ac91498bde8eb4e3a384c666a65d5e7c0}\label{classrlbox_1_1tainted__base__impl_ac91498bde8eb4e3a384c666a65d5e7c0}} 
+{\bfseries Compare\+Op} ($<$, false)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a2665ce9ccc644be5556c05fb26470468}\label{classrlbox_1_1tainted__base__impl_a2665ce9ccc644be5556c05fb26470468}} 
+{\bfseries Compare\+Op} ($<$=, false)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a461a58872313be13c882039a4d286145}\label{classrlbox_1_1tainted__base__impl_a461a58872313be13c882039a4d286145}} 
+{\bfseries Compare\+Op} ($>$, false)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_af85745a199b95587d0d750439fae25bd}\label{classrlbox_1_1tainted__base__impl_af85745a199b95587d0d750439fae25bd}} 
+{\bfseries Compare\+Op} ($>$=, false)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ad71e3e71f23ee730d9c6a9f9fc4d557e}\label{classrlbox_1_1tainted__base__impl_ad71e3e71f23ee730d9c6a9f9fc4d557e}} 
 {\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\const T\+\_\+\+Op\+Subscript\+Arr\+Ret \& {\bfseries operator\mbox{[}$\,$\mbox{]}} (T\+\_\+\+Rhs \&\&rhs) const
@@ -60,9 +84,6 @@ auto {\bfseries operator-\/$>$} () const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a52c2403f1851a0e2d295a712d8d10029}\label{classrlbox_1_1tainted__base__impl_a52c2403f1851a0e2d295a712d8d10029}} 
 auto {\bfseries operator-\/$>$} ()
-\item 
-\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ad22f860fd026994b29fbfe619d1cce36}\label{classrlbox_1_1tainted__base__impl_ad22f860fd026994b29fbfe619d1cce36}} 
-{\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\auto {\bfseries operator!=} (T\+\_\+\+Rhs \&\&arg) const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a05eaec33cccaad9bc15e014d6c25d695}\label{classrlbox_1_1tainted__base__impl_a05eaec33cccaad9bc15e014d6c25d695}} 
 auto {\bfseries operator!} ()

@@ -42,9 +42,6 @@ Collaboration diagram for rlbox\+:\+:tainted\+\_\+volatile$<$ T, T\+\_\+\+Sbx $>
 \mbox{\Hypertarget{classrlbox_1_1tainted__volatile_adc112be01be78aff6187e845e2e3ee5f}\label{classrlbox_1_1tainted__volatile_adc112be01be78aff6187e845e2e3ee5f}} 
 {\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\void {\bfseries assign\+\_\+raw\+\_\+pointer} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox, T\+\_\+\+Rhs val)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}\label{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}} 
-{\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\\hyperlink{classrlbox_1_1tainted__boolean__hint}{tainted\+\_\+boolean\+\_\+hint} \hyperlink{classrlbox_1_1tainted__volatile_a7edbf4fa582a5cedd158b9fe3d1d69b5}{operator==} (T\+\_\+\+Rhs \&\&arg) const
-\begin{DoxyCompactList}\small\item\em Comparisons with a \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile} return only a \char`\"{}hint\char`\"{} to the right answer, i.\+e., something that could be wrong or change. This is because a compromised sandbox can modify \hyperlink{classrlbox_1_1tainted__volatile}{tainted\+\_\+volatile} data at any time. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__volatile_ad6b318608ffa3306c230b8043b33091d}\label{classrlbox_1_1tainted__volatile_ad6b318608ffa3306c230b8043b33091d}} 
 {\footnotesize template$<$typename T\+\_\+\+Dummy  = void$>$ }\\{\bfseries operator bool} () const
 \end{DoxyCompactItemize}

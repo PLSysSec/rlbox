@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper" kind="struct" language="C++" prot="public">
+    <compoundname>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">false_type</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="105">
+        <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; T &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper"/>
+        <childnode refid="106" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="106">
+        <label>false_type</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="107">
+        <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; T &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper"/>
+        <childnode refid="108" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="108">
+        <label>false_type</label>
+      </node>
+    </collaborationgraph>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="38" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="37" bodyend="38"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

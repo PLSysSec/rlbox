@@ -90,7 +90,7 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a90051b6a6df7ba775ec917cd9cc8d029" kind="variable"><name>callback_unique_keys</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9350bc978320601504c5ae747ba35596" kind="variable"><name>callbacks</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1abe0dfb0cde9dbc85eee3fc37cac7a6e5" kind="variable"><name>MAX_CALLBACKS</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a0879ef5a8ed8dd3a636c0ea75480c92b" kind="variable"><name>thread_data</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a3c6118d160451d8f55f118595b6c547d" kind="variable"><name>thread_data</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1afc66f94f8c325ffde16953be83b47ece" kind="function"><name>callback_trampoline</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1aed3d297784c5654e6d83d4c5d3dacd90" kind="function"><name>impl_create_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1af1693fb4ff2ac776671d10c2c5481d61" kind="function"><name>impl_destroy_sandbox</name></member>
@@ -186,8 +186,6 @@
     <member refid="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a12f4b98341c36fa3eb97d9da82443bc8" kind="function"><name>UNSAFE_sandboxed</name></member>
   </compound>
-  <compound refid="classrlbox_1_1sandbox__function" kind="class"><name>rlbox::sandbox_function</name>
-  </compound>
   <compound refid="classrlbox_1_1tainted" kind="class"><name>rlbox::tainted</name>
     <member refid="classrlbox_1_1tainted_1a717f782e5555e14826a0ae1ff3261805" kind="typedef"><name>T_ClassBase</name></member>
     <member refid="classrlbox_1_1tainted_1a6fb2e3ca8f224c6430f8d6b9aa44498c" kind="typedef"><name>T_AppType</name></member>
@@ -208,12 +206,10 @@
     <member refid="classrlbox_1_1tainted_1a7cadc0cd1fb715d719baadb7e2d87042" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a56739db1ff21372093b8180af5778f88" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a06c24d3c7b8268ab42e244f45feb31ba" kind="function"><name>tainted</name></member>
-    <member refid="classrlbox_1_1tainted_1ac0513020c42df1f0389ba3ee1e58eb6b" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a59d4309650ad2e5749cf7847aba8fc48" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a058af0c109aadb7740696f8583310994" kind="function"><name>tainted</name></member>
     <member refid="classrlbox_1_1tainted_1a27a59dcab0ce6e4aa69be370ce5543fc" kind="function"><name>assign_raw_pointer</name></member>
     <member refid="classrlbox_1_1tainted_1a7396dc3297186d7c10dd8bc031627a78" kind="function"><name>to_opaque</name></member>
-    <member refid="classrlbox_1_1tainted_1a47bf953dac27d504e46682a6f33c2205" kind="function"><name>operator==</name></member>
     <member refid="classrlbox_1_1tainted_1a43e697ce5c9a1b853e786cae10105a52" kind="function"><name>operator bool</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted__base__impl" kind="class"><name>rlbox::tainted_base_impl</name>
@@ -222,7 +218,6 @@
     <member refid="classrlbox_1_1tainted__base__impl_1ac70f724530042010d1366ab44ae6117a" kind="typedef"><name>T_CopyAndVerifyRangeEl</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a7c1c8a81e0c89fc20607c3021bf711dd" kind="function"><name>impl</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1aebf64332a129c6782da259efee237dff" kind="function"><name>impl</name></member>
-    <member refid="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" kind="function"><name>copy_and_verify_range_helper</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214" kind="function"><name>UNSAFE_sandboxed</name></member>
@@ -235,20 +230,26 @@
     <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" kind="function"><name>BinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a100c45337a0ad48eb18ac977edb8cc48" kind="function"><name>BinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a60f6d9cc0d8462291f461e4183d90ec7" kind="function"><name>BinaryOp</name></member>
-    <member refid="classrlbox_1_1tainted__base__impl_1a30945c75dace33aa34d77c839e50d49a" kind="function"><name>UnaryOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a6c9e47896f394949e92a4b24313d61cf" kind="function"><name>BinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ac450c85ec8fa3c5046bcf3fb7aeca2d1" kind="function"><name>UnaryOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a257ae6c0b4a0fe1b1639044a572a038b" kind="function"><name>CompareOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a3d04a736a337294fc02a13baef2d78db" kind="function"><name>CompareOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1ac91498bde8eb4e3a384c666a65d5e7c0" kind="function"><name>CompareOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a2665ce9ccc644be5556c05fb26470468" kind="function"><name>CompareOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a461a58872313be13c882039a4d286145" kind="function"><name>CompareOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1af85745a199b95587d0d750439fae25bd" kind="function"><name>CompareOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ad71e3e71f23ee730d9c6a9f9fc4d557e" kind="function"><name>operator[]</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a6fd9a75009eee8738dd0a7625bb2b1fc" kind="function"><name>operator[]</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ae308e3faece4fe51254f38814220bcef" kind="function"><name>operator*</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a8fd7566680b44852f260d8431ee4d196" kind="function"><name>operator*</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a3e8fdb261d771cb7b5c9af33fe52ff35" kind="function"><name>operator-&gt;</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a52c2403f1851a0e2d295a712d8d10029" kind="function"><name>operator-&gt;</name></member>
-    <member refid="classrlbox_1_1tainted__base__impl_1ad22f860fd026994b29fbfe619d1cce36" kind="function"><name>operator!=</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a05eaec33cccaad9bc15e014d6c25d695" kind="function"><name>operator!</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a701759aedd637f48cc97a0e6ada1c8a6" kind="function"><name>copy_and_verify</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" kind="function"><name>copy_and_verify_range</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" kind="function"><name>copy_and_verify_string</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" kind="function"><name>copy_and_verify_address</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" kind="function"><name>copy_and_verify_range_helper</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted__boolean__hint" kind="class"><name>rlbox::tainted_boolean_hint</name>
     <member refid="classrlbox_1_1tainted__boolean__hint_1ac56b1b2bb81216a563c6a65287c8b93d" kind="variable"><name>val</name></member>
@@ -256,7 +257,7 @@
     <member refid="classrlbox_1_1tainted__boolean__hint_1adea514e39039a1278dc00b59ec911ce2" kind="function"><name>tainted_boolean_hint</name></member>
     <member refid="classrlbox_1_1tainted__boolean__hint_1accd26753a15b8c1510418a1b0ef6ac81" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1tainted__boolean__hint_1ae47718163139bbc69009f5d853700690" kind="function"><name>operator!</name></member>
-    <member refid="classrlbox_1_1tainted__boolean__hint_1af75b9abf5d1b842a630b040bbcb38182" kind="function"><name>get_value_safe_because</name></member>
+    <member refid="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19" kind="function"><name>unverified_safe_because</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted__opaque" kind="class"><name>rlbox::tainted_opaque</name>
     <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" kind="variable"><name>data</name></member>
@@ -280,24 +281,23 @@
     <member refid="classrlbox_1_1tainted__volatile_1ace5c231dd34dd457c5780711f659a262" kind="function"><name>operator &amp;</name></member>
     <member refid="classrlbox_1_1tainted__volatile_1a03de23a9e3db2a7ec1c392544c704988" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1tainted__volatile_1adc112be01be78aff6187e845e2e3ee5f" kind="function"><name>assign_raw_pointer</name></member>
-    <member refid="classrlbox_1_1tainted__volatile_1a7edbf4fa582a5cedd158b9fe3d1d69b5" kind="function"><name>operator==</name></member>
     <member refid="classrlbox_1_1tainted__volatile_1ad6b318608ffa3306c230b8043b33091d" kind="function"><name>operator bool</name></member>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper" kind="struct"><name>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper</name>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_1a880e2c32e27505ebf9e71b896b586c37" kind="typedef"><name>type</name></member>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_1ac48201968ef70435a4da5ce89e8993f7" kind="typedef"><name>type_sbx</name></member>
   </compound>
+  <compound refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper" kind="struct"><name>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper</name>
+  </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__callback_3_01T_00_01T__Sbx_01_4_01_4" kind="struct"><name>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; sandbox_callback&lt; T, T_Sbx &gt; &gt;</name>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__callback_3_01T_00_01T__Sbx_01_4_01_4_1a0dcaa696c32e68cdf01ac6d9e6e3563f" kind="typedef"><name>type</name></member>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__callback_3_01T_00_01T__Sbx_01_4_01_4_1a2bc8b3468e02fa4b270a5f995f427afe" kind="typedef"><name>type_sbx</name></member>
   </compound>
-  <compound refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__function_3_01T_00_01T__Sbx_01_4_01_4" kind="struct"><name>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; sandbox_function&lt; T, T_Sbx &gt; &gt;</name>
-    <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__function_3_01T_00_01T__Sbx_01_4_01_4_1a9e039719570357525aa740642bc2b21e" kind="typedef"><name>type</name></member>
-    <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01sandbox__function_3_01T_00_01T__Sbx_01_4_01_4_1a435a03c5d1a60d9298a07cf792dcc1b5" kind="typedef"><name>type_sbx</name></member>
-  </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4" kind="struct"><name>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted&lt; T, T_Sbx &gt; &gt;</name>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4_1ace6e380e9e64a1681492c3a4f93f3cf5" kind="typedef"><name>type</name></member>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4_1ac91e2c99e60e54c181ccce11433741ec" kind="typedef"><name>type_sbx</name></member>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper_3_01tainted__boolean__hint_01_4" kind="struct"><name>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; tainted_boolean_hint &gt;</name>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__opaque_3_01T_00_01T__Sbx_01_4_01_4" kind="struct"><name>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted_opaque&lt; T, T_Sbx &gt; &gt;</name>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__opaque_3_01T_00_01T__Sbx_01_4_01_4_1ad138d193f218b44c9b5ea938447673c8" kind="typedef"><name>type</name></member>
@@ -307,13 +307,24 @@
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__volatile_3_01T_00_01T__Sbx_01_4_01_4_1a35e2bbef854da26ac6183d86973088d1" kind="typedef"><name>type</name></member>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__volatile_3_01T_00_01T__Sbx_01_4_01_4_1a03486bcca1d3277cdfab50c85839b595" kind="typedef"><name>type_sbx</name></member>
   </compound>
-  <compound refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_el_detail::W</name>
-    <member refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W_1a40a0b72602d7250352c6adc3947e8ccc" kind="typedef"><name>type</name></member>
-  </compound>
   <compound refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_to_c_arr_detail::W</name>
     <member refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W_1a0820ff0c6b9407092672b903661c9459" kind="typedef"><name>type</name></member>
   </compound>
+  <compound refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_el_detail::W</name>
+    <member refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W_1a40a0b72602d7250352c6adc3947e8ccc" kind="typedef"><name>type</name></member>
+  </compound>
   <compound refid="namespacerlbox" kind="namespace"><name>rlbox</name>
+    <member refid="rlbox_8hpp_1a341a0f35f0f583144bd2cbf4cc2f701c" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a1972fc855287b24964bcaab50d65e2b6" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a288fd230c8d87eba5d9bc0ea9a28330d" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a192484cdecb4068a8d15695d4efe89e9" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a9554c25732e3460818aa2be9378f0253" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a44ffb8305bfc2eac8c597365e09703e1" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1ad8244e93519dd5484f7b3532cdccd801" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a82be7cb64ac0ead60044d77cece674c3" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1afdf95930ff16e35df43d446160dcfd61" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a8ccbcf9aa2a9f57e0274db6392509661" kind="function"><name>BinaryOpWrappedRhs</name></member>
+    <member refid="rlbox_8hpp_1a1fea4b3c5ef01a34946902032a8f0815" kind="function"><name>BinaryOpWrappedRhs</name></member>
     <member refid="rlbox_8hpp_1a7328c5d63ec45929e4842d951ab247fa" kind="function"><name>from_opaque</name></member>
     <member refid="rlbox__stdlib_8hpp_1aac1552a010c926f4211a3b73d04fb23d" kind="function"><name>sandbox_reinterpret_cast</name></member>
     <member refid="rlbox__stdlib_8hpp_1a449504c5212429fce9c27ab5535b4cef" kind="function"><name>sandbox_const_cast</name></member>
@@ -346,6 +357,7 @@
     <member refid="rlbox__type__traits_8hpp_1aba3f190638685e7c6f6145f65b5bdf30" kind="typedef"><name>add_const_if_this_const_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1a4cec78036c032a6deb55336f269714c3" kind="typedef"><name>remove_const_from_pointer</name></member>
     <member refid="rlbox__type__traits_8hpp_1ab03c765217996e646529468379d30cc4" kind="typedef"><name>add_const_from_pointer</name></member>
+    <member refid="rlbox__type__traits_8hpp_1a5b1e8d63bbdef37fe7031e17099d4525" kind="typedef"><name>remove_cv_ref_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1adb80814450ea92c6d877a99fd1b138d0" kind="typedef"><name>c_to_std_array_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1a1b54029c2063ff88a71cabe5f2633ba4" kind="typedef"><name>std_array_to_c_arr_t</name></member>
     <member refid="rlbox__type__traits_8hpp_1afbe695604973be987bd55e56a235bfbb" kind="typedef"><name>dereference_result_t</name></member>
@@ -369,6 +381,7 @@
     <member refid="rlbox__type__traits_8hpp_1a38a3217aae41c870be3e1c15e82f9d43" kind="variable"><name>is_std_array_v</name></member>
     <member refid="rlbox__type__traits_8hpp_1ae1e5b38244f3334ce9cce348c910cae0" kind="variable"><name>is_c_or_std_array_v</name></member>
     <member refid="rlbox__type__traits_8hpp_1a45ed24e94fe880e164e02e5b7a7d07e2" kind="variable"><name>all_extents_same</name></member>
+    <member refid="rlbox__wrapper__traits_8hpp_1a464ae2320f62b81d983308a8825d8e0c" kind="variable"><name>rlbox_is_tainted_boolean_hint_v</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a057b71227e31a443ab39a1daab7a4b73" kind="variable"><name>rlbox_is_tainted_or_vol_v</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a8c9dbd7d17f5684ccadcfceccf80572c" kind="variable"><name>rlbox_is_tainted_or_opaque_v</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1add309ec62a6f0b5387fc8bf31ecdce61" kind="variable"><name>rlbox_is_wrapper_v</name></member>
@@ -388,7 +401,6 @@
     <member refid="rlbox__wrapper__traits_8hpp_1a5eae14a6636fc4ecf27e26b7a1949160" kind="function"><name>rlbox_generate_wrapper_check</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a7b9bf51d724ad90c81229d274327b20e" kind="function"><name>rlbox_generate_wrapper_check</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a2a79e6802dd47b2b6a0f2675e99eb9c1" kind="function"><name>rlbox_generate_wrapper_check</name></member>
-    <member refid="rlbox__wrapper__traits_8hpp_1a67cd67d36187e6745022668230cfb8d7" kind="function"><name>rlbox_generate_wrapper_check</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a189dcab932823fa8ef0140d7454a9952" kind="function"><name>struct_is_member_of_rlbox_detail</name></member>
   </compound>
   <compound refid="namespacerlbox_1_1detail_1_1all__extents__same__detail" kind="namespace"><name>rlbox::detail::all_extents_same_detail</name>
@@ -401,6 +413,8 @@
   <compound refid="namespacerlbox_1_1detail_1_1convert__detail" kind="namespace"><name>rlbox::detail::convert_detail</name>
   </compound>
   <compound refid="namespacerlbox_1_1detail_1_1detail__is__member__of__rlbox__detail" kind="namespace"><name>rlbox::detail::detail_is_member_of_rlbox_detail</name>
+  </compound>
+  <compound refid="namespacerlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint" kind="namespace"><name>rlbox::detail::detail_rlbox_is_tainted_boolean_hint</name>
   </compound>
   <compound refid="namespacerlbox_1_1detail_1_1detail__rlbox__remove__wrapper" kind="namespace"><name>rlbox::detail::detail_rlbox_remove_wrapper</name>
   </compound>
@@ -428,6 +442,8 @@
     <member refid="rlbox_8hpp_1af856c0e9894b28f1b9cb0d89eb5a21a7" kind="define"><name>BinaryOpValAndPtr</name></member>
     <member refid="rlbox_8hpp_1a549df547f1f4c2c6673055b504891b74" kind="define"><name>BinaryOp</name></member>
     <member refid="rlbox_8hpp_1a102d341385d2903f0a7c1600b56ae40e" kind="define"><name>UnaryOp</name></member>
+    <member refid="rlbox_8hpp_1a3cd7ef6a73d543577423d64e3c5386ef" kind="define"><name>CompareOp</name></member>
+    <member refid="rlbox_8hpp_1a47c45131786a676f3c41fd08dde718df" kind="define"><name>BinaryOpWrappedRhs</name></member>
   </compound>
   <compound refid="rlbox__conversion_8hpp" kind="file"><name>rlbox_conversion.hpp</name>
   </compound>

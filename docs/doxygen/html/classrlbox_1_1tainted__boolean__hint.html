@@ -89,10 +89,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae47718163139bbc69009f5d853700690"><td class="memItemLeft" align="right" valign="top"><a id="ae47718163139bbc69009f5d853700690"></a>
 <a class="el" href="classrlbox_1_1tainted__boolean__hint.html">tainted_boolean_hint</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator!</b> ()</td></tr>
 <tr class="separator:ae47718163139bbc69009f5d853700690"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af75b9abf5d1b842a630b040bbcb38182"><td class="memTemplParams" colspan="2"><a id="af75b9abf5d1b842a630b040bbcb38182"></a>
+<tr class="memitem:abf39ef53dfd6b06017c127ef9370bb19"><td class="memTemplParams" colspan="2"><a id="abf39ef53dfd6b06017c127ef9370bb19"></a>
 template&lt;size_t N&gt; </td></tr>
-<tr class="memitem:af75b9abf5d1b842a630b040bbcb38182"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_value_safe_because</b> (const char(&amp;reason)[N]) const</td></tr>
-<tr class="separator:af75b9abf5d1b842a630b040bbcb38182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf39ef53dfd6b06017c127ef9370bb19"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unverified_safe_because</b> (const char(&amp;reason)[N]) const</td></tr>
+<tr class="separator:abf39ef53dfd6b06017c127ef9370bb19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tainted boolean value that serves as a "hint" and not a definite answer. Comparisons with a <a class="el" href="classrlbox_1_1tainted__volatile.html" title="Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile. ">tainted_volatile</a> return such hints. They are not <code>tainted&lt;bool&gt;</code> values because a compromised sandbox can modify <a class="el" href="classrlbox_1_1tainted__volatile.html" title="Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile. ">tainted_volatile</a> data at any time. </p>
