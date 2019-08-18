@@ -53,8 +53,5 @@ class rlbox_sandbox;
 template<typename T, typename T_Sbx>
 class sandbox_callback;
 
-template<typename T, typename T_Sbx>
-class sandbox_function;
-
 class rlbox_noop_sandbox;
 }

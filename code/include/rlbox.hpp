@@ -728,27 +728,6 @@ public:
       "This would keep the assignment in sandbox memory");
   }
 
-  tainted(
-    const sandbox_function<
-      detail::function_ptr_t<T> // Need to ensure we never generate code that
-                                // creates a sandbox_function of a non function
-      ,
-      T_Sbx>&)
-  {
-    rlbox_detail_static_fail_because(
-      detail::true_v<T>,
-      "RLBox does not support assigning sandbox_function values to tainted "
-      "types (i.e. types that live in application memory).\n"
-      "If you still want to do this, consider changing your code to store the "
-      "value in sandbox memory as follows. Convert\n\n"
-      "sandbox_function<T_Func, Sbx> cb = ...;\n"
-      "tainted<T_Func, Sbx> foo = cb;\n\n"
-      "to\n\n"
-      "tainted<T_Func*, Sbx> foo_ptr = sandbox.malloc_in_sandbox<T_Func*>();\n"
-      "*foo_ptr = cb;\n\n"
-      "This would keep the assignment in sandbox memory");
-  }
-
   tainted(const std::nullptr_t& arg)
     : data(arg)
   {
@@ -1024,9 +1003,7 @@ public:
         example_unsandboxed_ptr,
         nullptr /* sandbox_ptr */);
     }
-    else if_constexpr_named(cond4,
-                            detail::rlbox_is_sandbox_callback_v<T_Rhs> ||
-                              detail::rlbox_is_sandbox_function_v<T_Rhs>)
+    else if_constexpr_named(cond4, detail::rlbox_is_sandbox_callback_v<T_Rhs>)
     {
       using T_RhsFunc = detail::rlbox_remove_wrapper_t<T_Rhs>;
 

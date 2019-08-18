@@ -29,7 +29,6 @@ rlbox_generate_wrapper_check(tainted);
 rlbox_generate_wrapper_check(tainted_volatile);
 rlbox_generate_wrapper_check(tainted_opaque);
 rlbox_generate_wrapper_check(sandbox_callback);
-rlbox_generate_wrapper_check(sandbox_function);
 
 #undef rlbox_generate_wrapper_check
 
@@ -44,8 +43,7 @@ constexpr bool rlbox_is_tainted_or_opaque_v =
 template<typename T>
 constexpr bool rlbox_is_wrapper_v =
   rlbox_is_tainted_v<T> || rlbox_is_tainted_volatile_v<T> ||
-  rlbox_is_tainted_opaque_v<T> || rlbox_is_sandbox_callback_v<T> ||
-  rlbox_is_sandbox_function_v<T>;
+  rlbox_is_tainted_opaque_v<T> || rlbox_is_sandbox_callback_v<T>;
 
 namespace detail_rlbox_remove_wrapper {
   template<typename T>
@@ -78,13 +76,6 @@ namespace detail_rlbox_remove_wrapper {
 
   template<typename T, typename T_Sbx>
   struct unwrapper<sandbox_callback<T, T_Sbx>>
-  {
-    using type = T;
-    using type_sbx = T_Sbx;
-  };
-
-  template<typename T, typename T_Sbx>
-  struct unwrapper<sandbox_function<T, T_Sbx>>
   {
     using type = T;
     using type_sbx = T_Sbx;
