@@ -40,7 +40,7 @@ public:
   }
   inline tainted_boolean_hint operator!() { return tainted_boolean_hint(!val); }
   template<size_t N>
-  inline bool get_value_safe_because(const char (&reason)[N]) const
+  inline bool unverified_safe_because(const char (&reason)[N]) const
   {
     (void)reason; /* unused */
     return val;

@@ -76,8 +76,8 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
     auto result2 = t != (*t_ptr);
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
-    REQUIRE(result1.get_value_safe_because("Testing"));
-    REQUIRE(!result2.get_value_safe_because("Testing"));
+    REQUIRE(result1.unverified_safe_because("Testing"));
+    REQUIRE(!result2.unverified_safe_because("Testing"));
   }
   SECTION("tainted_volatile with tainted") // NOLINT
   {
@@ -85,8 +85,8 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
     auto result2 = (*t_ptr) != t;
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
-    REQUIRE(result1.get_value_safe_because("Testing"));
-    REQUIRE(!result2.get_value_safe_because("Testing"));
+    REQUIRE(result1.unverified_safe_because("Testing"));
+    REQUIRE(!result2.unverified_safe_because("Testing"));
   }
   SECTION("tainted_volatile with tainted_volatile") // NOLINT
   {
@@ -94,8 +94,8 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
     auto result2 = (*t_ptr) != (*t_ptr);
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
-    REQUIRE(result1.get_value_safe_because("Testing"));
-    REQUIRE(!result2.get_value_safe_because("Testing"));
+    REQUIRE(result1.unverified_safe_because("Testing"));
+    REQUIRE(!result2.unverified_safe_because("Testing"));
   }
   SECTION("tainted_volatile with unwrapped") // NOLINT
   {
@@ -103,8 +103,8 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
     auto result2 = (*t_ptr) != testVal;
     REQUIRE(std::is_same_v<decltype(result1), tainted_boolean_hint>);
     REQUIRE(std::is_same_v<decltype(result2), tainted_boolean_hint>);
-    REQUIRE(result1.get_value_safe_because("Testing"));
-    REQUIRE(!result2.get_value_safe_because("Testing"));
+    REQUIRE(result1.unverified_safe_because("Testing"));
+    REQUIRE(!result2.unverified_safe_because("Testing"));
   }
 
   sandbox.destroy_sandbox();
