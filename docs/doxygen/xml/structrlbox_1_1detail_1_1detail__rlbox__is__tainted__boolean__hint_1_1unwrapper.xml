@@ -13,24 +13,24 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="105">
+      <node id="101">
         <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; T &gt;</label>
         <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper"/>
-        <childnode refid="106" relation="public-inheritance">
+        <childnode refid="102" relation="public-inheritance">
         </childnode>
       </node>
-      <node id="106">
+      <node id="102">
         <label>false_type</label>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="107">
+      <node id="103">
         <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; T &gt;</label>
         <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper"/>
-        <childnode refid="108" relation="public-inheritance">
+        <childnode refid="104" relation="public-inheritance">
         </childnode>
       </node>
-      <node id="108">
+      <node id="104">
         <label>false_type</label>
       </node>
     </collaborationgraph>

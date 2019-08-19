@@ -431,7 +431,7 @@ operators like ``+`` and ``-`` on tainted values.
 +-------------------------+------------------------------------------------+
 |  Relational operators   |  ``==``, ``!=``, ``<``, ``<=``, ``>``, ``>=``  |
 +-------------------------+------------------------------------------------+
-|    Logical operators    |  ``!``, ``&&``, ``||``                         |
+|    Logical operators    |  ``!``, ``&&`` (limited), ``||`` (limited)     |
 +-------------------------+------------------------------------------------+
 |    Bitwise operators    |  ``~``, ``&``, ``|``, ``^``, ``<<``, ``>>``    |
 +-------------------------+------------------------------------------------+
@@ -448,7 +448,7 @@ unwrap the result:
 * Operator ``!`` on tainted pointers retruns an unwrapped ``bool``.
 * Operators ``==``, ``!=``, ``!`` on non-pointer tainted values return a ``tainted<bool>``
 * Operators ``==``, ``!=``, ``!`` on :ref:`tainted_volatile <tainted_volatile>` values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
-
+* Operators ``&&`` and ``||`` on booleans are only permitted when arguments are variables (not expressions). This is because C++ does not permit safe overloading of && and || operations with expression arguments as this affects the short circuiting behaviour of these operations.
 
 Application-sandbox shared memory
 ---------------------------------

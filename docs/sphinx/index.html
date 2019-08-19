@@ -427,9 +427,8 @@ type <a class="reference internal" href="#tainted"><span class="std std-ref">tai
 application from using tainted values unsafely.</p>
 <span class="target" id="tainted"></span><dl class="class">
 <dt id="_CPPv4I00EN5rlbox7taintedE">
-<span id="_CPPv3I00EN5rlbox7taintedE"></span><span id="_CPPv2I00EN5rlbox7taintedE"></span><span class="target" id="classrlbox_1_1tainted"></span>template&lt;typename <code class="sig-name descname">T</code>, typename <code class="sig-name descname">T_Sbx</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">tainted</code> : <em class="property">public</em> rlbox::tainted_base_impl&lt;<a class="reference internal" href="#_CPPv4I00EN5rlbox7taintedE" title="rlbox::tainted">tainted</a>, <a class="reference internal" href="#_CPPv4I00EN5rlbox7taintedE" title="rlbox::tainted::T">T</a>, <a class="reference internal" href="#_CPPv4I00EN5rlbox7taintedE" title="rlbox::tainted::T_Sbx">T_Sbx</a>&gt;<a class="headerlink" href="#_CPPv4I00EN5rlbox7taintedE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Tainted values represent untrusted values that originate from the sandbox. </p>
-</dd></dl>
+<span id="_CPPv3I00EN5rlbox7taintedE"></span><span id="_CPPv2I00EN5rlbox7taintedE"></span><span class="target" id="classrlbox_1_1tainted"></span>template&lt;typename <code class="sig-name descname">T</code>, typename <code class="sig-name descname">T_Sbx</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">tainted</code><a class="headerlink" href="#_CPPv4I00EN5rlbox7taintedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
 
 <p>RLBox has several kinds of tainted values, beyond <a class="reference internal" href="#tainted"><span class="std std-ref">tainted</span></a>.
 Thse, however, are slightly less pervasive in the surface API.</p>
@@ -649,7 +648,7 @@ operators like <code class="docutils literal notranslate"><span class="pre">+</s
 <td><p><code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Logical operators</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">!</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">||</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">!</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> (limited), <code class="docutils literal notranslate"><span class="pre">||</span></code> (limited)</p></td>
 </tr>
 <tr class="row-odd"><td><p>Bitwise operators</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code></p></td>
@@ -668,6 +667,7 @@ unwrap the result:</p>
 <li><p>Operator <code class="docutils literal notranslate"><span class="pre">!</span></code> on tainted pointers retruns an unwrapped <code class="docutils literal notranslate"><span class="pre">bool</span></code>.</p></li>
 <li><p>Operators <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">!</span></code> on non-pointer tainted values return a <code class="docutils literal notranslate"><span class="pre">tainted&lt;bool&gt;</span></code></p></li>
 <li><p>Operators <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">!</span></code> on <a class="reference internal" href="#tainted-volatile"><span class="std std-ref">tainted_volatile</span></a> values returns a <a class="reference internal" href="#tainted-boolean-hint"><span class="std std-ref">tainted_boolean_hint</span></a></p></li>
+<li><p>Operators <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">||</span></code> on booleans are only permitted when arguments are variables (not expressions). This is because C++ does not permit safe overloading of &amp;&amp; and || operations with expression arguments as this affects the short circuiting behaviour of these operations.</p></li>
 </ul>
 </div>
 </div>
