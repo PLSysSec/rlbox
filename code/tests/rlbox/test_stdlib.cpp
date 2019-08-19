@@ -43,6 +43,17 @@ TEST_CASE("test sandbox_const_cast", "[stdlib]")
 }
 
 // NOLINTNEXTLINE
+TEST_CASE("test sandbox_static_cast", "[stdlib]")
+{
+  const uint64_t a = std::numeric_limits<uint64_t>::max();
+  const auto b = static_cast<uint32_t>(a);
+  tainted<uint64_t, TestSandbox> t_a = a;
+  auto t_b = rlbox::sandbox_static_cast<uint32_t>(t_a);
+  REQUIRE(std::is_same_v<decltype(t_b), tainted<uint32_t, TestSandbox>>);
+  REQUIRE(b == t_b.UNSAFE_unverified());
+}
+
+// NOLINTNEXTLINE
 TEST_CASE("test memset", "[stdlib]")
 {
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
