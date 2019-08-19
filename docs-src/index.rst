@@ -485,9 +485,7 @@ memory regions and values.
 .. doxygenfunction:: memcpy
 .. doxygenfunction:: sandbox_reinterpret_cast
 .. doxygenfunction:: sandbox_const_cast
-
-RLBox also provides a standard C-library for the sandboxed code. We will
-describe this library in future version of this document.
+.. doxygenfunction:: sandbox_static_cast
 
 References
 ==========

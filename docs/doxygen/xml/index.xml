@@ -324,6 +324,7 @@
     <member refid="rlbox_8hpp_1a7328c5d63ec45929e4842d951ab247fa" kind="function"><name>from_opaque</name></member>
     <member refid="rlbox__stdlib_8hpp_1aac1552a010c926f4211a3b73d04fb23d" kind="function"><name>sandbox_reinterpret_cast</name></member>
     <member refid="rlbox__stdlib_8hpp_1a449504c5212429fce9c27ab5535b4cef" kind="function"><name>sandbox_const_cast</name></member>
+    <member refid="rlbox__stdlib_8hpp_1aa12ee34a239e9dac6ad8cafb7e859a6a" kind="function"><name>sandbox_static_cast</name></member>
     <member refid="rlbox__stdlib_8hpp_1ae2491d69e8718e121cc6898dba56c97b" kind="function"><name>memset</name></member>
     <member refid="rlbox__stdlib_8hpp_1a0b0d9db8aa78955e71974e5bf1545f3c" kind="function"><name>memcpy</name></member>
   </compound>
