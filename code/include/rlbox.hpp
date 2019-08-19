@@ -152,10 +152,64 @@ public:
   BinaryOp(|);
   BinaryOp(<<);
   BinaryOp(>>);
-  BinaryOp(&&);
-  BinaryOp(||);
 
 #undef BinaryOp
+
+#define BooleanBinaryOp(opSymbol)                                              \
+  template<typename T_Rhs>                                                     \
+  inline constexpr auto operator opSymbol(const T_Rhs& rhs)                    \
+    const->tainted<decltype(std::declval<T>() opSymbol std::declval<           \
+                            detail::rlbox_remove_wrapper_t<T_Rhs>>()),         \
+                   T_Sbx>                                                      \
+  {                                                                            \
+    static_assert(detail::is_fundamental_or_enum_v<T>,                         \
+                  "Operator " #opSymbol                                        \
+                  " only supported for primitive  types");                     \
+                                                                               \
+    auto raw = impl().get_raw_value();                                         \
+    auto raw_rhs = detail::unwrap_value(rhs);                                  \
+    static_assert(std::is_integral_v<decltype(raw_rhs)>,                       \
+                  "Can only operate on numeric types");                        \
+                                                                               \
+    auto ret = raw opSymbol raw_rhs;                                           \
+    using T_Ret = decltype(ret);                                               \
+    return tainted<T_Ret, T_Sbx>::internal_factory(ret);                       \
+  }                                                                            \
+                                                                               \
+  template<typename T_Rhs>                                                     \
+  inline constexpr auto operator opSymbol(const T_Rhs&&)                       \
+    const->tainted<decltype(std::declval<T>() opSymbol std::declval<           \
+                            detail::rlbox_remove_wrapper_t<T_Rhs>>()),         \
+                   T_Sbx>                                                      \
+  {                                                                            \
+    rlbox_detail_static_fail_because(                                          \
+      detail::true_v<T_Rhs>,                                                   \
+      "C++ does not permit safe overloading of && and || operations as this "  \
+      "affects the short circuiting behaviour of these operations. RLBox "     \
+      "does let you use && and || with tainted in limited situations - when "  \
+      "all arguments starting from the second are local variables. It does "   \
+      "not allow it if arguments starting from the second  are expressions.\n" \
+      "For example the following is not allowed\n"                             \
+      "\n"                                                                     \
+      "tainted<bool, T_Sbx> a = true;\n"                                       \
+      "auto r = a && true && sandbox.invoke_sandbox_function(getBool);\n"      \
+      "\n"                                                                     \
+      "However the following would be allowed\n"                               \
+      "tainted<bool, T_Sbx> a = true;\n"                                       \
+      "auto b = true\n"                                                        \
+      "auto c = sandbox.invoke_sandbox_function(getBool);\n"                   \
+      "auto r = a && b && c;\n"                                                \
+      "\n"                                                                     \
+      "Note that these 2 programs are not identical. The first program may "   \
+      "or may not call getBool, while second program always calls getBool");   \
+    return tainted<bool, T_Sbx>(false);                                        \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+  BooleanBinaryOp(&&);
+  BooleanBinaryOp(||);
+
+#undef BooleanBinaryOp
 
 #define UnaryOp(opSymbol)                                                      \
   inline auto operator opSymbol()                                              \
@@ -175,16 +229,16 @@ public:
 
 #undef UnaryOp
 
-  /**
-   * @brief Comparison operators. Comparisons to values in sandbox memory can
-   * only return a "tainted_boolean_hint" as the values in memory can be
-   * incorrect or malicously change in the future.
-   *
-   * @tparam T_Rhs
-   * @param rhs
-   * @return One of either a bool, tainted<bool>, or a tainted_boolean_hint
-   * depending on the arguments to the binary expression.
-   */
+/**
+ * @brief Comparison operators. Comparisons to values in sandbox memory can
+ * only return a "tainted_boolean_hint" as the values in memory can be
+ * incorrect or malicously change in the future.
+ *
+ * @tparam T_Rhs
+ * @param rhs
+ * @return One of either a bool, tainted<bool>, or a tainted_boolean_hint
+ * depending on the arguments to the binary expression.
+ */
 #define CompareOp(opSymbol, permit_pointers)                                   \
   template<typename T_Rhs>                                                     \
   inline constexpr auto operator opSymbol(const T_Rhs& rhs) const              \
@@ -207,8 +261,9 @@ public:
                   "Please file a bug.");                                       \
                                                                                \
     if constexpr (!permit_pointers) {                                          \
-      rlbox_detail_static_fail_because(std::is_pointer_v<T>,                   \
-                    "Only == and != comparisons are allowed for pointers");    \
+      rlbox_detail_static_fail_because(                                        \
+        std::is_pointer_v<T>,                                                  \
+        "Only == and != comparisons are allowed for pointers");                \
     }                                                                          \
                                                                                \
     bool ret = (impl().get_raw_value() opSymbol detail::unwrap_value(rhs));    \
@@ -596,8 +651,6 @@ BinaryOpWrappedRhs(&);
 BinaryOpWrappedRhs(|);
 BinaryOpWrappedRhs(<<);
 BinaryOpWrappedRhs(>>);
-BinaryOpWrappedRhs(&&);
-BinaryOpWrappedRhs(||);
 BinaryOpWrappedRhs(==);
 BinaryOpWrappedRhs(!=);
 BinaryOpWrappedRhs(<);
@@ -605,6 +658,62 @@ BinaryOpWrappedRhs(<=);
 BinaryOpWrappedRhs(>);
 BinaryOpWrappedRhs(>=);
 #undef BinaryOpWrappedRhs
+
+#define BooleanBinaryOpWrappedRhs(opSymbol)                                    \
+  template<template<typename, typename> typename T_Wrap,                       \
+           typename T,                                                         \
+           typename T_Sbx,                                                     \
+           typename T_Lhs,                                                     \
+           RLBOX_ENABLE_IF(!detail::rlbox_is_wrapper_v<T_Lhs> &&               \
+                           !detail::rlbox_is_tainted_boolean_hint_v<T_Lhs>)>   \
+  inline constexpr auto operator opSymbol(                                     \
+    const T_Lhs& lhs, const tainted_base_impl<T_Wrap, T, T_Sbx>& rhs)          \
+  {                                                                            \
+    static_assert(                                                             \
+      std::is_arithmetic_v<T_Lhs>,                                             \
+      "Binary expressions between an non tainted type and tainted"             \
+      "type is only permitted if the first value is the tainted type. Try "    \
+      "changing the order of the binary expression accordingly");              \
+    auto ret = tainted<T_Lhs, T_Sbx>(lhs) opSymbol rhs.impl();                 \
+    return ret;                                                                \
+  }                                                                            \
+                                                                               \
+  template<template<typename, typename> typename T_Wrap,                       \
+           typename T,                                                         \
+           typename T_Sbx,                                                     \
+           typename T_Lhs,                                                     \
+           RLBOX_ENABLE_IF(!detail::rlbox_is_wrapper_v<T_Lhs> &&               \
+                           !detail::rlbox_is_tainted_boolean_hint_v<T_Lhs>)>   \
+  inline constexpr auto operator opSymbol(                                     \
+    const T_Lhs&, const tainted_base_impl<T_Wrap, T, T_Sbx>&&)                 \
+  {                                                                            \
+    rlbox_detail_static_fail_because(                                          \
+      detail::true_v<T_Lhs>,                                                   \
+      "C++ does not permit safe overloading of && and || operations as this "  \
+      "affects the short circuiting behaviour of these operations. RLBox "     \
+      "does let you use && and || with tainted in limited situations - when "  \
+      "all arguments starting from the second are local variables. It does "   \
+      "not allow it if arguments starting from the second  are expressions.\n" \
+      "For example the following is not allowed\n"                             \
+      "\n"                                                                     \
+      "tainted<bool, T_Sbx> a = true;\n"                                       \
+      "auto r = a && true && sandbox.invoke_sandbox_function(getBool);\n"      \
+      "\n"                                                                     \
+      "However the following would be allowed\n"                               \
+      "tainted<bool, T_Sbx> a = true;\n"                                       \
+      "auto b = true\n"                                                        \
+      "auto c = sandbox.invoke_sandbox_function(getBool);\n"                   \
+      "auto r = a && b && c;\n"                                                \
+      "\n"                                                                     \
+      "Note that these 2 programs are not identical. The first program may "   \
+      "or may not call getBool, while second program always calls getBool");   \
+    return tainted<bool, T_Sbx>(false);                                        \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+BooleanBinaryOpWrappedRhs(&&);
+BooleanBinaryOpWrappedRhs(||);
+#undef BooleanBinaryOpWrappedRhs
 
 namespace tainted_detail {
   template<typename T, typename T_Sbx>
