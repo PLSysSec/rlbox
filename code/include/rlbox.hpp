@@ -311,7 +311,7 @@ public:
                   "Internal error: Could not deduce type for comparison. "     \
                   "Please file a bug.");                                       \
                                                                                \
-    if constexpr (!permit_pointers) {                                          \
+    if constexpr (!permit_pointers && std::is_pointer_v<T>) {                  \
       rlbox_detail_static_fail_because(                                        \
         std::is_pointer_v<T>,                                                  \
         "Only == and != comparisons are allowed for pointers");                \

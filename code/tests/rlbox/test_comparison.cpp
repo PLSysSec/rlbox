@@ -139,3 +139,11 @@ TEST_CASE("Test comparisons to tainted_volatile", "[tainted_compare]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("Test other comparison operators", "[tainted_compare]")
+{
+  tainted<uint32_t, TestSandbox> a = 1;
+  auto ret = a > static_cast<uint32_t>(0);
+  REQUIRE(ret.UNSAFE_unverified());
+}
