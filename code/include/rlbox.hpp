@@ -155,6 +155,57 @@ public:
 
 #undef BinaryOp
 
+#define CompoundAssignmentOp(opSymbol)                                         \
+  template<typename T_Rhs>                                                     \
+  inline constexpr T_Wrap<T, T_Sbx>& operator opSymbol##=(const T_Rhs& rhs)    \
+  {                                                                            \
+    auto& this_ref = impl();                                                   \
+    this_ref = this_ref opSymbol rhs;                                          \
+    return this_ref;                                                           \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+  CompoundAssignmentOp(+);
+  CompoundAssignmentOp(-);
+  CompoundAssignmentOp(*);
+  CompoundAssignmentOp(/);
+  CompoundAssignmentOp(%);
+  CompoundAssignmentOp(^);
+  CompoundAssignmentOp(&);
+  CompoundAssignmentOp(|);
+  CompoundAssignmentOp(<<);
+  CompoundAssignmentOp(>>);
+
+#undef CompoundAssignmentOp
+
+#define PreIncDecOps(opSymbol)                                                 \
+  inline constexpr T_Wrap<T, T_Sbx>& operator opSymbol##opSymbol()             \
+  {                                                                            \
+    auto& this_ref = impl();                                                   \
+    this_ref = this_ref opSymbol 1;                                            \
+    return this_ref;                                                           \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+  PreIncDecOps(+);
+  PreIncDecOps(-);
+
+#undef PreIncDecOps
+
+#define PostIncDecOps(opSymbol)                                                \
+  inline constexpr T_Wrap<T, T_Sbx> operator opSymbol##opSymbol(int)           \
+  {                                                                            \
+    tainted<T, T_Sbx> ret = impl();                                            \
+    operator++();                                                              \
+    return ret;                                                                \
+  }                                                                            \
+  RLBOX_REQUIRE_SEMI_COLON
+
+  PostIncDecOps(+);
+  PostIncDecOps(-);
+
+#undef PostIncDecOps
+
 #define BooleanBinaryOp(opSymbol)                                              \
   template<typename T_Rhs>                                                     \
   inline constexpr auto operator opSymbol(const T_Rhs& rhs)                    \

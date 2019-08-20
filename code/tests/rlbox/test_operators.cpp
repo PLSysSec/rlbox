@@ -38,6 +38,55 @@ TEST_CASE("Test operator + with const refs", "[operator]")
   REQUIRE((ref.a + ref.b).UNSAFE_unverified() == 10);
 }
 
+// NOLINTNEXTLINE
+TEST_CASE("Test compound assignment operators", "[operator]")
+{
+  const int32_t a = 3;
+  tainted<int32_t, TestSandbox> b = a;
+  tainted<int32_t, TestSandbox> c = b;
+  c += 1;
+  tainted<int32_t, TestSandbox> d = b;
+  REQUIRE(b.UNSAFE_unverified() == a);
+  REQUIRE(c.UNSAFE_unverified() == a + 1);
+  REQUIRE(d.UNSAFE_unverified() == a);
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("Test pre/post increment operators", "[operator]")
+{
+  const int32_t val = 3;
+
+  SECTION("Test pre increment") // NOLINT
+  {
+    int32_t a = val;
+    int32_t b = ++a;
+    int32_t c = a;
+
+    tainted<int32_t, TestSandbox> t_a = val;
+    tainted<int32_t, TestSandbox> t_b = ++t_a;
+    tainted<int32_t, TestSandbox> t_c = t_a;
+
+    REQUIRE(t_a.UNSAFE_unverified() == a);
+    REQUIRE(t_b.UNSAFE_unverified() == b);
+    REQUIRE(t_c.UNSAFE_unverified() == c);
+  }
+
+  SECTION("Test post increment") // NOLINT
+  {
+    int32_t a = val;
+    int32_t b = a++;
+    int32_t c = a;
+
+    tainted<int32_t, TestSandbox> t_a = val;
+    tainted<int32_t, TestSandbox> t_b = t_a++;
+    tainted<int32_t, TestSandbox> t_c = t_a;
+
+    REQUIRE(t_a.UNSAFE_unverified() == a);
+    REQUIRE(t_b.UNSAFE_unverified() == b);
+    REQUIRE(t_c.UNSAFE_unverified() == c);
+  }
+}
+
 TEST_CASE("Test operators that produce new values for numerics", "[operator]")
 {
   const uint32_t a = 11;
