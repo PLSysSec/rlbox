@@ -206,6 +206,16 @@
     <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" kind="function"><name>BinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a100c45337a0ad48eb18ac977edb8cc48" kind="function"><name>BinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a60f6d9cc0d8462291f461e4183d90ec7" kind="function"><name>BinaryOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a15ced8f568f8899e55b6354f620cbc7c" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a254df7254438c313621ff1a689dd5c34" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1aece2071face2e9e95aa270173a93e5cd" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a695650ceddb22aee9f17b290e721dbd8" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1ac234712a7d68b938c9c2f34bd4f96d73" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a532585754028205606cdc219e61cacce" kind="function"><name>CompoundAssignmentOp</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a6c8dca7aef6cbf28dec6cba42963e76a" kind="function"><name>PreIncDecOps</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1ab9decc76ea24942932c7288d2ee257c3" kind="function"><name>PreIncDecOps</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a2ccdf93dd8466df3985c4f7c9225af08" kind="function"><name>PostIncDecOps</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a091f18be8cd32b34bec75322364e1f1d" kind="function"><name>PostIncDecOps</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a59f056b2d926bd2c715aebb7295f0348" kind="function"><name>BooleanBinaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ac450c85ec8fa3c5046bcf3fb7aeca2d1" kind="function"><name>UnaryOp</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a257ae6c0b4a0fe1b1639044a572a038b" kind="function"><name>CompareOp</name></member>
@@ -434,6 +444,9 @@
   <compound refid="rlbox_8hpp" kind="file"><name>rlbox.hpp</name>
     <member refid="rlbox_8hpp_1af856c0e9894b28f1b9cb0d89eb5a21a7" kind="define"><name>BinaryOpValAndPtr</name></member>
     <member refid="rlbox_8hpp_1a549df547f1f4c2c6673055b504891b74" kind="define"><name>BinaryOp</name></member>
+    <member refid="rlbox_8hpp_1aa57c59858082131bfff5d1a5b7c6d37b" kind="define"><name>CompoundAssignmentOp</name></member>
+    <member refid="rlbox_8hpp_1ace0ee5a5d49bc3a0c872a8a942638236" kind="define"><name>PreIncDecOps</name></member>
+    <member refid="rlbox_8hpp_1a4ea0c83305abd890a880c1bed05bd61d" kind="define"><name>PostIncDecOps</name></member>
     <member refid="rlbox_8hpp_1a65b756c8847e3f0eb5ee3b95d9cd2d0d" kind="define"><name>BooleanBinaryOp</name></member>
     <member refid="rlbox_8hpp_1a102d341385d2903f0a7c1600b56ae40e" kind="define"><name>UnaryOp</name></member>
     <member refid="rlbox_8hpp_1a3cd7ef6a73d543577423d64e3c5386ef" kind="define"><name>CompareOp</name></member>
