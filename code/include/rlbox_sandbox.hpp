@@ -404,6 +404,9 @@ public:
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
     auto ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
+    if (!ptr) {
+      return tainted<T*, T_Sbx>(nullptr);
+    }
     detail::dynamic_check(is_pointer_in_sandbox_memory(ptr),
                           "Malloc returned pointer outside the sandbox memory");
     auto ptr_end = reinterpret_cast<uintptr_t>(ptr + (count - 1));
