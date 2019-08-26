@@ -64,6 +64,22 @@ namespace detail {
 #endif
   }
 
+// Create an extension point so applications can provide their own shared lock
+// implementation
+#ifndef rlbox_use_custom_shared_lock
+#  define rlbox_shared_lock(name) std::shared_timed_mutex name
+#  define rlbox_acquire_shared_guard(name, ...)                                \
+    std::shared_lock<std::shared_timed_mutex> name(__VA_ARGS__)
+#  define rlbox_acquire_unique_guard(name, ...)                                \
+    std::unique_lock<std::shared_timed_mutex> name(__VA_ARGS__)
+#else
+#  if !defined(rlbox_shared_lock) || !defined(rlbox_acquire_shared_guard) ||   \
+    !defined(rlbox_acquire_unique_guard)
+#    error                                                                     \
+      "rlbox_use_custom_shared_lock defined but missing definitions for rlbox_shared_lock, rlbox_acquire_shared_guard, rlbox_acquire_unique_guard"
+#  endif
+#endif
+
 #define rlbox_detail_forward_binop_to_base(opSymbol, ...)                      \
   template<typename T_Rhs>                                                     \
   inline auto operator opSymbol(T_Rhs rhs)                                     \
