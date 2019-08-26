@@ -1,5 +1,7 @@
 #include "test_include.hpp"
 
+#include <memory>
+
 using rlbox::tainted;
 using rlbox::tainted_opaque;
 using RL = rlbox::rlbox_sandbox<TestSandbox>;
@@ -121,6 +123,26 @@ TEST_CASE("callback assignment check", "[sandbox_callback]")
 
   auto p_fnPtr = sandbox.malloc_in_sandbox<int (*)(int)>();
   REQUIRE_NO_COMPILE_ERR(p_fnPtr = nullptr);
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("callback re-register", "[sandbox_callback]")
+{
+  RL sandbox;
+  sandbox.create_sandbox();
+
+  using T_F = int (*)(int);
+  {
+    auto cb = std::make_unique<rlbox::sandbox_callback<T_F, TestSandbox>>(sandbox.register_callback(test_cb));
+  }
+  {
+    auto cb2 = sandbox.register_callback(test_cb);
+  }
+  {
+    auto cb3 = sandbox.register_callback(test_cb);
+  }
 
   sandbox.destroy_sandbox();
 }
