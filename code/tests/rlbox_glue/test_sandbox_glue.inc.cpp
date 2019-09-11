@@ -19,6 +19,10 @@ using rlbox::tainted;
 #  error "Define CreateSandbox before including this file"
 #endif
 
+#ifndef TestName
+#  error "Define TestName before including this file"
+#endif
+
 #ifndef TestType
 #  error "Define TestType before including this file"
 #endif
@@ -73,7 +77,7 @@ static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("sandbox glue tests", "[sandbox_glue_tests]")
+TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 {
   rlbox::rlbox_sandbox<TestType> sandbox;
   CreateSandbox(sandbox);

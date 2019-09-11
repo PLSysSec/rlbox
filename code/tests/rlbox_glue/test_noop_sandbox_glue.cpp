@@ -5,6 +5,8 @@
 #include "rlbox_noop_sandbox.hpp"
 
 // NOLINTNEXTLINE
+#define TestName "rlbox_noop_sandbox"
+// NOLINTNEXTLINE
 #define TestType rlbox::rlbox_noop_sandbox
 // NOLINTNEXTLINE
 #define CreateSandbox(sandbox) sandbox.create_sandbox()
