@@ -92,7 +92,7 @@ TEST_CASE("convert_type_fundamental_or_array for arrays operates correctly",
   {
     int32_t dest[4]{}; // NOLINT
     convert_type_fundamental_or_array(dest, std_arr_1);
-    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
+    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(dest)) == 0);
   }
 
   {
@@ -104,7 +104,7 @@ TEST_CASE("convert_type_fundamental_or_array for arrays operates correctly",
   {
     int32_t dest[4]{}; // NOLINT
     convert_type_fundamental_or_array(dest, std_arr_2);
-    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(std_arr_1)) == 0);
+    REQUIRE(std::memcmp(&dest, &c_arr_1, sizeof(dest)) == 0);
   }
 }
 
