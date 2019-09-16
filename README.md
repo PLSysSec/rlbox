@@ -30,6 +30,10 @@ cmake --build ./build --target all
 cmake --build ./build --target test
 ```
 
+## Running the tests
+
+Currently rlbox has been tested and should work with gcc-7 or later and clang-7 or later.
+
 ## Using/Building docs
 
 You can view the pre-built docs checked in to the repo in the docs folder.
