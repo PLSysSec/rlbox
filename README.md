@@ -32,7 +32,7 @@ cmake --build ./build --target test
 
 ## Running the tests
 
-Currently rlbox has been tested and should work with gcc-7 or later and clang-6 or later.
+Currently rlbox has been tested and should work with gcc-7 or later and clang-5 or later.
 
 ## Using/Building docs
 

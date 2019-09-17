@@ -28,7 +28,7 @@ TEST_CASE("RLBox test array verification", "[verification]")
   const int32_t defaultVal3 = 212;
   const int32_t defaultVal4 = 213;
   std::array<long, 4> def = // NOLINT
-    { defaultVal1, defaultVal2, defaultVal3, defaultVal4 };
+    { { defaultVal1, defaultVal2, defaultVal3, defaultVal4 } };
 
   auto result_fail = pa->copy_and_verify([&def](std::array<long, 4>) { // NOLINT
     return def;

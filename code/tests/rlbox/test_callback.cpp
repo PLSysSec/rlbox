@@ -135,7 +135,8 @@ TEST_CASE("callback re-register", "[sandbox_callback]")
 
   using T_F = int (*)(int);
   {
-    auto cb = std::make_unique<rlbox::sandbox_callback<T_F, TestSandbox>>(sandbox.register_callback(test_cb));
+    auto cb = std::make_unique<rlbox::sandbox_callback<T_F, TestSandbox>>(
+      sandbox.register_callback(test_cb));
   }
   {
     auto cb2 = sandbox.register_callback(test_cb);

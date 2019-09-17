@@ -16,6 +16,7 @@
 
 #include "rlbox_conversion.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_stdlib_polyfill.hpp"
 #include "rlbox_struct_support.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
@@ -511,12 +512,12 @@ public:
     (check_invoke_param_type_is_ok<T_Args>(), ...);
 
     static_assert(
-      std::is_invocable_v<
+      rlbox::detail::polyfill::is_invocable_v<
         T,
         detail::rlbox_remove_wrapper_t<std::remove_reference_t<T_Args>>...>,
       "Mismatched arguments types for function");
 
-    using T_Result = std::invoke_result_t<
+    using T_Result = rlbox::detail::polyfill::invoke_result_t<
       T,
       detail::rlbox_remove_wrapper_t<std::remove_reference_t<T_Args>>...>;
 

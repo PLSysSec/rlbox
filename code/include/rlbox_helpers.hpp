@@ -8,6 +8,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "rlbox_stdlib_polyfill.hpp"
+
 namespace rlbox {
 namespace detail {
   const int CompileErrorCode = 42;
@@ -154,7 +156,7 @@ namespace detail {
   template<typename T, typename T2>
   [[nodiscard]] inline auto return_first_result(T first_task, T2 second_task)
   {
-    using T_Result = std::invoke_result_t<T>;
+    using T_Result = rlbox::detail::polyfill::invoke_result_t<T>;
 
     if constexpr (std::is_void_v<T_Result>) {
       first_task();

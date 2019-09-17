@@ -78,10 +78,10 @@ TEST_CASE("convert_type_fundamental_or_array for arrays operates correctly",
           "[convert]")
 {
   const int32_t c_arr_1[4]{ 1, 2, 3, 4 }; // NOLINT
-  const std::array<int32_t, 4> std_arr_1{ 1, 2, 3, 4 };
+  const std::array<int32_t, 4> std_arr_1{ { 1, 2, 3, 4 } };
 
   const int64_t c_arr_2[4]{ 1, 2, 3, 4 }; // NOLINT
-  const std::array<int64_t, 4> std_arr_2{ 1, 2, 3, 4 };
+  const std::array<int64_t, 4> std_arr_2{ { 1, 2, 3, 4 } };
 
   {
     std::array<int32_t, 4> dest{};
