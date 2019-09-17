@@ -47,7 +47,10 @@ class rlbox_sandbox : protected T_Sbx
 
 private:
   static inline rlbox_shared_lock(sandbox_list_lock);
-  static inline std::vector<rlbox_sandbox<T_Sbx>*> sandbox_list;
+  // The actual type of the vector is std::vector<rlbox_sandbox<T_Sbx>*>
+  // However clang 5, 6 have bugs where compilation seg-faults on this type
+  // So we just use this std::vector<void*>
+  static inline std::vector<void*> sandbox_list;
 
   rlbox_shared_lock(func_ptr_cache_lock);
   std::map<std::string, void*> func_ptr_map;
@@ -233,7 +236,8 @@ private:
       "Internal error: received a null example pointer. Please file a bug.");
 
     rlbox_acquire_shared_guard(lock, sandbox_list_lock);
-    for (rlbox_sandbox<T_Sbx>* sandbox : sandbox_list) {
+    for (auto sandbox_v : sandbox_list) {
+      auto sandbox = reinterpret_cast<rlbox_sandbox<T_Sbx>*>(sandbox_v);
       if (sandbox->is_pointer_in_sandbox_memory(example_sandbox_ptr)) {
         return sandbox;
       }
