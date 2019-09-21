@@ -1,5 +1,7 @@
+#include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <utility>
@@ -14,6 +16,7 @@ rlbox_load_structs_from_library(libtest); // NOLINT
 
 using rlbox::rlbox_sandbox;
 using rlbox::tainted;
+using namespace std::chrono;
 
 #ifndef CreateSandbox
 #  error "Define CreateSandbox before including this file"
@@ -25,6 +28,12 @@ using rlbox::tainted;
 
 #ifndef TestType
 #  error "Define TestType before including this file"
+#endif
+
+#if _MSC_VER && !__INTEL_COMPILER
+  #define NOINLINE __declspec(noinline)
+#else
+  #define NOINLINE __attribute__ ((noinline))
 #endif
 
 static tainted<int, TestType> exampleCallback(
@@ -76,6 +85,34 @@ static tainted<int, TestType> exampleCallback2( // NOLINT(google-runtime-int)
            : -1;                              // NOLINT
 }
 
+static tainted<unsigned long, TestType>
+exampleCallback3( // NOLINT(google-runtime-int)
+  rlbox_sandbox<TestType>& /* sandbox */,
+  tainted<unsigned long, TestType> val1, // NOLINT(google-runtime-int)
+  tainted<unsigned long, TestType> val2) // NOLINT(google-runtime-int)
+{
+  return val1 + val2;
+}
+
+NOINLINE
+static unsigned long local_simpleAddNoPrintTest(unsigned long a, unsigned long b)
+{
+  return a + b;
+}
+
+NOINLINE
+static unsigned long local_simpleCallbackLoop(unsigned long a,
+                                 unsigned long b,
+                                 unsigned long iterations,
+                                 CallbackType3 callback)
+{
+  unsigned long ret = 0;
+  for (unsigned long i = 0; i < iterations; i++) {
+    ret += callback(a, b);
+  }
+  return ret;
+}
+
 // NOLINTNEXTLINE
 TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 {
@@ -83,6 +120,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   CreateSandbox(sandbox);
 
   const int upper_bound = 100;
+  const int test_iterations = 1000000;
 
   tainted<char*, TestType> sb_string =
     sandbox.template malloc_in_sandbox<char>(upper_bound);
@@ -401,6 +439,87 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     *elRef = nullptr;
     // NOLINTNEXTLINE
     REQUIRE(resultT->pointerArray[3].UNSAFE_unverified() == (initValRaw + 4));
+  }
+
+  SECTION("Function invocation measurements") // NOLINT
+  {
+    // Warm up the timer. The first call is always slow (at least on the test
+    // platform)
+    for (int i = 0; i < 10; i++) {
+      auto val = high_resolution_clock::now();
+      RLBOX_UNUSED(val);
+    }
+
+    const int val1 = 2;
+    const int val2 = 3;
+
+    // Baseline
+    uint64_t result1 = 0;
+    {
+      auto enter_time = high_resolution_clock::now();
+      for (int i = 0; i < test_iterations; i++) {
+        // to make sure the optimizer doesn't try to be too clever and eliminate
+        // the call
+        result1 += local_simpleAddNoPrintTest(val1, val2);
+      }
+      auto exit_time = high_resolution_clock::now();
+
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Unsandboxed function invocation time: " << (ns / test_iterations) << "\n";
+    }
+
+    // Sandbox
+    uint64_t result2 = 0;
+    {
+      auto enter_time = high_resolution_clock::now();
+      for (int i = 0; i < test_iterations; i++) {
+        // to make sure the optimizer doesn't try to be too clever and eliminate
+        // the call
+        result2 +=
+          sandbox.invoke_sandbox_function(simpleAddNoPrintTest, val1, val2)
+            .unverified_safe_because("test");
+      }
+      auto exit_time = high_resolution_clock::now();
+
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Sandboxed function invocation time: " << (ns / test_iterations) << "\n";
+    }
+
+    REQUIRE(result1 == result2);
+  }
+
+  SECTION("Callback invocation measurements") // NOLINT
+  {
+    auto cb_callback_param = sandbox.register_callback(exampleCallback3);
+
+    const int val1 = 2;
+    const int val2 = 3;
+
+    // Baseline
+    uint64_t result1;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result1 = local_simpleCallbackLoop(val1, val2, test_iterations, local_simpleAddNoPrintTest);
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Unsandboxed callback invocation time: " << (ns / test_iterations) << "\n";
+    }
+
+    // Sandbox
+    uint64_t result2;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result2 =
+        sandbox
+          .invoke_sandbox_function(
+            simpleCallbackLoop, val1, val2, test_iterations, cb_callback_param)
+          .unverified_safe_because("test");
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Sandboxed callback invocation time: " << (ns / test_iterations) << "\n";
+    }
+
+    REQUIRE(result1 == result2);
   }
 
   sandbox.template free_in_sandbox(sb_string);

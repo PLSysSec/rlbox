@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -14,6 +14,7 @@ extern "C"
                                unsigned long,
                                unsigned long,
                                unsigned long);
+  typedef unsigned long (*CallbackType3)(unsigned long, unsigned long);
 
   struct testStruct
   {
@@ -42,6 +43,10 @@ extern "C"
   };
 
   unsigned long simpleAddNoPrintTest(unsigned long a, unsigned long b);
+  unsigned long simpleCallbackLoop(unsigned long a,
+                                   unsigned long b,
+                                   unsigned long iterations,
+                                   CallbackType3 callback);
   double simpleDivideTest(double a, double b);
   int simpleAddTest(int a, int b);
   size_t simpleStrLenTest(const char* str);

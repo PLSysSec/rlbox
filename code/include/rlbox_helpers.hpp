@@ -168,6 +168,48 @@ namespace detail {
     }
   }
 
+  // Scope Exit guards
+  template<typename T_ExitFunc>
+  class scope_exit
+  {
+    T_ExitFunc exit_func;
+    bool released;
+
+  public:
+    explicit scope_exit(T_ExitFunc&& cleanup)
+      : exit_func(cleanup)
+      , released(true)
+    {}
+
+    scope_exit(scope_exit&& rhs)
+      : exit_func(std::move(rhs.exit_func))
+      , released(rhs.released)
+    {
+      rhs.release();
+    }
+
+    ~scope_exit()
+    {
+      if (released) {
+        exit_func();
+      }
+    }
+
+    void release() { released = false; }
+
+  private:
+    explicit scope_exit(const scope_exit&) = delete;
+    scope_exit& operator=(const scope_exit&) = delete;
+    scope_exit& operator=(scope_exit&&) = delete;
+  };
+
+  template<typename T_ExitFunc>
+  [[nodiscard]] scope_exit<T_ExitFunc> make_scope_exit(
+    T_ExitFunc&& exitFunction)
+  {
+    return scope_exit<T_ExitFunc>(std::move(exitFunction));
+  }
+
 /*
 Make sure classes can access the private memmbers of tainted<T1> and
 tainted_volatile. Ideally, this should be

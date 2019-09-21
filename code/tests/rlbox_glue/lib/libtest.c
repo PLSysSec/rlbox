@@ -9,6 +9,18 @@ unsigned long simpleAddNoPrintTest(unsigned long a, unsigned long b)
   return a + b;
 }
 
+unsigned long simpleCallbackLoop(unsigned long a,
+                                 unsigned long b,
+                                 unsigned long iterations,
+                                 CallbackType3 callback)
+{
+  unsigned long ret = 0;
+  for (unsigned long i = 0; i < iterations; i++) {
+    ret += callback(a, b);
+  }
+  return ret;
+}
+
 double simpleDivideTest(double a, double b)
 {
   return a / b;

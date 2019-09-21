@@ -4,11 +4,18 @@
 
 #include <algorithm>
 #include <atomic>
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+#  include <chrono>
+#endif
 #include <cstdlib>
 #include <map>
 #include <mutex>
 #ifndef rlbox_use_custom_shared_lock
 #  include <shared_mutex>
+#endif
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+#  include <sstream>
+#  include <string>
 #endif
 #include <type_traits>
 #include <utility>
@@ -20,6 +27,10 @@
 #include "rlbox_struct_support.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
+
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+using namespace std::chrono;
+#endif
 
 namespace rlbox {
 
@@ -35,6 +46,34 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
     T_Ret (*)(T_Args...));
 }
 
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+enum class rlbox_transition
+{
+  INVOKE,
+  CALLBACK
+};
+struct rlbox_transition_timing
+{
+  rlbox_transition invoke;
+  const char* name;
+  void* ptr;
+  int64_t time;
+
+  std::string to_string()
+  {
+    std::ostringstream ret;
+    if (invoke == rlbox_transition::INVOKE) {
+      ret << name;
+    } else {
+      ret << "Callback " << ptr;
+    }
+    ret << " : " << time << "\n";
+
+    return ret.str();
+  }
+};
+#endif
+
 /**
  * @brief Encapsulation for sandboxes.
  *
@@ -47,6 +86,10 @@ class rlbox_sandbox : protected T_Sbx
   KEEP_CLASSES_FRIENDLY
 
 private:
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+  std::vector<rlbox_transition_timing> transition_times;
+#endif
+
   static inline rlbox_shared_lock(sandbox_list_lock);
   // The actual type of the vector is std::vector<rlbox_sandbox<T_Sbx>*>
   // However clang 5, 6 have bugs where compilation seg-faults on this type
@@ -180,6 +223,19 @@ private:
       T_Func_Ret (*)(rlbox_sandbox<T_Sbx>&, tainted<T_Args, T_Sbx>...);
     auto target_fn_ptr = reinterpret_cast<T_Func>(key);
 
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+    high_resolution_clock::time_point enter_time = high_resolution_clock::now();
+    auto on_exit = rlbox::detail::make_scope_exit([&] {
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      sandbox.transition_times.push_back(
+        rlbox_transition_timing{ rlbox_transition::CALLBACK,
+                                 nullptr /* func_name */,
+                                 key /* func_ptr */,
+                                 ns });
+    });
+#endif
+
     if constexpr (std::is_void_v<T_Func_Ret>) {
       (*target_fn_ptr)(
         sandbox,
@@ -274,6 +330,14 @@ public:
   template<typename... T_Args>
   inline auto create_sandbox(T_Args... args)
   {
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+    // Warm up the timer. The first call is always slow (at least on the test
+    // platform)
+    for (int i = 0; i < 10; i++) {
+      auto val = high_resolution_clock::now();
+      RLBOX_UNUSED(val);
+    }
+#endif
     auto expected = Sandbox_Status::NOT_CREATED;
     bool success = sandbox_created.compare_exchange_strong(
       expected, Sandbox_Status::INITIALIZING /* desired */);
@@ -498,7 +562,7 @@ public:
                                              T_Args&&... params)
   {
     return INTERNAL_invoke_with_func_ptr<T, T_Args...>(
-      lookup_symbol(func_name), std::forward<T_Args>(params)...);
+      func_name, lookup_symbol(func_name), std::forward<T_Args>(params)...);
   }
 
   // this is an internal function invoked from macros, so it has be public
@@ -507,8 +571,21 @@ public:
   // calls with the same signature can share the same code segments for
   // sandboxed function execution in the binary
   template<typename T, typename... T_Args>
-  auto INTERNAL_invoke_with_func_ptr(void* func_ptr, T_Args&&... params)
+  auto INTERNAL_invoke_with_func_ptr(const char* func_name,
+                                     void* func_ptr,
+                                     T_Args&&... params)
   {
+    // unused in some paths
+    RLBOX_UNUSED(func_name);
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+    auto enter_time = high_resolution_clock::now();
+    auto on_exit = rlbox::detail::make_scope_exit([&] {
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      transition_times.push_back(rlbox_transition_timing{
+        rlbox_transition::INVOKE, func_name, func_ptr, ns });
+    });
+#endif
     (check_invoke_param_type_is_ok<T_Args>(), ...);
 
     static_assert(
@@ -710,6 +787,14 @@ public:
   {
     return tainted<T*, T_Sbx>::internal_factory(reinterpret_cast<T*>(func_ptr));
   }
+
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
+  inline std::vector<rlbox_transition_timing>&
+  process_and_get_transition_times()
+  {
+    return transition_times;
+  }
+#endif
 };
 
 #if defined(__clang__)
@@ -739,6 +824,7 @@ public:
 
 #  define invoke_sandbox_function(func_name, ...)                              \
     template INTERNAL_invoke_with_func_ptr<decltype(func_name)>(               \
+      #func_name,                                                              \
       sandbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name),       \
       ##__VA_ARGS__)
 
