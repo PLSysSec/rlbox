@@ -49,7 +49,11 @@ static tainted<int, TestType> exampleCallback(
     [](unsigned val) { return val > 0 && val < upper_bound ? val : -1U; });
   auto bCopy =
     b.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
-      return std::strlen(val.get()) < upper_bound ? std::move(val) : nullptr;
+      auto raw = val.get();
+      if (!raw) {
+        return std::unique_ptr<char[]>(nullptr);
+      }
+      return std::strlen(raw) < upper_bound ? std::move(val) : nullptr;
     });
 
   auto cCopy = c.copy_and_verify_range(
@@ -255,7 +259,11 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     *retStrRaw = 'H';
     auto retStr2 = retStrRaw.copy_and_verify_string(
       [](std::unique_ptr<char[]> val) { // NOLINT
-        return std::strlen(val.get()) < upper_bound ? std::move(val) : nullptr;
+        auto raw = val.get();
+        if (!raw) {
+          return std::unique_ptr<char[]>(nullptr);
+        }
+        return std::strlen(raw) < upper_bound ? std::move(val) : nullptr;
       });
     REQUIRE(std::strcmp(str, retStr2.get()) == 0);
 
