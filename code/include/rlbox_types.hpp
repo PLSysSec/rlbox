@@ -45,6 +45,7 @@ public:
     (void)reason; /* unused */
     return val;
   }
+  inline bool UNSAFE_unverified() const { return val; }
 };
 
 template<typename T_Sbx>
