@@ -68,17 +68,17 @@ namespace detail {
 
 // Create an extension point so applications can provide their own shared lock
 // implementation
-#ifndef rlbox_use_custom_shared_lock
-#  define rlbox_shared_lock(name) std::shared_timed_mutex name
-#  define rlbox_acquire_shared_guard(name, ...)                                \
+#ifndef RLBOX_USE_CUSTOM_SHARED_LOCK
+#  define RLBOX_SHARED_LOCK(name) std::shared_timed_mutex name
+#  define RLBOX_ACQUIRE_SHARED_GUARD(name, ...)                                \
     std::shared_lock<std::shared_timed_mutex> name(__VA_ARGS__)
-#  define rlbox_acquire_unique_guard(name, ...)                                \
+#  define RLBOX_ACQUIRE_UNIQUE_GUARD(name, ...)                                \
     std::unique_lock<std::shared_timed_mutex> name(__VA_ARGS__)
 #else
-#  if !defined(rlbox_shared_lock) || !defined(rlbox_acquire_shared_guard) ||   \
-    !defined(rlbox_acquire_unique_guard)
+#  if !defined(RLBOX_SHARED_LOCK) || !defined(RLBOX_ACQUIRE_SHARED_GUARD) ||   \
+    !defined(RLBOX_ACQUIRE_UNIQUE_GUARD)
 #    error                                                                     \
-      "rlbox_use_custom_shared_lock defined but missing definitions for rlbox_shared_lock, rlbox_acquire_shared_guard, rlbox_acquire_unique_guard"
+      "RLBOX_USE_CUSTOM_SHARED_LOCK defined but missing definitions for RLBOX_SHARED_LOCK, RLBOX_ACQUIRE_SHARED_GUARD, RLBOX_ACQUIRE_UNIQUE_GUARD"
 #  endif
 #endif
 

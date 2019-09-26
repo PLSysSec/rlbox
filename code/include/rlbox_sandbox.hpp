@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <map>
 #include <mutex>
-#ifndef rlbox_use_custom_shared_lock
+#ifndef RLBOX_USE_CUSTOM_SHARED_LOCK
 #  include <shared_mutex>
 #endif
 #ifdef RLBOX_MEASURE_TRANSITION_TIMES
@@ -74,6 +74,11 @@ struct rlbox_transition_timing
 };
 #endif
 
+#ifndef RLBOX_SINGLE_THREADED_INVOCATIONS
+#  error                                                                       \
+    "RLBox does not yet support threading. Please define RLBOX_SINGLE_THREADED_INVOCATIONS prior to including RLBox and ensure you are only using it from a single thread. If threading is required, please file a bug."
+#endif
+
 /**
  * @brief Encapsulation for sandboxes.
  *
@@ -90,13 +95,13 @@ private:
   std::vector<rlbox_transition_timing> transition_times;
 #endif
 
-  static inline rlbox_shared_lock(sandbox_list_lock);
+  static inline RLBOX_SHARED_LOCK(sandbox_list_lock);
   // The actual type of the vector is std::vector<rlbox_sandbox<T_Sbx>*>
   // However clang 5, 6 have bugs where compilation seg-faults on this type
   // So we just use this std::vector<void*>
   static inline std::vector<void*> sandbox_list;
 
-  rlbox_shared_lock(func_ptr_cache_lock);
+  RLBOX_SHARED_LOCK(func_ptr_cache_lock);
   std::map<std::string, void*> func_ptr_map;
 
   // This variable tracks of the sandbox has already been created/destroyed.
@@ -292,7 +297,7 @@ private:
       example_sandbox_ptr != nullptr,
       "Internal error: received a null example pointer. Please file a bug.");
 
-    rlbox_acquire_shared_guard(lock, sandbox_list_lock);
+    RLBOX_ACQUIRE_SHARED_GUARD(lock, sandbox_list_lock);
     for (auto sandbox_v : sandbox_list) {
       auto sandbox = reinterpret_cast<rlbox_sandbox<T_Sbx>*>(sandbox_v);
       if (sandbox->is_pointer_in_sandbox_memory(example_sandbox_ptr)) {
@@ -352,7 +357,7 @@ public:
       },
       [&]() {
         sandbox_created.store(Sandbox_Status::CREATED);
-        rlbox_acquire_unique_guard(lock, sandbox_list_lock);
+        RLBOX_ACQUIRE_UNIQUE_GUARD(lock, sandbox_list_lock);
         sandbox_list.push_back(this);
       });
   }
@@ -372,7 +377,7 @@ public:
       "destroyed concurrently");
 
     {
-      rlbox_acquire_unique_guard(lock, sandbox_list_lock);
+      RLBOX_ACQUIRE_UNIQUE_GUARD(lock, sandbox_list_lock);
       auto el_ref = std::find(sandbox_list.begin(), sandbox_list.end(), this);
       detail::dynamic_check(
         el_ref != sandbox_list.end(),
@@ -542,7 +547,7 @@ public:
   void* lookup_symbol(const char* func_name)
   {
     {
-      rlbox_acquire_shared_guard(lock, func_ptr_cache_lock);
+      RLBOX_ACQUIRE_SHARED_GUARD(lock, func_ptr_cache_lock);
 
       auto func_ptr_ref = func_ptr_map.find(func_name);
       if (func_ptr_ref != func_ptr_map.end()) {
@@ -551,7 +556,7 @@ public:
     }
 
     void* func_ptr = this->impl_lookup_symbol(func_name);
-    rlbox_acquire_unique_guard(lock, func_ptr_cache_lock);
+    RLBOX_ACQUIRE_UNIQUE_GUARD(lock, func_ptr_cache_lock);
     func_ptr_map[func_name] = func_ptr;
     return func_ptr;
   }
