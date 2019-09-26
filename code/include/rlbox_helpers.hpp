@@ -124,6 +124,13 @@ namespace detail {
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
   }
 
+#define rlbox_detail_member_and_const(sig, ...)                                \
+  sig __VA_ARGS__                                                              \
+                                                                               \
+    sig const __VA_ARGS__                                                      \
+                                                                               \
+    static_assert(true)
+
   template<typename T>
   inline auto remove_volatile_from_ptr_cast(T* ptr)
   {

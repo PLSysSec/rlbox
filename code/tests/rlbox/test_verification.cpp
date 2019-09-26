@@ -84,7 +84,7 @@ TEST_CASE("RLBox test function pointer verification", "[verification]")
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("RLBox test unverified", "[verification]")
+TEST_CASE("RLBox test unverified value", "[verification]")
 {
   const auto testVal = 5;
   tainted<int, TestSandbox> test = testVal;
@@ -94,4 +94,21 @@ TEST_CASE("RLBox test unverified", "[verification]")
   REQUIRE(result1 == testVal);
   REQUIRE(result2 == testVal);
   REQUIRE(result3 == testVal);
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("RLBox test unverified pointer", "[verification]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+  tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();
+
+  const auto elementCountSafe = 1;
+  REQUIRE_NOTHROW(pa.unverified_safe_pointer_because(elementCountSafe,
+                                                     "Reading within range"));
+
+  const auto elementCountUnsafe =
+    (TestSandbox::SandboxMemorySize / sizeof(int)) + 1;
+  REQUIRE_THROWS(pa.unverified_safe_pointer_because(
+    elementCountUnsafe, "Definitely out of sandbox memory. Unsafe!"));
 }
