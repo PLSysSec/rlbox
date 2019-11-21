@@ -20,10 +20,13 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]")
   tainted<int, TestSandbox> c = b;
   tainted<int, TestSandbox> d; // NOLINT
   d = b;
+  const float FloatVal1 = 2.4;
+  tainted<float, TestSandbox> e = 2.4; // NOLINT
   REQUIRE(a.UNSAFE_unverified() == RandomVal1); // NOLINT
   REQUIRE(b.UNSAFE_unverified() == RandomVal2); // NOLINT
   REQUIRE(c.UNSAFE_unverified() == RandomVal2); // NOLINT
   REQUIRE(d.UNSAFE_unverified() == RandomVal2); // NOLINT
+  REQUIRE(e.UNSAFE_unverified() == FloatVal1); // NOLINT
 }
 
 // NOLINTNEXTLINE
