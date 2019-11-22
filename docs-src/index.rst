@@ -154,7 +154,7 @@ Note that we do not call ``hello()`` directly. Instead, we use the
 This invocation is a bit more interesting. First, we call ``add`` with
 arguments. Second, RLBox ensures that the ``unsigned`` return value that
 ``add`` returns is :ref:`tainted <tainted>` and thus cannot be used without
-verification. Here, we call the :ref:`copy_and_verify <copy_and_verify >`
+verification. Here, we call the copy_and_verify
 function which copies the value into application memory and runs our verifier
 function::
 
@@ -402,10 +402,10 @@ We however provide additional functions that are especially useful during
 migration:
 
 .. _UNSAFE_unverified:
-.. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_unverified()
-.. doxygenfunction:: rlbox::sandbox_callback::UNSAFE_unverified()
-.. doxygenfunction:: rlbox::tainted_base_impl::UNSAFE_sandboxed()
-.. doxygenfunction:: rlbox::sandbox_callback::UNSAFE_sandboxed()
+.. doxygenclass:: rlbox::tainted_base_impl
+   :members: UNSAFE_unverified, UNSAFE_sandboxed
+
+These functions are also available for :ref:`callback <callback>`
 
 .. danger::  Unchecked unwrapped tainted values can be abused by a compromised
    or malicious library to potentially compromise the application.
