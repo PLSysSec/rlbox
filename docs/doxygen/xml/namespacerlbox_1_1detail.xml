@@ -5,6 +5,7 @@
     <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper_3_01T_00_01T__Sbx_00_01std_1_1201f48555b4b2007b214b5f3cfa39c9f" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper&lt; T, T_Sbx, std::enable_if_t&lt;!std::is_class_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="classrlbox_1_1detail_1_1convert__type__class" prot="public">rlbox::detail::convert_type_class</innerclass>
+    <innerclass refid="classrlbox_1_1detail_1_1scope__exit" prot="public">rlbox::detail::scope_exit</innerclass>
     <innernamespace refid="namespacerlbox_1_1detail_1_1all__extents__same__detail">rlbox::detail::all_extents_same_detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1base__type__detail">rlbox::detail::base_type_detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1compile__time__for__detail">rlbox::detail::compile_time_for_detail</innernamespace>
@@ -13,6 +14,7 @@
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint">rlbox::detail::detail_rlbox_is_tainted_boolean_hint</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__rlbox__remove__wrapper">rlbox::detail::detail_rlbox_remove_wrapper</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1is__c__or__std__array__detail">rlbox::detail::is_c_or_std_array_detail</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1polyfill">rlbox::detail::polyfill</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1remove__all__pointers__detail">rlbox::detail::remove_all_pointers_detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1std__array__el__detail">rlbox::detail::std_array_el_detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1std__array__to__c__arr__detail">rlbox::detail::std_array_to_c_arr_detail</innernamespace>
@@ -348,7 +350,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="13" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="13" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="15" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="15" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a7df0dd3978a900fd9627282050110d54" prot="public" static="no" mutable="no">
         <templateparamlist>
@@ -834,7 +836,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="15" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="15" bodyend="27"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="17" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="17" bodyend="29"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1a4b876f895c98f2bc7f4d820462002482" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -854,7 +856,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="56" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="56" bodyend="65"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="58" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="58" bodyend="67"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1ac1cb27fdc5cead24eebfac5d97ffb208" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -876,7 +878,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="110" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="110" bodyend="114"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="135" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="135" bodyend="139"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1a459e96f592f5ddb4067da56441373d54" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -903,7 +905,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="132" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="132" bodyend="136"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="157" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="157" bodyend="161"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__helpers_8hpp_1ada946cbeddac61199d28701c5a3e251a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -932,7 +934,29 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="139" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="139" bodyend="151"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="164" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="164" bodyend="176"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__helpers_8hpp_1a5a3a020ec87cc208026a3f9f82ff9248" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_ExitFunc</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classrlbox_1_1detail_1_1scope__exit" kindref="compound">scope_exit</ref>&lt; T_ExitFunc &gt;</type>
+        <definition>scope_exit&lt;T_ExitFunc&gt; rlbox::detail::make_scope_exit</definition>
+        <argsstring>(T_ExitFunc &amp;&amp;exitFunction)</argsstring>
+        <name>make_scope_exit</name>
+        <param>
+          <type>T_ExitFunc &amp;&amp;</type>
+          <declname>exitFunction</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" line="214" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp" bodystart="214" bodyend="218"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__range_8hpp_1aa16bb3815e90212d3f756f037abb933e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>

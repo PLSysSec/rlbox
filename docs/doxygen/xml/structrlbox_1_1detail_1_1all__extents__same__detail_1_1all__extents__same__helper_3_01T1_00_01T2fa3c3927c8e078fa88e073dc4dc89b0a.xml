@@ -16,24 +16,24 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="3">
+      <node id="11">
         <label>false_type</label>
       </node>
-      <node id="2">
+      <node id="10">
         <label>rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt; !=std::rank_v&lt; T2 &gt; &gt; &gt;</label>
         <link refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T2fa3c3927c8e078fa88e073dc4dc89b0a"/>
-        <childnode refid="3" relation="public-inheritance">
+        <childnode refid="11" relation="public-inheritance">
         </childnode>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="5">
+      <node id="13">
         <label>false_type</label>
       </node>
-      <node id="4">
+      <node id="12">
         <label>rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt; !=std::rank_v&lt; T2 &gt; &gt; &gt;</label>
         <link refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T2fa3c3927c8e078fa88e073dc4dc89b0a"/>
-        <childnode refid="5" relation="public-inheritance">
+        <childnode refid="13" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>

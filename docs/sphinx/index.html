@@ -17,6 +17,7 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -25,6 +26,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="contents topic" id="contents">
@@ -188,7 +191,7 @@ going to use the NULL sandbox) and call the <code class="docutils literal notran
 <p>This invocation is a bit more interesting. First, we call <code class="docutils literal notranslate"><span class="pre">add</span></code> with
 arguments. Second, RLBox ensures that the <code class="docutils literal notranslate"><span class="pre">unsigned</span></code> return value that
 <code class="docutils literal notranslate"><span class="pre">add</span></code> returns is <a class="reference internal" href="#tainted"><span class="std std-ref">tainted</span></a> and thus cannot be used without
-verification. Here, we call the <span class="xref std std-ref">copy_and_verify</span>
+verification. Here, we call the copy_and_verify
 function which copies the value into application memory and runs our verifier
 function:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[](</span><span class="n">unsigned</span> <span class="n">ret</span><span class="p">){</span>
@@ -568,51 +571,41 @@ be anything the caller chooses.</p>
 <p>In some cases it’s useful to unwrap tainted values without verification.
 Sometimes this is safe to do and RLBox provides a method for doing so:</p>
 <span class="target" id="unverified-safe-because"></span><dl class="function">
-<dt id="_CPPv4I_6size_tEN5rlbox17tainted_base_impl23unverified_safe_becauseEDaRA1N_Kc">
-<span id="_CPPv3I_6size_tEN5rlbox17tainted_base_impl23unverified_safe_becauseERA1N_Kc"></span><span id="_CPPv2I_6size_tEN5rlbox17tainted_base_impl23unverified_safe_becauseERAN_Kc"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1a1292132a467d30150be6d4e2b72ff6b2"></span>template&lt;size_t <code class="sig-name descname">N</code>&gt;<br />auto <code class="sig-prename descclassname">rlbox::tainted_base_impl<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">unverified_safe_because</code><span class="sig-paren">(</span><em class="property">const</em> char (&amp;<em>reason</em>)[N]<span class="sig-paren">)</span><br /></dt>
-<dd><p>Unwrap a tainted value without verification. This function should be used when unwrapping is safe. </p>
-<p><dl class="simple">
+<dt id="_CPPv4I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseEbRA1N_Kc">
+<span id="_CPPv3I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseERA1N_Kc"></span><span id="_CPPv2I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseERAN_Kc"></span><span class="target" id="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19"></span>template&lt;size_t <code class="sig-name descname">N</code>&gt;<br />bool <code class="sig-prename descclassname">rlbox::<a class="reference internal" href="#_CPPv4N5rlbox20tainted_boolean_hintE" title="rlbox::tainted_boolean_hint">tainted_boolean_hint</a><code class="sig-prename descclassname">::</code></code><code class="sig-name descname">unverified_safe_because</code><span class="sig-paren">(</span><em class="property">const</em> char (&amp;<em>reason</em>)[N]<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseEbRA1N_Kc" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>We however provide additional functions that are especially useful during
+migration:</p>
+<span class="target" id="unsafe-unverified"></span><dl class="class">
+<dt id="_CPPv4II00E000EN5rlbox17tainted_base_implE">
+<span id="_CPPv3II00E000EN5rlbox17tainted_base_implE"></span><span id="_CPPv2II00E000EN5rlbox17tainted_base_implE"></span><span class="target" id="classrlbox_1_1tainted__base__impl"></span>template&lt;template&lt;typename, typename&gt; typename <code class="sig-name descname">T_Wrap</code>, typename <code class="sig-name descname">T</code>, typename <code class="sig-name descname">T_Sbx</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">tainted_base_impl</code><a class="headerlink" href="#_CPPv4II00E000EN5rlbox17tainted_base_implE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv">
+<span id="_CPPv3N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv"></span><span id="_CPPv2N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv"></span><span id="rlbox::tainted_base_impl::UNSAFE_unverified"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f"></span>auto <code class="sig-name descname">UNSAFE_unverified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N5rlbox17tainted_base_impl16UNSAFE_sandboxedER13rlbox_sandboxI5T_SbxE">
+<span id="_CPPv3N5rlbox17tainted_base_impl16UNSAFE_sandboxedER13rlbox_sandboxI5T_SbxE"></span><span id="_CPPv2N5rlbox17tainted_base_impl16UNSAFE_sandboxedER13rlbox_sandboxI5T_SbxE"></span><span id="rlbox::tainted_base_impl::UNSAFE_sandboxed__rlbox_sandbox:T_Sbx:R"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214"></span>auto <code class="sig-name descname">UNSAFE_sandboxed</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN5rlbox13rlbox_sandboxE" title="rlbox::rlbox_sandbox">rlbox_sandbox</a>&lt;T_Sbx&gt; &amp;<em>sandbox</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5rlbox17tainted_base_impl16UNSAFE_sandboxedER13rlbox_sandboxI5T_SbxE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Like UNSAFE_unverified, but get the underlying sandbox representation. </p>
+<p><p>For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </p>
+<dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reason</span></code>: An explanation why the unverified unwrapping is safe. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sandbox</span></code>: Reference to sandbox.</p></li>
 </ul>
 </dd>
 </dl>
 </p>
 </dd></dl>
 
-<p>We however provide additional functions that are especially useful during
-migration:</p>
-<span class="target" id="unsafe-unverified"></span><dl class="function">
-<dt id="_CPPv4N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv">
-<span id="_CPPv3N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv"></span><span id="_CPPv2N5rlbox17tainted_base_impl17UNSAFE_unverifiedEv"></span><span id="rlbox::tainted_base_impl::UNSAFE_unverified"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f"></span>auto <code class="sig-prename descclassname">rlbox::tainted_base_impl<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">UNSAFE_unverified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. </p>
+</div>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv4N5rlbox16sandbox_callback17UNSAFE_unverifiedEv">
-<span id="_CPPv3N5rlbox16sandbox_callback17UNSAFE_unverifiedEv"></span><span id="_CPPv2N5rlbox16sandbox_callback17UNSAFE_unverifiedEv"></span><span id="rlbox::sandbox_callback::UNSAFE_unverified"></span><span class="target" id="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f"></span>auto <code class="sig-prename descclassname">rlbox::sandbox_callback<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">UNSAFE_unverified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
-<dd></dd></dl>
-
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve multiple matches for function “rlbox::tainted_base_impl::UNSAFE_sandboxed” with arguments () in doxygen xml output for project “RLBox” from directory: /home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/docs/doxygen/xml.
-Potential matches:
-</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_base_impl</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_base_impl</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="n">const</span>
-</pre></div>
-</div>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve multiple matches for function “rlbox::sandbox_callback::UNSAFE_sandboxed” with arguments () in doxygen xml output for project “RLBox” from directory: /home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/docs/doxygen/xml.
-Potential matches:
-</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">sandbox_callback</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">auto</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">sandbox_callback</span><span class="p">::</span><span class="n">UNSAFE_sandboxed</span><span class="p">(</span><span class="n">rlbox_sandbox</span><span class="o">&lt;</span><span class="n">T_Sbx</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="n">const</span>
-</pre></div>
-</div>
-</div>
+<p>These functions are also available for <a class="reference internal" href="#callback"><span class="std std-ref">callback</span></a></p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
 <p>Unchecked unwrapped tainted values can be abused by a compromised
@@ -808,6 +801,7 @@ memory regions and values.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -840,6 +834,14 @@ memory regions and values.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -849,7 +851,7 @@ memory regions and values.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/index.rst.txt"

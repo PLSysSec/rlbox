@@ -10,6 +10,7 @@
     <innerfile refid="rlbox__range_8hpp">rlbox_range.hpp</innerfile>
     <innerfile refid="rlbox__sandbox_8hpp">rlbox_sandbox.hpp</innerfile>
     <innerfile refid="rlbox__stdlib_8hpp">rlbox_stdlib.hpp</innerfile>
+    <innerfile refid="rlbox__stdlib__polyfill_8hpp">rlbox_stdlib_polyfill.hpp</innerfile>
     <innerfile refid="rlbox__struct__support_8hpp">rlbox_struct_support.hpp</innerfile>
     <innerfile refid="rlbox__type__traits_8hpp">rlbox_type_traits.hpp</innerfile>
     <innerfile refid="rlbox__types_8hpp">rlbox_types.hpp</innerfile>

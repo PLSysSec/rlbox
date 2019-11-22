@@ -20,10 +20,16 @@ auto \hyperlink{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}\label{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}} 
 auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const
 \item 
-{\footnotesize template$<$size\+\_\+t N$>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}{unverified\+\_\+safe\+\_\+because} (const char(\&reason)\mbox{[}N\mbox{]})
+\hyperlink{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+because(const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();\})
 \begin{DoxyCompactList}\small\item\em Unwrap a tainted value without verification. This function should be used when unwrapping is safe. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a88d4ea11a08ad91cb7ead1b80908f7f2}\label{classrlbox_1_1tainted__base__impl_a88d4ea11a08ad91cb7ead1b80908f7f2}} 
-{\footnotesize template$<$size\+\_\+t N$>$ }\\auto {\bfseries unverified\+\_\+safe\+\_\+because} (const char(\&reason)\mbox{[}N\mbox{]}) const
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_af9767a70f0e97d74c5d70a6511cff5d1}\label{classrlbox_1_1tainted__base__impl_af9767a70f0e97d74c5d70a6511cff5d1}} 
+{\bfseries rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+pointer\+\_\+because(size\+\_\+t count, const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}Expected pointer type\char`\"{});using T\+\_\+\+Pointed=std\+::remove\+\_\+pointer\+\_\+t$<$ T $>$;if\+\_\+constexpr\+\_\+named(cond1, std\+::is\+\_\+pointer\+\_\+v$<$ T\+\_\+\+Pointed $>$) \{ rlbox\+\_\+detail\+\_\+static\+\_\+fail\+\_\+because(cond1, \char`\"{}There is no way to use unverified\+\_\+safe\+\_\+pointer\+\_\+because for \char`\"{} \char`\"{}\textquotesingle{}pointers to pointers\textquotesingle{} safely. Use \hyperlink{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}{copy\+\_\+and\+\_\+verify} instead.\char`\"{});return nullptr;\} auto ret=\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();if(ret !=nullptr) \{ size\+\_\+t bytes=sizeof(T) $\ast$count;detail\+::check\+\_\+range\+\_\+doesnt\+\_\+cross\+\_\+app\+\_\+sbx\+\_\+boundary$<$ T\+\_\+\+Sbx $>$(ret, bytes);\} return ret;\})
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_afd3ea6da54b1556e0bdfd222df1ed2e9}\label{classrlbox_1_1tainted__base__impl_afd3ea6da54b1556e0bdfd222df1ed2e9}} 
+auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+unverified\+\_\+safe} ()
+\item 
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_aadcc0f6dc4114d5c9ebecff33040c3c7}\label{classrlbox_1_1tainted__base__impl_aadcc0f6dc4114d5c9ebecff33040c3c7}} 
+auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+unverified\+\_\+safe} () const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ac11254da0346088f7e2ccfdccf87deb1}\label{classrlbox_1_1tainted__base__impl_ac11254da0346088f7e2ccfdccf87deb1}} 
 {\bfseries Binary\+Op\+Val\+And\+Ptr} (+)
@@ -233,6 +239,22 @@ Copy a tainted string from sandbox and verify it.
 \begin{DoxyReturn}{Returns}
 Whatever the verifier function returns. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}\label{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}} 
+\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const@{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const}}
+\index{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const@{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
+\subsubsection{\texorpdfstring{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const()}{rlbox\_detail\_member\_and\_const()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const (\begin{DoxyParamCaption}\item[{template$<$ size\+\_\+t N $>$ inline auto }]{unverified\+\_\+safe\+\_\+becauseconst char(\&reason)\mbox{[}\+N\mbox{]},  }\item[{\{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();\}}]{ }\end{DoxyParamCaption})}
+
+
+
+Unwrap a tainted value without verification. This function should be used when unwrapping is safe. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em reason} & An explanation why the unverified unwrapping is safe. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}\label{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}} 
 \index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}}
 \index{U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
@@ -249,24 +271,7 @@ Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representa
 {\em sandbox} & Reference to sandbox.\\
 \hline
 \end{DoxyParams}
-For the Wasm-\/based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (L\+P32). \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}\label{classrlbox_1_1tainted__base__impl_a1292132a467d30150be6d4e2b72ff6b2}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!unverified\+\_\+safe\+\_\+because@{unverified\+\_\+safe\+\_\+because}}
-\index{unverified\+\_\+safe\+\_\+because@{unverified\+\_\+safe\+\_\+because}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{unverified\+\_\+safe\+\_\+because()}{unverified\_safe\_because()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
-template$<$size\+\_\+t N$>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::unverified\+\_\+safe\+\_\+because (\begin{DoxyParamCaption}\item[{const char(\&)}]{reason\mbox{[}\+N\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Unwrap a tainted value without verification. This function should be used when unwrapping is safe. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em reason} & An explanation why the unverified unwrapping is safe. \\
-\hline
-\end{DoxyParams}
-
+For the Wasm-\/based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (L\+P32). 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

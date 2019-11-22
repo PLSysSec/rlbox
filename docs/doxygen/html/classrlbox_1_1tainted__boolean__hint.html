@@ -93,6 +93,18 @@ Public Member Functions</h2></td></tr>
 template&lt;size_t N&gt; </td></tr>
 <tr class="memitem:abf39ef53dfd6b06017c127ef9370bb19"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unverified_safe_because</b> (const char(&amp;reason)[N]) const</td></tr>
 <tr class="separator:abf39ef53dfd6b06017c127ef9370bb19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e23142c021bb326ab1d6d700a493b6f"><td class="memItemLeft" align="right" valign="top"><a id="a6e23142c021bb326ab1d6d700a493b6f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_unverified</b> () const</td></tr>
+<tr class="separator:a6e23142c021bb326ab1d6d700a493b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bcd23163c04db9f85ee68a6e06ab57e"><td class="memItemLeft" align="right" valign="top"><a id="a5bcd23163c04db9f85ee68a6e06ab57e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>UNSAFE_unverified</b> ()</td></tr>
+<tr class="separator:a5bcd23163c04db9f85ee68a6e06ab57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa686dad271f4d9ed7e908d38313706d5"><td class="memItemLeft" align="right" valign="top"><a id="aa686dad271f4d9ed7e908d38313706d5"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>INTERNAL_unverified_safe</b> ()</td></tr>
+<tr class="separator:aa686dad271f4d9ed7e908d38313706d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e329c5d66230f3d7af46482c84ba3a4"><td class="memItemLeft" align="right" valign="top"><a id="a6e329c5d66230f3d7af46482c84ba3a4"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>INTERNAL_unverified_safe</b> () const</td></tr>
+<tr class="separator:a6e329c5d66230f3d7af46482c84ba3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tainted boolean value that serves as a "hint" and not a definite answer. Comparisons with a <a class="el" href="classrlbox_1_1tainted__volatile.html" title="Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile. ">tainted_volatile</a> return such hints. They are not <code>tainted&lt;bool&gt;</code> values because a compromised sandbox can modify <a class="el" href="classrlbox_1_1tainted__volatile.html" title="Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile. ">tainted_volatile</a> data at any time. </p>

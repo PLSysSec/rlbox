@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r" kind="struct" language="C++" prot="public">
+    <compoundname>rlbox::detail::polyfill::is_nothrow_invocable_r</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">std::integral_constant&lt; bool, __nothrow_invokable_r&lt; _Ret, _Fn, _Args... &gt;::value &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>class _Ret</type>
+      </param>
+      <param>
+        <type>class _Fn</type>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>_Args</declname>
+        <defname>_Args</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="103">
+        <label>std::integral_constant&lt; bool, __nothrow_invokable_r&lt; _Ret, _Fn, _Args... &gt;::value &gt;</label>
+      </node>
+      <node id="102">
+        <label>rlbox::detail::polyfill::is_nothrow_invocable_r&lt; _Ret, _Fn, _Args &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r"/>
+        <childnode refid="103" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="105">
+        <label>std::integral_constant&lt; bool, __nothrow_invokable_r&lt; _Ret, _Fn, _Args... &gt;::value &gt;</label>
+      </node>
+      <node id="104">
+        <label>rlbox::detail::polyfill::is_nothrow_invocable_r&lt; _Ret, _Fn, _Args &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r"/>
+        <childnode refid="105" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="165" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="162" bodyend="165"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

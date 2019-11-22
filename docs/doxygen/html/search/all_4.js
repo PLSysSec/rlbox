@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['free_5fin_5fsandbox',['free_in_sandbox',['../classrlbox_1_1rlbox__sandbox.html#a775b1828f996dc8f14f24a296096e0e3',1,'rlbox::rlbox_sandbox']]]
+  ['destroy_5fsandbox',['destroy_sandbox',['../classrlbox_1_1rlbox__sandbox.html#ac2be161ed2183fa8bc319232a8d74da6',1,'rlbox::rlbox_sandbox']]]
 ];

@@ -1,5 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.8.13">
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kind="struct"><name>rlbox::detail::polyfill::__nat</name>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nat_1aa6c30cb58b6c5d9d4ab652f04e1c3f09" kind="function"><name>__nat</name></member>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nat_1a8dadab1bd03e7932154cab0c5c33d848" kind="function"><name>__nat</name></member>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nat_1a54a77343b44d5061d576b291d8046080" kind="function"><name>operator=</name></member>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nat_1a466e16b2cfc1471e0b647b0b62e90f6f" kind="function"><name>~__nat</name></member>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kind="struct"><name>rlbox::detail::polyfill::__nothrow_invokable_r_imp</name>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_1aaa3afbce40cb594321ea054cf5b1bb1e" kind="variable"><name>value</name></member>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01false_00_01__R20797f25b6d2c31e27d840915001dc22" kind="struct"><name>rlbox::detail::polyfill::__nothrow_invokable_r_imp&lt; true, false, _Ret, _Fp, _Args... &gt;</name>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01false_00_01__R20797f25b6d2c31e27d840915001dc22_1a7a04331f62c0e1f997458058c0abe2de" kind="typedef"><name>_ThisT</name></member>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01false_00_01__R20797f25b6d2c31e27d840915001dc22_1a9c532bad2cdf463a2e7d625781ef4c70" kind="variable"><name>value</name></member>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01false_00_01__R20797f25b6d2c31e27d840915001dc22_1adc5e761252c44fa3eab6e7f6cd51fac3" kind="function"><name>__test_noexcept</name></member>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01true_00_01__Re94b011956b38a71c476d923b84fea4ba" kind="struct"><name>rlbox::detail::polyfill::__nothrow_invokable_r_imp&lt; true, true, _Ret, _Fp, _Args... &gt;</name>
+    <member refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01true_00_01__Re94b011956b38a71c476d923b84fea4ba_1a597a997ef843495ae6cd48a7f4a499c2" kind="variable"><name>value</name></member>
+  </compound>
   <compound refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper" kind="struct"><name>rlbox::detail::all_extents_same_detail::all_extents_same_helper</name>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T2fa3c3927c8e078fa88e073dc4dc89b0a" kind="struct"><name>rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt; !=std::rank_v&lt; T2 &gt; &gt; &gt;</name>
@@ -59,6 +76,10 @@
   </compound>
   <compound refid="classrlbox_1_1detail_1_1convert__type__class" kind="class"><name>rlbox::detail::convert_type_class</name>
   </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of" kind="struct"><name>rlbox::detail::polyfill::helper__invoke_of</name>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1invoke__result" kind="struct"><name>rlbox::detail::polyfill::invoke_result</name>
+  </compound>
   <compound refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper" kind="struct"><name>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper</name>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00f7133443f751f75ceb0fc3a4cd3f63ff" kind="struct"><name>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; is_std_array_v&lt; T &gt; &gt; &gt;</name>
@@ -67,9 +88,17 @@
   </compound>
   <compound refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_006917f5978f5075d5dadfc94abedf439f" kind="struct"><name>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt;!std::is_array_v&lt; T &gt; &amp;&amp;!is_std_array_v&lt; T &gt; &gt; &gt;</name>
   </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable" kind="struct"><name>rlbox::detail::polyfill::is_invocable</name>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r" kind="struct"><name>rlbox::detail::polyfill::is_invocable_r</name>
+  </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper" kind="struct"><name>rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper</name>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail_586dbac5071c7fb9e9b52cfd4627c31a" kind="struct"><name>rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper&lt; T, decltype(struct_is_member_of_rlbox_detail(std::declval&lt; T &gt;()))&gt;</name>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable" kind="struct"><name>rlbox::detail::polyfill::is_nothrow_invocable</name>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r" kind="struct"><name>rlbox::detail::polyfill::is_nothrow_invocable_r</name>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num" kind="struct"><name>rlbox::detail::compile_time_for_detail::num</name>
     <member refid="structrlbox_1_1detail_1_1compile__time__for__detail_1_1num_1a3ebecc6d20c6b147ad13c12b152999a7" kind="variable"><name>value</name></member>
@@ -86,11 +115,11 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1aad50443cb7733460ca536ffd553aad08" kind="typedef"><name>T_IntType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a909dbb8c3226fbcd19171c0548f21acf" kind="typedef"><name>T_PointerType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a0bacaced018f138bf097b8e854c3ad5f" kind="typedef"><name>T_ShortType</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a888778c2eab9464bfe152e98edb85e84" kind="variable"><name>callback_mutex</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a90051b6a6df7ba775ec917cd9cc8d029" kind="variable"><name>callback_unique_keys</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9350bc978320601504c5ae747ba35596" kind="variable"><name>callbacks</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1abe0dfb0cde9dbc85eee3fc37cac7a6e5" kind="variable"><name>MAX_CALLBACKS</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a3c6118d160451d8f55f118595b6c547d" kind="variable"><name>thread_data</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a90051b6a6df7ba775ec917cd9cc8d029" kind="variable"><name>callback_unique_keys</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9350bc978320601504c5ae747ba35596" kind="variable"><name>callbacks</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1ab09ec04f405ba6165400ce736a592d2c" kind="function"><name>RLBOX_SHARED_LOCK</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1afc66f94f8c325ffde16953be83b47ece" kind="function"><name>callback_trampoline</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1aed3d297784c5654e6d83d4c5d3dacd90" kind="function"><name>impl_create_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1af1693fb4ff2ac776671d10c2c5481d61" kind="function"><name>impl_destroy_sandbox</name></member>
@@ -124,19 +153,19 @@
     <member refid="classrlbox_1_1rlbox__sandbox_1a24201ea4d4fa6923d41cc3916466095e" kind="typedef"><name>convert_fn_ptr_to_sandbox_equivalent_t</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a2236c8f780e2fbb505b616a05d632298" kind="typedef"><name>convert_to_sandbox_equivalent_nonclass_t</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a09c972acd976ab264478c3abd32f8383" kind="typedef"><name>T_Cb_no_wrap</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1ab6fd863e3c6c8506a01745e7d992f916" kind="variable"><name>sandbox_list_lock</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1ab052abf0169e7efc9a6cb38a3b5b9cf1" kind="variable"><name>sandbox_list</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1af1bfe0450085d81244ecffc3e2556038" kind="variable"><name>func_ptr_cache_lock</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a30c1d4dbbdf0b3d7703964d7f0132466" kind="variable"><name>sandbox_list</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a2518efbb4e7c12d050fa555f121ee165" kind="variable"><name>func_ptr_map</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ae9542cd3cc19b7655958aa4332adbe60" kind="variable"><name>sandbox_created</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a08803ef5d6b029a8b31c34df70322f51" kind="variable"><name>callback_lock</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ae65aee474d232b3737e07638df545f3d" kind="variable"><name>callback_keys</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1ae66207864d8c2bc0882cfa9fbf473d99" kind="function"><name>RLBOX_SHARED_LOCK</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1ac6a40ac359d24d397bdfa65c95e04351" kind="function"><name>sandbox_callback_interceptor</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a0695cfcf47345344e02d1d4ba058337d" kind="function"><name>find_sandbox_from_example</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a5c74b2ca8125342e07bd329fa51bbd09" kind="function"><name>RLBOX_SHARED_LOCK</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a29b5ec5468651f2ac34eb5107163b93b" kind="function"><name>check_invoke_param_type_is_ok</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a9d7fe6306db467d3949862346084aeed" kind="function"><name>invoke_process_param</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a4c4c49f996b6cc9040fb9e09a8cc4ae8" kind="function"><name>sandbox_callback_intercept_convert_param</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1abded0a7d6c2b1c5505be3d0c87817c96" kind="function"><name>unregister_callback</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1ac6a40ac359d24d397bdfa65c95e04351" kind="function"><name>sandbox_callback_interceptor</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1a0695cfcf47345344e02d1d4ba058337d" kind="function"><name>find_sandbox_from_example</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a32de91755a582024dc43b879ef192b2c" kind="function"><name>get_sandbox_impl</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a7b938866462f607bcc069770c1bc1ba6" kind="function"><name>create_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ac2be161ed2183fa8bc319232a8d74da6" kind="function"><name>destroy_sandbox</name></member>
@@ -151,7 +180,7 @@
     <member refid="classrlbox_1_1rlbox__sandbox_1af682f225ef74ad07cfa5c25e7c8ed42c" kind="function"><name>get_memory_location</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a38b2f18b1db0dbd789477a93d0dc40eb" kind="function"><name>lookup_symbol</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1a9f9e13680f09205f25a520fc04ef3f9a" kind="function"><name>INTERNAL_invoke_with_func_name</name></member>
-    <member refid="classrlbox_1_1rlbox__sandbox_1aa9949431e81241554f6b54fa7bcaca19" kind="function"><name>INTERNAL_invoke_with_func_ptr</name></member>
+    <member refid="classrlbox_1_1rlbox__sandbox_1a5eacf092a66c9d4f850b726ffdcd9926" kind="function"><name>INTERNAL_invoke_with_func_ptr</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1acd10ff63b848c01690ba1f8977621a72" kind="function"><name>UNSAFE_accept_pointer</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ad2cf7d6b28eca1cdc04cb3cbee338189" kind="function"><name>register_callback</name></member>
     <member refid="classrlbox_1_1rlbox__sandbox_1ae4f4cc7825bcb613ab5405e0f6cae7f3" kind="function"><name>register_callback</name></member>
@@ -177,6 +206,7 @@
     <member refid="classrlbox_1_1sandbox__callback_1a0ce763c5aa54385263a3f40055e3ef76" kind="function"><name>get_raw_value</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a72090fc430b1b20349a3b40437f73d4e" kind="function"><name>get_raw_sandbox_value</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1ab6886f593df13c2aa282aff54c14b374" kind="function"><name>sandbox_callback</name></member>
+    <member refid="classrlbox_1_1sandbox__callback_1ad092fdea1356d88bfaaaa6721b91a765" kind="function"><name>sandbox_callback</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1af9453a813aa03d7b817b31f4ff82ce69" kind="function"><name>sandbox_callback</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1ac20b4643ac1c7f887e47e80f73e81ebb" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a533080e1c309f61779c132037c232c8d" kind="function"><name>unregister</name></member>
@@ -185,6 +215,17 @@
     <member refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" kind="function"><name>UNSAFE_sandboxed</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a12f4b98341c36fa3eb97d9da82443bc8" kind="function"><name>UNSAFE_sandboxed</name></member>
+  </compound>
+  <compound refid="classrlbox_1_1detail_1_1scope__exit" kind="class"><name>rlbox::detail::scope_exit</name>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1af89aabf40874d9f7d94a1a31ae69643a" kind="variable"><name>exit_func</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1a20d4048b842ece546def3fe797a2a156" kind="variable"><name>released</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1a4641bf6c373d54990939eff6bc05ef5b" kind="function"><name>scope_exit</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1a03299473483c9b24c1c9e37f966c06c6" kind="function"><name>scope_exit</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1ab0c9dd9c2304d3bfe53c2c828a60ca15" kind="function"><name>~scope_exit</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1a632232600d8f56dcccc21c05ebd543fe" kind="function"><name>release</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1aa17eabe299ba9dcfb73ac9ad684a9d77" kind="function"><name>scope_exit</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1aa52843c3aadc0f45a2b4988616762e1e" kind="function"><name>operator=</name></member>
+    <member refid="classrlbox_1_1detail_1_1scope__exit_1a3197643e574f3f7f5b47faa86ab9064c" kind="function"><name>operator=</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted" kind="class"><name>rlbox::tainted</name>
   </compound>
@@ -198,8 +239,10 @@
     <member refid="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214" kind="function"><name>UNSAFE_sandboxed</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a2fb81eab8dc3839f351d6d89410c2350" kind="function"><name>UNSAFE_sandboxed</name></member>
-    <member refid="classrlbox_1_1tainted__base__impl_1a1292132a467d30150be6d4e2b72ff6b2" kind="function"><name>unverified_safe_because</name></member>
-    <member refid="classrlbox_1_1tainted__base__impl_1a88d4ea11a08ad91cb7ead1b80908f7f2" kind="function"><name>unverified_safe_because</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1ac7d2f71a8fc72b922bfa1260d4a7ac94" kind="function"><name>rlbox_detail_member_and_const</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1af9767a70f0e97d74c5d70a6511cff5d1" kind="function"><name>rlbox_detail_member_and_const</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1afd3ea6da54b1556e0bdfd222df1ed2e9" kind="function"><name>INTERNAL_unverified_safe</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1aadcc0f6dc4114d5c9ebecff33040c3c7" kind="function"><name>INTERNAL_unverified_safe</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ac11254da0346088f7e2ccfdccf87deb1" kind="function"><name>BinaryOpValAndPtr</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ab64e73357c9a9387ca281d31e17bc490" kind="function"><name>BinaryOpValAndPtr</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" kind="function"><name>BinaryOp</name></member>
@@ -244,6 +287,10 @@
     <member refid="classrlbox_1_1tainted__boolean__hint_1accd26753a15b8c1510418a1b0ef6ac81" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1tainted__boolean__hint_1ae47718163139bbc69009f5d853700690" kind="function"><name>operator!</name></member>
     <member refid="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19" kind="function"><name>unverified_safe_because</name></member>
+    <member refid="classrlbox_1_1tainted__boolean__hint_1a6e23142c021bb326ab1d6d700a493b6f" kind="function"><name>UNSAFE_unverified</name></member>
+    <member refid="classrlbox_1_1tainted__boolean__hint_1a5bcd23163c04db9f85ee68a6e06ab57e" kind="function"><name>UNSAFE_unverified</name></member>
+    <member refid="classrlbox_1_1tainted__boolean__hint_1aa686dad271f4d9ed7e908d38313706d5" kind="function"><name>INTERNAL_unverified_safe</name></member>
+    <member refid="classrlbox_1_1tainted__boolean__hint_1a6e329c5d66230f3d7af46482c84ba3a4" kind="function"><name>INTERNAL_unverified_safe</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted__opaque" kind="class"><name>rlbox::tainted_opaque</name>
     <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" kind="variable"><name>data</name></member>
@@ -293,11 +340,11 @@
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__volatile_3_01T_00_01T__Sbx_01_4_01_4_1a35e2bbef854da26ac6183d86973088d1" kind="typedef"><name>type</name></member>
     <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted__volatile_3_01T_00_01T__Sbx_01_4_01_4_1a03486bcca1d3277cdfab50c85839b595" kind="typedef"><name>type_sbx</name></member>
   </compound>
-  <compound refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_to_c_arr_detail::W</name>
-    <member refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W_1a0820ff0c6b9407092672b903661c9459" kind="typedef"><name>type</name></member>
-  </compound>
   <compound refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_el_detail::W</name>
     <member refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W_1a40a0b72602d7250352c6adc3947e8ccc" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kind="struct"><name>rlbox::detail::std_array_to_c_arr_detail::W</name>
+    <member refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W_1a0820ff0c6b9407092672b903661c9459" kind="typedef"><name>type</name></member>
   </compound>
   <compound refid="namespacerlbox" kind="namespace"><name>rlbox</name>
     <member refid="rlbox_8hpp_1a8fe48bd08b952ec679b00341d96a92a3" kind="typedef"><name>T_ClassBase</name></member>
@@ -402,6 +449,7 @@
     <member refid="rlbox__helpers_8hpp_1ac1cb27fdc5cead24eebfac5d97ffb208" kind="function"><name>remove_volatile_from_ptr_cast</name></member>
     <member refid="rlbox__helpers_8hpp_1a459e96f592f5ddb4067da56441373d54" kind="function"><name>compile_time_for</name></member>
     <member refid="rlbox__helpers_8hpp_1ada946cbeddac61199d28701c5a3e251a" kind="function"><name>return_first_result</name></member>
+    <member refid="rlbox__helpers_8hpp_1a5a3a020ec87cc208026a3f9f82ff9248" kind="function"><name>make_scope_exit</name></member>
     <member refid="rlbox__range_8hpp_1aa16bb3815e90212d3f756f037abb933e" kind="function"><name>check_range_doesnt_cross_app_sbx_boundary</name></member>
     <member refid="rlbox__unwrap_8hpp_1a405f2af348c8d91411e4822e4c58c0ca" kind="function"><name>unwrap_value</name></member>
     <member refid="rlbox__wrapper__traits_8hpp_1a84ff21aac9edff694c01a03516354079" kind="function"><name>rlbox_generate_wrapper_check</name></member>
@@ -429,6 +477,18 @@
     <member refid="rlbox__type__traits_8hpp_1a8491a4b9f71cfd7500e9bde8b8e35e94" kind="variable"><name>is_std_array_v</name></member>
     <member refid="rlbox__type__traits_8hpp_1aa0c772106526e6c605f3f1c111dcf1c2" kind="function"><name>is_std_array_helper</name></member>
     <member refid="rlbox__type__traits_8hpp_1af6fde81b57a8b08a0fa043ffb80a0606" kind="function"><name>is_std_array_helper</name></member>
+  </compound>
+  <compound refid="namespacerlbox_1_1detail_1_1polyfill" kind="namespace"><name>rlbox::detail::polyfill</name>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1a7b59a943b2c1f511d46d86e10716749e" kind="typedef"><name>_BoolConstant</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1aa2fb4bcc83d123819d1d4c80e707a1ae" kind="typedef"><name>_IsNotSame</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1ae4d3b1827587f905d3f5c7d8ea76e0f0" kind="typedef"><name>__invokable</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1a915346fa52c9639dbd81c4b425f96ae4" kind="typedef"><name>__nothrow_invokable_r</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1ae6863aa73ea15bd1a0bcf596f66f0991" kind="typedef"><name>__nothrow_invokable</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1acb975d6d9b0d47d0f1bb0dee345ea621" kind="typedef"><name>invoke_result_t</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1a901727016c1ff28b6c04f628a2cf810a" kind="variable"><name>is_invocable_v</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1ae8d2106cf1c9ffcd88ac7a19b69abc1b" kind="variable"><name>is_invocable_r_v</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1aa2a16ed95ebcee2d1f9a8bc4eae3a13b" kind="variable"><name>is_nothrow_invocable_v</name></member>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1a36c4bc16c1ee2d1132d67efc15f7b030" kind="variable"><name>is_nothrow_invocable_r_v</name></member>
   </compound>
   <compound refid="namespacerlbox_1_1detail_1_1remove__all__pointers__detail" kind="namespace"><name>rlbox::detail::remove_all_pointers_detail</name>
   </compound>
@@ -461,9 +521,13 @@
     <member refid="rlbox__helpers_8hpp_1aa951ef1ac3c130c23dab718b23eb7f52" kind="define"><name>RLBOX_UNUSED</name></member>
     <member refid="rlbox__helpers_8hpp_1ae89c6b928ee7a5607cf555dcc7346b56" kind="define"><name>RLBOX_REQUIRE_SEMI_COLON</name></member>
     <member refid="rlbox__helpers_8hpp_1ae5ac8bd87a92fc820e651db0f6942f12" kind="define"><name>if_constexpr_named</name></member>
+    <member refid="rlbox__helpers_8hpp_1a3c9318b4a72c32849f024e6ecf4796b4" kind="define"><name>RLBOX_SHARED_LOCK</name></member>
+    <member refid="rlbox__helpers_8hpp_1addf39a9a87daf027392d839207cf96f8" kind="define"><name>RLBOX_ACQUIRE_SHARED_GUARD</name></member>
+    <member refid="rlbox__helpers_8hpp_1a08a475449e11aeed7dee85f4211f779c" kind="define"><name>RLBOX_ACQUIRE_UNIQUE_GUARD</name></member>
     <member refid="rlbox__helpers_8hpp_1aa4b3ef8b83d2ffda9c8429ebc6f289c7" kind="define"><name>rlbox_detail_forward_binop_to_base</name></member>
     <member refid="rlbox__helpers_8hpp_1ac8ed7051dd56ef3c64c356dd0d26069d" kind="define"><name>rlbox_detail_forward_to_const</name></member>
     <member refid="rlbox__helpers_8hpp_1abf71479e7859dd57b5f9b989ee84ff2d" kind="define"><name>rlbox_detail_forward_to_const_a</name></member>
+    <member refid="rlbox__helpers_8hpp_1abb5c3bf792e819ee1df4c2eac99b5154" kind="define"><name>rlbox_detail_member_and_const</name></member>
     <member refid="rlbox__helpers_8hpp_1a61663c769b3d66775fa9b06e4e9011e6" kind="define"><name>KEEP_CLASSES_FRIENDLY</name></member>
   </compound>
   <compound refid="rlbox__noop__sandbox_8hpp" kind="file"><name>rlbox_noop_sandbox.hpp</name>
@@ -481,6 +545,9 @@
   </compound>
   <compound refid="rlbox__stdlib_8hpp" kind="file"><name>rlbox_stdlib.hpp</name>
     <member refid="rlbox__stdlib_8hpp_1aeebe62e22b2387421933abf7831075f4" kind="define"><name>KEEP_CAST_FRIENDLY</name></member>
+  </compound>
+  <compound refid="rlbox__stdlib__polyfill_8hpp" kind="file"><name>rlbox_stdlib_polyfill.hpp</name>
+    <member refid="rlbox__stdlib__polyfill_8hpp_1a8e7b7f53bfb1ceecb65ca5e6d11283f1" kind="define"><name>INVOKE_RETURN</name></member>
   </compound>
   <compound refid="rlbox__struct__support_8hpp" kind="file"><name>rlbox_struct_support.hpp</name>
     <member refid="rlbox__struct__support_8hpp_1a6d0e9680ce48e4dee3000f081215e2ab" kind="define"><name>helper_create_converted_field</name></member>

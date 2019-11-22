@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of" kind="struct" language="C++" prot="public">
+    <compoundname>rlbox::detail::polyfill::helper__invoke_of</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">std::enable_if&lt; __invokable&lt; _Fp, _Args... &gt;::value, __invokable_r&lt; void, _Fp, _Args... &gt;::_Result &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>class</type>
+        <declname>_Fp</declname>
+        <defname>_Fp</defname>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>_Args</declname>
+        <defname>_Args</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="59">
+        <label>std::enable_if&lt; __invokable&lt; _Fp, _Args... &gt;::value, __invokable_r&lt; void, _Fp, _Args... &gt;::_Result &gt;</label>
+      </node>
+      <node id="58">
+        <label>rlbox::detail::polyfill::helper__invoke_of&lt; _Fp, _Args &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of"/>
+        <childnode refid="59" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="61">
+        <label>std::enable_if&lt; __invokable&lt; _Fp, _Args... &gt;::value, __invokable_r&lt; void, _Fp, _Args... &gt;::_Result &gt;</label>
+      </node>
+      <node id="60">
+        <label>rlbox::detail::polyfill::helper__invoke_of&lt; _Fp, _Args &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of"/>
+        <childnode refid="61" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="124" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="121" bodyend="124"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

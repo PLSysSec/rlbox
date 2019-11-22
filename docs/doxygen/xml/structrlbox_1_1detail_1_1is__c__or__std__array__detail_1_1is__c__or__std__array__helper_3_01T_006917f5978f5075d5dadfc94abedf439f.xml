@@ -13,24 +13,24 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="61">
+      <node id="79">
         <label>false_type</label>
       </node>
-      <node id="60">
+      <node id="78">
         <label>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt;!std::is_array_v&lt; T &gt; &amp;&amp;!is_std_array_v&lt; T &gt; &gt; &gt;</label>
         <link refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_006917f5978f5075d5dadfc94abedf439f"/>
-        <childnode refid="61" relation="public-inheritance">
+        <childnode refid="79" relation="public-inheritance">
         </childnode>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="63">
+      <node id="81">
         <label>false_type</label>
       </node>
-      <node id="62">
+      <node id="80">
         <label>rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt;!std::is_array_v&lt; T &gt; &amp;&amp;!is_std_array_v&lt; T &gt; &gt; &gt;</label>
         <link refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_006917f5978f5075d5dadfc94abedf439f"/>
-        <childnode refid="63" relation="public-inheritance">
+        <childnode refid="81" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>
