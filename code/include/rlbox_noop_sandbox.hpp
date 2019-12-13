@@ -39,8 +39,18 @@ private:
     uint32_t last_callback_invoked;
   };
 
+#ifndef RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
   thread_local static inline rlbox_noop_sandbox_thread_local thread_data{ 0,
                                                                           0 };
+#else
+  thread_local static rlbox_noop_sandbox_thread_local thread_data;
+#  define RLBOX_NOOP_SANDBOX_STATIC_VARIABLES()                                \
+    thread_local rlbox::rlbox_noop_sandbox::rlbox_noop_sandbox_thread_local    \
+      rlbox::rlbox_noop_sandbox::thread_data                                   \
+    {                                                                          \
+      0, 0                                                                     \
+    }
+#endif
 
   template<uint32_t N, typename T_Ret, typename... T_Args>
   static T_Ret callback_trampoline(T_Args... params)
