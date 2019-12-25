@@ -229,6 +229,29 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     sandbox.free_in_sandbox(pFoo);
   }
 
+  SECTION("test callback registration unregistration") // NOLINT
+  {
+    const uint32_t cb_iterations = 1024;
+    for (uint32_t i = 0; i < cb_iterations; i++) {
+      // NOLINTNEXTLINE
+      rlbox::sandbox_callback<int (*)(unsigned, const char*, unsigned*),
+                              TestType>
+        cb_callback_param1;
+      rlbox::sandbox_callback<int (*)(unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long), // NOLINT
+                              TestType>
+        cb_callback_param2;
+
+      cb_callback_param1 = sandbox.register_callback(exampleCallback);
+      cb_callback_param2 = sandbox.register_callback(exampleCallback2);
+      // destructor will unregister the cbs here
+    }
+  }
+
   SECTION("test echo and pointer locations") // NOLINT
   {
     const char* str = "Hello";
