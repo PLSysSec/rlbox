@@ -372,6 +372,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     // writes should still go through
     resultT.fieldLong = 17;                               // NOLINT
     REQUIRE(resultT.fieldLong.UNSAFE_unverified() == 17); // NOLINT
+    delete[] result.fieldString;
   }
 
   SECTION("test structure pointer") // NOLINT
@@ -412,6 +413,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
         return val;
       });
     REQUIRE(val3 == 17); // NOLINT
+    delete[] result.fieldString;
   }
 
   SECTION("test pointers in struct") // NOLINT
