@@ -29,6 +29,9 @@ else()
   endif()
 endif()
 
+# For ASAN
+# add_compile_options(-fsanitize=address -O2 -gline-tables-only)
+
 # Dev Tools ###################
 
 find_program(CLANG_TIDY "clang-tidy")
@@ -80,7 +83,7 @@ FetchContent_Declare(catch2
                      GIT_TAG v2.9.1)
 
 FetchContent_GetProperties(catch2)
-if(NOT catch2_POLULATED)
+if(NOT catch2_POPULATED)
   FetchContent_Populate(catch2)
 endif()
 
