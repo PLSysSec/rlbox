@@ -40,6 +40,8 @@ TEST_CASE("test sandbox_const_cast", "[stdlib]")
   REQUIRE(std::is_same_v<decltype(ptr), tainted<const uint64_t*, TestSandbox>>);
   REQUIRE(std::is_same_v<decltype(ptr2), tainted<uint64_t*, TestSandbox>>);
   REQUIRE(ptr->UNSAFE_unverified() == testVal);
+
+  sandbox.destroy_sandbox();
 }
 
 // NOLINTNEXTLINE

@@ -13,32 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(WERR "Enable warnings as errors" OFF)
-
-if(MSVC)
-  add_compile_options(/W4)
-  if (WERR)
-    add_compile_options(/WX)
-  endif()
-else()
-  add_compile_options(-Wall
-                      -Wextra
-                      -pedantic)
-  if (WERR)
-    add_compile_options(-Werror)
-  endif()
-endif()
-
-# For ASAN
-# add_compile_options(-fsanitize=address -O2 -gline-tables-only)
-
-# Dev Tools ###################
-
-find_program(CLANG_TIDY "clang-tidy")
-if(CLANG_TIDY)
-  # Config in .clang-tidy
-  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-endif()
+option(DEV "Use settings suitable for dev contributions to rlbox" OFF)
 
 file(GLOB_RECURSE
      ALL_CXX_SOURCE_FILES
@@ -49,30 +24,53 @@ file(GLOB_RECURSE
      code/*.ii
      code/*.[CHI])
 
-find_program(CLANG_FORMAT "clang-format")
-if(CLANG_FORMAT)
-  # Config in .clang-format
-  add_custom_target(format-source
-                    COMMAND clang-format
-                            -i
-                            -style=file
-                            ${ALL_CXX_SOURCE_FILES})
-endif()
+# Dev Tools ###################
 
-find_program(IWYU "iwyu")
-if("")#IWYU)
-  # TODO: Still have to ensure this checks .hpp files, which it doesn't right
-  # now. See bug below about "check_also"... which doesn't seem to work
-  # https://github.com/include-what-you-use/include-what-you-use/issues/633
-  set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
-      iwyu
-      -Xiwyu
-      --transitive_includes_only
-      -Xiwyu
-      --check_also="*.hpp"
-      # -Xiwyu
-      # --verbose=4
-      -Xiwyu --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
+if(DEV)
+  if(MSVC)
+    add_compile_options(/W4) # warnings
+    add_compile_options(/WX) # warnings as errors
+  else()
+    add_compile_options(-Wall -Wextra -pedantic) # warnings
+    add_compile_options(-Werror) # warnings as errors
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
+    # add_compile_options(-fsanitize=undefined)
+    # add_link_options(-fsanitize=undefined)
+  endif()
+
+  find_program(CLANG_TIDY "clang-tidy")
+  if(CLANG_TIDY)
+    # Config in .clang-tidy
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  endif()
+
+  find_program(CLANG_FORMAT "clang-format")
+  if(CLANG_FORMAT)
+    # Config in .clang-format
+    add_custom_target(format-source
+                      COMMAND clang-format
+                              -i
+                              -style=file
+                              ${ALL_CXX_SOURCE_FILES})
+  endif()
+
+  find_program(IWYU "iwyu")
+  if(IWYU)# TODO: Still have to ensure this checks .hpp files, which it
+         # doesn't right now. See bug below about "check_also"... which doesn't
+         # seem to work https://github.com/include-what-you-use/include-what-
+         # you-use/issues/633
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
+        iwyu
+        -Xiwyu
+        --transitive_includes_only
+        -Xiwyu
+        --check_also="*.hpp"
+        # -Xiwyu
+        # --verbose=4
+        -Xiwyu --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
+  endif()
+
 endif()
 
 # Dependencies ###################
@@ -131,20 +129,20 @@ if(DOXYGEN_FOUND)
     set(SPHINX_BUILD ${CMAKE_CURRENT_SOURCE_DIR}/docs/sphinx)
     set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
 
-    # Only regenerate Sphinx when:
-    # - Doxygen has rerun
-    # - Our doc files have been updated
-    # - The Sphinx config has been updated
-    add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
-                       COMMAND ${SPHINX_EXECUTABLE} -b html
-                       -Dbreathe_projects.RLBox=${DOXYGEN_OUTPUT_DIR}/xml
-                       ${SPHINX_SOURCE} ${SPHINX_BUILD}
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                       DEPENDS
-                       ${SPHINX_SOURCE}/index.rst
-                       ${DOXYGEN_INDEX_FILE}
-                       MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
-                       COMMENT "Generating Sphinx documentation")
+    # Only regenerate Sphinx when: - Doxygen has rerun - Our doc files have been
+    # updated - The Sphinx config has been updated
+    add_custom_command(
+      OUTPUT ${SPHINX_INDEX_FILE}
+      COMMAND ${SPHINX_EXECUTABLE}
+              -b
+              html
+              -Dbreathe_projects.RLBox=${DOXYGEN_OUTPUT_DIR}/xml
+              ${SPHINX_SOURCE}
+              ${SPHINX_BUILD}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS ${SPHINX_SOURCE}/index.rst ${DOXYGEN_INDEX_FILE}
+      MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
+      COMMENT "Generating Sphinx documentation")
 
     add_custom_target(docs ALL DEPENDS ${SPHINX_INDEX_FILE})
   endif()
@@ -162,7 +160,6 @@ target_link_libraries(rlbox-cpp17-lib INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 
 include(CTest)
 include(Catch)
-
 
 # Test rlbox features
 add_executable(test_rlbox
@@ -217,5 +214,9 @@ catch_discover_tests(test_rlbox_glue)
 
 # Shortcuts ###################
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V)
+add_custom_target(
+  check
+  COMMAND
+    LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
+    ${CMAKE_CTEST_COMMAND} -V)
 add_dependencies(check test_rlbox test_rlbox_glue)

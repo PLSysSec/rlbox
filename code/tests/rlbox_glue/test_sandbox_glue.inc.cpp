@@ -184,6 +184,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
         });
 
     REQUIRE(*result2 == val1);
+    sandbox.free_in_sandbox(pa);
   }
 
   SECTION("test callback 1 and re-entrancy") // NOLINT
@@ -341,6 +342,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
           return val > 0 && val < upper_bound ? val : defaultVal;
         });
     REQUIRE(resultD == d1 + d2);
+    sandbox.free_in_sandbox(p);
   }
 
   SECTION("test structures") // NOLINT
@@ -414,6 +416,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
       });
     REQUIRE(val3 == 17); // NOLINT
     delete[] result.fieldString;
+    sandbox.free_in_sandbox(resultT);
   }
 
   SECTION("test pointers in struct") // NOLINT
@@ -473,6 +476,8 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     *elRef = nullptr;
     // NOLINTNEXTLINE
     REQUIRE(resultT->pointerArray[3].UNSAFE_unverified() == (initValRaw + 4));
+    sandbox.free_in_sandbox(resultT);
+    sandbox.free_in_sandbox(initVal);
   }
 
   SECTION("Function invocation measurements") // NOLINT

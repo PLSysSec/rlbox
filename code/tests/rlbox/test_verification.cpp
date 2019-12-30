@@ -111,4 +111,6 @@ TEST_CASE("RLBox test unverified pointer", "[verification]")
     (TestSandbox::SandboxMemorySize / sizeof(int)) + 1;
   REQUIRE_THROWS(pa.unverified_safe_pointer_because(
     elementCountUnsafe, "Definitely out of sandbox memory. Unsafe!"));
+
+  sandbox.destroy_sandbox();
 }
