@@ -35,8 +35,8 @@ if(DEV)
     add_compile_options(-Werror) # warnings as errors
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
-    # add_compile_options(-fsanitize=undefined)
-    # add_link_options(-fsanitize=undefined)
+    add_compile_options(-fsanitize=undefined)
+    add_link_options(-fsanitize=undefined)
   endif()
 
   find_program(CLANG_TIDY "clang-tidy")
@@ -218,5 +218,6 @@ add_custom_target(
   check
   COMMAND
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
+    UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)
 add_dependencies(check test_rlbox test_rlbox_glue)

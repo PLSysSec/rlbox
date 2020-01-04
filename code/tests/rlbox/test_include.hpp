@@ -74,7 +74,7 @@ private:
     return std::make_pair(mem, alignedMem);
   }
 
-  size_t CurrFreeAddress = 4; // NOLINT
+  size_t CurrFreeAddress = 8; // NOLINT
   // Some sandboxed encode functions as regular pointers, others use an
   // indirection table. Using an indirection table here as this is the more
   // complicated case
@@ -179,7 +179,9 @@ protected:
   inline T_PointerType impl_malloc_in_sandbox(size_t size)
   {
     auto ret = static_cast<T_PointerType>(CurrFreeAddress);
-    CurrFreeAddress += size;
+    // Malloc normally produces pointers aligned to sizeof(uintptr) bytes
+    size_t roundedTo8Size = (size + 7) & ~7;
+    CurrFreeAddress += roundedTo8Size;
     if (CurrFreeAddress > SandboxMemorySize) {
       std::abort();
     }
