@@ -4,6 +4,10 @@
 
 RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev).
 
+## Reporting security bugs
+
+If you find a security bug, please do not create a public issue. Instead, file a security bug on bugzilla using the [following template link](https://bugzilla.mozilla.org/enter_bug.cgi?cc=tom%40mozilla.com&cc=nfroyd%40mozilla.com&cc=deian%40cs.ucsd.edu&cc=shravanrn%40gmail.com&component=Security%3A%20Process%20Sandboxing&defined_groups=1&groups=core-security&product=Core&bug_type=defect).
+
 ## Setup
 
 Configure cmake to setup a build folder. This is needed to run tests or build
