@@ -3,6 +3,7 @@
   <compounddef id="namespacerlbox" kind="namespace" language="C++">
     <compoundname>rlbox</compoundname>
     <innerclass refid="classrlbox_1_1rlbox__noop__sandbox" prot="public">rlbox::rlbox_noop_sandbox</innerclass>
+    <innerclass refid="structrlbox_1_1rlbox__noop__sandbox__thread__data" prot="public">rlbox::rlbox_noop_sandbox_thread_data</innerclass>
     <innerclass refid="classrlbox_1_1rlbox__sandbox" prot="public">rlbox::rlbox_sandbox</innerclass>
     <innerclass refid="classrlbox_1_1sandbox__callback" prot="public">rlbox::sandbox_callback</innerclass>
     <innerclass refid="classrlbox_1_1tainted" prot="public">rlbox::tainted</innerclass>

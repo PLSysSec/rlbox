@@ -17,7 +17,6 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -26,8 +25,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="contents topic" id="contents">
@@ -211,7 +208,7 @@ Instead, we must allocate a buffer in sandbox memory and copy the string we
 want to pass to <code class="docutils literal notranslate"><span class="pre">echo</span></code> into this region:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
    <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">helloStr</span> <span class="o">=</span> <span class="s2">&quot;hi hi!&quot;</span><span class="p">;</span>
-   <span class="n">size_t</span> <span class="n">helloSize</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">helloStr</span><span class="p">);</span>
+   <span class="n">size_t</span> <span class="n">helloSize</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">helloStr</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
    <span class="o">//</span> <span class="n">allocate</span> <span class="n">memory</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">sandbox</span><span class="p">:</span>
    <span class="n">auto</span> <span class="n">taintedStr</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">malloc_in_sandbox</span><span class="o">&lt;</span><span class="n">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">helloSize</span><span class="p">);</span>
    <span class="o">//</span> <span class="n">copy</span> <span class="n">helloStr</span> <span class="n">into</span> <span class="n">the</span> <span class="n">sandbox</span><span class="p">:</span>
@@ -801,7 +798,6 @@ memory regions and values.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -834,14 +830,6 @@ memory regions and values.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -851,7 +839,7 @@ memory regions and values.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/index.rst.txt"

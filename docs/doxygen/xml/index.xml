@@ -116,7 +116,7 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a909dbb8c3226fbcd19171c0548f21acf" kind="typedef"><name>T_PointerType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a0bacaced018f138bf097b8e854c3ad5f" kind="typedef"><name>T_ShortType</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1abe0dfb0cde9dbc85eee3fc37cac7a6e5" kind="variable"><name>MAX_CALLBACKS</name></member>
-    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a3c6118d160451d8f55f118595b6c547d" kind="variable"><name>thread_data</name></member>
+    <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9048fa0b387162bb61d6aa8ee76205a1" kind="variable"><name>thread_data</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a90051b6a6df7ba775ec917cd9cc8d029" kind="variable"><name>callback_unique_keys</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a9350bc978320601504c5ae747ba35596" kind="variable"><name>callbacks</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1ab09ec04f405ba6165400ce736a592d2c" kind="function"><name>RLBOX_SHARED_LOCK</name></member>
@@ -140,9 +140,9 @@
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a5f720e5813f800fe573b028ce363760a" kind="function"><name>impl_is_in_same_sandbox</name></member>
     <member refid="classrlbox_1_1rlbox__noop__sandbox_1a4166590503035668cd74a63755cd1167" kind="function"><name>impl_get_executed_callback_sandbox_and_key</name></member>
   </compound>
-  <compound refid="structrlbox_1_1rlbox__noop__sandbox_1_1rlbox__noop__sandbox__thread__local" kind="struct"><name>rlbox::rlbox_noop_sandbox::rlbox_noop_sandbox_thread_local</name>
-    <member refid="structrlbox_1_1rlbox__noop__sandbox_1_1rlbox__noop__sandbox__thread__local_1ab4d7a3082fa2f1eb1e624c02a9cbd10e" kind="variable"><name>sandbox</name></member>
-    <member refid="structrlbox_1_1rlbox__noop__sandbox_1_1rlbox__noop__sandbox__thread__local_1aafc9e163c9e2409eb16bdcf2b74470dd" kind="variable"><name>last_callback_invoked</name></member>
+  <compound refid="structrlbox_1_1rlbox__noop__sandbox__thread__data" kind="struct"><name>rlbox::rlbox_noop_sandbox_thread_data</name>
+    <member refid="structrlbox_1_1rlbox__noop__sandbox__thread__data_1aa4022aa2e2b1433c9c98ad77ad47ac22" kind="variable"><name>sandbox</name></member>
+    <member refid="structrlbox_1_1rlbox__noop__sandbox__thread__data_1aca401c5a2cd7e67ed305db3757f28d84" kind="variable"><name>last_callback_invoked</name></member>
   </compound>
   <compound refid="classrlbox_1_1rlbox__sandbox" kind="class"><name>rlbox::rlbox_sandbox</name>
     <member refid="classrlbox_1_1rlbox__sandbox_1a815c2a8b5adaf0944fd995e7c9cfc72c" kind="enum"><name>Sandbox_Status</name></member>

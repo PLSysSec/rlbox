@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classrlbox_1_1tainted__boolean__hint.html" title="Tainted boolean value that serves as a &quot;hint&quot; and not a definite answer. Comparisons with a tainted_v..." alt="" coords="5,5,183,32"/>
+<area shape="rect" id="node1" href="$classrlbox_1_1tainted__base__impl.html" title="rlbox::tainted_base\l_impl\&lt; tainted_volatile,\l T, T_Sbx \&gt;" alt="" coords="5,5,161,61"/>
+<area shape="rect" id="node2" href="$classrlbox_1_1tainted__volatile.html" title="Tainted volatile values are like tainted values but still point to sandbox memory. Dereferencing a tainted pointer produces a tainted_volatile. " alt="" coords="209,13,355,54"/>
 </map>

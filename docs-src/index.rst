@@ -176,7 +176,7 @@ want to pass to ``echo`` into this region::
 
    ...
       const char* helloStr = "hi hi!";
-      size_t helloSize = strlen(helloStr);
+      size_t helloSize = strlen(helloStr) + 1;
       // allocate memory in the sandbox:
       auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
       // copy helloStr into the sandbox:
