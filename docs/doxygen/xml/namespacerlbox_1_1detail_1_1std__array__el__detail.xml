@@ -1,10 +1,15 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="namespacerlbox_1_1detail_1_1std__array__el__detail" kind="namespace" language="C++">
     <compoundname>rlbox::detail::std_array_el_detail</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" prot="public">rlbox::detail::std_array_el_detail::W</innerclass>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="rlbox__type__traits_8hpp_1a8a178fb88a3b48cc72d9dc29b97a6aa5" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
         <type>decltype(std_array_el_detail::is_std_array_helper(std::declval&lt; std::add_pointer_t&lt; T &gt; &gt;))</type>
         <definition>using rlbox::detail::std_array_el_detail::std_array_el_t = typedef decltype(std_array_el_detail::is_std_array_helper( std::declval&lt;std::add_pointer_t&lt;T&gt; &gt;))</definition>
         <argsstring></argsstring>
@@ -15,7 +20,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="167" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="168" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="167" column="3" bodyfile="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="168" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -43,7 +48,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="161" column="1"/>
+        <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="161" column="5" declfile="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" declline="161" declcolumn="5"/>
       </memberdef>
       <memberdef kind="function" id="rlbox__type__traits_8hpp_1a64594eca0368e1238370b066f3a80704" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -64,13 +69,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="164" column="1"/>
+        <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="164" column="5" declfile="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" declline="164" declcolumn="5"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="153" column="1"/>
+    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="153" column="29"/>
   </compounddef>
 </doxygen>

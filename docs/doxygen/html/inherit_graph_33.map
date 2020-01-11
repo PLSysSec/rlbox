@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$structrlbox_1_1detail_1_1polyfill_1_1is__invocable.html" title="rlbox::detail::polyfill\l::is_invocable\&lt; _Fn, \l_Args \&gt;" alt="" coords="181,5,325,61"/>
-<area shape="rect" id="node3" href="$structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r.html" title="rlbox::detail::polyfill\l::is_invocable_r\&lt; _Ret,\l _Fn, _Args \&gt;" alt="" coords="175,85,332,141"/>
-<area shape="rect" id="node4" href="$structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable.html" title="rlbox::detail::polyfill\l::is_nothrow_invocable\l\&lt; _Fn, _Args \&gt;" alt="" coords="176,165,331,221"/>
-<area shape="rect" id="node5" href="$structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r.html" title="rlbox::detail::polyfill\l::is_nothrow_invocable\l_r\&lt; _Ret, _Fn, _Args \&gt;" alt="" coords="175,245,332,301"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,140,140,167"/>
+<area shape="rect" id="node2" href="$structrlbox_1_1detail_1_1polyfill_1_1is__invocable.html" title=" " alt="" coords="195,5,352,61"/>
+<area shape="rect" id="node3" href="$structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r.html" title=" " alt="" coords="188,85,359,141"/>
+<area shape="rect" id="node4" href="$structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable.html" title=" " alt="" coords="188,165,359,221"/>
+<area shape="rect" id="node5" href="$structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r.html" title=" " alt="" coords="188,245,359,301"/>
 </map>

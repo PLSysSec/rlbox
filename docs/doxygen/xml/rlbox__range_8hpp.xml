@@ -1,39 +1,40 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="rlbox__range_8hpp" kind="file" language="C++">
     <compoundname>rlbox_range.hpp</compoundname>
     <includes local="no">cstdint</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
     <incdepgraph>
-      <node id="94">
+      <node id="2">
         <label>cstdint</label>
       </node>
-      <node id="95">
+      <node id="1">
+        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
+        <link refid="rlbox__range_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
         <label>rlbox_types.hpp</label>
         <link refid="rlbox__types_8hpp_source"/>
       </node>
-      <node id="93">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
-        <link refid="rlbox__range_8hpp"/>
-        <childnode refid="94" relation="include">
-        </childnode>
-        <childnode refid="95" relation="include">
-        </childnode>
-      </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="97">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+      <node id="2">
+        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</label>
         <link refid="rlbox_8hpp_source"/>
       </node>
-      <node id="96">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
+      <node id="1">
+        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
         <link refid="rlbox__range_8hpp"/>
-        <childnode refid="97" relation="include">
+        <childnode refid="2" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
+    <innernamespace refid="namespacerlbox">rlbox</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
     <briefdescription>
     </briefdescription>
@@ -49,7 +50,7 @@
 <codeline lineno="7"><highlight class="normal"></highlight></codeline>
 <codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rlbox_types.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacerlbox_1_1detail" kindref="compound">rlbox::detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">rlbox::detail<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Checks<sp/>that<sp/>a<sp/>given<sp/>range<sp/>is<sp/>either<sp/>entirely<sp/>in<sp/>a<sp/>sandbox<sp/>or<sp/>entirely</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>outside</highlight><highlight class="normal"></highlight></codeline>
@@ -73,6 +74,6 @@
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
 <codeline lineno="32"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp"/>
+    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_range.hpp"/>
   </compounddef>
 </doxygen>

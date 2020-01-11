@@ -113,6 +113,7 @@ library::
 
    // main.cpp:
 
+   #define RLBOX_SINGLE_THREADED_INVOCATIONS
    #define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol
 
    #include <stdio.h>
@@ -180,14 +181,14 @@ want to pass to ``echo`` into this region::
       // allocate memory in the sandbox:
       auto taintedStr = sandbox.malloc_in_sandbox<char>(helloSize);
       // copy helloStr into the sandbox:
-      std::strncpy(taintedStr.unverified_safe_because("writing to region"), helloStr, helloSize);
+      std::strncpy(taintedStr.unverified_safe_pointer_because(helloSize, "writing to region"), helloStr, helloSize);
    ...
 
 Note that ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
 lives in the sandbox memory and could be written to by the (compromised)
-library code concurrently. As such, it's unsafe for us to use this value
-without verification. Above, we use the :ref:`unverified_safe_because
-<unverified_safe_because>` verifier which basically removes the taint without
+library code concurrently. As such, it's unsafe for us to use this pointer
+without verification. Above, we use the :ref:`unverified_safe_pointer_because
+<unverified_safe_pointer_because>` verifier which basically removes the taint without
 any verification. This is safe because we copy the ``helloStr`` to sandbox
 memory: at worst, the sandboxed library can overwrite the memory region pointed
 to by ``taintedStr`` and crash when it tries to print it.
@@ -397,6 +398,12 @@ Sometimes this is safe to do and RLBox provides a method for doing so:
 
 .. _unverified_safe_because:
 .. doxygenfunction:: unverified_safe_because(const char (&)[N])
+
+Since pointers are special (sandbox code may modify the data the pointer
+points to), we have a similar function for pointers:
+
+.. _unverified_safe_pointer_because:
+.. doxygenfunction:: unverified_safe_pointer_because(size_t count, const char (&)[N])
 
 We however provide additional functions that are especially useful during
 migration:

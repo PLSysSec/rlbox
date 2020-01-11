@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::polyfill::is_nothrow_invocable</compoundname>
     <basecompoundref prot="public" virt="non-virtual">std::integral_constant&lt; bool, __nothrow_invokable&lt; _Fn, _Args... &gt;::value &gt;</basecompoundref>
@@ -18,28 +18,28 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="99">
+      <node id="2">
         <label>std::integral_constant&lt; bool, __nothrow_invokable&lt; _Fn, _Args... &gt;::value &gt;</label>
       </node>
-      <node id="98">
+      <node id="1">
         <label>rlbox::detail::polyfill::is_nothrow_invocable&lt; _Fn, _Args &gt;</label>
         <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable"/>
-        <childnode refid="99" relation="public-inheritance">
+        <childnode refid="2" relation="public-inheritance">
         </childnode>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="101">
+      <node id="2">
         <label>std::integral_constant&lt; bool, __nothrow_invokable&lt; _Fn, _Args... &gt;::value &gt;</label>
       </node>
-      <node id="100">
+      <node id="1">
         <label>rlbox::detail::polyfill::is_nothrow_invocable&lt; _Fn, _Args &gt;</label>
         <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable"/>
-        <childnode refid="101" relation="public-inheritance">
+        <childnode refid="2" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="159" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="157" bodyend="159"/>
+    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="159" column="1" bodyfile="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="157" bodyend="159"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>
