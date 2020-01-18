@@ -36,18 +36,23 @@ TEST_CASE("tainted_volatile assignment operates correctly",
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  // uint64_t on 64 bit platforms is "unsigned long" which is 64 bits in the app
-  // but long is 32-bits in our test sandbox env
-  auto pc = sandbox.malloc_in_sandbox<uint64_t>();
+  // On 64 bit platforms, "unsigned long" is 64 bits in the app
+  // but unsigned long is 32-bits in our test sandbox env
+  // NOLINTNEXTLINE(google-runtime-int)
+  auto pc = sandbox.malloc_in_sandbox<unsigned long>();
 
-  uint64_t max32Val = std::numeric_limits<uint32_t>::max();
-  *pc = max32Val;
+  // Only run this test for platforms where unsigned long is 64 bits
+  // NOLINTNEXTLINE(google-runtime-int)
+  if constexpr (sizeof(unsigned long) == sizeof(uint64_t)) {
+    uint64_t max32Val = std::numeric_limits<uint32_t>::max();
+    *pc = max32Val;
 
-  REQUIRE((*pc).UNSAFE_unverified() == max32Val);
-  REQUIRE(pc->UNSAFE_unverified() == max32Val);
+    REQUIRE((*pc).UNSAFE_unverified() == max32Val);
+    REQUIRE(pc->UNSAFE_unverified() == max32Val);
 
-  uint64_t max64Val = std::numeric_limits<uint64_t>::max();
-  REQUIRE_THROWS(*pc = max64Val);
+    uint64_t max64Val = std::numeric_limits<uint64_t>::max();
+    REQUIRE_THROWS(*pc = max64Val);
+  }
 
   sandbox.destroy_sandbox();
 }
