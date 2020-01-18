@@ -56,7 +56,7 @@ if(DEV)
   endif()
 
   find_program(IWYU "iwyu")
-  if(IWYU)# TODO: Still have to ensure this checks .hpp files, which it
+  if("")#IWYU)# TODO: Still have to ensure this checks .hpp files, which it
          # doesn't right now. See bug below about "check_also"... which doesn't
          # seem to work https://github.com/include-what-you-use/include-what-
          # you-use/issues/633
@@ -173,7 +173,6 @@ add_executable(test_rlbox
                code/tests/rlbox/test_sandbox_noop_sandbox.cpp
                code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
                code/tests/rlbox/test_sandbox_ptr_conversion.cpp
-               code/tests/rlbox/test_sandbox_transition_timings.cpp
                code/tests/rlbox/test_stdlib.cpp
                code/tests/rlbox/test_tainted_assignment.cpp
                code/tests/rlbox/test_tainted_opaque.cpp
@@ -189,6 +188,18 @@ target_include_directories(test_rlbox PRIVATE code/tests/rlbox)
 target_link_libraries(test_rlbox Catch2::Catch2 rlbox-cpp17-lib)
 
 catch_discover_tests(test_rlbox)
+
+# Test rlbox overheads
+
+add_executable(test_rlbox_transition_timers
+               code/tests/test_main.cpp
+               code/tests/rlbox/test_sandbox_transition_timings.cpp)
+
+target_include_directories(test_rlbox_transition_timers PRIVATE code/tests/rlbox)
+
+target_link_libraries(test_rlbox_transition_timers Catch2::Catch2 rlbox-cpp17-lib)
+
+catch_discover_tests(test_rlbox_transition_timers)
 
 # Test rlbox glue
 add_library(rlbox_glue_lib_static STATIC code/tests/rlbox_glue/lib/libtest.c)
@@ -220,4 +231,4 @@ add_custom_target(
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
     UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)
-add_dependencies(check test_rlbox test_rlbox_glue)
+add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue)
