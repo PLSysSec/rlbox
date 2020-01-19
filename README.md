@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
 
-RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev). This code has been tested on Ubuntu and Mac OSX.
+RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev). This code has been tested on 64-bit versions of Ubuntu and Mac OSX.
 
 ## Reporting security bugs
 
