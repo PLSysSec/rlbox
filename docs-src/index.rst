@@ -501,7 +501,7 @@ memory regions and values.
 References
 ==========
 
-.. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.
+.. [RLBoxPaper] `*Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. <https://usenix2020.rlbox.dev>`_
 .. [Doxygen] `RLBox Doxygen Documentation <https://doxygen.rlbox.dev/>`_
 
 
