@@ -1,5 +1,5 @@
-\hypertarget{classrlbox_1_1rlbox__noop__sandbox}{}\doxysection{rlbox\+::rlbox\+\_\+noop\+\_\+sandbox Class Reference}
-\label{classrlbox_1_1rlbox__noop__sandbox}\index{rlbox::rlbox\_noop\_sandbox@{rlbox::rlbox\_noop\_sandbox}}
+\hypertarget{classrlbox_1_1rlbox__noop__sandbox}{}\section{rlbox\+:\+:rlbox\+\_\+noop\+\_\+sandbox Class Reference}
+\label{classrlbox_1_1rlbox__noop__sandbox}\index{rlbox\+::rlbox\+\_\+noop\+\_\+sandbox@{rlbox\+::rlbox\+\_\+noop\+\_\+sandbox}}
 
 
 Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the R\+L\+Box A\+PI.  
@@ -9,7 +9,7 @@ Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t ac
 
 {\ttfamily \#include $<$rlbox\+\_\+noop\+\_\+sandbox.\+hpp$>$}
 
-\doxysubsection*{Public Types}
+\subsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a54dfd9239da9ce4bdc48486ce03dfff6}\label{classrlbox_1_1rlbox__noop__sandbox_a54dfd9239da9ce4bdc48486ce03dfff6}} 
@@ -27,7 +27,7 @@ using {\bfseries T\+\_\+\+Pointer\+Type} = uintptr\+\_\+t
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a0bacaced018f138bf097b8e854c3ad5f}\label{classrlbox_1_1rlbox__noop__sandbox_a0bacaced018f138bf097b8e854c3ad5f}} 
 using {\bfseries T\+\_\+\+Short\+Type} = short
 \end{DoxyCompactItemize}
-\doxysubsection*{Protected Member Functions}
+\subsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_aed3d297784c5654e6d83d4c5d3dacd90}\label{classrlbox_1_1rlbox__noop__sandbox_aed3d297784c5654e6d83d4c5d3dacd90}} 
@@ -72,26 +72,26 @@ void $\ast$ {\bfseries impl\+\_\+get\+\_\+memory\+\_\+location} ()
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a2949f30bdc7cdc297042465818357ca0}\label{classrlbox_1_1rlbox__noop__sandbox_a2949f30bdc7cdc297042465818357ca0}} 
 {\footnotesize template$<$typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ }\\void {\bfseries impl\+\_\+unregister\+\_\+callback} (void $\ast$key)
 \end{DoxyCompactItemize}
-\doxysubsection*{Static Protected Member Functions}
+\subsection*{Static Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_ad8e4d197b5da2ed5028b96ebe03c81dd}\label{classrlbox_1_1rlbox__noop__sandbox_ad8e4d197b5da2ed5028b96ebe03c81dd}} 
-{\footnotesize template$<$typename T $>$ }\\static void $\ast$ {\bfseries impl\+\_\+get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (T\+\_\+\+Pointer\+Type p, const void $\ast$, \mbox{\hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox}} $\ast$($\ast$)(const void $\ast$example\+\_\+unsandboxed\+\_\+ptr))
+{\footnotesize template$<$typename T $>$ }\\static void $\ast$ {\bfseries impl\+\_\+get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (T\+\_\+\+Pointer\+Type p, const void $\ast$, \hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox} $\ast$($\ast$)(const void $\ast$example\+\_\+unsandboxed\+\_\+ptr))
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a267c49ce62893a37fc138d7a26c30123}\label{classrlbox_1_1rlbox__noop__sandbox_a267c49ce62893a37fc138d7a26c30123}} 
-{\footnotesize template$<$typename T $>$ }\\static T\+\_\+\+Pointer\+Type {\bfseries impl\+\_\+get\+\_\+sandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (const void $\ast$p, const void $\ast$, \mbox{\hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox}} $\ast$($\ast$)(const void $\ast$example\+\_\+unsandboxed\+\_\+ptr))
+{\footnotesize template$<$typename T $>$ }\\static T\+\_\+\+Pointer\+Type {\bfseries impl\+\_\+get\+\_\+sandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (const void $\ast$p, const void $\ast$, \hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox} $\ast$($\ast$)(const void $\ast$example\+\_\+unsandboxed\+\_\+ptr))
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a5f720e5813f800fe573b028ce363760a}\label{classrlbox_1_1rlbox__noop__sandbox_a5f720e5813f800fe573b028ce363760a}} 
 static bool {\bfseries impl\+\_\+is\+\_\+in\+\_\+same\+\_\+sandbox} (const void $\ast$, const void $\ast$)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__noop__sandbox_a4166590503035668cd74a63755cd1167}\label{classrlbox_1_1rlbox__noop__sandbox_a4166590503035668cd74a63755cd1167}} 
-static std\+::pair$<$ \mbox{\hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox}} $\ast$, void $\ast$ $>$ {\bfseries impl\+\_\+get\+\_\+executed\+\_\+callback\+\_\+sandbox\+\_\+and\+\_\+key} ()
+static std\+::pair$<$ \hyperlink{classrlbox_1_1rlbox__noop__sandbox}{rlbox\+\_\+noop\+\_\+sandbox} $\ast$, void $\ast$ $>$ {\bfseries impl\+\_\+get\+\_\+executed\+\_\+callback\+\_\+sandbox\+\_\+and\+\_\+key} ()
 \end{DoxyCompactItemize}
 
 
-\doxysubsection{Detailed Description}
+\subsection{Detailed Description}
 Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the R\+L\+Box A\+PI. 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/d/hack/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+noop\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}
+/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+noop\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}

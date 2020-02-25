@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
   <compounddef id="rlbox__policy__types_8hpp" kind="file" language="C++">
     <compoundname>rlbox_policy_types.hpp</compoundname>
     <includes local="no">type_traits</includes>
@@ -7,131 +7,131 @@
     <includes refid="rlbox__helpers_8hpp" local="yes">rlbox_helpers.hpp</includes>
     <includes refid="rlbox__struct__support_8hpp" local="yes">rlbox_struct_support.hpp</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
     <incdepgraph>
-      <node id="14">
-        <label>rlbox_type_traits.hpp</label>
-        <link refid="rlbox__type__traits_8hpp_source"/>
-        <childnode refid="12" relation="include">
-        </childnode>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="13">
+      <node id="87">
         <label>limits</label>
       </node>
-      <node id="16">
-        <label>rlbox_wrapper_traits.hpp</label>
-        <link refid="rlbox__wrapper__traits_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="15" relation="include">
-        </childnode>
-      </node>
-      <node id="7">
-        <label>stdexcept</label>
-      </node>
-      <node id="9">
-        <label>rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="10" relation="include">
-        </childnode>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="11" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="15" relation="include">
-        </childnode>
-        <childnode refid="16" relation="include">
-        </childnode>
-      </node>
-      <node id="8">
-        <label>rlbox_stdlib_polyfill.hpp</label>
-        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
-      </node>
-      <node id="1">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="9" relation="include">
-        </childnode>
-        <childnode refid="15" relation="include">
-        </childnode>
-      </node>
-      <node id="4">
-        <label>rlbox_helpers.hpp</label>
-        <link refid="rlbox__helpers_8hpp_source"/>
-        <childnode refid="5" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-      </node>
-      <node id="3">
-        <label>utility</label>
-      </node>
-      <node id="12">
-        <label>array</label>
-      </node>
-      <node id="15">
+      <node id="89">
         <label>rlbox_types.hpp</label>
         <link refid="rlbox__types_8hpp_source"/>
       </node>
-      <node id="5">
-        <label>cstdlib</label>
+      <node id="82">
+        <label>rlbox_stdlib_polyfill.hpp</label>
+        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
       </node>
-      <node id="6">
-        <label>iostream</label>
-      </node>
-      <node id="2">
-        <label>type_traits</label>
-      </node>
-      <node id="10">
-        <label>cstring</label>
-      </node>
-      <node id="11">
+      <node id="85">
         <label>rlbox_conversion.hpp</label>
         <link refid="rlbox__conversion_8hpp_source"/>
-        <childnode refid="12" relation="include">
+        <childnode refid="86" relation="include">
         </childnode>
-        <childnode refid="10" relation="include">
+        <childnode refid="84" relation="include">
         </childnode>
-        <childnode refid="13" relation="include">
+        <childnode refid="87" relation="include">
         </childnode>
-        <childnode refid="2" relation="include">
+        <childnode refid="76" relation="include">
         </childnode>
-        <childnode refid="4" relation="include">
+        <childnode refid="78" relation="include">
         </childnode>
-        <childnode refid="14" relation="include">
+        <childnode refid="88" relation="include">
         </childnode>
-        <childnode refid="15" relation="include">
+        <childnode refid="89" relation="include">
         </childnode>
+      </node>
+      <node id="81">
+        <label>stdexcept</label>
+      </node>
+      <node id="75">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp"/>
+        <childnode refid="76" relation="include">
+        </childnode>
+        <childnode refid="77" relation="include">
+        </childnode>
+        <childnode refid="78" relation="include">
+        </childnode>
+        <childnode refid="83" relation="include">
+        </childnode>
+        <childnode refid="89" relation="include">
+        </childnode>
+      </node>
+      <node id="90">
+        <label>rlbox_wrapper_traits.hpp</label>
+        <link refid="rlbox__wrapper__traits_8hpp_source"/>
+        <childnode refid="76" relation="include">
+        </childnode>
+        <childnode refid="89" relation="include">
+        </childnode>
+      </node>
+      <node id="83">
+        <label>rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
+        <childnode refid="84" relation="include">
+        </childnode>
+        <childnode refid="76" relation="include">
+        </childnode>
+        <childnode refid="85" relation="include">
+        </childnode>
+        <childnode refid="78" relation="include">
+        </childnode>
+        <childnode refid="89" relation="include">
+        </childnode>
+        <childnode refid="90" relation="include">
+        </childnode>
+      </node>
+      <node id="88">
+        <label>rlbox_type_traits.hpp</label>
+        <link refid="rlbox__type__traits_8hpp_source"/>
+        <childnode refid="86" relation="include">
+        </childnode>
+        <childnode refid="76" relation="include">
+        </childnode>
+      </node>
+      <node id="77">
+        <label>utility</label>
+      </node>
+      <node id="86">
+        <label>array</label>
+      </node>
+      <node id="79">
+        <label>cstdlib</label>
+      </node>
+      <node id="80">
+        <label>iostream</label>
+      </node>
+      <node id="76">
+        <label>type_traits</label>
+      </node>
+      <node id="78">
+        <label>rlbox_helpers.hpp</label>
+        <link refid="rlbox__helpers_8hpp_source"/>
+        <childnode refid="79" relation="include">
+        </childnode>
+        <childnode refid="80" relation="include">
+        </childnode>
+        <childnode refid="81" relation="include">
+        </childnode>
+        <childnode refid="76" relation="include">
+        </childnode>
+        <childnode refid="77" relation="include">
+        </childnode>
+        <childnode refid="82" relation="include">
+        </childnode>
+      </node>
+      <node id="84">
+        <label>cstring</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="2">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
-      </node>
-      <node id="1">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+      <node id="91">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
         <link refid="rlbox__policy__types_8hpp"/>
-        <childnode refid="2" relation="include">
+        <childnode refid="92" relation="include">
         </childnode>
+      </node>
+      <node id="92">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
       </node>
     </invincdepgraph>
     <innerclass refid="classrlbox_1_1sandbox__callback" prot="public">rlbox::sandbox_callback</innerclass>
@@ -153,7 +153,7 @@
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rlbox_struct_support.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rlbox_types.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">rlbox<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacerlbox" kindref="compound">rlbox</ref><sp/>{</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">callback_detail<sp/>{</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
@@ -182,7 +182,7 @@
 <codeline lineno="38"><highlight class="normal"><sp/><sp/>KEEP_CLASSES_FRIENDLY</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>*<sp/>sandbox;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/>rlbox_sandbox&lt;T_Sbx&gt;*<sp/>sandbox;</highlight></codeline>
 <codeline lineno="42"><highlight class="normal"></highlight></codeline>
 <codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>T_Callback<sp/>=</highlight></codeline>
 <codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>decltype(callback_detail::callback_type_helper&lt;T_Sbx&gt;(std::declval&lt;T&gt;()));</highlight></codeline>
@@ -251,7 +251,7 @@
 <codeline lineno="107"><highlight class="normal"></highlight></codeline>
 <codeline lineno="108"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Keep<sp/>constructor<sp/>private<sp/>as<sp/>only<sp/>rlbox_sandbox<sp/>should<sp/>be<sp/>able<sp/>to<sp/>create</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="109"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>this<sp/>object</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="110"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref>(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>*<sp/>p_sandbox,</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref>(rlbox_sandbox&lt;T_Sbx&gt;*<sp/>p_sandbox,</highlight></codeline>
 <codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T_Callback<sp/>p_callback,</highlight></codeline>
 <codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T_Interceptor<sp/>p_callback_interceptor,</highlight></codeline>
 <codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T_Trampoline<sp/>p_callback_trampoline,</highlight></codeline>
@@ -297,13 +297,13 @@
 <codeline lineno="153"><highlight class="normal"><sp/><sp/>~<ref refid="classrlbox_1_1sandbox__callback" kindref="compound">sandbox_callback</ref>()<sp/>{<sp/>unregister();<sp/>}</highlight></codeline>
 <codeline lineno="154"><highlight class="normal"></highlight></codeline>
 <codeline lineno="159" refid="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" kindref="member">UNSAFE_unverified</ref>()<sp/>const<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
-<codeline lineno="166" refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" kindref="member">UNSAFE_sandboxed</ref>(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>&amp;<sp/>sandbox)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>noexcept</highlight></codeline>
+<codeline lineno="166" refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" kindref="member">UNSAFE_sandboxed</ref>(rlbox_sandbox&lt;T_Sbx&gt;&amp;<sp/>sandbox)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>noexcept</highlight></codeline>
 <codeline lineno="167"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
 <codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
 <codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
 <codeline lineno="170"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="171"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" kindref="member">UNSAFE_unverified</ref>()<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
-<codeline lineno="172"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" kindref="member">UNSAFE_sandboxed</ref>(rlbox_sandbox&lt;T_Sbx&gt;&amp;<sp/>sandbox)<sp/>noexcept</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>UNSAFE_unverified()<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>UNSAFE_sandboxed(rlbox_sandbox&lt;T_Sbx&gt;&amp;<sp/>sandbox)<sp/>noexcept</highlight></codeline>
 <codeline lineno="173"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
 <codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
 <codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
@@ -312,6 +312,6 @@
 <codeline lineno="178"><highlight class="normal"></highlight></codeline>
 <codeline lineno="179"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp"/>
   </compounddef>
 </doxygen>

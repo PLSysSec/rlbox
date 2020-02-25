@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
   <compounddef id="rlbox__conversion_8hpp" kind="file" language="C++">
     <compoundname>rlbox_conversion.hpp</compoundname>
     <includes local="no">array</includes>
@@ -9,125 +9,124 @@
     <includes refid="rlbox__helpers_8hpp" local="yes">rlbox_helpers.hpp</includes>
     <includes refid="rlbox__type__traits_8hpp" local="yes">rlbox_type_traits.hpp</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
-    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/d/hack/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
     <incdepgraph>
-      <node id="12">
-        <label>rlbox_type_traits.hpp</label>
-        <link refid="rlbox__type__traits_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-      </node>
-      <node id="4">
+      <node id="33">
         <label>limits</label>
       </node>
-      <node id="9">
-        <label>stdexcept</label>
-      </node>
-      <node id="11">
-        <label>rlbox_stdlib_polyfill.hpp</label>
-        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
-      </node>
-      <node id="6">
-        <label>rlbox_helpers.hpp</label>
-        <link refid="rlbox__helpers_8hpp_source"/>
-        <childnode refid="7" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-        <childnode refid="9" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-        <childnode refid="10" relation="include">
-        </childnode>
-        <childnode refid="11" relation="include">
-        </childnode>
-      </node>
-      <node id="10">
-        <label>utility</label>
-      </node>
-      <node id="2">
-        <label>array</label>
-      </node>
-      <node id="13">
+      <node id="42">
         <label>rlbox_types.hpp</label>
         <link refid="rlbox__types_8hpp_source"/>
       </node>
-      <node id="7">
+      <node id="40">
+        <label>rlbox_stdlib_polyfill.hpp</label>
+        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
+      </node>
+      <node id="30">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
+        <link refid="rlbox__conversion_8hpp"/>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>stdexcept</label>
+      </node>
+      <node id="41">
+        <label>rlbox_type_traits.hpp</label>
+        <link refid="rlbox__type__traits_8hpp_source"/>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>utility</label>
+      </node>
+      <node id="31">
+        <label>array</label>
+      </node>
+      <node id="36">
         <label>cstdlib</label>
       </node>
-      <node id="8">
+      <node id="37">
         <label>iostream</label>
       </node>
-      <node id="5">
+      <node id="34">
         <label>type_traits</label>
       </node>
-      <node id="3">
-        <label>cstring</label>
+      <node id="35">
+        <label>rlbox_helpers.hpp</label>
+        <link refid="rlbox__helpers_8hpp_source"/>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
       </node>
-      <node id="1">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
-        <link refid="rlbox__conversion_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="12" relation="include">
-        </childnode>
-        <childnode refid="13" relation="include">
-        </childnode>
+      <node id="32">
+        <label>cstring</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="2">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+      <node id="47">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
+        <childnode refid="44" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
+        <link refid="rlbox__conversion_8hpp"/>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="44" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
         <link refid="rlbox_8hpp_source"/>
       </node>
-      <node id="3">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+      <node id="45">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
         <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="4" relation="include">
+        <childnode refid="46" relation="include">
         </childnode>
-        <childnode refid="5" relation="include">
+        <childnode refid="47" relation="include">
         </childnode>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="4">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="5">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="1">
-        <label>/home/d/hack/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
-        <link refid="rlbox__conversion_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
+        <childnode refid="44" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
     <innerclass refid="classrlbox_1_1detail_1_1convert__type__class" prot="public">rlbox::detail::convert_type_class</innerclass>
-    <innernamespace refid="namespacerlbox">rlbox</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
     <briefdescription>
     </briefdescription>
@@ -147,7 +146,7 @@
 <codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rlbox_type_traits.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rlbox_types.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">rlbox::detail<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacerlbox_1_1detail" kindref="compound">rlbox::detail</ref><sp/>{</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T_To,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T_From&gt;</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>convert_type_fundamental(T_To&amp;<sp/>to,</highlight></codeline>
@@ -202,7 +201,7 @@
 <codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Eg:<sp/>uint32_t<sp/>from<sp/>int64_t</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&gt;=<sp/>0,<sp/>err_msg);</highlight></codeline>
 <codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>to_max<sp/>=<sp/>numeric_limits&lt;T_To&gt;::max();</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&lt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">T_From</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(to_max),<sp/>err_msg);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&lt;=<sp/>static_cast&lt;T_From&gt;(to_max),<sp/>err_msg);</highlight></codeline>
 <codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Eg:<sp/>uint32_t<sp/>from<sp/>int32_t,<sp/>uint64_t<sp/>from<sp/>int32_t</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&gt;=<sp/>0,<sp/>err_msg);</highlight></codeline>
@@ -211,7 +210,7 @@
 <codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>constexpr<sp/>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T_To)<sp/>&lt;=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T_From))<sp/>{</highlight></codeline>
 <codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Eg:<sp/>int32_t<sp/>from<sp/>uint32_t,<sp/>int32_t<sp/>from<sp/>uint64_t</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>to_max<sp/>=<sp/>numeric_limits&lt;T_To&gt;::max();</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&lt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">T_From</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(to_max),<sp/>err_msg);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dynamic_check(from<sp/>&lt;=<sp/>static_cast&lt;T_From&gt;(to_max),<sp/>err_msg);</highlight></codeline>
 <codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Eg:<sp/>int64_t<sp/>from<sp/>uint32_t</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
@@ -407,6 +406,6 @@
 <codeline lineno="271"><highlight class="normal"></highlight></codeline>
 <codeline lineno="272"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_conversion.hpp"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp"/>
   </compounddef>
 </doxygen>

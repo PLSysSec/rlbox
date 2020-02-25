@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
   <compounddef id="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper</compoundname>
     <basecompoundref prot="public" virt="non-virtual">false_type</basecompoundref>
@@ -17,28 +17,28 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="1">
+      <node id="91">
+        <label>false_type</label>
+      </node>
+      <node id="90">
         <label>rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper&lt; T, typename &gt;</label>
         <link refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper"/>
-        <childnode refid="2" relation="public-inheritance">
+        <childnode refid="91" relation="public-inheritance">
         </childnode>
-      </node>
-      <node id="2">
-        <label>std::false_type</label>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="1">
+      <node id="93">
+        <label>false_type</label>
+      </node>
+      <node id="92">
         <label>rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper&lt; T, typename &gt;</label>
         <link refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper"/>
-        <childnode refid="2" relation="public-inheritance">
+        <childnode refid="93" relation="public-inheritance">
         </childnode>
       </node>
-      <node id="2">
-        <label>std::false_type</label>
-      </node>
     </collaborationgraph>
-    <location file="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="119" column="1" bodyfile="/home/d/hack/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="118" bodyend="119"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="119" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="118" bodyend="119"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>

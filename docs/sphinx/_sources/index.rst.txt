@@ -400,10 +400,9 @@ Sometimes this is safe to do and RLBox provides a method for doing so:
 .. doxygenfunction:: unverified_safe_because(const char (&)[N])
 
 Since pointers are special (sandbox code may modify the data the pointer
-points to), we have a similar function for pointers:
-
-.. _unverified_safe_pointer_because:
-.. doxygenfunction:: unverified_safe_pointer_because(size_t count, const char (&)[N])
+points to), we have a similar function for pointers called
+unverified_safe_pointer_because. This API requires specifying the number of
+elements being pointed to for safety.
 
 We however provide additional functions that are especially useful during
 migration:
@@ -501,7 +500,7 @@ memory regions and values.
 References
 ==========
 
-.. [RLBoxPaper] *Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.
+.. [RLBoxPaper] `*Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. <https://usenix2020.rlbox.dev>`_
 .. [Doxygen] `RLBox Doxygen Documentation <https://doxygen.rlbox.dev/>`_
 
 

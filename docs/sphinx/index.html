@@ -17,7 +17,6 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -26,8 +25,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="contents topic" id="contents">
@@ -223,7 +220,7 @@ want to pass to <code class="docutils literal notranslate"><span class="pre">ech
 <p>Note that <code class="docutils literal notranslate"><span class="pre">taintedStr</span></code> is actually a <a class="reference internal" href="#tainted"><span class="std std-ref">tainted</span></a> string: it
 lives in the sandbox memory and could be written to by the (compromised)
 library code concurrently. As such, it’s unsafe for us to use this pointer
-without verification. Above, we use the <a class="reference internal" href="#unverified-safe-pointer-because"><span class="std std-ref">unverified_safe_pointer_because</span></a> verifier which basically removes the taint without
+without verification. Above, we use the <span class="xref std std-ref">unverified_safe_pointer_because</span> verifier which basically removes the taint without
 any verification. This is safe because we copy the <code class="docutils literal notranslate"><span class="pre">helloStr</span></code> to sandbox
 memory: at worst, the sandboxed library can overwrite the memory region pointed
 to by <code class="docutils literal notranslate"><span class="pre">taintedStr</span></code> and crash when it tries to print it.</p>
@@ -577,11 +574,9 @@ Sometimes this is safe to do and RLBox provides a method for doing so:</p>
 <dd></dd></dl>
 
 <p>Since pointers are special (sandbox code may modify the data the pointer
-points to), we have a similar function for pointers:</p>
-<div class="admonition warning" id="unverified-safe-pointer-because">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find function “unverified_safe_pointer_because” in doxygen xml output for project “RLBox” from directory: /home/d/hack/rlbox_api_cpp17/docs/doxygen/xml</p>
-</div>
+points to), we have a similar function for pointers called
+unverified_safe_pointer_because. This API requires specifying the number of
+elements being pointed to for safety.</p>
 <p>We however provide additional functions that are especially useful during
 migration:</p>
 <span class="target" id="unsafe-unverified"></span><dl class="class">
@@ -790,7 +785,7 @@ memory regions and values.</p>
 <h1><a class="toc-backref" href="#id15">References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
 <dl class="citation">
 <dt class="label" id="rlboxpaper"><span class="brackets"><a class="fn-backref" href="#id1">RLBoxPaper</a></span></dt>
-<dd><p><em>Retrofitting Fine Grain Isolation in the Firefox Renderer</em>. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. Available upon request.</p>
+<dd><p><a class="reference external" href="https://usenix2020.rlbox.dev">*Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan.</a></p>
 </dd>
 <dt class="label" id="doxygen"><span class="brackets"><a class="fn-backref" href="#id2">Doxygen</a></span></dt>
 <dd><p><a class="reference external" href="https://doxygen.rlbox.dev/">RLBox Doxygen Documentation</a></p>
@@ -808,7 +803,6 @@ memory regions and values.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -841,14 +835,6 @@ memory regions and values.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -857,8 +843,8 @@ memory regions and values.</p>
       &copy;2019, RLBox_AUTHOR.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/index.rst.txt"
