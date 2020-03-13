@@ -180,3 +180,57 @@ TEST_CASE("test memcpy", "[stdlib]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("test memcmp", "[stdlib]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  const char* buffer1 = "abcd";
+  const char* buffer2 = "abCD";
+
+  const uint32_t max_length = 100;
+  auto buffer1_t = sandbox.malloc_in_sandbox<char>(max_length); // NOLINT
+  auto buffer2_t = sandbox.malloc_in_sandbox<char>(max_length); // NOLINT
+
+  std::strncpy(buffer1_t.UNSAFE_unverified(), buffer1, max_length);
+  std::strncpy(buffer2_t.UNSAFE_unverified(), buffer2, max_length);
+
+  auto b1b1 = std::memcmp(buffer1, buffer1, strlen(buffer1));
+  auto b1b2 = std::memcmp(buffer1, buffer2, strlen(buffer1));
+  auto b2b1 = std::memcmp(buffer2, buffer1, strlen(buffer1));
+
+  // NOLINTNEXTLINE
+  auto tb1b1 = rlbox::memcmp(sandbox, buffer1_t, buffer1, strlen(buffer1))
+                 .unverified_safe_because("test");
+  // NOLINTNEXTLINE
+  auto tb1b2 = rlbox::memcmp(sandbox, buffer1_t, buffer2, strlen(buffer1))
+                 .unverified_safe_because("test");
+  // NOLINTNEXTLINE
+  auto tb2b1 = rlbox::memcmp(sandbox, buffer2_t, buffer1, strlen(buffer1))
+                 .unverified_safe_because("test");
+
+  // NOLINTNEXTLINE
+  auto tb1tb1 = rlbox::memcmp(sandbox, buffer1_t, buffer1_t, strlen(buffer1))
+                  .unverified_safe_because("test");
+  // NOLINTNEXTLINE
+  auto tb1tb2 = rlbox::memcmp(sandbox, buffer1_t, buffer2_t, strlen(buffer1))
+                  .unverified_safe_because("test");
+  // NOLINTNEXTLINE
+  auto tb2tb1 = rlbox::memcmp(sandbox, buffer2_t, buffer1_t, strlen(buffer1))
+                  .unverified_safe_because("test");
+
+  REQUIRE(b1b1 == tb1b1);
+  REQUIRE(b1b2 == tb1b2);
+  REQUIRE(b2b1 == tb2b1);
+
+  REQUIRE(b1b1 == tb1tb1);
+  REQUIRE(b1b2 == tb1tb2);
+  REQUIRE(b2b1 == tb2tb1);
+
+  sandbox.free_in_sandbox(buffer1_t);
+  sandbox.free_in_sandbox(buffer2_t);
+
+  sandbox.destroy_sandbox();
+}
