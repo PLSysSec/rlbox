@@ -407,9 +407,10 @@ namespace convert_detail {
     T_LongType,
     T_LongLongType,
     T_PointerType,
-    std::enable_if_t<(std::is_same_v<bool, T> || std::is_same_v<void, T> ||
-                      std::is_same_v<char, T> || std::is_same_v<signed char, T> ||
-                      std::is_floating_point_v<T> || std::is_enum_v<T>)&&!std::is_const_v<T>>>
+    std::enable_if_t<(
+      std::is_same_v<bool, T> || std::is_same_v<void, T> ||
+      std::is_same_v<char, T> || std::is_same_v<signed char, T> ||
+      std::is_floating_point_v<T> || std::is_enum_v<T>)&&!std::is_const_v<T>>>
   {
     using type = T;
   };
