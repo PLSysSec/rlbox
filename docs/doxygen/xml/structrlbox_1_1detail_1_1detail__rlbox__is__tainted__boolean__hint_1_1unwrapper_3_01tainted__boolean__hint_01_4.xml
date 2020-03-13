@@ -10,17 +10,6 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="148">
-        <label>true_type</label>
-      </node>
-      <node id="147">
-        <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; tainted_boolean_hint &gt;</label>
-        <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper_3_01tainted__boolean__hint_01_4"/>
-        <childnode refid="148" relation="public-inheritance">
-        </childnode>
-      </node>
-    </inheritancegraph>
-    <collaborationgraph>
       <node id="150">
         <label>true_type</label>
       </node>
@@ -28,6 +17,17 @@
         <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; tainted_boolean_hint &gt;</label>
         <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper_3_01tainted__boolean__hint_01_4"/>
         <childnode refid="150" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="152">
+        <label>true_type</label>
+      </node>
+      <node id="151">
+        <label>rlbox::detail::detail_rlbox_is_tainted_boolean_hint::unwrapper&lt; tainted_boolean_hint &gt;</label>
+        <link refid="structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper_3_01tainted__boolean__hint_01_4"/>
+        <childnode refid="152" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>

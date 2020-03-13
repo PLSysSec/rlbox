@@ -292,6 +292,18 @@
     <member refid="classrlbox_1_1tainted__boolean__hint_1aa686dad271f4d9ed7e908d38313706d5" kind="function"><name>INTERNAL_unverified_safe</name></member>
     <member refid="classrlbox_1_1tainted__boolean__hint_1a6e329c5d66230f3d7af46482c84ba3a4" kind="function"><name>INTERNAL_unverified_safe</name></member>
   </compound>
+  <compound refid="classrlbox_1_1tainted__int__hint" kind="class"><name>rlbox::tainted_int_hint</name>
+    <member refid="classrlbox_1_1tainted__int__hint_1a5a8a4ea02833d145ff6fc11439ac731c" kind="variable"><name>val</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a6dccc10c30d28b63ecdcdd2f35b0ba63" kind="function"><name>tainted_int_hint</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1aff51cd5556756d01d9623756bd079e3c" kind="function"><name>tainted_int_hint</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a4111198d5937dd0e91a1830ff7617be8" kind="function"><name>operator=</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a9f716ceac11a70d7c3472b2c8f9fc5d5" kind="function"><name>operator!</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a1f7a28c11c9d09613fd347402fcb9b45" kind="function"><name>unverified_safe_because</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1ac3b2d7236f3e457c76eddee351357832" kind="function"><name>UNSAFE_unverified</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a05e881c8eb389d1bf045507e36921ec9" kind="function"><name>UNSAFE_unverified</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a6046f83981c177ea16ff1631cb436714" kind="function"><name>INTERNAL_unverified_safe</name></member>
+    <member refid="classrlbox_1_1tainted__int__hint_1a4b0d4f31f2656bc8eb5a8221f66c5172" kind="function"><name>INTERNAL_unverified_safe</name></member>
+  </compound>
   <compound refid="classrlbox_1_1tainted__opaque" kind="class"><name>rlbox::tainted_opaque</name>
     <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" kind="variable"><name>data</name></member>
   </compound>
@@ -384,6 +396,7 @@
     <member refid="rlbox__stdlib_8hpp_1aa12ee34a239e9dac6ad8cafb7e859a6a" kind="function"><name>sandbox_static_cast</name></member>
     <member refid="rlbox__stdlib_8hpp_1ae2491d69e8718e121cc6898dba56c97b" kind="function"><name>memset</name></member>
     <member refid="rlbox__stdlib_8hpp_1a0b0d9db8aa78955e71974e5bf1545f3c" kind="function"><name>memcpy</name></member>
+    <member refid="rlbox__stdlib_8hpp_1a1e3106c2bee4e4b4358ac5cef07cf450" kind="function"><name>memcmp</name></member>
   </compound>
   <compound refid="namespacerlbox_1_1callback__detail" kind="namespace"><name>rlbox::callback_detail</name>
     <member refid="rlbox__policy__types_8hpp_1aa06719daa4b902f61960b7374e9c3357" kind="typedef"><name>T_Cb</name></member>

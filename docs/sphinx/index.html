@@ -568,11 +568,18 @@ be anything the caller chooses.</p>
 
 <p>In some cases it’s useful to unwrap tainted values without verification.
 Sometimes this is safe to do and RLBox provides a method for doing so:</p>
-<span class="target" id="unverified-safe-because"></span><dl class="function">
-<dt id="_CPPv4I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseEbRA1N_Kc">
-<span id="_CPPv3I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseERA1N_Kc"></span><span id="_CPPv2I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseERAN_Kc"></span><span class="target" id="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19"></span>template&lt;size_t <code class="sig-name descname">N</code>&gt;<br />bool <code class="sig-prename descclassname">rlbox::<a class="reference internal" href="#_CPPv4N5rlbox20tainted_boolean_hintE" title="rlbox::tainted_boolean_hint">tainted_boolean_hint</a><code class="sig-prename descclassname">::</code></code><code class="sig-name descname">unverified_safe_because</code><span class="sig-paren">(</span><em class="property">const</em> char (&amp;<em>reason</em>)[N]<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I_6size_tENK5rlbox20tainted_boolean_hint23unverified_safe_becauseEbRA1N_Kc" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
+<div class="admonition warning" id="unverified-safe-because">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function “unverified_safe_because” with arguments (const char (&amp;)[N]) in doxygen xml output for project “RLBox” from directory: /home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
+  <span class="nb">bool</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_boolean_hint</span><span class="p">::</span><span class="n">unverified_safe_because</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="p">(</span><span class="o">&amp;</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span> <span class="n">const</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
+  <span class="nb">int</span> <span class="n">rlbox</span><span class="p">::</span><span class="n">tainted_int_hint</span><span class="p">::</span><span class="n">unverified_safe_because</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="p">(</span><span class="o">&amp;</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span> <span class="n">const</span>
+</pre></div>
+</div>
+</div>
 <p>Since pointers are special (sandbox code may modify the data the pointer
 points to), we have a similar function for pointers called
 unverified_safe_pointer_because. This API requires specifying the number of

@@ -9,6 +9,7 @@
     <innerclass refid="classrlbox_1_1tainted" prot="public">rlbox::tainted</innerclass>
     <innerclass refid="classrlbox_1_1tainted__base__impl" prot="public">rlbox::tainted_base_impl</innerclass>
     <innerclass refid="classrlbox_1_1tainted__boolean__hint" prot="public">rlbox::tainted_boolean_hint</innerclass>
+    <innerclass refid="classrlbox_1_1tainted__int__hint" prot="public">rlbox::tainted_int_hint</innerclass>
     <innerclass refid="classrlbox_1_1tainted__opaque" prot="public">rlbox::tainted_opaque</innerclass>
     <innerclass refid="classrlbox_1_1tainted__volatile" prot="public">rlbox::tainted_volatile</innerclass>
     <innernamespace refid="namespacerlbox_1_1callback__detail">rlbox::callback_detail</innernamespace>
@@ -759,6 +760,54 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="141" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="141" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__stdlib_8hpp_1a1e3106c2bee4e4b4358ac5cef07cf450" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+          <param>
+            <type>typename T_Rhs</type>
+          </param>
+          <param>
+            <type>typename T_Lhs</type>
+          </param>
+          <param>
+            <type>typename T_Num</type>
+          </param>
+          <param>
+            <type>template&lt; typename, typename &gt; typename</type>
+            <declname>T_Wrap</declname>
+            <defname>T_Wrap</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classrlbox_1_1tainted__int__hint" kindref="compound">tainted_int_hint</ref></type>
+        <definition>tainted_int_hint rlbox::memcmp</definition>
+        <argsstring>(rlbox_sandbox&lt; T_Sbx &gt; &amp;sandbox, T_Wrap&lt; T_Rhs *, T_Sbx &gt; dest, T_Lhs src, T_Num num)</argsstring>
+        <name>memcmp</name>
+        <param>
+          <type><ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox</ref>&lt; T_Sbx &gt; &amp;</type>
+          <declname>sandbox</declname>
+        </param>
+        <param>
+          <type>T_Wrap&lt; T_Rhs *, T_Sbx &gt;</type>
+          <declname>dest</declname>
+        </param>
+        <param>
+          <type>T_Lhs</type>
+          <declname>src</declname>
+        </param>
+        <param>
+          <type>T_Num</type>
+          <declname>num</declname>
+        </param>
+        <briefdescription>
+<para>Compare data in sandbox memory area. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" line="180" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp" bodystart="180" bodyend="206"/>
       </memberdef>
       </sectiondef>
     <briefdescription>

@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classrlbox_1_1tainted__int__hint" kind="class" language="C++" prot="public">
+    <compoundname>rlbox::tainted_int_hint</compoundname>
+    <includes refid="rlbox__types_8hpp" local="no">rlbox_types.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classrlbox_1_1tainted__int__hint_1a5a8a4ea02833d145ff6fc11439ac731c" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int rlbox::tainted_int_hint::val</definition>
+        <argsstring></argsstring>
+        <name>val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="63" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a6dccc10c30d28b63ecdcdd2f35b0ba63" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_int_hint::tainted_int_hint</definition>
+        <argsstring>(int init)</argsstring>
+        <name>tainted_int_hint</name>
+        <param>
+          <type>int</type>
+          <declname>init</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="66" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="66" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1aff51cd5556756d01d9623756bd079e3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rlbox::tainted_int_hint::tainted_int_hint</definition>
+        <argsstring>(const tainted_int_hint &amp;)=default</argsstring>
+        <name>tainted_int_hint</name>
+        <param>
+          <type>const <ref refid="classrlbox_1_1tainted__int__hint" kindref="compound">tainted_int_hint</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="69" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a4111198d5937dd0e91a1830ff7617be8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classrlbox_1_1tainted__int__hint" kindref="compound">tainted_int_hint</ref> &amp;</type>
+        <definition>tainted_int_hint&amp; rlbox::tainted_int_hint::operator=</definition>
+        <argsstring>(int rhs)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type>int</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="70" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="70" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a9f716ceac11a70d7c3472b2c8f9fc5d5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classrlbox_1_1tainted__boolean__hint" kindref="compound">tainted_boolean_hint</ref></type>
+        <definition>tainted_boolean_hint rlbox::tainted_int_hint::operator!</definition>
+        <argsstring>()</argsstring>
+        <name>operator!</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="75" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a1f7a28c11c9d09613fd347402fcb9b45" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int rlbox::tainted_int_hint::unverified_safe_because</definition>
+        <argsstring>(const char(&amp;reason)[N]) const</argsstring>
+        <name>unverified_safe_because</name>
+        <param>
+          <type>const char(&amp;)</type>
+          <declname>reason</declname>
+          <array>[N]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="77" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="77" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1ac3b2d7236f3e457c76eddee351357832" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int rlbox::tainted_int_hint::UNSAFE_unverified</definition>
+        <argsstring>() const</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="82" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="82" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a05e881c8eb389d1bf045507e36921ec9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int rlbox::tainted_int_hint::UNSAFE_unverified</definition>
+        <argsstring>()</argsstring>
+        <name>UNSAFE_unverified</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="83" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="83" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a6046f83981c177ea16ff1631cb436714" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_int_hint::INTERNAL_unverified_safe</definition>
+        <argsstring>()</argsstring>
+        <name>INTERNAL_unverified_safe</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="84" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="84" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a4b0d4f31f2656bc8eb5a8221f66c5172" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto rlbox::tainted_int_hint::INTERNAL_unverified_safe</definition>
+        <argsstring>() const</argsstring>
+        <name>INTERNAL_unverified_safe</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="85" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="85" bodyend="85"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Tainted integer value that serves as a &quot;hint&quot; and not a definite answer. Comparisons with a <ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref> return such hints. They are not <computeroutput>tainted&lt;int&gt;</computeroutput> values because a compromised sandbox can modify <ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref> data at any time. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="61" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="60" bodyend="86"/>
+    <listofallmembers>
+      <member refid="classrlbox_1_1tainted__int__hint_1a6046f83981c177ea16ff1631cb436714" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>INTERNAL_unverified_safe</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a4b0d4f31f2656bc8eb5a8221f66c5172" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>INTERNAL_unverified_safe</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a9f716ceac11a70d7c3472b2c8f9fc5d5" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>operator!</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a4111198d5937dd0e91a1830ff7617be8" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>operator=</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a6dccc10c30d28b63ecdcdd2f35b0ba63" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>tainted_int_hint</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1aff51cd5556756d01d9623756bd079e3c" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>tainted_int_hint</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1ac3b2d7236f3e457c76eddee351357832" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a05e881c8eb389d1bf045507e36921ec9" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a1f7a28c11c9d09613fd347402fcb9b45" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>unverified_safe_because</name></member>
+      <member refid="classrlbox_1_1tainted__int__hint_1a5a8a4ea02833d145ff6fc11439ac731c" prot="private" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>val</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

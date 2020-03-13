@@ -310,18 +310,6 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="133">
-        <label>rlbox::tainted_volatile&lt; T, T_Sbx &gt;</label>
-        <link refid="classrlbox_1_1tainted__volatile"/>
-        <childnode refid="134" relation="public-inheritance">
-        </childnode>
-      </node>
-      <node id="134">
-        <label>rlbox::tainted_base_impl&lt; tainted_volatile, T, T_Sbx &gt;</label>
-        <link refid="classrlbox_1_1tainted__base__impl"/>
-      </node>
-    </inheritancegraph>
-    <collaborationgraph>
       <node id="135">
         <label>rlbox::tainted_volatile&lt; T, T_Sbx &gt;</label>
         <link refid="classrlbox_1_1tainted__volatile"/>
@@ -329,6 +317,18 @@
         </childnode>
       </node>
       <node id="136">
+        <label>rlbox::tainted_base_impl&lt; tainted_volatile, T, T_Sbx &gt;</label>
+        <link refid="classrlbox_1_1tainted__base__impl"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="137">
+        <label>rlbox::tainted_volatile&lt; T, T_Sbx &gt;</label>
+        <link refid="classrlbox_1_1tainted__volatile"/>
+        <childnode refid="138" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="138">
         <label>rlbox::tainted_base_impl&lt; tainted_volatile, T, T_Sbx &gt;</label>
         <link refid="classrlbox_1_1tainted__base__impl"/>
       </node>
