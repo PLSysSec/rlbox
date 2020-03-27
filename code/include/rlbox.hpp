@@ -692,7 +692,7 @@ public:
    * the address of a pointer. Other APIs such as copy_and_verify performs a
    * deep copy and changes the address bits.
    *
-   * @param verifer Function used to verify the copied value.
+   * @param verifier Function used to verify the copied value.
    * @tparam T_Func the type of the verifier ``T_Ret(*)(uintptr_t)``
    * @return Whatever the verifier function returns.
    */
@@ -713,7 +713,9 @@ public:
    * the address of a buffer. Other APIs such as copy_and_verify performs a
    * deep copy and changes the address bits.
    *
-   * @param verifer Function used to verify the copied value.
+   * @param verifier Function used to verify the copied value.
+   * @param size Size of the buffer. Buffer with length size is expected to fit
+   * inside sandbox memory.
    * @tparam T_Func the type of the verifier ``T_Ret(*)(uintptr_t)``
    * @return Whatever the verifier function returns.
    */
