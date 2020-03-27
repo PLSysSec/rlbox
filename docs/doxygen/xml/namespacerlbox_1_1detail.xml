@@ -295,7 +295,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="471" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="477" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="472" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="478" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__wrapper__traits_8hpp_1abe73eda33d45ebd5cd9107718f1f5c1c" prot="public" static="no">
         <type>typename <ref refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper" kindref="compound">detail_rlbox_remove_wrapper::unwrapper</ref>&lt; T &gt;::type</type>

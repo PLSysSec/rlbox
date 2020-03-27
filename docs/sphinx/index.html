@@ -17,6 +17,7 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -25,6 +26,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="contents topic" id="contents">
@@ -550,7 +553,7 @@ be anything the caller chooses.</p>
 <dt id="_CPPv4I0EN5rlbox17tainted_base_impl23copy_and_verify_addressEDa6T_Func">
 <span id="_CPPv3I0EN5rlbox17tainted_base_impl23copy_and_verify_addressE6T_Func"></span><span id="_CPPv2I0EN5rlbox17tainted_base_impl23copy_and_verify_addressE6T_Func"></span><span class="target" id="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b"></span>template&lt;typename <code class="sig-name descname">T_Func</code>&gt;<br />auto <code class="sig-prename descclassname">rlbox::tainted_base_impl<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">copy_and_verify_address</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN5rlbox17tainted_base_impl23copy_and_verify_addressEDa6T_Func" title="rlbox::tainted_base_impl::copy_and_verify_address::T_Func">T_Func</a> <em>verifier</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5rlbox17tainted_base_impl23copy_and_verify_addressEDa6T_Func" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy a tainted pointer from sandbox and verify the address. </p>
-<p>This function is useful if you need to verify physical bits representing the address of a pointed to since copy_and_verify performs a deep copy and changes the address bits.</p>
+<p>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</p>
 <p><dl class="simple">
 <dt><strong>Return</strong></dt><dd><p>Whatever the verifier function returns. </p>
 </dd>
@@ -810,6 +813,7 @@ memory regions and values.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -842,6 +846,14 @@ memory regions and values.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -851,7 +863,7 @@ memory regions and values.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/index.rst.txt"

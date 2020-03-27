@@ -817,7 +817,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="626" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="626" bodyend="640"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="637" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="637" bodyend="651"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -856,7 +856,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="650" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="650" bodyend="675"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="661" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="661" bodyend="686"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -875,7 +875,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         <briefdescription>
 <para>Copy a tainted pointer from sandbox and verify the address. </para>        </briefdescription>
         <detaileddescription>
-<para>This function is useful if you need to verify physical bits representing the address of a pointed to since copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
+<para>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifer</parametername>
 </parameternamelist>
@@ -895,10 +895,76 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="689" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="689" bodyend="695"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="700" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="700" bodyend="706"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a4f739a0994af23036cce2d06b10953ee" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T_Func</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_buffer_address</definition>
+        <argsstring>(T_Func verifier, std::size_t size)</argsstring>
+        <name>copy_and_verify_buffer_address</name>
+        <param>
+          <type>T_Func</type>
+          <declname>verifier</declname>
+        </param>
+        <param>
+          <type>std::size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+<para>Copy a tainted pointer to a buffer from sandbox and verify the address. </para>        </briefdescription>
+        <detaileddescription>
+<para>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>verifer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T_Func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="721" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="721" bodyend="727"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
+      <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aee644ca1b50c70f23ac4f8628b606d2b" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T2</type>
+            <defval>T</defval>
+          </param>
+        </templateparamlist>
+        <type>const void *</type>
+        <definition>const void* rlbox::tainted_base_impl&lt; T_Wrap, T, T_Sbx &gt;::verify_range_helper</definition>
+        <argsstring>(std::size_t count) const</argsstring>
+        <name>verify_range_helper</name>
+        <param>
+          <type>std::size_t</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="586" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="586" bodyend="604"/>
+      </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
@@ -920,14 +986,14 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="586" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="586" bodyend="613"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="607" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="607" bodyend="624"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="696"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="728"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
@@ -950,6 +1016,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
       <member refid="classrlbox_1_1tainted__base__impl_1a532585754028205606cdc219e61cacce" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>CompoundAssignmentOp</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a701759aedd637f48cc97a0e6ada1c8a6" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_address</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1a4f739a0994af23036cce2d06b10953ee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_buffer_address</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_range</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_range_helper</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>copy_and_verify_string</name></member>
@@ -978,6 +1045,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
       <member refid="classrlbox_1_1tainted__base__impl_1a2fb81eab8dc3839f351d6d89410c2350" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_sandboxed</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_unverified</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>UNSAFE_unverified</name></member>
+      <member refid="classrlbox_1_1tainted__base__impl_1aee644ca1b50c70f23ac4f8628b606d2b" prot="private" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>verify_range_helper</name></member>
     </listofallmembers>
   </compounddef>
 </doxygen>

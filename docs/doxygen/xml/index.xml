@@ -63,11 +63,11 @@
   <compound refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTd09a1c93590178c260005e6430499871" kind="struct"><name>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_same_v&lt; short, T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</name>
     <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTd09a1c93590178c260005e6430499871_1acc928cabc40780bf019da1735727cd2a" kind="typedef"><name>type</name></member>
   </compound>
-  <compound refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT2bc89571370fe560fd1dec2752f78995" kind="struct"><name>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_unsigned_v&lt; T &gt; &amp;&amp;!std::is_same_v&lt; T, bool &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</name>
-    <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT2bc89571370fe560fd1dec2752f78995_1ae3586f2ac0dd14dcfb863042790642d8" kind="typedef"><name>type</name></member>
+  <compound refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT2641b5801e05451ecb774e9060ab0487" kind="struct"><name>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_unsigned_v&lt; T &gt; &amp;&amp;!std::is_same_v&lt; T, bool &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &amp;&amp;!std::is_enum_v&lt; T &gt; &gt; &gt;</name>
+    <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT2641b5801e05451ecb774e9060ab0487_1a621abfee37aa239f65c0f878a631e66b" kind="typedef"><name>type</name></member>
   </compound>
-  <compound refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT1ce08e6d4bd8e158266cb5177a31dc8a" kind="struct"><name>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt;(std::is_same_v&lt; bool, T &gt;||std::is_same_v&lt; void, T &gt;||std::is_same_v&lt; char, T &gt;||std::is_floating_point_v&lt; T &gt;||std::is_enum_v&lt; T &gt;)&amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</name>
-    <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT1ce08e6d4bd8e158266cb5177a31dc8a_1ad849d25811620cd78754b873a9a25338" kind="typedef"><name>type</name></member>
+  <compound refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT29e53cddbfe80e82d3bacb7238c231fa" kind="struct"><name>rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt;(std::is_same_v&lt; bool, T &gt;||std::is_same_v&lt; void, T &gt;||std::is_same_v&lt; char, T &gt;||std::is_same_v&lt; signed char, T &gt;||std::is_same_v&lt; unsigned char, T &gt;||std::is_floating_point_v&lt; T &gt;||std::is_enum_v&lt; T &gt;)&amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</name>
+    <member refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT29e53cddbfe80e82d3bacb7238c231fa_1a8b52923d55eb9ff6714673de0dddccd0" kind="typedef"><name>type</name></member>
   </compound>
   <compound refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper" kind="struct"><name>rlbox::detail::convert_to_sandbox_equivalent_helper</name>
   </compound>
@@ -278,6 +278,8 @@
     <member refid="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" kind="function"><name>copy_and_verify_range</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" kind="function"><name>copy_and_verify_string</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" kind="function"><name>copy_and_verify_address</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1a4f739a0994af23036cce2d06b10953ee" kind="function"><name>copy_and_verify_buffer_address</name></member>
+    <member refid="classrlbox_1_1tainted__base__impl_1aee644ca1b50c70f23ac4f8628b606d2b" kind="function"><name>verify_range_helper</name></member>
     <member refid="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" kind="function"><name>copy_and_verify_range_helper</name></member>
   </compound>
   <compound refid="classrlbox_1_1tainted__boolean__hint" kind="class"><name>rlbox::tainted_boolean_hint</name>
@@ -396,7 +398,7 @@
     <member refid="rlbox__stdlib_8hpp_1aa12ee34a239e9dac6ad8cafb7e859a6a" kind="function"><name>sandbox_static_cast</name></member>
     <member refid="rlbox__stdlib_8hpp_1ae2491d69e8718e121cc6898dba56c97b" kind="function"><name>memset</name></member>
     <member refid="rlbox__stdlib_8hpp_1a0b0d9db8aa78955e71974e5bf1545f3c" kind="function"><name>memcpy</name></member>
-    <member refid="rlbox__stdlib_8hpp_1a1e3106c2bee4e4b4358ac5cef07cf450" kind="function"><name>memcmp</name></member>
+    <member refid="rlbox__stdlib_8hpp_1a0c5e7d3bb1ea465aa5ef5388052208ae" kind="function"><name>memcmp</name></member>
   </compound>
   <compound refid="namespacerlbox_1_1callback__detail" kind="namespace"><name>rlbox::callback_detail</name>
     <member refid="rlbox__policy__types_8hpp_1aa06719daa4b902f61960b7374e9c3357" kind="typedef"><name>T_Cb</name></member>

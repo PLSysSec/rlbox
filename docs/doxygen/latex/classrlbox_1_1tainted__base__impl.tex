@@ -131,7 +131,9 @@ auto {\bfseries operator!} ()
 {\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}{copy\+\_\+and\+\_\+verify\+\_\+string} (T\+\_\+\+Func verifier) const
 \begin{DoxyCompactList}\small\item\em Copy a tainted string from sandbox and verify it. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}{copy\+\_\+and\+\_\+verify\+\_\+address} (T\+\_\+\+Func verifier)
-\begin{DoxyCompactList}\small\item\em Copy a tainted pointer from sandbox and verify the address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Copy a tainted pointer from sandbox and verify the address. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address} (T\+\_\+\+Func verifier, std\+::size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Copy a tainted pointer to a buffer from sandbox and verify the address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Member Function Documentation}
@@ -172,7 +174,34 @@ auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\
 
 Copy a tainted pointer from sandbox and verify the address. 
 
-This function is useful if you need to verify physical bits representing the address of a pointed to since copy\+\_\+and\+\_\+verify performs a deep copy and changes the address bits.
+This function is useful if you need to verify physical bits representing the address of a pointer. Other A\+P\+Is such as copy\+\_\+and\+\_\+verify performs a deep copy and changes the address bits.
+
+
+\begin{DoxyParams}{Parameters}
+{\em verifer} & Function used to verify the copied value. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T\+\_\+\+Func} & the type of the verifier {\ttfamily T\+\_\+\+Ret($\ast$)(uintptr\+\_\+t)} \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+Whatever the verifier function returns. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}\label{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}} 
+\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address}}
+\index{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
+\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address()}{copy\_and\_verify\_buffer\_address()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+template$<$typename T\+\_\+\+Func $>$ \\
+auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier,  }\item[{std\+::size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Copy a tainted pointer to a buffer from sandbox and verify the address. 
+
+This function is useful if you need to verify physical bits representing the address of a buffer. Other A\+P\+Is such as copy\+\_\+and\+\_\+verify performs a deep copy and changes the address bits.
 
 
 \begin{DoxyParams}{Parameters}

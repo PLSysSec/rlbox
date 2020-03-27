@@ -214,6 +214,10 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator!</b> ()</td>
 <tr class="memitem:ad34419b3444d0bf37e25ecf7d37fbe0b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classrlbox_1_1tainted__base__impl.html#ad34419b3444d0bf37e25ecf7d37fbe0b">copy_and_verify_address</a> (T_Func verifier)</td></tr>
 <tr class="memdesc:ad34419b3444d0bf37e25ecf7d37fbe0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a tainted pointer from sandbox and verify the address.  <a href="#ad34419b3444d0bf37e25ecf7d37fbe0b">More...</a><br /></td></tr>
 <tr class="separator:ad34419b3444d0bf37e25ecf7d37fbe0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f739a0994af23036cce2d06b10953ee"><td class="memTemplParams" colspan="2">template&lt;typename T_Func &gt; </td></tr>
+<tr class="memitem:a4f739a0994af23036cce2d06b10953ee"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classrlbox_1_1tainted__base__impl.html#a4f739a0994af23036cce2d06b10953ee">copy_and_verify_buffer_address</a> (T_Func verifier, std::size_t size)</td></tr>
+<tr class="memdesc:a4f739a0994af23036cce2d06b10953ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a tainted pointer to a buffer from sandbox and verify the address.  <a href="#a4f739a0994af23036cce2d06b10953ee">More...</a><br /></td></tr>
+<tr class="separator:a4f739a0994af23036cce2d06b10953ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a701759aedd637f48cc97a0e6ada1c8a6"></a>
@@ -290,7 +294,63 @@ template&lt;typename T_Func &gt; </div>
 </div><div class="memdoc">
 
 <p>Copy a tainted pointer from sandbox and verify the address. </p>
-<p>This function is useful if you need to verify physical bits representing the address of a pointed to since copy_and_verify performs a deep copy and changes the address bits.</p>
+<p>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">verifer</td><td>Function used to verify the copied value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T_Func</td><td>the type of the verifier <code>T_Ret(*)(uintptr_t)</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whatever the verifier function returns. </dd></dl>
+
+</div>
+</div>
+<a id="a4f739a0994af23036cce2d06b10953ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f739a0994af23036cce2d06b10953ee">&#9670;&nbsp;</a></span>copy_and_verify_buffer_address()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; typename, typename &gt; typename T_Wrap, typename T, typename T_Sbx&gt; </div>
+<div class="memtemplate">
+template&lt;typename T_Func &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classrlbox_1_1tainted__base__impl.html">rlbox::tainted_base_impl</a>&lt; T_Wrap, T, T_Sbx &gt;::copy_and_verify_buffer_address </td>
+          <td>(</td>
+          <td class="paramtype">T_Func&#160;</td>
+          <td class="paramname"><em>verifier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy a tainted pointer to a buffer from sandbox and verify the address. </p>
+<p>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">verifer</td><td>Function used to verify the copied value. </td></tr>
