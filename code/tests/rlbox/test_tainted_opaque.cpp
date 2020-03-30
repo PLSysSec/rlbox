@@ -17,6 +17,9 @@ TEST_CASE("tainted opaque operates correctly", "[tainted_opaque]")
   auto c = rlbox::from_opaque(b);
   REQUIRE(c.UNSAFE_unverified() == test_val);
 
+  b.set_zero();
+  REQUIRE(rlbox::from_opaque(b).UNSAFE_unverified() == 0);
+
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
@@ -47,6 +50,12 @@ TEST_CASE("tainted opaque operates correctly", "[tainted_opaque]")
   REQUIRE(voidPtr == nullptr);
   REQUIRE(s3.voidPtr.UNSAFE_unverified() == nullptr);
   REQUIRE(voidPtr.UNSAFE_unverified() == nullptr);
+
+  tainted<const char*, TestSandbox> stringPtr = s3.fieldString;
+  tainted_opaque<const char*, TestSandbox> stringOpaquePtr =
+    stringPtr.to_opaque();
+  stringOpaquePtr.set_zero();
+  REQUIRE(rlbox::from_opaque(stringOpaquePtr).UNSAFE_unverified() == nullptr);
 
   sandbox.destroy_sandbox();
 }
