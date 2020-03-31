@@ -30,13 +30,35 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="11" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="11" bodyend="-1"/>
       </memberdef>
       </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classrlbox_1_1tainted__opaque_1a04c0acc924d20dbef92b2c348fc799e8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T2</type>
+            <defval>T</defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void rlbox::tainted_opaque&lt; T, T_Sbx &gt;::set_zero</definition>
+        <argsstring>()</argsstring>
+        <name>set_zero</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="15" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="15" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="9" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="8" bodyend="12"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="9" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="8" bodyend="19"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" prot="private" virt="non-virtual"><scope>rlbox::tainted_opaque</scope><name>data</name></member>
+      <member refid="classrlbox_1_1tainted__opaque_1a04c0acc924d20dbef92b2c348fc799e8" prot="public" virt="non-virtual"><scope>rlbox::tainted_opaque</scope><name>set_zero</name></member>
     </listofallmembers>
   </compounddef>
 </doxygen>

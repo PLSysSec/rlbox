@@ -297,7 +297,7 @@ template&lt;typename T_Func &gt; </div>
 <p>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">verifer</td><td>Function used to verify the copied value. </td></tr>
+    <tr><td class="paramname">verifier</td><td>Function used to verify the copied value. </td></tr>
   </table>
   </dd>
 </dl>
@@ -353,7 +353,8 @@ template&lt;typename T_Func &gt; </div>
 <p>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">verifer</td><td>Function used to verify the copied value. </td></tr>
+    <tr><td class="paramname">verifier</td><td>Function used to verify the copied value. </td></tr>
+    <tr><td class="paramname">size</td><td>Size of the buffer. Buffer with length size is expected to fit inside sandbox memory. </td></tr>
   </table>
   </dd>
 </dl>

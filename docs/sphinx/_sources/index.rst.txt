@@ -8,6 +8,8 @@
 Overview
 ========
 
+This is a short tutorial on the RLBox API. If you are looking for a reference
+of all APIs, see [Doxygen]_.
 
 RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
@@ -394,10 +396,8 @@ be anything the caller chooses.
 .. doxygenfunction:: copy_and_verify_address
 
 In some cases it's useful to unwrap tainted values without verification.
-Sometimes this is safe to do and RLBox provides a method for doing so:
-
-.. _unverified_safe_because:
-.. doxygenfunction:: unverified_safe_because(const char (&)[N])
+Sometimes this is safe to do and RLBox provides a method for doing so
+called ``unverified_safe_because``
 
 Since pointers are special (sandbox code may modify the data the pointer
 points to), we have a similar function for pointers called

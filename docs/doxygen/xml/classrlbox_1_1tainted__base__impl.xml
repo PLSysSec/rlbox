@@ -877,7 +877,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         <detaileddescription>
 <para>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
-<parametername>verifer</parametername>
+<parametername>verifier</parametername>
 </parameternamelist>
 <parameterdescription>
 <para>Function used to verify the copied value. </para></parameterdescription>
@@ -920,10 +920,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         <detaileddescription>
 <para>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
-<parametername>verifer</parametername>
+<parametername>verifier</parametername>
 </parameternamelist>
 <parameterdescription>
 <para>Function used to verify the copied value. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of the buffer. Buffer with length size is expected to fit inside sandbox memory. </para></parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -938,7 +945,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="721" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="721" bodyend="727"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="723" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="723" bodyend="729"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -993,7 +1000,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="728"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="730"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
