@@ -59,3 +59,13 @@ TEST_CASE("tainted opaque operates correctly", "[tainted_opaque]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("tainted opaque free operates correctly", "[tainted_opaque]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+  auto fieldString = sandbox.malloc_in_sandbox<char>(1).to_opaque();
+  sandbox.free_in_sandbox(fieldString);
+  sandbox.destroy_sandbox();
+}

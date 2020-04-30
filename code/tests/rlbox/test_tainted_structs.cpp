@@ -73,6 +73,8 @@ TEST_CASE("Tainted struct pointer assignment", "[tainted_struct]")
   REQUIRE(ps->voidPtr.UNSAFE_unverified() == nullptr);
   REQUIRE(voidPtr.UNSAFE_unverified() == nullptr);
 
+  sandbox.free_in_sandbox(ps->fieldString);
+
   // Disabled until function pointers are handled correctly
   // tainted<testVarietyStruct, TestSandbox> s = *ps;
   // UNUSED(s);

@@ -511,6 +511,30 @@ public:
   }
 
   /**
+   * @brief Free the memory referenced by a tainted_volatile pointer ref.
+   *
+   * @param ptr_ref Pointer reference to sandbox memory to free.
+   */
+  template<typename T>
+  inline void free_in_sandbox(tainted_volatile<T, T_Sbx>& ptr_ref)
+  {
+    tainted<T, T_Sbx> ptr = ptr_ref;
+    free_in_sandbox(ptr);
+  }
+
+  /**
+   * @brief Free the memory referenced by a tainted_opaque pointer.
+   *
+   * @param ptr_opaque Opaque pointer to sandbox memory to free.
+   */
+  template<typename T>
+  inline void free_in_sandbox(tainted_opaque<T, T_Sbx> ptr_opaque)
+  {
+    tainted<T, T_Sbx> ptr = from_opaque(ptr_opaque);
+    free_in_sandbox(ptr);
+  }
+
+  /**
    * @brief Check if two pointers are in the same sandbox.
    * For the null-sandbox, this always returns true.
    */
