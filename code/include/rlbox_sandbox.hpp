@@ -8,6 +8,7 @@
 #  include <chrono>
 #endif
 #include <cstdlib>
+#include <limits>
 #include <map>
 #include <mutex>
 #ifndef RLBOX_USE_CUSTOM_SHARED_LOCK
@@ -17,6 +18,7 @@
 #  include <sstream>
 #  include <string>
 #endif
+#include <stdint.h>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -478,7 +480,9 @@ public:
     }
 
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
-    auto ptr_in_sandbox = this->impl_malloc_in_sandbox(sizeof(T) * count);
+    detail::dynamic_check(sizeof(T) <= std::numeric_limits<uint32_t>::max(), "Tried to allocate an object over 4GB.");
+    auto total_size = ((uint64_t)sizeof(T)) * count;
+    auto ptr_in_sandbox = this->impl_malloc_in_sandbox(total_size);
     auto ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
     if (!ptr) {
       return tainted<T*, T_Sbx>(nullptr);
