@@ -490,9 +490,12 @@ public:
       // On a 32-bit platform, we need to make sure that total_size is not >=4GB
       detail::dynamic_check(total_size < std::numeric_limits<uint32_t>::max(),
                             "Tried to allocate memory over 4GB");
-    } else {
+    } else if constexpr (sizeof(size_t) != 8) {
       // Double check we are on a 64-bit platform
-      static_assert(sizeof(size_t) == 8);
+      // Note for static checks we need to have some dependence on T, so adding a dummy
+      constexpr bool dummy = sizeof(T) >= 0;
+      rlbox_detail_static_fail_because(dummy && sizeof(size_t) != 8,
+                                       "Expected 32 or 64 bit platform.");
     }
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(total_size);
     auto ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
