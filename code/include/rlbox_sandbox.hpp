@@ -480,8 +480,20 @@ public:
     }
 
     detail::dynamic_check(count != 0, "Malloc tried to allocate 0 bytes");
-    detail::dynamic_check(sizeof(T) <= std::numeric_limits<uint32_t>::max(), "Tried to allocate an object over 4GB.");
-    auto total_size = ((uint64_t)sizeof(T)) * count;
+    if constexpr (sizeof(T) >= std::numeric_limits<uint32_t>::max()) {
+      rlbox_detail_static_fail_because(sizeof(T) >=
+                                         std::numeric_limits<uint32_t>::max(),
+                                       "Tried to allocate an object over 4GB.");
+    }
+    auto total_size = static_cast<uint64_t>(sizeof(T)) * count;
+    if constexpr (sizeof(size_t) == 4) {
+      // On a 32-bit platform, we need to make sure that total_size is not >=4GB
+      detail::dynamic_check(total_size < std::numeric_limits<uint32_t>::max(),
+                            "Tried to allocate memory over 4GB");
+    } else {
+      // Double check we are on a 64-bit platform
+      static_assert(sizeof(size_t) == 8);
+    }
     auto ptr_in_sandbox = this->impl_malloc_in_sandbox(total_size);
     auto ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
     if (!ptr) {
