@@ -209,20 +209,20 @@ inline tainted_int_hint memcmp(rlbox_sandbox<T_Sbx>& sandbox,
  * @param src Raw pointer to the buffer
  * @param num Number of bytes in the buffer
  * @param delete_source_on_copy If the source buffer was copied, this variable
- * controls whether copy_or_transfer_memory should call delete on the src.
+ * controls whether copy_memory_or_grant_access should call delete on the src.
  * This calls delete[] if num > 1.
  * @param copied out parameter indicating if the source was copied or transfered
  */
 template<typename T_Sbx, typename T>
-tainted<T*, T_Sbx> copy_or_transfer_memory(rlbox_sandbox<T_Sbx>& sandbox,
-                                           T* src,
-                                           size_t num,
-                                           bool delete_source_on_copy,
-                                           bool& copied)
+tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
+                                               T* src,
+                                               size_t num,
+                                               bool delete_source_on_copy,
+                                               bool& copied)
 {
-  // sandbox can transfer ownership if it includes the following line
-  // using can_transfer_objects = void;
-  if constexpr (detail::has_member_using_can_transfer_objects_v<T_Sbx>) {
+  // sandbox can grant access if it includes the following line
+  // using can_grant_access = void;
+  if constexpr (detail::has_member_using_can_grant_access_v<T_Sbx>) {
     detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src, num);
 
     bool success;

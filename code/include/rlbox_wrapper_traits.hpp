@@ -134,21 +134,21 @@ constexpr auto is_member_of_rlbox_detail =
   detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper<T>::value;
 
 // https://stackoverflow.com/questions/9644477/how-to-check-whether-a-class-has-specified-nested-class-definition-or-typedef-in
-namespace detail_has_member_using_can_transfer_objects {
+namespace detail_has_member_using_can_grant_access {
   template<class T, class Enable = void>
-  struct has_member_using_can_transfer_objects : std::false_type
+  struct has_member_using_can_grant_access : std::false_type
   {};
 
   template<class T>
-  struct has_member_using_can_transfer_objects<
+  struct has_member_using_can_grant_access<
     T,
-    std::void_t<typename T::can_transfer_objects>> : std::true_type
+    std::void_t<typename T::can_grant_access>> : std::true_type
   {};
 }
 
 template<class T>
-constexpr bool has_member_using_can_transfer_objects_v =
-  detail_has_member_using_can_transfer_objects::
-    has_member_using_can_transfer_objects<T>::value;
+constexpr bool has_member_using_can_grant_access_v =
+  detail_has_member_using_can_grant_access::has_member_using_can_grant_access<
+    T>::value;
 
 }

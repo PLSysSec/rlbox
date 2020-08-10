@@ -594,7 +594,7 @@ public:
    * sandbox memory. Called by internal APIs only if the underlying sandbox
    * supports can_transfer_object by including the line
    * ```
-   * using can_transfer_objects = void;
+   * using can_grant_access = void;
    * ```
    */
   template<typename T>

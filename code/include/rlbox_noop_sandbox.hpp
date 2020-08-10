@@ -52,7 +52,7 @@ public:
   using T_ShortType = short;
   // no-op sandbox can transfer buffers as there is no sandboxings
   // Thus transfer is a noop
-  using can_transfer_objects = void;
+  using can_grant_access = void;
 
 private:
   RLBOX_SHARED_LOCK(callback_mutex);

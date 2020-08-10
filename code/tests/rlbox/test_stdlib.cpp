@@ -245,7 +245,7 @@ TEST_CASE("test transfer ownership", "[stdlib]")
   *src = 42;
 
   bool used_copy;
-  auto transfered = rlbox::copy_or_transfer_memory(
+  auto transfered = rlbox::copy_memory_or_grant_access(
     sandbox, src, sizeof(unsigned int), true, used_copy);
 
   REQUIRE((*transfered == 42).unverified_safe_because("test"));
