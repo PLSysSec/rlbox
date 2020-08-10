@@ -584,6 +584,18 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     REQUIRE(result1 == result2);
   }
 
+  SECTION("test transfer ownership") // NOLINT
+  {
+    unsigned int* src = new unsigned int; // NOLINT
+    *src = 42;
+
+    bool used_copy;
+    auto transfered = rlbox::copy_or_transfer_memory(
+      sandbox, src, sizeof(unsigned int), true, used_copy);
+
+    REQUIRE((*transfered == 42).unverified_safe_because("test"));
+  }
+
   sandbox.template free_in_sandbox(sb_string);
 
   sandbox.destroy_sandbox();

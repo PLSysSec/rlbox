@@ -200,4 +200,51 @@ inline tainted_int_hint memcmp(rlbox_sandbox<T_Sbx>& sandbox,
   return converted_ret;
 }
 
+/**
+ * @brief This function either
+ * - copies the given buffer into the sandbox calling delete on the src
+ * OR
+ * - if the sandbox allows, adds the buffer to the existing sandbox memory
+ * @param sandbox Target sandbox
+ * @param src Raw pointer to the buffer
+ * @param num Number of bytes in the buffer
+ * @param delete_source_on_copy If the source buffer was copied, this variable
+ * controls whether copy_or_transfer_memory should call delete on the src.
+ * This calls delete[] if num > 1.
+ * @param copied out parameter indicating if the source was copied or transfered
+ */
+template<typename T_Sbx, typename T>
+tainted<T*, T_Sbx> copy_or_transfer_memory(rlbox_sandbox<T_Sbx>& sandbox,
+                                           T* src,
+                                           size_t num,
+                                           bool delete_source_on_copy,
+                                           bool& copied)
+{
+  // sandbox can transfer ownership if it includes the following line
+  // using can_transfer_objects = void;
+  if constexpr (detail::has_member_using_can_transfer_objects_v<T_Sbx>) {
+    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src, num);
+
+    bool success;
+    auto ret = sandbox.INTERNAL_transfer_object(src, num, success);
+    if (success) {
+      copied = false;
+      return ret;
+    }
+  }
+
+  tainted<T*, T_Sbx> copy = sandbox.template malloc_in_sandbox<T>(num);
+  rlbox::memcpy(sandbox, copy, src, num);
+  if (delete_source_on_copy) {
+    if (num == 1) {
+      delete src;
+    } else {
+      delete[] src;
+    }
+  }
+
+  copied = true;
+  return copy;
+}
+
 }

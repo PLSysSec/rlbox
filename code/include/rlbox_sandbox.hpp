@@ -588,6 +588,24 @@ public:
     return this->impl_get_memory_location();
   }
 
+  /**
+   * @brief For internal use only.
+   * Transfer ownership of the passed in buffer from application memory to
+   * sandbox memory. Called by internal APIs only if the underlying sandbox
+   * supports can_transfer_object by including the line
+   * ```
+   * using can_transfer_objects = void;
+   * ```
+   */
+  template<typename T>
+  inline tainted<T*, T_Sbx> INTERNAL_transfer_object(T* src,
+                                                     size_t num,
+                                                     bool& success)
+  {
+    auto ret = this->impl_transfer_object(src, num, success);
+    return tainted<T*, T_Sbx>::internal_factory(src);
+  }
+
   void* lookup_symbol(const char* func_name)
   {
     {
