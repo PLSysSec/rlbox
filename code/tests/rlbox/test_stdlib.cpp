@@ -236,17 +236,20 @@ TEST_CASE("test memcmp", "[stdlib]")
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("test transfer ownership", "[stdlib]")
+TEST_CASE("test grant deny access", "[stdlib]")
 {
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  unsigned int* src = new unsigned int; // NOLINT
+  unsigned int* src = static_cast<unsigned int*>(malloc(sizeof(unsigned int))); // NOLINT
   *src = 42;
 
   bool used_copy;
+
   auto transfered = rlbox::copy_memory_or_grant_access(
     sandbox, src, sizeof(unsigned int), true, used_copy);
-
   REQUIRE((*transfered == 42).unverified_safe_because("test"));
+
+  auto transfered2 = rlbox::copy_memory_or_deny_access(sandbox, transfered, sizeof(unsigned int), true, used_copy);
+  REQUIRE(*transfered2 == 42);
 }

@@ -590,20 +590,38 @@ public:
 
   /**
    * @brief For internal use only.
-   * Transfer ownership of the passed in buffer from application memory to
-   * sandbox memory. Called by internal APIs only if the underlying sandbox
-   * supports can_transfer_object by including the line
+   * Grant access of the passed in buffer in to the sandbox instance. Called by
+   * internal APIs only if the underlying sandbox supports
+   * can_grant_deny_access by including the line
    * ```
-   * using can_grant_access = void;
+   * using can_grant_deny_access = void;
    * ```
    */
   template<typename T>
-  inline tainted<T*, T_Sbx> INTERNAL_transfer_object(T* src,
+  inline tainted<T*, T_Sbx> INTERNAL_grant_access(T* src,
                                                      size_t num,
                                                      bool& success)
   {
-    auto ret = this->impl_transfer_object(src, num, success);
-    return tainted<T*, T_Sbx>::internal_factory(src);
+    auto ret = this->impl_grant_access(src, num, success);
+    return tainted<T*, T_Sbx>::internal_factory(ret);
+  }
+
+  /**
+   * @brief For internal use only.
+   * Grant access of the passed in buffer in to the sandbox instance. Called by
+   * internal APIs only if the underlying sandbox supports
+   * can_grant_deny_access by including the line
+   * ```
+   * using can_grant_deny_access = void;
+   * ```
+   */
+  template<typename T>
+  inline T* INTERNAL_deny_access(tainted<T*, T_Sbx> src,
+                                                     size_t num,
+                                                     bool& success)
+  {
+    auto ret = this->impl_deny_access(src.INTERNAL_unverified_safe(), num, success);
+    return ret;
   }
 
   void* lookup_symbol(const char* func_name)
