@@ -1148,12 +1148,24 @@ private:
     return data;
   };
 
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(rlbox_sandbox<T_Sbx>& sandbox) const
+    noexcept
+  {
+    return data;
+  };
+
   inline std::remove_cv_t<T_AppType> get_raw_value()
   {
     rlbox_detail_forward_to_const(get_raw_value, std::remove_cv_t<T_AppType>);
   }
 
   inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value() noexcept
+  {
+    rlbox_detail_forward_to_const(get_raw_sandbox_value,
+                                  std::remove_cv_t<T_SandboxedType>);
+  };
+
+  inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(rlbox_sandbox<T_Sbx>& sandbox) noexcept
   {
     rlbox_detail_forward_to_const(get_raw_sandbox_value,
                                   std::remove_cv_t<T_SandboxedType>);
