@@ -233,14 +233,15 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
     }
   }
 
-  tainted<T*, T_Sbx> copy = sandbox.template malloc_in_sandbox<T>(num);
+  using T_nocv = std::remove_cv_t<T>;
+  tainted<T_nocv*, T_Sbx> copy = sandbox.template malloc_in_sandbox<T_nocv>(num);
   rlbox::memcpy(sandbox, copy, src, num);
   if (free_source_on_copy) {
-    free(src);
+    free(const_cast<void*>(reinterpret_cast<const void*>(src)));
   }
   
   copied = true;
-  return copy;
+  return sandbox_const_cast<T*>(copy);
 }
 
 /**
