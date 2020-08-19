@@ -367,7 +367,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   {
     auto resultT = sandbox.invoke_sandbox_function(simpleTestStructVal);
     auto result = resultT.copy_and_verify([](
-                                            tainted<testStruct, TestType> val) {
+                                            tainted<testStruct, TestType> val) -> testStruct {
       testStruct ret{};
       ret.fieldLong = val.fieldLong.UNSAFE_unverified();
 
@@ -443,7 +443,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     auto resultT =
       sandbox.invoke_sandbox_function(initializePointerStruct, initVal);
     auto result =
-      resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) {
+      resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) -> pointersStruct {
         pointersStruct ret{};
         ret.firstPointer = val.firstPointer.UNSAFE_unverified();
         ret.pointerArray[0] = val.pointerArray[0].UNSAFE_unverified();

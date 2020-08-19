@@ -244,7 +244,7 @@ TEST_CASE("test grant deny access", "[stdlib]")
   unsigned int* src = static_cast<unsigned int*>(malloc(sizeof(unsigned int))); // NOLINT
   *src = 42;
 
-  bool used_copy;
+  bool used_copy = false;
 
   auto transfered = rlbox::copy_memory_or_grant_access(
     sandbox, src, sizeof(unsigned int), true, used_copy);
@@ -252,4 +252,6 @@ TEST_CASE("test grant deny access", "[stdlib]")
 
   auto transfered2 = rlbox::copy_memory_or_deny_access(sandbox, transfered, sizeof(unsigned int), true, used_copy);
   REQUIRE(*transfered2 == 42);
+
+  free(transfered2);
 }
