@@ -191,3 +191,17 @@ int simpleCallbackTest2(unsigned long startVal, CallbackType2 cb)
             startVal + 4,
             startVal + 5);
 }
+
+unsigned long stackParametersTest(
+  unsigned long a1,
+  unsigned long a2,
+  unsigned long a3,
+  unsigned long a4,
+  unsigned long a5,
+  unsigned long a6,
+  unsigned long a7,
+  unsigned long a8,
+  unsigned long a9
+) {
+  return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9;
+}

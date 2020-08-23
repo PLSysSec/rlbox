@@ -153,6 +153,24 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   //   REQUIRE(ret2.UNSAFE_unverified() == result);
   // }
 
+  SECTION("test function with stack params invocation") // NOLINT
+  {
+    const unsigned long val1 = 20;
+    const unsigned long val2 = 23;
+    const unsigned long val3 = 26;
+    const unsigned long val4 = 29;
+    const unsigned long val5 = 32;
+    const unsigned long val6 = 35;
+    const unsigned long val7 = 38;
+    const unsigned long val8 = 41;
+    const unsigned long val9 = 44;
+
+    auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
+      val1, val2, val3, val4, val5, val6, val7, val8, val9
+    );
+    REQUIRE(ret2.UNSAFE_unverified() == (val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8 + val9));
+  }
+
   SECTION("test verification function") // NOLINT
   {
     const int val1 = 2;
