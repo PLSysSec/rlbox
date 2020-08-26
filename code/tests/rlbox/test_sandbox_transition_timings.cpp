@@ -35,6 +35,7 @@ TEST_CASE("sandbox timing tests", "[sandbox_timing_tests]")
 
     auto& transition_times = sandbox.process_and_get_transition_times();
     REQUIRE(transition_times.size() == iterations);
+    REQUIRE(sandbox.get_total_ns_time_in_sandbox_and_transitions() > 0);
   }
 
   sandbox.destroy_sandbox();

@@ -492,7 +492,8 @@ public:
                             "Tried to allocate memory over 4GB");
     } else if constexpr (sizeof(size_t) != 8) {
       // Double check we are on a 64-bit platform
-      // Note for static checks we need to have some dependence on T, so adding a dummy
+      // Note for static checks we need to have some dependence on T, so adding
+      // a dummy
       constexpr bool dummy = sizeof(T) >= 0;
       rlbox_detail_static_fail_because(dummy && sizeof(size_t) != 8,
                                        "Expected 32 or 64 bit platform.");
@@ -841,6 +842,18 @@ public:
   process_and_get_transition_times()
   {
     return transition_times;
+  }
+  inline int64_t get_total_ns_time_in_sandbox_and_transitions()
+  {
+    int64_t ret = 0;
+    for (auto& transition_time : transition_times) {
+      if (transition_time.invoke == rlbox_transition::INVOKE) {
+        ret += transition_time.time;
+      } else {
+        ret -= transition_time.time;
+      }
+    }
+    return ret;
   }
 #endif
 };
