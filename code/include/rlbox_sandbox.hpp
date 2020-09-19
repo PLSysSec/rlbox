@@ -48,12 +48,12 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
     T_Ret (*)(T_Args...));
 }
 
-#ifdef RLBOX_MEASURE_TRANSITION_TIMES
 enum class rlbox_transition
 {
   INVOKE,
   CALLBACK
 };
+#ifdef RLBOX_MEASURE_TRANSITION_TIMES
 struct rlbox_transition_timing
 {
   rlbox_transition invoke;
@@ -242,7 +242,14 @@ private:
                                  ns });
     });
 #endif
-
+#ifdef RLBOX_TRANSITION_ACTION_OUT
+  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */);
+#endif
+#ifdef RLBOX_TRANSITION_ACTION_IN
+  auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
+    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */);
+  });
+#endif
     if constexpr (std::is_void_v<T_Func_Ret>) {
       (*target_fn_ptr)(
         sandbox,
@@ -670,6 +677,14 @@ public:
       transition_times.push_back(rlbox_transition_timing{
         rlbox_transition::INVOKE, func_name, func_ptr, ns });
     });
+#endif
+#ifdef RLBOX_TRANSITION_ACTION_IN
+  RLBOX_TRANSITION_ACTION_IN(rlbox_transition::INVOKE, func_name, func_ptr);
+#endif
+#ifdef RLBOX_TRANSITION_ACTION_OUT
+  auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
+    RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::INVOKE, func_name, func_ptr);
+  });
 #endif
     (check_invoke_param_type_is_ok<T_Args>(), ...);
 

@@ -201,6 +201,18 @@ target_link_libraries(test_rlbox_transition_timers Catch2::Catch2 rlbox-cpp17-li
 
 catch_discover_tests(test_rlbox_transition_timers)
 
+# Test rlbox transition customization
+
+add_executable(test_rlbox_transition_customization
+               code/tests/test_main.cpp
+               code/tests/rlbox/test_sandbox_transition_customization.cpp)
+
+target_include_directories(test_rlbox_transition_customization PRIVATE code/tests/rlbox)
+
+target_link_libraries(test_rlbox_transition_customization Catch2::Catch2 rlbox-cpp17-lib)
+
+catch_discover_tests(test_rlbox_transition_customization)
+
 # Test rlbox glue
 add_library(rlbox_glue_lib_static STATIC code/tests/rlbox_glue/lib/libtest.c)
 target_include_directories(rlbox_glue_lib_static
