@@ -126,6 +126,8 @@ private:
   std::mutex callback_lock;
   std::vector<void*> callback_keys;
 
+  void* transition_state = nullptr;
+
   template<typename T>
   using convert_fn_ptr_to_sandbox_equivalent_t = decltype(
     ::rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::helper<T_Sbx>(
@@ -243,11 +245,11 @@ private:
     });
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_OUT
-  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */);
+  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, transition_state);
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_IN
   auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
-    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */);
+    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, transition_state);
   });
 #endif
     if constexpr (std::is_void_v<T_Func_Ret>) {
@@ -595,6 +597,14 @@ public:
     return this->impl_get_memory_location();
   }
 
+  void* get_transition_state() {
+    return transition_state;
+  }
+
+  void* set_transition_state(void* new_state) {
+    transition_state = new_state;
+  }
+
   /**
    * @brief For internal use only.
    * Grant access of the passed in buffer in to the sandbox instance. Called by
@@ -679,11 +689,11 @@ public:
     });
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_IN
-  RLBOX_TRANSITION_ACTION_IN(rlbox_transition::INVOKE, func_name, func_ptr);
+  RLBOX_TRANSITION_ACTION_IN(rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_OUT
   auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
-    RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::INVOKE, func_name, func_ptr);
+    RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
   });
 #endif
     (check_invoke_param_type_is_ok<T_Args>(), ...);
