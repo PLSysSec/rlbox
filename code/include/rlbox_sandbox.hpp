@@ -601,7 +601,7 @@ public:
     return transition_state;
   }
 
-  void* set_transition_state(void* new_state) {
+  void set_transition_state(void* new_state) {
     transition_state = new_state;
   }
 
