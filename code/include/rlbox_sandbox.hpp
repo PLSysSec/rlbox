@@ -245,11 +245,11 @@ private:
     });
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_OUT
-  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, transition_state);
+  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, sandbox.transition_state);
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_IN
   auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
-    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, transition_state);
+    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, sandbox.transition_state);
   });
 #endif
     if constexpr (std::is_void_v<T_Func_Ret>) {
