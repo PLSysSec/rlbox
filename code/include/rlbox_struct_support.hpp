@@ -3,6 +3,7 @@
 // IWYU pragma: friend "rlbox_.*\.hpp"
 
 #include <cstring>
+#include <functional>
 #include <type_traits>
 
 #include "rlbox_conversion.hpp"
