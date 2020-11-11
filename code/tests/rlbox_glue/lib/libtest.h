@@ -60,6 +60,7 @@ extern "C"
   struct testStruct* simpleTestStructPtr();
   struct testStruct simpleTestStructValBadPtr();
   struct testStruct* simpleTestStructPtrBadPtr();
+  long simpleTestStructParam(struct testStruct param);
   int* echoPointer(int* pointer);
   double simplePointerValAddTest(double* ptr, double val);
   struct pointersStruct initializePointerStruct(char* initVal);

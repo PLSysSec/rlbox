@@ -135,6 +135,11 @@ struct testStruct* simpleTestStructPtrBadPtr()
   return ret;
 }
 
+long simpleTestStructParam(struct testStruct param)
+{
+  return param.fieldLong + (param.fieldString? strlen(param.fieldString) : 0);
+}
+
 int* echoPointer(int* pointer)
 {
   return pointer;

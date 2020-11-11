@@ -363,6 +363,15 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     sandbox.free_in_sandbox(p);
   }
 
+  SECTION("test structure params") // NOLINT
+  {
+    tainted<testStruct, TestType> val{};
+    val.fieldLong = 2;
+    val.fieldString = rlbox::sandbox_const_cast<const char*>(sb_string);
+    auto resultT = sandbox.invoke_sandbox_function(simpleTestStructParam, val);
+    REQUIRE(resultT.UNSAFE_unverified() == 7);
+  }
+
   SECTION("test structures") // NOLINT
   {
     auto resultT = sandbox.invoke_sandbox_function(simpleTestStructVal);
