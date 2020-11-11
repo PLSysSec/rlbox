@@ -99,3 +99,17 @@ TEST_CASE("Tainted const structs", "[tainted_struct]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("Tainted full struct assignment", "[tainted_struct]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  auto p = sandbox.malloc_in_sandbox<testVarietyStruct>();
+  tainted<testVarietyStruct, TestSandbox> o{};
+  *p = o;
+  sandbox.free_in_sandbox(p);
+
+  sandbox.destroy_sandbox();
+}
