@@ -923,6 +923,9 @@ public:
     }
     return ret;
   }
+  inline void clear_transition_times() {
+    transition_times.clear();
+  }
 #endif
 };
 
