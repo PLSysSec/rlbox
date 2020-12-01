@@ -243,4 +243,4 @@ add_custom_target(
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
     UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)
-add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue)
+add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue test_rlbox_transition_customization)

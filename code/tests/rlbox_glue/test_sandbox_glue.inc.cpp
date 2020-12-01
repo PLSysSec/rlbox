@@ -603,7 +603,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     auto transfered = rlbox::copy_memory_or_grant_access(
       sandbox, src, sizeof(unsigned int), true, used_copy);
     REQUIRE((*transfered == 42).unverified_safe_because("test"));
-    
+
     auto transfered2 = rlbox::copy_memory_or_deny_access(sandbox, transfered, sizeof(unsigned int), true, used_copy);
     REQUIRE(*transfered2 == 42);
   }
