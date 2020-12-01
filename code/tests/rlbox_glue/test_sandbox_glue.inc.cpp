@@ -6,6 +6,8 @@
 #include <memory>
 #include <utility>
 
+#include <sys/time.h>
+
 // IWYU pragma: no_forward_declare mpl_::na
 #include "catch2/catch.hpp"
 #include "libtest.h"
@@ -105,6 +107,27 @@ static unsigned long local_simpleAddNoPrintTest(unsigned long a,
   return a + b;
 }
 
+static tainted<int, TestType>
+exampleCallbackGetTimeOfDay( // NOLINT(google-runtime-int)
+  rlbox_sandbox<TestType>& /* sandbox */,
+  tainted<struct timeval*, TestType> t_tv)
+{
+  tainted<struct timeval, TestType> tv;
+  int ret = gettimeofday((struct timeval*) &tv, nullptr);
+  *t_tv = tv;
+  return ret;
+}
+
+static int
+local_exampleCallbackGetTimeOfDay( // NOLINT(google-runtime-int)
+  struct timeval* t_tv)
+{
+  struct timeval tv;
+  int ret = gettimeofday((struct timeval*) &tv, nullptr);
+  *t_tv = tv;
+  return ret;
+}
+
 NOINLINE
 static unsigned long local_simpleCallbackLoop(unsigned long a,
                                               unsigned long b,
@@ -114,6 +137,16 @@ static unsigned long local_simpleCallbackLoop(unsigned long a,
   unsigned long ret = 0;
   for (unsigned long i = 0; i < iterations; i++) {
     ret += callback(a, b);
+  }
+  return ret;
+}
+
+static int local_simpleCallbackLoopGetTimeOfDay(unsigned long iterations, CallbackTypeTimeOfDay callback)
+{
+  int ret = 0;
+  struct timeval time;
+  for (unsigned long i = 0; i < iterations; i++) {
+    ret += callback(&time);
   }
   return ret;
 }
@@ -591,6 +624,40 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     }
 
     REQUIRE(result1 == result2);
+  }
+
+  SECTION("Syscall Callback invocation measurements") // NOLINT
+  {
+    auto cb_callback_param = sandbox.register_callback(exampleCallbackGetTimeOfDay);
+
+    // Baseline
+    uint64_t result1;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result1 = local_simpleCallbackLoopGetTimeOfDay(
+        test_iterations, local_exampleCallbackGetTimeOfDay);
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Unsandboxed syscall callback invocation time: "
+                << (ns / test_iterations) << "\n";
+    }
+
+    // Sandbox
+    uint64_t result2;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result2 =
+        sandbox
+          .invoke_sandbox_function(
+            simpleCallbackLoopGetTimeOfDay, test_iterations, cb_callback_param)
+          .unverified_safe_because("test");
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Sandboxed syscall callback invocation time: "
+                << (ns / test_iterations) << "\n";
+    }
+
+    REQUIRE(true);
   }
 
   SECTION("test grant deny access") // NOLINT

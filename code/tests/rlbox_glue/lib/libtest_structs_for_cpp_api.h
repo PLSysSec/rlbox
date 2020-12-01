@@ -33,10 +33,15 @@
   f(char * [4], pointerArray, FIELD_NORMAL, ##__VA_ARGS__) g()                 \
   f(char*, lastPointer, FIELD_NORMAL, ##__VA_ARGS__) g()
 
+#define sandbox_fields_reflection_libtest_class_timeval(f, g, ...)             \
+  f(time_t, tv_sec, FIELD_NORMAL, ##__VA_ARGS__) g()                           \
+  f(suseconds_t, tv_usec, FIELD_NORMAL, ##__VA_ARGS__) g()
+
 #define sandbox_fields_reflection_libtest_allClasses(f, ...)                   \
   f(testStruct, libtest, ##__VA_ARGS__)                                        \
   f(frozenStruct, libtest, ##__VA_ARGS__)                                      \
-  f(pointersStruct, libtest, ##__VA_ARGS__)
+  f(pointersStruct, libtest, ##__VA_ARGS__)                                    \
+  f(timeval, libtest, ##__VA_ARGS__)
 
 // clang-format on
 

@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <sys/time.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -15,6 +17,8 @@ extern "C"
                                unsigned long,
                                unsigned long);
   typedef unsigned long (*CallbackType3)(unsigned long, unsigned long);
+
+  typedef int (*CallbackTypeTimeOfDay)(struct timeval *);
 
   struct testStruct
   {
@@ -47,6 +51,7 @@ extern "C"
                                    unsigned long b,
                                    unsigned long iterations,
                                    CallbackType3 callback);
+  int simpleCallbackLoopGetTimeOfDay(unsigned long iterations, CallbackTypeTimeOfDay callback);
   double simpleDivideTest(double a, double b);
   int simpleAddTest(int a, int b);
   size_t simpleStrLenTest(const char* str);

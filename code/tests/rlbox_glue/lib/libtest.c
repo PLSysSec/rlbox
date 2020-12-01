@@ -21,6 +21,16 @@ unsigned long simpleCallbackLoop(unsigned long a,
   return ret;
 }
 
+int simpleCallbackLoopGetTimeOfDay(unsigned long iterations, CallbackTypeTimeOfDay callback)
+{
+  int ret = 0;
+  struct timeval time;
+  for (unsigned long i = 0; i < iterations; i++) {
+    ret += callback(&time);
+  }
+  return ret;
+}
+
 double simpleDivideTest(double a, double b)
 {
   return a / b;
