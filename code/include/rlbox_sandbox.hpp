@@ -48,11 +48,13 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
     T_Ret (*)(T_Args...));
 }
 
+#if defined(RLBOX_MEASURE_TRANSITION_TIMES) || defined(RLBOX_TRANSITION_ACTION_OUT) || defined(RLBOX_TRANSITION_ACTION_IN)
 enum class rlbox_transition
 {
   INVOKE,
   CALLBACK
 };
+#endif
 #ifdef RLBOX_MEASURE_TRANSITION_TIMES
 struct rlbox_transition_timing
 {
