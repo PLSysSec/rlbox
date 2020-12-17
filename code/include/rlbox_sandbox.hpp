@@ -48,7 +48,8 @@ namespace convert_fn_ptr_to_sandbox_equivalent_detail {
     T_Ret (*)(T_Args...));
 }
 
-#if defined(RLBOX_MEASURE_TRANSITION_TIMES) || defined(RLBOX_TRANSITION_ACTION_OUT) || defined(RLBOX_TRANSITION_ACTION_IN)
+#if defined(RLBOX_MEASURE_TRANSITION_TIMES) ||                                 \
+  defined(RLBOX_TRANSITION_ACTION_OUT) || defined(RLBOX_TRANSITION_ACTION_IN)
 enum class rlbox_transition
 {
   INVOKE,
@@ -131,9 +132,9 @@ private:
   void* transition_state = nullptr;
 
   template<typename T>
-  using convert_fn_ptr_to_sandbox_equivalent_t = decltype(
-    ::rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::helper<T_Sbx>(
-      std::declval<T>()));
+  using convert_fn_ptr_to_sandbox_equivalent_t =
+    decltype(::rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::helper<
+             T_Sbx>(std::declval<T>()));
 
   template<typename T>
   inline constexpr void check_invoke_param_type_is_ok()
@@ -247,12 +248,18 @@ private:
     });
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_OUT
-  RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, sandbox.transition_state);
+    RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::CALLBACK,
+                                nullptr /* func_name */,
+                                key /* func_ptr */,
+                                sandbox.transition_state);
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_IN
-  auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
-    RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK, nullptr /* func_name */, key /* func_ptr */, sandbox.transition_state);
-  });
+    auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
+      RLBOX_TRANSITION_ACTION_IN(rlbox_transition::CALLBACK,
+                                 nullptr /* func_name */,
+                                 key /* func_ptr */,
+                                 sandbox.transition_state);
+    });
 #endif
     if constexpr (std::is_void_v<T_Func_Ret>) {
       (*target_fn_ptr)(
@@ -606,13 +613,9 @@ public:
     return this->impl_get_memory_location();
   }
 
-  void* get_transition_state() {
-    return transition_state;
-  }
+  void* get_transition_state() { return transition_state; }
 
-  void set_transition_state(void* new_state) {
-    transition_state = new_state;
-  }
+  void set_transition_state(void* new_state) { transition_state = new_state; }
 
   /**
    * @brief For internal use only.
@@ -625,8 +628,8 @@ public:
    */
   template<typename T>
   inline tainted<T*, T_Sbx> INTERNAL_grant_access(T* src,
-                                                     size_t num,
-                                                     bool& success)
+                                                  size_t num,
+                                                  bool& success)
   {
     auto ret = this->impl_grant_access(src, num, success);
     return tainted<T*, T_Sbx>::internal_factory(ret);
@@ -643,10 +646,11 @@ public:
    */
   template<typename T>
   inline T* INTERNAL_deny_access(tainted<T*, T_Sbx> src,
-                                                     size_t num,
-                                                     bool& success)
+                                 size_t num,
+                                 bool& success)
   {
-    auto ret = this->impl_deny_access(src.INTERNAL_unverified_safe(), num, success);
+    auto ret =
+      this->impl_deny_access(src.INTERNAL_unverified_safe(), num, success);
     return ret;
   }
 
@@ -698,12 +702,14 @@ public:
     });
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_IN
-  RLBOX_TRANSITION_ACTION_IN(rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
+    RLBOX_TRANSITION_ACTION_IN(
+      rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
 #endif
 #ifdef RLBOX_TRANSITION_ACTION_OUT
-  auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
-    RLBOX_TRANSITION_ACTION_OUT(rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
-  });
+    auto on_exit_transition = rlbox::detail::make_scope_exit([&] {
+      RLBOX_TRANSITION_ACTION_OUT(
+        rlbox_transition::INVOKE, func_name, func_ptr, transition_state);
+    });
 #endif
     (check_invoke_param_type_is_ok<T_Args>(), ...);
 
@@ -925,9 +931,7 @@ public:
     }
     return ret;
   }
-  inline void clear_transition_times() {
-    transition_times.clear();
-  }
+  inline void clear_transition_times() { transition_times.clear(); }
 #endif
 };
 

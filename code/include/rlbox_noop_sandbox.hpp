@@ -126,10 +126,7 @@ protected:
     return p;
   }
 
-  inline void impl_free_in_sandbox(T_PointerType p)
-  {
-    free(p);
-  }
+  inline void impl_free_in_sandbox(T_PointerType p) { free(p); }
 
   static inline bool impl_is_in_same_sandbox(const void*, const void*)
   {

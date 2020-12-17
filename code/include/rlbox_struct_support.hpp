@@ -93,8 +93,8 @@ using convert_to_sandbox_equivalent_t =
       return *reinterpret_cast<MaybeConst Sbx_##libId##_##T<T_Sbx>*>(this);    \
     }                                                                          \
                                                                                \
-    inline const Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref() const       \
-      noexcept                                                                 \
+    inline const Sbx_##libId##_##T<T_Sbx>& get_sandbox_value_ref()             \
+      const noexcept                                                           \
     {                                                                          \
       return *reinterpret_cast<const Sbx_##libId##_##T<T_Sbx>*>(this);         \
     }                                                                          \

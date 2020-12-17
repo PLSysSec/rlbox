@@ -234,12 +234,13 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
   }
 
   using T_nocv = std::remove_cv_t<T>;
-  tainted<T_nocv*, T_Sbx> copy = sandbox.template malloc_in_sandbox<T_nocv>(num);
+  tainted<T_nocv*, T_Sbx> copy =
+    sandbox.template malloc_in_sandbox<T_nocv>(num);
   rlbox::memcpy(sandbox, copy, src, num);
   if (free_source_on_copy) {
     free(const_cast<void*>(reinterpret_cast<const void*>(src)));
   }
-  
+
   copied = true;
   return sandbox_const_cast<T*>(copy);
 }
@@ -258,17 +259,21 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
  * This calls delete[] if num > 1.
  * @param copied out parameter indicating if the source was copied or transfered
  */
-template<typename T_Sbx, typename T, template<typename, typename> typename T_Wrap>
+template<typename T_Sbx,
+         typename T,
+         template<typename, typename>
+         typename T_Wrap>
 T* copy_memory_or_deny_access(rlbox_sandbox<T_Sbx>& sandbox,
-                                               T_Wrap<T*, T_Sbx> src,
-                                               size_t num,
-                                               bool free_source_on_copy,
-                                               bool& copied)
+                              T_Wrap<T*, T_Sbx> src,
+                              size_t num,
+                              bool free_source_on_copy,
+                              bool& copied)
 {
   // sandbox can grant access if it includes the following line
   // using can_grant_deny_access = void;
   if constexpr (detail::has_member_using_can_grant_deny_access_v<T_Sbx>) {
-    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src.INTERNAL_unverified_safe(), num);
+    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(
+      src.INTERNAL_unverified_safe(), num);
 
     bool success;
     auto ret = sandbox.INTERNAL_deny_access(src, num, success);
@@ -282,9 +287,7 @@ T* copy_memory_or_deny_access(rlbox_sandbox<T_Sbx>& sandbox,
 
   tainted<T*, T_Sbx> src_tainted = src;
   char* src_raw = src_tainted.copy_and_verify_buffer_address(
-    [](uintptr_t val) { return reinterpret_cast<char*>(val); },
-    num
-  );
+    [](uintptr_t val) { return reinterpret_cast<char*>(val); }, num);
   std::memcpy(copy, src_raw, num);
   if (free_source_on_copy) {
     sandbox.free_in_sandbox(src);

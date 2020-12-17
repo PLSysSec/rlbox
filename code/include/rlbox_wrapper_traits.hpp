@@ -148,7 +148,7 @@ namespace detail_has_member_using_can_grant_deny_access {
 
 template<class T>
 constexpr bool has_member_using_can_grant_deny_access_v =
-  detail_has_member_using_can_grant_deny_access::has_member_using_can_grant_deny_access<
-    T>::value;
+  detail_has_member_using_can_grant_deny_access::
+    has_member_using_can_grant_deny_access<T>::value;
 
 }
