@@ -224,8 +224,7 @@ target_include_directories(rlbox_glue_lib_shared
 
 add_executable(test_rlbox_glue
                code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue_embedder_vars.cpp)
+               code/tests/rlbox_glue/test_noop_sandbox_glue.cpp)
 target_include_directories(test_rlbox_glue PUBLIC code/tests/rlbox_glue)
 
 target_link_libraries(test_rlbox_glue
@@ -235,6 +234,18 @@ target_link_libraries(test_rlbox_glue
 
 catch_discover_tests(test_rlbox_glue)
 
+add_executable(test_rlbox_glue_embedder_vars
+               code/tests/test_main.cpp
+               code/tests/rlbox_glue/test_noop_sandbox_glue_embedder_vars.cpp)
+target_include_directories(test_rlbox_glue_embedder_vars PUBLIC code/tests/rlbox_glue)
+
+target_link_libraries(test_rlbox_glue_embedder_vars
+                      Catch2::Catch2
+                      rlbox-cpp17-lib
+                      rlbox_glue_lib_static)
+
+catch_discover_tests(test_rlbox_glue_embedder_vars)
+
 # Shortcuts ###################
 
 add_custom_target(
@@ -243,4 +254,4 @@ add_custom_target(
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
     UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)
-add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue test_rlbox_transition_customization)
+add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue test_rlbox_glue_embedder_vars test_rlbox_transition_customization)
