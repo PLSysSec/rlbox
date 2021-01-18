@@ -24,7 +24,7 @@ struct rlbox_dylib_sandbox_thread_data
 #ifdef RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
 
 rlbox_dylib_sandbox_thread_data* get_rlbox_dylib_sandbox_thread_data();
-#  define RLBOX_dylib_SANDBOX_STATIC_VARIABLES()                                \
+#  define RLBOX_DYLIB_SANDBOX_STATIC_VARIABLES()                                \
     thread_local rlbox::rlbox_dylib_sandbox_thread_data                         \
       rlbox_dylib_sandbox_thread_info{ 0, 0 };                                  \
     namespace rlbox {                                                          \
