@@ -235,6 +235,21 @@ target_link_libraries(test_rlbox_glue
 
 catch_discover_tests(test_rlbox_glue)
 
+add_executable(test_rlbox_glue_indirect
+               code/tests/test_main.cpp
+               code/tests/rlbox_glue/test_noopindirect_sandbox_glue.cpp)
+target_include_directories(test_rlbox_glue_indirect PUBLIC code/tests/rlbox_glue)
+
+target_link_libraries(test_rlbox_glue_indirect
+                      Catch2::Catch2
+                      rlbox-cpp17-lib
+                      -Wl,--whole-archive
+                      rlbox_glue_lib_static
+                      -Wl,--no-whole-archive
+                      ${CMAKE_DL_LIBS})
+target_link_options(test_rlbox_glue_indirect PRIVATE "-rdynamic")
+catch_discover_tests(test_rlbox_glue_indirect)
+
 # Shortcuts ###################
 
 add_custom_target(
@@ -243,4 +258,4 @@ add_custom_target(
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
     UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)
-add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue test_rlbox_transition_customization)
+add_dependencies(check test_rlbox test_rlbox_transition_timers test_rlbox_glue test_rlbox_glue_indirect test_rlbox_transition_customization)
