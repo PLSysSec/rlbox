@@ -99,4 +99,6 @@ template<typename T, typename T_Sbx>
 class sandbox_callback;
 
 class rlbox_noop_sandbox;
+
+class rlbox_noopindirect_sandbox;
 }
