@@ -38,6 +38,10 @@ void on_transition_in(rlbox::rlbox_transition transition,
                       const void* func_ptr,
                       void* saved_state)
 {
+  UNUSED(transition);
+  UNUSED(func_name);
+  UNUSED(func_ptr);
+  UNUSED(saved_state);
   transition_in_count++;
 }
 
@@ -46,6 +50,10 @@ void on_transition_out(rlbox::rlbox_transition transition,
                        const void* func_ptr,
                        void* saved_state)
 {
+  UNUSED(transition);
+  UNUSED(func_name);
+  UNUSED(func_ptr);
+  UNUSED(saved_state);
   transition_out_count++;
 }
 
