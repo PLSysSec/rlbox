@@ -166,9 +166,17 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned long val9 = 44;
 
     auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
-      val1, val2, val3, val4, val5, val6, val7, val8, val9
-    );
-    REQUIRE(ret2.UNSAFE_unverified() == (val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8 + val9));
+                                                val1,
+                                                val2,
+                                                val3,
+                                                val4,
+                                                val5,
+                                                val6,
+                                                val7,
+                                                val8,
+                                                val9);
+    REQUIRE(ret2.UNSAFE_unverified() ==
+            (val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8 + val9));
   }
 
   SECTION("test verification function") // NOLINT
@@ -375,24 +383,25 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   SECTION("test structures") // NOLINT
   {
     auto resultT = sandbox.invoke_sandbox_function(simpleTestStructVal);
-    auto result = resultT.copy_and_verify([](
-                                            tainted<testStruct, TestType> val) -> testStruct {
-      testStruct ret{};
-      ret.fieldLong = val.fieldLong.UNSAFE_unverified();
+    auto result = resultT.copy_and_verify(
+      [](tainted<testStruct, TestType> val) -> testStruct {
+        testStruct ret{};
+        ret.fieldLong = val.fieldLong.UNSAFE_unverified();
 
-      ret.fieldString = val.fieldString.copy_and_verify_string(
-        [](std::unique_ptr<const char[]> s_val) { // NOLINT
-          return std::strlen(s_val.get()) < upper_bound ? s_val.release()
-                                                        : nullptr;
-        });
+        ret.fieldString = val.fieldString.copy_and_verify_string(
+          [](std::unique_ptr<const char[]> s_val) { // NOLINT
+            return std::strlen(s_val.get()) < upper_bound ? s_val.release()
+                                                          : nullptr;
+          });
 
-      ret.fieldBool = val.fieldBool.UNSAFE_unverified();
+        ret.fieldBool = val.fieldBool.UNSAFE_unverified();
 
-      auto fieldFixedArr = val.fieldFixedArr.UNSAFE_unverified();
-      std::memcpy(&ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
+        auto fieldFixedArr = val.fieldFixedArr.UNSAFE_unverified();
+        std::memcpy(
+          &ret.fieldFixedArr[0], &fieldFixedArr, sizeof(fieldFixedArr));
 
-      return ret;
-    });
+        return ret;
+      });
     REQUIRE(result.fieldLong == 7);
     REQUIRE(std::strcmp(result.fieldString, "Hello") == 0);
     REQUIRE(result.fieldBool == 1);
@@ -451,8 +460,8 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     auto initVal = sandbox.template malloc_in_sandbox<char>();
     auto resultT =
       sandbox.invoke_sandbox_function(initializePointerStruct, initVal);
-    auto result =
-      resultT.copy_and_verify([](tainted<pointersStruct, TestType> val) -> pointersStruct {
+    auto result = resultT.copy_and_verify(
+      [](tainted<pointersStruct, TestType> val) -> pointersStruct {
         pointersStruct ret{};
         ret.firstPointer = val.firstPointer.UNSAFE_unverified();
         ret.pointerArray[0] = val.pointerArray[0].UNSAFE_unverified();
@@ -595,7 +604,8 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
   SECTION("test grant deny access") // NOLINT
   {
-    unsigned int* src = static_cast<unsigned int*>(malloc(sizeof(unsigned int))); // NOLINT
+    unsigned int* src =
+      static_cast<unsigned int*>(malloc(sizeof(unsigned int))); // NOLINT
     *src = 42;
 
     bool used_copy;
@@ -604,7 +614,8 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
       sandbox, src, sizeof(unsigned int), true, used_copy);
     REQUIRE((*transfered == 42).unverified_safe_because("test"));
 
-    auto transfered2 = rlbox::copy_memory_or_deny_access(sandbox, transfered, sizeof(unsigned int), true, used_copy);
+    auto transfered2 = rlbox::copy_memory_or_deny_access(
+      sandbox, transfered, sizeof(unsigned int), true, used_copy);
     REQUIRE(*transfered2 == 42);
   }
 

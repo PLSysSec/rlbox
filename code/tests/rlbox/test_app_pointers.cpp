@@ -1,7 +1,7 @@
 #include "test_include.hpp"
 
-using rlbox::tainted;
 using rlbox::app_pointer;
+using rlbox::tainted;
 
 using RL = rlbox::rlbox_sandbox<TestSandbox>;
 
@@ -13,8 +13,9 @@ TEST_CASE("Test app pointers", "[app pointer]")
 
   auto sandbox_mem_loc = sandbox.malloc_in_sandbox<unsigned int*>();
 
-  unsigned int* ptr = (unsigned int*) malloc(sizeof(unsigned int));
-  app_pointer<unsigned int*, TestSandbox> app_ptr = sandbox.get_app_pointer(ptr);
+  unsigned int* ptr = (unsigned int*)malloc(sizeof(unsigned int));
+  app_pointer<unsigned int*, TestSandbox> app_ptr =
+    sandbox.get_app_pointer(ptr);
   tainted<unsigned int*, TestSandbox> app_ptr_tainted = app_ptr.to_tainted();
 
   // Force the conversion to volatile and back

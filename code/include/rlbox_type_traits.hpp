@@ -479,39 +479,33 @@ namespace unsigned_int_of_size_t_detail {
   struct unsigned_int_of_size_t_helper;
 
   template<typename T>
-  struct unsigned_int_of_size_t_helper<
-    T,
-    std::enable_if_t<sizeof(T) == 1>>
+  struct unsigned_int_of_size_t_helper<T, std::enable_if_t<sizeof(T) == 1>>
   {
     using type = uint8_t;
   };
 
   template<typename T>
-  struct unsigned_int_of_size_t_helper<
-    T,
-    std::enable_if_t<sizeof(T) == 2>>
+  struct unsigned_int_of_size_t_helper<T, std::enable_if_t<sizeof(T) == 2>>
   {
     using type = uint16_t;
   };
 
   template<typename T>
-  struct unsigned_int_of_size_t_helper<
-    T,
-    std::enable_if_t<sizeof(T) == 4>>
+  struct unsigned_int_of_size_t_helper<T, std::enable_if_t<sizeof(T) == 4>>
   {
     using type = uint32_t;
   };
 
   template<typename T>
-  struct unsigned_int_of_size_t_helper<
-    T,
-    std::enable_if_t<sizeof(T) == 8>>
+  struct unsigned_int_of_size_t_helper<T, std::enable_if_t<sizeof(T) == 8>>
   {
     using type = uint64_t;
   };
 }
 
 template<typename T>
-using unsigned_int_of_size_t = typename unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper<T>::type;
+using unsigned_int_of_size_t =
+  typename unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper<
+    T>::type;
 
 }

@@ -197,7 +197,10 @@ private:
     other.idx_unsandboxed = nullptr;
   }
 
-  inline T get_raw_value() const noexcept { return to_tainted().get_raw_value(); }
+  inline T get_raw_value() const noexcept
+  {
+    return to_tainted().get_raw_value();
+  }
   inline typename T_Sbx::T_PointerType get_raw_sandbox_value() const noexcept
   {
     return idx;
@@ -209,13 +212,18 @@ private:
   }
 
 public:
-  app_pointer(app_pointer_map<typename T_Sbx::T_PointerType>* a_map, typename T_Sbx::T_PointerType a_idx, T a_idx_unsandboxed) : map(a_map), idx(a_idx), idx_unsandboxed(a_idx_unsandboxed) { }
+  app_pointer(app_pointer_map<typename T_Sbx::T_PointerType>* a_map,
+              typename T_Sbx::T_PointerType a_idx,
+              T a_idx_unsandboxed)
+    : map(a_map)
+    , idx(a_idx)
+    , idx_unsandboxed(a_idx_unsandboxed)
+  {}
 
-  ~app_pointer() {
-    unregister();
-  }
+  ~app_pointer() { unregister(); }
 
-  void unregister() {
+  void unregister()
+  {
     if (idx != 0) {
       map->remove_app_ptr(idx);
       map = nullptr;
@@ -224,8 +232,10 @@ public:
     }
   }
 
-  tainted<T, T_Sbx> to_tainted() {
-    return tainted<T, T_Sbx>::internal_factory(reinterpret_cast<T>(idx_unsandboxed));
+  tainted<T, T_Sbx> to_tainted()
+  {
+    return tainted<T, T_Sbx>::internal_factory(
+      reinterpret_cast<T>(idx_unsandboxed));
   }
 
   /**
