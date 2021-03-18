@@ -189,8 +189,8 @@ want to pass to ``echo`` into this region::
 Note that ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
 lives in the sandbox memory and could be written to by the (compromised)
 library code concurrently. As such, it's unsafe for us to use this pointer
-without verification. Above, we use the :ref:`unverified_safe_pointer_because
-<unverified_safe_pointer_because>` verifier which basically removes the taint without
+without verification. Above, we use the "unverified_safe_pointer_because"
+verifier which basically removes the taint without
 any verification. This is safe because we copy the ``helloStr`` to sandbox
 memory: at worst, the sandboxed library can overwrite the memory region pointed
 to by ``taintedStr`` and crash when it tries to print it.
@@ -317,7 +317,6 @@ Application code can expose :ref:`callback functions <callback>` to sandbox via
 by the sandboxed code until they are :ref:`unregistered <unregister_callback>`.
 
 .. _register_callback:
-.. doxygenfunction:: register_callback(T_Ret (*)T_RL, T_Args...)
 
 The type signatures of :ref:`register_callback() <register_callback>`
 function is a bit daunting. In short, the function takes a :ref:`callback
@@ -475,7 +474,6 @@ sandbox (e.g., by passing the pointer as an argument to a function).
 .. doxygenfunction:: malloc_in_sandbox(uint32_t)
 
 .. _free_in_sandbox:
-.. doxygenfunction:: free_in_sandbox
 
 To distinguish between different pointer types, RLBox also provides some helper functions:
 

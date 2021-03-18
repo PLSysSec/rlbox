@@ -1,9 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="namespacerlbox_1_1convert__fn__ptr__to__sandbox__equivalent__detail" kind="namespace" language="C++">
     <compoundname>rlbox::convert_fn_ptr_to_sandbox_equivalent_detail</compoundname>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="rlbox__sandbox_8hpp_1a31ec87c075b2419aa9e3a2c5df5c4855" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename T_Sbx</type>
+          </param>
+        </templateparamlist>
         <type>::rlbox::detail::convert_to_sandbox_equivalent_t&lt; T, T_Sbx &gt;</type>
         <definition>using rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::conv = typedef ::rlbox::detail::convert_to_sandbox_equivalent_t&lt;T, T_Sbx&gt;</definition>
         <argsstring></argsstring>
@@ -14,9 +22,19 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="39" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="39" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="41" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__sandbox_8hpp_1a9d5efbe238bbf333f954cf544c50b9a7" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>typename T_Ret</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>T_Args</declname>
+            <defname>T_Args</defname>
+          </param>
+        </templateparamlist>
         <type>T_Ret(*)(T_Args...)</type>
         <definition>using rlbox::convert_fn_ptr_to_sandbox_equivalent_detail::T_Func = typedef T_Ret (*)(T_Args...)</definition>
         <argsstring></argsstring>
@@ -27,7 +45,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="42" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="42" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="44" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -58,13 +76,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="45" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="47" column="10" declfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" declline="47" declcolumn="10"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="37" column="1"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp" line="39" column="53"/>
   </compounddef>
 </doxygen>

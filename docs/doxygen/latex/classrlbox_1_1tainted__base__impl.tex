@@ -1,6 +1,6 @@
-\hypertarget{classrlbox_1_1tainted__base__impl}{}\section{rlbox\+:\+:tainted\+\_\+base\+\_\+impl$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$ Class Template Reference}
-\label{classrlbox_1_1tainted__base__impl}\index{rlbox\+::tainted\+\_\+base\+\_\+impl$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$@{rlbox\+::tainted\+\_\+base\+\_\+impl$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$}}
-\subsection*{Public Member Functions}
+\hypertarget{classrlbox_1_1tainted__base__impl}{}\doxysection{rlbox\+::tainted\+\_\+base\+\_\+impl$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$ Class Template Reference}
+\label{classrlbox_1_1tainted__base__impl}\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a7c1c8a81e0c89fc20607c3021bf711dd}\label{classrlbox_1_1tainted__base__impl_a7c1c8a81e0c89fc20607c3021bf711dd}} 
@@ -10,20 +10,20 @@ auto \& {\bfseries impl} ()
 auto \& {\bfseries impl} () const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}\label{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}} 
-auto \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified} ()
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}} ()
 \begin{DoxyCompactList}\small\item\em Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a41f8eed43072bf173cce34cd3351191e}\label{classrlbox_1_1tainted__base__impl_a41f8eed43072bf173cce34cd3351191e}} 
 auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+unverified} () const
 \item 
-auto \hyperlink{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}{U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox)
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}{U\+N\+S\+A\+F\+E\+\_\+sandboxed}} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox)
 \begin{DoxyCompactList}\small\item\em Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}\label{classrlbox_1_1tainted__base__impl_a2fb81eab8dc3839f351d6d89410c2350}} 
-auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const
+auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const
 \item 
-\hyperlink{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+because(const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();\})
+\mbox{\hyperlink{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const}} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+because(const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}}();\})
 \begin{DoxyCompactList}\small\item\em Unwrap a tainted value without verification. This function should be used when unwrapping is safe. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_af9767a70f0e97d74c5d70a6511cff5d1}\label{classrlbox_1_1tainted__base__impl_af9767a70f0e97d74c5d70a6511cff5d1}} 
-{\bfseries rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+pointer\+\_\+because(size\+\_\+t count, const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}Expected pointer type\char`\"{});using T\+\_\+\+Pointed=std\+::remove\+\_\+pointer\+\_\+t$<$ T $>$;if\+\_\+constexpr\+\_\+named(cond1, std\+::is\+\_\+pointer\+\_\+v$<$ T\+\_\+\+Pointed $>$) \{ rlbox\+\_\+detail\+\_\+static\+\_\+fail\+\_\+because(cond1, \char`\"{}There is no way to use unverified\+\_\+safe\+\_\+pointer\+\_\+because for \char`\"{} \char`\"{}\textquotesingle{}pointers to pointers\textquotesingle{} safely. Use \hyperlink{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}{copy\+\_\+and\+\_\+verify} instead.\char`\"{});return nullptr;\} auto ret=\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();if(ret !=nullptr) \{ size\+\_\+t bytes=sizeof(T) $\ast$count;detail\+::check\+\_\+range\+\_\+doesnt\+\_\+cross\+\_\+app\+\_\+sbx\+\_\+boundary$<$ T\+\_\+\+Sbx $>$(ret, bytes);\} return ret;\})
+{\bfseries rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const} (template$<$ size\+\_\+t N $>$ inline auto unverified\+\_\+safe\+\_\+pointer\+\_\+because(size\+\_\+t count, const char(\&reason)\mbox{[}N\mbox{]}), \{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}Expected pointer type\char`\"{});using T\+\_\+\+Pointed=std\+::remove\+\_\+pointer\+\_\+t$<$ T $>$;if\+\_\+constexpr\+\_\+named(cond1, std\+::is\+\_\+pointer\+\_\+v$<$ T\+\_\+\+Pointed $>$) \{ rlbox\+\_\+detail\+\_\+static\+\_\+fail\+\_\+because(cond1, \char`\"{}There is no way to use unverified\+\_\+safe\+\_\+pointer\+\_\+because for \char`\"{} \char`\"{}\textquotesingle{}pointers to pointers\textquotesingle{} safely. Use \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}{copy\+\_\+and\+\_\+verify}} instead.\char`\"{});return nullptr;\} auto ret=\mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}}();if(ret !=nullptr) \{ size\+\_\+t bytes=sizeof(T) $\ast$count;detail\+::check\+\_\+range\+\_\+doesnt\+\_\+cross\+\_\+app\+\_\+sbx\+\_\+boundary$<$ T\+\_\+\+Sbx $>$(ret, bytes);\} return ret;\})
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_afd3ea6da54b1556e0bdfd222df1ed2e9}\label{classrlbox_1_1tainted__base__impl_afd3ea6da54b1556e0bdfd222df1ed2e9}} 
 auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+unverified\+\_\+safe} ()
@@ -110,10 +110,10 @@ Boolean\+Binary\+Op \&\& {\bfseries Boolean\+Binary\+Op} ($\vert$$\vert$);\#defi
 {\footnotesize template$<$typename T\+\_\+\+Rhs $>$ }\\T\+\_\+\+Op\+Subscript\+Arr\+Ret \& {\bfseries operator\mbox{[}$\,$\mbox{]}} (T\+\_\+\+Rhs \&\&rhs)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ae308e3faece4fe51254f38814220bcef}\label{classrlbox_1_1tainted__base__impl_ae308e3faece4fe51254f38814220bcef}} 
-\hyperlink{classrlbox_1_1tainted__volatile}{T\+\_\+\+Op\+Deref\+Ret} \& {\bfseries operator$\ast$} () const
+\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{T\+\_\+\+Op\+Deref\+Ret}} \& {\bfseries operator$\ast$} () const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a8fd7566680b44852f260d8431ee4d196}\label{classrlbox_1_1tainted__base__impl_a8fd7566680b44852f260d8431ee4d196}} 
-\hyperlink{classrlbox_1_1tainted__volatile}{T\+\_\+\+Op\+Deref\+Ret} \& {\bfseries operator$\ast$} ()
+\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{T\+\_\+\+Op\+Deref\+Ret}} \& {\bfseries operator$\ast$} ()
 \item 
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a3e8fdb261d771cb7b5c9af33fe52ff35}\label{classrlbox_1_1tainted__base__impl_a3e8fdb261d771cb7b5c9af33fe52ff35}} 
 auto {\bfseries operator-\/$>$} () const
@@ -124,26 +124,26 @@ auto {\bfseries operator-\/$>$} ()
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a05eaec33cccaad9bc15e014d6c25d695}\label{classrlbox_1_1tainted__base__impl_a05eaec33cccaad9bc15e014d6c25d695}} 
 auto {\bfseries operator!} ()
 \item 
-{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}{copy\+\_\+and\+\_\+verify} (T\+\_\+\+Func verifier) const
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}{copy\+\_\+and\+\_\+verify}} (T\+\_\+\+Func verifier) const
 \begin{DoxyCompactList}\small\item\em Copy tainted value from sandbox and verify it. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a76e49089d448ba0cfa7ef6d7c1e2d288}{copy\+\_\+and\+\_\+verify\+\_\+range} (T\+\_\+\+Func verifier, std\+::size\+\_\+t count) const
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a76e49089d448ba0cfa7ef6d7c1e2d288}{copy\+\_\+and\+\_\+verify\+\_\+range}} (T\+\_\+\+Func verifier, std\+::size\+\_\+t count) const
 \begin{DoxyCompactList}\small\item\em Copy a range of tainted values from sandbox and verify them. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}{copy\+\_\+and\+\_\+verify\+\_\+string} (T\+\_\+\+Func verifier) const
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}{copy\+\_\+and\+\_\+verify\+\_\+string}} (T\+\_\+\+Func verifier) const
 \begin{DoxyCompactList}\small\item\em Copy a tainted string from sandbox and verify it. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}{copy\+\_\+and\+\_\+verify\+\_\+address} (T\+\_\+\+Func verifier)
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}{copy\+\_\+and\+\_\+verify\+\_\+address}} (T\+\_\+\+Func verifier)
 \begin{DoxyCompactList}\small\item\em Copy a tainted pointer from sandbox and verify the address. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \hyperlink{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address} (T\+\_\+\+Func verifier, std\+::size\+\_\+t size)
+{\footnotesize template$<$typename T\+\_\+\+Func $>$ }\\auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address}} (T\+\_\+\+Func verifier, std\+::size\+\_\+t size)
 \begin{DoxyCompactList}\small\item\em Copy a tainted pointer to a buffer from sandbox and verify the address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Member Function Documentation}
+\doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}\label{classrlbox_1_1tainted__base__impl_a701759aedd637f48cc97a0e6ada1c8a6}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify@{copy\+\_\+and\+\_\+verify}}
-\index{copy\+\_\+and\+\_\+verify@{copy\+\_\+and\+\_\+verify}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify()}{copy\_and\_verify()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!copy\_and\_verify@{copy\_and\_verify}}
+\index{copy\_and\_verify@{copy\_and\_verify}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_and\_verify()}{copy\_and\_verify()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T\+\_\+\+Func $>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -163,12 +163,12 @@ Copy tainted value from sandbox and verify it.
 Whatever the verifier function returns. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}\label{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+address}}
-\index{copy\+\_\+and\+\_\+verify\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+address}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify\+\_\+address()}{copy\_and\_verify\_address()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!copy\_and\_verify\_address@{copy\_and\_verify\_address}}
+\index{copy\_and\_verify\_address@{copy\_and\_verify\_address}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_and\_verify\_address()}{copy\_and\_verify\_address()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T\+\_\+\+Func $>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+address (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+address (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -190,12 +190,12 @@ This function is useful if you need to verify physical bits representing the add
 Whatever the verifier function returns. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}\label{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address}}
-\index{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address@{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address()}{copy\_and\_verify\_buffer\_address()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!copy\_and\_verify\_buffer\_address@{copy\_and\_verify\_buffer\_address}}
+\index{copy\_and\_verify\_buffer\_address@{copy\_and\_verify\_buffer\_address}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_and\_verify\_buffer\_address()}{copy\_and\_verify\_buffer\_address()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T\+\_\+\+Func $>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier,  }\item[{std\+::size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+buffer\+\_\+address (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier,  }\item[{std\+::size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -219,12 +219,12 @@ This function is useful if you need to verify physical bits representing the add
 Whatever the verifier function returns. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_a76e49089d448ba0cfa7ef6d7c1e2d288}\label{classrlbox_1_1tainted__base__impl_a76e49089d448ba0cfa7ef6d7c1e2d288}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify\+\_\+range@{copy\+\_\+and\+\_\+verify\+\_\+range}}
-\index{copy\+\_\+and\+\_\+verify\+\_\+range@{copy\+\_\+and\+\_\+verify\+\_\+range}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify\+\_\+range()}{copy\_and\_verify\_range()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!copy\_and\_verify\_range@{copy\_and\_verify\_range}}
+\index{copy\_and\_verify\_range@{copy\_and\_verify\_range}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_and\_verify\_range()}{copy\_and\_verify\_range()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T\+\_\+\+Func $>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+range (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier,  }\item[{std\+::size\+\_\+t}]{count }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+range (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier,  }\item[{std\+::size\+\_\+t}]{count }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -246,12 +246,12 @@ Copy a range of tainted values from sandbox and verify them.
 Whatever the verifier function returns. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}\label{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!copy\+\_\+and\+\_\+verify\+\_\+string@{copy\+\_\+and\+\_\+verify\+\_\+string}}
-\index{copy\+\_\+and\+\_\+verify\+\_\+string@{copy\+\_\+and\+\_\+verify\+\_\+string}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{copy\+\_\+and\+\_\+verify\+\_\+string()}{copy\_and\_verify\_string()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!copy\_and\_verify\_string@{copy\_and\_verify\_string}}
+\index{copy\_and\_verify\_string@{copy\_and\_verify\_string}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_and\_verify\_string()}{copy\_and\_verify\_string()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T\+\_\+\+Func $>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+string (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::copy\+\_\+and\+\_\+verify\+\_\+string (\begin{DoxyParamCaption}\item[{T\+\_\+\+Func}]{verifier }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -271,11 +271,11 @@ Copy a tainted string from sandbox and verify it.
 Whatever the verifier function returns. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}\label{classrlbox_1_1tainted__base__impl_ac7d2f71a8fc72b922bfa1260d4a7ac94}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const@{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const}}
-\index{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const@{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const()}{rlbox\_detail\_member\_and\_const()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
-\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const (\begin{DoxyParamCaption}\item[{template$<$ size\+\_\+t N $>$ inline auto }]{unverified\+\_\+safe\+\_\+becauseconst char(\&reason)\mbox{[}\+N\mbox{]},  }\item[{\{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}();\}}]{ }\end{DoxyParamCaption})}
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!rlbox\_detail\_member\_and\_const@{rlbox\_detail\_member\_and\_const}}
+\index{rlbox\_detail\_member\_and\_const@{rlbox\_detail\_member\_and\_const}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{rlbox\_detail\_member\_and\_const()}{rlbox\_detail\_member\_and\_const()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
+\mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::rlbox\+\_\+detail\+\_\+member\+\_\+and\+\_\+const (\begin{DoxyParamCaption}\item[{template$<$ size\+\_\+t N $>$ inline auto }]{unverified\+\_\+safe\+\_\+becauseconst char(\&reason)\mbox{[}\+N\mbox{]},  }\item[{\{ R\+L\+B\+O\+X\+\_\+\+U\+N\+U\+S\+ED(reason);static\+\_\+assert(!std\+::is\+\_\+pointer\+\_\+v$<$ T $>$, \char`\"{}unverified\+\_\+safe\+\_\+because does not support pointers. Use \char`\"{} \char`\"{}unverified\+\_\+safe\+\_\+pointer\+\_\+because.\char`\"{});return \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a01acab6b4bd8137afa03cf4b2678844f}{U\+N\+S\+A\+F\+E\+\_\+unverified}}();\}}]{ }\end{DoxyParamCaption})}
 
 
 
@@ -287,11 +287,11 @@ Unwrap a tainted value without verification. This function should be used when u
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}\label{classrlbox_1_1tainted__base__impl_ae2c69129cbb9344e7d2623129f031214}} 
-\index{rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}!U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}}
-\index{U\+N\+S\+A\+F\+E\+\_\+sandboxed@{U\+N\+S\+A\+F\+E\+\_\+sandboxed}!rlbox\+::tainted\+\_\+base\+\_\+impl@{rlbox\+::tainted\+\_\+base\+\_\+impl}}
-\subsubsection{\texorpdfstring{U\+N\+S\+A\+F\+E\+\_\+sandboxed()}{UNSAFE\_sandboxed()}}
-{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T, typename T\+\_\+\+Sbx$>$ \\
-auto \hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\index{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}!UNSAFE\_sandboxed@{UNSAFE\_sandboxed}}
+\index{UNSAFE\_sandboxed@{UNSAFE\_sandboxed}!rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$@{rlbox::tainted\_base\_impl$<$ T\_Wrap, T, T\_Sbx $>$}}
+\doxysubsubsection{\texorpdfstring{UNSAFE\_sandboxed()}{UNSAFE\_sandboxed()}}
+{\footnotesize\ttfamily template$<$template$<$ typename, typename $>$ typename T\+\_\+\+Wrap, typename T , typename T\+\_\+\+Sbx $>$ \\
+auto \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{rlbox\+::tainted\+\_\+base\+\_\+impl}}$<$ T\+\_\+\+Wrap, T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 

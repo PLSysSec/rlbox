@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="structrlbox_1_1detail_1_1polyfill_1_1is__invocable" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::polyfill::is_invocable</compoundname>
     <basecompoundref prot="public" virt="non-virtual">std::integral_constant&lt; bool, __invokable&lt; _Fn, _Args... &gt;::value &gt;</basecompoundref>
@@ -18,24 +18,24 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="83">
+      <node id="2">
         <label>std::integral_constant&lt; bool, __invokable&lt; _Fn, _Args... &gt;::value &gt;</label>
       </node>
-      <node id="82">
+      <node id="1">
         <label>rlbox::detail::polyfill::is_invocable&lt; _Fn, _Args &gt;</label>
         <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable"/>
-        <childnode refid="83" relation="public-inheritance">
+        <childnode refid="2" relation="public-inheritance">
         </childnode>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="85">
+      <node id="2">
         <label>std::integral_constant&lt; bool, __invokable&lt; _Fn, _Args... &gt;::value &gt;</label>
       </node>
-      <node id="84">
+      <node id="1">
         <label>rlbox::detail::polyfill::is_invocable&lt; _Fn, _Args &gt;</label>
         <link refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable"/>
-        <childnode refid="85" relation="public-inheritance">
+        <childnode refid="2" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>

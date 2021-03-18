@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="namespacerlbox_1_1detail_1_1polyfill" kind="namespace" language="C++">
     <compoundname>rlbox::detail::polyfill</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" prot="public">rlbox::detail::polyfill::__nat</innerclass>
@@ -14,6 +14,13 @@
     <innerclass refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r" prot="public">rlbox::detail::polyfill::is_nothrow_invocable_r</innerclass>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1a7b59a943b2c1f511d46d86e10716749e" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>bool</type>
+            <declname>_Val</declname>
+            <defname>_Val</defname>
+          </param>
+        </templateparamlist>
         <type>std::integral_constant&lt; bool, _Val &gt;</type>
         <definition>using rlbox::detail::polyfill::_BoolConstant = typedef std::integral_constant&lt;bool, _Val&gt;</definition>
         <argsstring></argsstring>
@@ -27,6 +34,14 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="31" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="31" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1aa2fb4bcc83d123819d1d4c80e707a1ae" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class _Tp</type>
+          </param>
+          <param>
+            <type>class _Up</type>
+          </param>
+        </templateparamlist>
         <type>_BoolConstant&lt;!std::is_same&lt; _Tp, _Up &gt;::value &gt;</type>
         <definition>using rlbox::detail::polyfill::_IsNotSame = typedef _BoolConstant&lt;!std::is_same&lt;_Tp, _Up&gt;::value&gt;</definition>
         <argsstring></argsstring>
@@ -40,6 +55,16 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="34" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="34" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1ae4d3b1827587f905d3f5c7d8ea76e0f0" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class _Fp</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>_Args</declname>
+            <defname>_Args</defname>
+          </param>
+        </templateparamlist>
         <type>(_Fp &amp;&amp;__f, _Args &amp;&amp;... __args) INVOKE_RETURN(std __invokable_r&lt; void, _Fp, _Args... &gt;</type>
         <definition>using rlbox::detail::polyfill::__invokable = typedef (_Fp&amp;&amp; __f, _Args&amp;&amp;... __args) INVOKE_RETURN(std __invokable_r&lt;void, _Fp, _Args...&gt;</definition>
         <argsstring></argsstring>
@@ -53,6 +78,19 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="73" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="73" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1a915346fa52c9639dbd81c4b425f96ae4" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class _Ret</type>
+          </param>
+          <param>
+            <type>class _Fp</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>_Args</declname>
+            <defname>_Args</defname>
+          </param>
+        </templateparamlist>
         <type><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kindref="compound">__nothrow_invokable_r_imp</ref>&lt; __invokable_r&lt; _Ret, _Fp, _Args... &gt;::value, std::is_void&lt; _Ret &gt;::value, _Ret, _Fp, _Args... &gt;</type>
         <definition>using rlbox::detail::polyfill::__nothrow_invokable_r = typedef __nothrow_invokable_r_imp&lt;__invokable_r&lt;_Ret, _Fp, _Args...&gt;::value, std::is_void&lt;_Ret&gt;::value, _Ret, _Fp, _Args...&gt;</definition>
         <argsstring></argsstring>
@@ -66,6 +104,16 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="105" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="110" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1ae6863aa73ea15bd1a0bcf596f66f0991" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class _Fp</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>_Args</declname>
+            <defname>_Args</defname>
+          </param>
+        </templateparamlist>
         <type><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kindref="compound">__nothrow_invokable_r_imp</ref>&lt; __invokable&lt; _Fp, _Args... &gt;::value, true, void, _Fp, _Args... &gt;</type>
         <definition>using rlbox::detail::polyfill::__nothrow_invokable = typedef __nothrow_invokable_r_imp&lt;__invokable&lt;_Fp, _Args...&gt;::value, true, void, _Fp, _Args...&gt;</definition>
         <argsstring></argsstring>
@@ -79,6 +127,16 @@
         <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="113" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="118" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="rlbox__stdlib__polyfill_8hpp_1acb975d6d9b0d47d0f1bb0dee345ea621" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class _Fn</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>_Args</declname>
+            <defname>_Args</defname>
+          </param>
+        </templateparamlist>
         <type>typename <ref refid="structrlbox_1_1detail_1_1polyfill_1_1invoke__result" kindref="compound">invoke_result</ref>&lt; _Fn, _Args... &gt;::type</type>
         <definition>using rlbox::detail::polyfill::invoke_result_t = typedef typename invoke_result&lt;_Fn, _Args...&gt;::type</definition>
         <argsstring></argsstring>
@@ -93,7 +151,7 @@
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
-      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1a901727016c1ff28b6c04f628a2cf810a" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1a901727016c1ff28b6c04f628a2cf810a" prot="public" static="no" constexpr="yes" mutable="no">
         <templateparamlist>
           <param>
             <type>class _Fn</type>
@@ -115,9 +173,9 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="148" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="148" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="148" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="148" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1ae8d2106cf1c9ffcd88ac7a19b69abc1b" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1ae8d2106cf1c9ffcd88ac7a19b69abc1b" prot="public" static="no" constexpr="yes" mutable="no">
         <templateparamlist>
           <param>
             <type>class _Ret</type>
@@ -143,9 +201,9 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="151" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="151" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="151" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="151" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1aa2a16ed95ebcee2d1f9a8bc4eae3a13b" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1aa2a16ed95ebcee2d1f9a8bc4eae3a13b" prot="public" static="no" constexpr="yes" mutable="no">
         <templateparamlist>
           <param>
             <type>class _Fn</type>
@@ -168,9 +226,9 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="168" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="168" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="168" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="168" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1a36c4bc16c1ee2d1132d67efc15f7b030" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="rlbox__stdlib__polyfill_8hpp_1a36c4bc16c1ee2d1132d67efc15f7b030" prot="public" static="no" constexpr="yes" mutable="no">
         <templateparamlist>
           <param>
             <type>class _Ret</type>
@@ -196,13 +254,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="172" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="172" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="172" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="172" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="20" column="1"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="20" column="33"/>
   </compounddef>
 </doxygen>

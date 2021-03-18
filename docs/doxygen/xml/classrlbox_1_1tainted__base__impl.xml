@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="classrlbox_1_1tainted__base__impl" kind="class" language="C++" prot="public">
     <compoundname>rlbox::tainted_base_impl</compoundname>
     <templateparamlist>
@@ -9,14 +9,10 @@
         <defname>T_Wrap</defname>
       </param>
       <param>
-        <type>typename</type>
-        <declname>T</declname>
-        <defname>T</defname>
+        <type>typename T</type>
       </param>
       <param>
-        <type>typename</type>
-        <declname>T_Sbx</declname>
-        <defname>T_Sbx</defname>
+        <type>typename T_Sbx</type>
       </param>
     </templateparamlist>
       <sectiondef kind="private-type">
@@ -31,7 +27,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="369" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="373" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="370" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="374" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1tainted__base__impl_1ab367db1429d5326c9684d2eef6364fa9" prot="private" static="no">
         <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">tainted_volatile</ref>&lt; std::remove_pointer_t&lt; T &gt;, T_Sbx &gt;</type>
@@ -44,7 +40,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="433" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="433" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="434" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="434" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1tainted__base__impl_1ac70f724530042010d1366ab44ae6117a" prot="private" static="no">
         <type>detail::valid_array_el_t&lt; std::remove_cv_t&lt; std::remove_pointer_t&lt; T &gt; &gt;&gt;</type>
@@ -57,7 +53,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="580" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="581" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="581" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="582" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -72,7 +68,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="32" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="32" bodyend="32"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="33" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="33" bodyend="33"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aebf64332a129c6782da259efee237dff" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto &amp;</type>
@@ -85,7 +81,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="33" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="33" bodyend="36"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="34" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="34" bodyend="37"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -93,12 +89,13 @@
         <argsstring>()</argsstring>
         <name>UNSAFE_unverified</name>
         <briefdescription>
-<para>Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. </para>        </briefdescription>
+<para>Unwrap a tainted value without verification. This is an unsafe operation and should be used with care. </para>
+        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="42" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="42" bodyend="42"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="43" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="43" bodyend="43"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a41f8eed43072bf173cce34cd3351191e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -111,7 +108,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="43" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="43" bodyend="43"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="44" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="44" bodyend="44"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ae2c69129cbb9344e7d2623129f031214" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -123,20 +120,23 @@
           <declname>sandbox</declname>
         </param>
         <briefdescription>
-<para>Like UNSAFE_unverified, but get the underlying sandbox representation. </para>        </briefdescription>
+<para>Like UNSAFE_unverified, but get the underlying sandbox representation. </para>
+        </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>sandbox</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Reference to sandbox.</para></parameterdescription>
+<para>Reference to sandbox.</para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </para>        </detaileddescription>
+For the Wasm-based sandbox, this function additionally validates the unwrapped value against the machine model of the sandbox (LP32). </para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="53" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="53" bodyend="56"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="54" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="54" bodyend="57"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a2fb81eab8dc3839f351d6d89410c2350" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -153,7 +153,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="57" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="57" bodyend="60"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="58" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="58" bodyend="61"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac7d2f71a8fc72b922bfa1260d4a7ac94" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -169,20 +169,23 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <type>{ RLBOX_UNUSED(reason);static_assert(!std::is_pointer_v&lt; T &gt;, &quot;unverified_safe_because does not support pointers. Use &quot; &quot;unverified_safe_pointer_because.&quot;);return <ref refid="classrlbox_1_1tainted__base__impl_1a01acab6b4bd8137afa03cf4b2678844f" kindref="member">UNSAFE_unverified</ref>();}</type>
         </param>
         <briefdescription>
-<para>Unwrap a tainted value without verification. This function should be used when unwrapping is safe. </para>        </briefdescription>
+<para>Unwrap a tainted value without verification. This function should be used when unwrapping is safe. </para>
+        </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>reason</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>An explanation why the unverified unwrapping is safe. </para></parameterdescription>
+<para>An explanation why the unverified unwrapping is safe. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-</para>        </detaileddescription>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="68" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="69" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1af9767a70f0e97d74c5d70a6511cff5d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -203,7 +206,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="79" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="80" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1afd3ea6da54b1556e0bdfd222df1ed2e9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -216,7 +219,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="105" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="105" bodyend="105"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="106" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="106" bodyend="106"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aadcc0f6dc4114d5c9ebecff33040c3c7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -229,7 +232,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="106" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="106" bodyend="106"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="107" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="107" bodyend="107"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac11254da0346088f7e2ccfdccf87deb1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -245,7 +248,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="147" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="148" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ab64e73357c9a9387ca281d31e17bc490" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -261,7 +264,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="148" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="149" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>BinaryOp *</type>
@@ -277,7 +280,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="174" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="175" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>BinaryOp^</type>
@@ -293,7 +296,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="177" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="178" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a100c45337a0ad48eb18ac977edb8cc48" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -309,7 +312,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="180" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="181" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a60f6d9cc0d8462291f461e4183d90ec7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -325,7 +328,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="181" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="182" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a15ced8f568f8899e55b6354f620cbc7c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -341,7 +344,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="195" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="196" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a254df7254438c313621ff1a689dd5c34" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -357,7 +360,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="196" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="197" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aece2071face2e9e95aa270173a93e5cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CompoundAssignmentOp *</type>
@@ -373,7 +376,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="197" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="198" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a695650ceddb22aee9f17b290e721dbd8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CompoundAssignmentOp^</type>
@@ -389,7 +392,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="200" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="201" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac234712a7d68b938c9c2f34bd4f96d73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -405,7 +408,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="203" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="204" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a532585754028205606cdc219e61cacce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -421,7 +424,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="204" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="205" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a6c8dca7aef6cbf28dec6cba42963e76a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -437,7 +440,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="217" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="218" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ab9decc76ea24942932c7288d2ee257c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -453,7 +456,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="218" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="219" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a2ccdf93dd8466df3985c4f7c9225af08" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -469,7 +472,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="231" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="232" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a091f18be8cd32b34bec75322364e1f1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -485,7 +488,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="232" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="233" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a59f056b2d926bd2c715aebb7295f0348" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>BooleanBinaryOp &amp;&amp;</type>
@@ -501,7 +504,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="287" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="288" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac450c85ec8fa3c5046bcf3fb7aeca2d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -517,7 +520,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="306" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="307" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a257ae6c0b4a0fe1b1639044a572a038b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -533,7 +536,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="359" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="360" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3d04a736a337294fc02a13baef2d78db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -552,7 +555,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="360" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="361" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ac91498bde8eb4e3a384c666a65d5e7c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -565,7 +568,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="361" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="362" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a2665ce9ccc644be5556c05fb26470468" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -584,7 +587,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="362" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="363" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a461a58872313be13c882039a4d286145" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -600,7 +603,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="363" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="364" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1af85745a199b95587d0d750439fae25bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -619,7 +622,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="364" column="1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="365" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad71e3e71f23ee730d9c6a9f9fc4d557e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -641,7 +644,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="377" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="377" bodyend="424"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="378" column="36" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="378" bodyend="425"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a6fd9a75009eee8738dd0a7625bb2b1fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -663,7 +666,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="427" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="427" bodyend="430"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="428" column="30" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="428" bodyend="431"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ae308e3faece4fe51254f38814220bcef" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">T_OpDerefRet</ref> &amp;</type>
@@ -676,7 +679,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="436" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="436" bodyend="446"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="437" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="437" bodyend="447"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a8fd7566680b44852f260d8431ee4d196" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__volatile" kindref="compound">T_OpDerefRet</ref> &amp;</type>
@@ -689,7 +692,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="448" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="448" bodyend="451"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="449" column="23" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="449" bodyend="452"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3e8fdb261d771cb7b5c9af33fe52ff35" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -702,7 +705,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="457" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="457" bodyend="465"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="458" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="458" bodyend="466"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a52c2403f1851a0e2d295a712d8d10029" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -715,7 +718,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="467" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="467" bodyend="471"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="468" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="468" bodyend="472"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a05eaec33cccaad9bc15e014d6c25d695" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -728,7 +731,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="473" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="473" bodyend="492"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="474" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="474" bodyend="493"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a701759aedd637f48cc97a0e6ada1c8a6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -745,14 +748,16 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <declname>verifier</declname>
         </param>
         <briefdescription>
-<para>Copy tainted value from sandbox and verify it. </para>        </briefdescription>
+<para>Copy tainted value from sandbox and verify it. </para>
+        </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifer</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Function used to verify the copied value. </para></parameterdescription>
+<para>Function used to verify the copied value. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -760,14 +765,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 <parametername>T_Func</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the type of the verifier. </para></parameterdescription>
+<para>the type of the verifier. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
-</para>        </detaileddescription>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para>
+</simplesect>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="502" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="502" bodyend="577"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="503" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="503" bodyend="578"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a76e49089d448ba0cfa7ef6d7c1e2d288" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -788,21 +796,24 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <declname>count</declname>
         </param>
         <briefdescription>
-<para>Copy a range of tainted values from sandbox and verify them. </para>        </briefdescription>
+<para>Copy a range of tainted values from sandbox and verify them. </para>
+        </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifer</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Function used to verify the copied value. </para></parameterdescription>
+<para>Function used to verify the copied value. </para>
+</parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
 <parametername>count</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Number of elements to copy. </para></parameterdescription>
+<para>Number of elements to copy. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -810,14 +821,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 <parametername>T_Func</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the type of the verifier. If the tainted type is <computeroutput>int*</computeroutput> then <computeroutput>T_Func = T_Ret(*)(unique_ptr&lt;int[]&gt;)</computeroutput>. </para></parameterdescription>
+<para>the type of the verifier. If the tainted type is <computeroutput>int*</computeroutput> then <computeroutput>T_Func = T_Ret(*)(unique_ptr&lt;int[]&gt;)</computeroutput>. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
-</para>        </detaileddescription>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para>
+</simplesect>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="637" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="637" bodyend="651"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="638" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="638" bodyend="652"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1aa377cc4d0ea6768ada5032234ac89aab" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -834,14 +848,16 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <declname>verifier</declname>
         </param>
         <briefdescription>
-<para>Copy a tainted string from sandbox and verify it. </para>        </briefdescription>
+<para>Copy a tainted string from sandbox and verify it. </para>
+        </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifer</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Function used to verify the copied value. </para></parameterdescription>
+<para>Function used to verify the copied value. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -849,14 +865,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 <parametername>T_Func</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the type of the verifier <computeroutput>T_Ret(*)(unique_ptr&lt;char[]&gt;)</computeroutput> </para></parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(unique_ptr&lt;char[]&gt;)</computeroutput> </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
-</para>        </detaileddescription>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para>
+</simplesect>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="661" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="661" bodyend="686"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="662" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="662" bodyend="687"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -873,14 +892,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <declname>verifier</declname>
         </param>
         <briefdescription>
-<para>Copy a tainted pointer from sandbox and verify the address. </para>        </briefdescription>
+<para>Copy a tainted pointer from sandbox and verify the address. </para>
+        </briefdescription>
         <detaileddescription>
-<para>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
+<para>This function is useful if you need to verify physical bits representing the address of a pointer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para>
+<para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifier</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Function used to verify the copied value. </para></parameterdescription>
+<para>Function used to verify the copied value. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -888,14 +910,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 <parametername>T_Func</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para></parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
-</para>        </detaileddescription>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para>
+</simplesect>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="700" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="700" bodyend="706"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="701" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="701" bodyend="707"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a4f739a0994af23036cce2d06b10953ee" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -916,21 +941,25 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
           <declname>size</declname>
         </param>
         <briefdescription>
-<para>Copy a tainted pointer to a buffer from sandbox and verify the address. </para>        </briefdescription>
+<para>Copy a tainted pointer to a buffer from sandbox and verify the address. </para>
+        </briefdescription>
         <detaileddescription>
-<para>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para><para><parameterlist kind="param"><parameteritem>
+<para>This function is useful if you need to verify physical bits representing the address of a buffer. Other APIs such as copy_and_verify performs a deep copy and changes the address bits.</para>
+<para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>verifier</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Function used to verify the copied value. </para></parameterdescription>
+<para>Function used to verify the copied value. </para>
+</parameterdescription>
 </parameteritem>
 <parameteritem>
 <parameternamelist>
 <parametername>size</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Size of the buffer. Buffer with length size is expected to fit inside sandbox memory. </para></parameterdescription>
+<para>Size of the buffer. Buffer with length size is expected to fit inside sandbox memory. </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
 <parameterlist kind="templateparam"><parameteritem>
@@ -938,14 +967,17 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
 <parametername>T_Func</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para></parameterdescription>
+<para>the type of the verifier <computeroutput>T_Ret(*)(uintptr_t)</computeroutput> </para>
+</parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>Whatever the verifier function returns. </para></simplesect>
-</para>        </detaileddescription>
+<simplesect kind="return"><para>Whatever the verifier function returns. </para>
+</simplesect>
+</para>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="723" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="723" bodyend="729"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="724" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="724" bodyend="730"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -970,7 +1002,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="586" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="586" bodyend="604"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="587" column="21" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="587" bodyend="605"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a3fe59d5447f84c60a7b5e875570b9afa" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -993,14 +1025,14 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="607" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="607" bodyend="624"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="608" column="26" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="608" bodyend="625"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="26" bodyend="730"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" line="28" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp" bodystart="27" bodyend="731"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__base__impl_1af6fc3e13ab58feba9d6df1b9965055c0" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>

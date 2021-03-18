@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c" kind="dir">
     <compoundname>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include</compoundname>
     <innerfile refid="rlbox_8hpp">rlbox.hpp</innerfile>
+    <innerfile refid="rlbox__app__pointer_8hpp">rlbox_app_pointer.hpp</innerfile>
     <innerfile refid="rlbox__conversion_8hpp">rlbox_conversion.hpp</innerfile>
     <innerfile refid="rlbox__helpers_8hpp">rlbox_helpers.hpp</innerfile>
     <innerfile refid="rlbox__noop__sandbox_8hpp">rlbox_noop_sandbox.hpp</innerfile>
