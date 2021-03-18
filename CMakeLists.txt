@@ -164,6 +164,7 @@ include(Catch)
 # Test rlbox features
 add_executable(test_rlbox
                code/tests/test_main.cpp
+               code/tests/rlbox/test_app_pointers.cpp
                code/tests/rlbox/test_bool_operators.cpp
                code/tests/rlbox/test_callback.cpp
                code/tests/rlbox/test_comparison.cpp
