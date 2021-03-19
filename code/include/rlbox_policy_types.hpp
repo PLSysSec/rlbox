@@ -211,7 +211,6 @@ private:
     return idx;
   }
 
-public:
   app_pointer(app_pointer_map<typename T_Sbx::T_PointerType>* a_map,
               typename T_Sbx::T_PointerType a_idx,
               T a_idx_unsandboxed)
@@ -220,7 +219,24 @@ public:
     , idx_unsandboxed(a_idx_unsandboxed)
   {}
 
+public:
+
+  app_pointer() : map(nullptr), idx(0), idx_unsandboxed(0){}
+
   ~app_pointer() { unregister(); }
+
+  app_pointer(app_pointer&& other)
+  {
+    move_obj(std::forward<app_pointer>(other));
+  }
+
+  inline app_pointer& operator=(app_pointer&& other)
+  {
+    if (this != &other) {
+      move_obj(std::forward<app_pointer>(other));
+    }
+    return *this;
+  }
 
   void unregister()
   {
