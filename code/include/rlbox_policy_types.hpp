@@ -220,8 +220,11 @@ private:
   {}
 
 public:
-
-  app_pointer() : map(nullptr), idx(0), idx_unsandboxed(0){}
+  app_pointer()
+    : map(nullptr)
+    , idx(0)
+    , idx_unsandboxed(0)
+  {}
 
   ~app_pointer() { unregister(); }
 

@@ -56,15 +56,19 @@ public:
   T_PointerType get_app_pointer_idx(void* ptr)
   {
     RLBOX_ACQUIRE_UNIQUE_GUARD(lock, map_mutex);
-    auto idx = get_unused_index();
-    pointer_map[idx] = ptr;
+    T_PointerType idx = get_unused_index();
+    T_PointerTypeUnsigned idx_int =
+      reinterpret_cast<T_PointerTypeUnsigned>(idx);
+    pointer_map[idx_int] = ptr;
     return idx;
   }
 
   void remove_app_ptr(T_PointerType idx)
   {
     RLBOX_ACQUIRE_UNIQUE_GUARD(lock, map_mutex);
-    auto it = pointer_map.find(idx);
+    T_PointerTypeUnsigned idx_int =
+      reinterpret_cast<T_PointerTypeUnsigned>(idx);
+    auto it = pointer_map.find(idx_int);
     detail::dynamic_check(it != pointer_map.end(),
                           "Error: removing a non-existing app pointer");
     pointer_map.erase(it);
@@ -73,7 +77,9 @@ public:
   void* lookup_index(T_PointerType idx)
   {
     RLBOX_ACQUIRE_SHARED_GUARD(lock, map_mutex);
-    auto it = pointer_map.find(idx);
+    T_PointerTypeUnsigned idx_int =
+      reinterpret_cast<T_PointerTypeUnsigned>(idx);
+    auto it = pointer_map.find(idx_int);
     detail::dynamic_check(it != pointer_map.end(),
                           "Error: looking up a non-existing app pointer");
     return it->second;

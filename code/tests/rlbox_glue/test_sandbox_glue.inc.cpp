@@ -14,6 +14,7 @@
 #include "libtest_structs_for_cpp_api.h"
 rlbox_load_structs_from_library(libtest); // NOLINT
 
+using rlbox::app_pointer;
 using rlbox::rlbox_sandbox;
 using rlbox::tainted;
 using namespace std::chrono;
@@ -620,6 +621,17 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     REQUIRE(*transfered2 == test_val);
 
     free(transfered2);
+  }
+
+  SECTION("app_ptr test")
+  {
+    void* ptr = malloc(sizeof(unsigned int));
+    app_pointer<void*, TestType> app_ptr = sandbox.get_app_pointer(ptr);
+    tainted<void*, TestType> app_ptr_tainted = app_ptr.to_tainted();
+
+    void* original_ptr = sandbox.lookup_app_ptr(app_ptr_tainted);
+    REQUIRE(ptr == original_ptr);
+    free(ptr);
   }
 
   sandbox.template free_in_sandbox(sb_string);
