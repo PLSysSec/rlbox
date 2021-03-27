@@ -126,7 +126,11 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   CreateSandbox(sandbox);
 
   const int upper_bound = 100;
-  const int test_iterations = 1000000;
+  #ifdef BENCHMARK_CUSTOM_ITERATIONS
+    const int test_iterations = BENCHMARK_CUSTOM_ITERATIONS;
+  #else
+    const int test_iterations = 1000000;
+  #endif
 
   tainted<char*, TestType> sb_string =
     sandbox.template malloc_in_sandbox<char>(upper_bound);
