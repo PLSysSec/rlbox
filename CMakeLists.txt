@@ -252,6 +252,7 @@ catch_discover_tests(test_rlbox_glue_embedder_vars)
 add_custom_target(
   check
   COMMAND
+    ${CMAKE_COMMAND} -E env
     LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
     UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
     ${CMAKE_CTEST_COMMAND} -V)

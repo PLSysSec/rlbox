@@ -220,13 +220,17 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
                                                bool free_source_on_copy,
                                                bool& copied)
 {
+  // Malloc in sandbox takes a uint32_t as the parameter, need a bounds check
+  detail::dynamic_check(num <= std::numeric_limits<uint32_t>::max(), "Granting access too large a region");
+  uint32_t num_trunc = num;
+
   // sandbox can grant access if it includes the following line
   // using can_grant_deny_access = void;
   if constexpr (detail::has_member_using_can_grant_deny_access_v<T_Sbx>) {
-    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src, num);
+    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src, num_trunc);
 
     bool success;
-    auto ret = sandbox.INTERNAL_grant_access(src, num, success);
+    auto ret = sandbox.INTERNAL_grant_access(src, num_trunc, success);
     if (success) {
       copied = false;
       return ret;
@@ -235,8 +239,8 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
 
   using T_nocv = std::remove_cv_t<T>;
   tainted<T_nocv*, T_Sbx> copy =
-    sandbox.template malloc_in_sandbox<T_nocv>(num);
-  rlbox::memcpy(sandbox, copy, src, num);
+    sandbox.template malloc_in_sandbox<T_nocv>(num_trunc);
+  rlbox::memcpy(sandbox, copy, src, num_trunc);
   if (free_source_on_copy) {
     free(const_cast<void*>(reinterpret_cast<const void*>(src)));
   }

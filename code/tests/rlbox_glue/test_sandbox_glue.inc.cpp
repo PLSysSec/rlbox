@@ -47,9 +47,9 @@ static tainted<int, TestType> exampleCallback(
 {
   const unsigned upper_bound = 100;
   auto aCopy = a.copy_and_verify(
-    [](unsigned val) { return val > 0 && val < upper_bound ? val : -1U; });
+    [&](unsigned val) { return val > 0 && val < upper_bound ? val : -1U; });
   auto bCopy =
-    b.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
+    b.copy_and_verify_string([&](std::unique_ptr<char[]> val) { // NOLINT
       auto raw = val.get();
       if (!raw) {
         return std::unique_ptr<char[]>(nullptr);
@@ -58,7 +58,7 @@ static tainted<int, TestType> exampleCallback(
     });
 
   auto cCopy = c.copy_and_verify_range(
-    [](std::unique_ptr<const unsigned[]> arr) { // NOLINT
+    [&](std::unique_ptr<const unsigned[]> arr) { // NOLINT
       return arr[0] > 0 && arr[0] < upper_bound ? std::move(arr) : nullptr;
     },
     1);
@@ -189,7 +189,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const int val1 = 2;
     const int val2 = 3;
     auto result1 = sandbox.invoke_sandbox_function(simpleAddTest, val1, val2)
-                     .copy_and_verify([](int val) {
+                     .copy_and_verify([&](int val) {
                        return val > 0 && val < upper_bound ? val : -1;
                      });
     REQUIRE(result1 == val1 + val2);
@@ -203,14 +203,14 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     *pa = val1;
 
     auto result1 = sandbox.invoke_sandbox_function(echoPointer, pa)
-                     .copy_and_verify([](std::unique_ptr<const int> val) {
+                     .copy_and_verify([&](std::unique_ptr<const int> val) {
                        return *val > 0 && *val < upper_bound ? *val : -1;
                      });
     REQUIRE(result1 == val1);
 
     auto result2 =
       sandbox.invoke_sandbox_function(echoPointer, pa)
-        .copy_and_verify([](std::unique_ptr<const int> val) {
+        .copy_and_verify([&](std::unique_ptr<const int> val) {
           return *val > 0 && *val < upper_bound ? std::move(val) : nullptr;
         });
 
@@ -228,7 +228,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
       simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
 
     auto result = resultT.copy_and_verify(
-      [](int val) { return val > 0 && val < upper_bound ? val : -1; });
+      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
     REQUIRE(result == 10);
   }
 
@@ -255,7 +255,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
       simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
 
     auto result = resultT.copy_and_verify(
-      [](int val) { return val > 0 && val < upper_bound ? val : -1; });
+      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
     REQUIRE(result == 10);
 
     sandbox.free_in_sandbox(pFoo);
@@ -304,7 +304,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     // test some modifications of the string
     *retStrRaw = 'g';
     char* retStr = retStrRaw.copy_and_verify_string(
-      [](std::unique_ptr<char[]> val) { // NOLINT
+      [&](std::unique_ptr<char[]> val) { // NOLINT
         return std::strlen(val.get()) < upper_bound ? val.release() : nullptr;
       });
 
@@ -314,7 +314,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     REQUIRE(std::strcmp(str, retStr) != 0);
     *retStrRaw = 'H';
     auto retStr2 = retStrRaw.copy_and_verify_string(
-      [](std::unique_ptr<char[]> val) { // NOLINT
+      [&](std::unique_ptr<char[]> val) { // NOLINT
         auto raw = val.get();
         if (!raw) {
           return std::unique_ptr<char[]>(nullptr);
@@ -389,12 +389,12 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   {
     auto resultT = sandbox.invoke_sandbox_function(simpleTestStructVal);
     auto result = resultT.copy_and_verify(
-      [](tainted<testStruct, TestType> val) -> testStruct {
+      [&](tainted<testStruct, TestType> val) -> testStruct {
         testStruct ret{};
         ret.fieldLong = val.fieldLong.UNSAFE_unverified();
 
         ret.fieldString = val.fieldString.copy_and_verify_string(
-          [](std::unique_ptr<const char[]> s_val) { // NOLINT
+          [&](std::unique_ptr<const char[]> s_val) { // NOLINT
             return std::strlen(s_val.get()) < upper_bound ? s_val.release()
                                                           : nullptr;
           });
@@ -423,12 +423,12 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     auto resultT = sandbox.invoke_sandbox_function(simpleTestStructPtr);
 
     auto result = resultT.copy_and_verify(
-      [](std::unique_ptr<tainted<testStruct, TestType>> val) {
+      [&](std::unique_ptr<tainted<testStruct, TestType>> val) {
         testStruct ret{};
         ret.fieldLong = val->fieldLong.UNSAFE_unverified();
 
         ret.fieldString = val->fieldString.copy_and_verify_string(
-          [](std::unique_ptr<const char[]> s_val) { // NOLINT
+          [&](std::unique_ptr<const char[]> s_val) { // NOLINT
             return std::strlen(s_val.get()) < upper_bound ? s_val.release()
                                                           : nullptr;
           });
@@ -638,7 +638,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     free(ptr);
   }
 
-  sandbox.template free_in_sandbox(sb_string);
+  sandbox.free_in_sandbox(sb_string);
 
   sandbox.destroy_sandbox();
 }

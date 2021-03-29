@@ -1261,7 +1261,7 @@ public:
         // is safe.
         auto func = val.get_raw_sandbox_value();
         using T_Cast = std::remove_volatile_t<T_SandboxedType>;
-        get_sandbox_value_ref() = reinterpret_cast<T_Cast>(func);
+        get_sandbox_value_ref() = (T_Cast)func;
       }
     }
     else if_constexpr_named(

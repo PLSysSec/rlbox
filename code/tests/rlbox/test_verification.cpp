@@ -15,7 +15,7 @@ TEST_CASE("RLBox test basic verification", "[verification]")
 
   tainted<int, TestSandbox> test = testVal;
   auto result = test.copy_and_verify(
-    [](int val) { return val > lb && val < ub ? val : -1; });
+    [&](int val) { return val > lb && val < ub ? val : -1; });
   REQUIRE(result == 5);
 }
 
@@ -48,7 +48,7 @@ TEST_CASE("RLBox test pointer verification", "[verification]")
   tainted<int*, TestSandbox> pa = sandbox.malloc_in_sandbox<int>();
   *pa = testVal;
 
-  auto result1 = pa.copy_and_verify([](std::unique_ptr<int> val) {
+  auto result1 = pa.copy_and_verify([&](std::unique_ptr<int> val) {
     return *val > lb && *val < ub ? std::move(val) : nullptr;
   });
   REQUIRE(result1 != nullptr);
