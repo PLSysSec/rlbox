@@ -30,7 +30,7 @@ cmake --build ./build --target check
 Alternatively, you can run the build and test targets separately
 
 ```bash
-cmake --build ./build --target all
+cmake --build ./build
 cmake --build ./build --target test
 ```
 
@@ -95,7 +95,18 @@ cmake -DCMAKE_BUILD_TYPE=Debug -DDEV=ON -S . -B ./build
 ```
 
 3. After making changes to the source, add any new required tests and run all
-tests as described earlier.
+tests.
+
+```bash
+cmake --build ./build  --config Debug --target check
+```
+
+Alternatively, you can run the build and test targets separately
+
+```bash
+cmake --build ./build --config Debug
+cmake --build ./build --config Debug --target test
+```
 
 4. Modify the docs as appropriate and rebuild docs as described earlier.
 Rebuilding is required if you have added new APIs.
