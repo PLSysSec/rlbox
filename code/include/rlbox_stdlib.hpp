@@ -130,7 +130,12 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(rlbox_sandbox<T_Sbx>& sandbox,
 }
 
 /**
- * @brief Copy to sandbox memory area.
+ * @brief Copy to sandbox memory area. Note that memcpy is meant to be called on
+ * byte arrays does not adjust data according to ABI differences. If the
+ * programmer does accidentally call memcpy on buffers that needs ABI
+ * adjustment, this may cause compatibility issues, but will not cause a
+ * security issue as the destination is always a tainted or tainted_volatile
+ * pointer
  */
 template<typename T_Sbx,
          typename T_Rhs,
