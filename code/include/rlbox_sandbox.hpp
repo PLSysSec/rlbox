@@ -327,10 +327,6 @@ private:
       }
     }
 
-    detail::dynamic_check(
-      false,
-      "Internal error: Could not find the sandbox associated with example "
-      "pointer. Please file a bug.");
     return nullptr;
   }
 
