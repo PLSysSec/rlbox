@@ -27,6 +27,17 @@ using valid_return_t =
 template<typename T>
 using valid_param_t = std::conditional_t<std::is_void_v<T>, void*, T>;
 
+namespace func_arg_nums_v_detail {
+  template<typename T_Ret, typename... T_Args>
+  constexpr size_t helper(T_Ret(*)(T_Args...))
+  {
+    return sizeof...(T_Args);
+  }
+}
+
+template<typename T_Func>
+constexpr size_t func_arg_nums_v = func_arg_nums_v_detail::helper(reinterpret_cast<T_Func*>(0));
+
 template<typename T>
 using valid_array_el_t =
   std::conditional_t<std::is_void_v<T> || std::is_function_v<T>, int, T>;
