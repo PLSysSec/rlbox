@@ -99,6 +99,26 @@ exampleCallback3( // NOLINT(google-runtime-int)
   return val1 + val2;
 }
 
+static tainted<float, TestType> cbFloat(rlbox_sandbox<TestType>& /* sandbox */,
+                                        tainted<float, TestType> val)
+{
+  return val;
+}
+
+static tainted<double, TestType> cbDouble(
+  rlbox_sandbox<TestType>& /* sandbox */,
+  tainted<double, TestType> val)
+{
+  return val;
+}
+
+static tainted<long long int, TestType> cbLongLong(
+  rlbox_sandbox<TestType>& /* sandbox */,
+  tainted<long long int, TestType> val)
+{
+  return val;
+}
+
 NOINLINE
 static unsigned long local_simpleAddNoPrintTest(unsigned long a,
                                                 unsigned long b)
@@ -126,11 +146,11 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   CreateSandbox(sandbox);
 
   const int upper_bound = 100;
-  #ifdef BENCHMARK_CUSTOM_ITERATIONS
-    const int test_iterations = BENCHMARK_CUSTOM_ITERATIONS;
-  #else
-    const int test_iterations = 1000000;
-  #endif
+#ifdef BENCHMARK_CUSTOM_ITERATIONS
+  const int test_iterations = BENCHMARK_CUSTOM_ITERATIONS;
+#else
+  const int test_iterations = 1000000;
+#endif
 
   tainted<char*, TestType> sb_string =
     sandbox.template malloc_in_sandbox<char>(upper_bound);
@@ -241,6 +261,37 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
     auto result = resultT.copy_and_verify([](int val) { return val; });
     REQUIRE(result == 11);
+  }
+
+  SECTION("test callback different returns") // NOLINT
+  {
+    {
+      auto cb_callback_param = sandbox.register_callback(cbFloat);
+      const float val = 1042.1;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeFloatTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](float val) { return val; });
+      REQUIRE(result == val);
+    }
+    {
+      auto cb_callback_param = sandbox.register_callback(cbDouble);
+      const double val = 1042.1;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeDoubleTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](double val) { return val; });
+      REQUIRE(result == val);
+    }
+    {
+      auto cb_callback_param = sandbox.register_callback(cbLongLong);
+      const long long val = -42;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeLongLongTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](long long val) { return val; });
+      REQUIRE(result == val);
+    }
   }
 
   SECTION("test callback to an internal function") // NOLINT

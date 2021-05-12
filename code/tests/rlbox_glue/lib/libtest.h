@@ -15,6 +15,9 @@ extern "C"
                                unsigned long,
                                unsigned long);
   typedef unsigned long (*CallbackType3)(unsigned long, unsigned long);
+  typedef float (*CallbackTypeFloat)(float val);
+  typedef double (*CallbackTypeDouble)(double val);
+  typedef long long int (*CallbackTypeLongLong)(long long int val);
 
   struct testStruct
   {
@@ -47,6 +50,10 @@ extern "C"
                                    unsigned long b,
                                    unsigned long iterations,
                                    CallbackType3 callback);
+  float callbackTypeFloatTest(float val, CallbackTypeFloat callback);
+  double callbackTypeDoubleTest(double val, CallbackTypeDouble callback);
+  long long int callbackTypeLongLongTest(long long int val,
+                                         CallbackTypeLongLong callback);
   double simpleDivideTest(double a, double b);
   int simpleAddTest(int a, int b);
   size_t simpleStrLenTest(const char* str);

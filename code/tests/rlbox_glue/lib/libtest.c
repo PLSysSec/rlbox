@@ -21,6 +21,22 @@ unsigned long simpleCallbackLoop(unsigned long a,
   return ret;
 }
 
+float callbackTypeFloatTest(float val, CallbackTypeFloat callback)
+{
+  return callback(val);
+}
+
+double callbackTypeDoubleTest(double val, CallbackTypeDouble callback)
+{
+  return callback(val);
+}
+
+long long int callbackTypeLongLongTest(long long int val,
+                                       CallbackTypeLongLong callback)
+{
+  return callback(val);
+}
+
 double simpleDivideTest(double a, double b)
 {
   return a / b;
@@ -137,7 +153,7 @@ struct testStruct* simpleTestStructPtrBadPtr()
 
 long simpleTestStructParam(struct testStruct param)
 {
-  return param.fieldLong + (param.fieldString? strlen(param.fieldString) : 0);
+  return param.fieldLong + (param.fieldString ? strlen(param.fieldString) : 0);
 }
 
 int* echoPointer(int* pointer)
@@ -197,16 +213,15 @@ int simpleCallbackTest2(unsigned long startVal, CallbackType2 cb)
             startVal + 5);
 }
 
-unsigned long stackParametersTest(
-  unsigned long a1,
-  unsigned long a2,
-  unsigned long a3,
-  unsigned long a4,
-  unsigned long a5,
-  unsigned long a6,
-  unsigned long a7,
-  unsigned long a8,
-  unsigned long a9
-) {
+unsigned long stackParametersTest(unsigned long a1,
+                                  unsigned long a2,
+                                  unsigned long a3,
+                                  unsigned long a4,
+                                  unsigned long a5,
+                                  unsigned long a6,
+                                  unsigned long a7,
+                                  unsigned long a8,
+                                  unsigned long a9)
+{
   return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9;
 }
