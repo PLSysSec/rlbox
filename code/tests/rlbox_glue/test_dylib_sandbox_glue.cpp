@@ -8,7 +8,12 @@
 #define TestName "rlbox_dylib_sandbox"
 // NOLINTNEXTLINE
 #define TestType rlbox::rlbox_dylib_sandbox
+
+#ifndef GLUE_LIB_PATH
+#  error "Missing definition for GLUE_LIB_PATH"
+#endif
+
 // NOLINTNEXTLINE
-#define CreateSandbox(sandbox) sandbox.create_sandbox("./librlbox_glue_lib_shared.so")
+#define CreateSandbox(sandbox) sandbox.create_sandbox(GLUE_LIB_PATH)
 
 #include "test_sandbox_glue.inc.cpp"

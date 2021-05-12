@@ -2,12 +2,19 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <dlfcn.h>
 #include <mutex>
 #ifndef RLBOX_USE_CUSTOM_SHARED_LOCK
 #  include <shared_mutex>
 #endif
 #include <utility>
+
+#if defined(_WIN32)
+// Ensure the min/max macro in the header doesn't collide with functions in std::
+#define NOMINMAX
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
 
 #include "rlbox_helpers.hpp"
 
@@ -88,15 +95,40 @@ private:
 
 protected:
   inline void impl_create_sandbox(const char* path) {
+    #if defined(_WIN32)
+    sandbox = LoadLibraryA(wasm2c_module_path);
+    #else
     sandbox = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-    if (sandbox == nullptr) {
-      char* error = dlerror();
-      detail::dynamic_check(sandbox != nullptr, error);
+    #endif
+
+    if (!sandbox) {
+      std::string error_msg = "Could not load dynamic library: ";
+      #if defined(_WIN32)
+        DWORD errorMessageID  = GetLastError();
+        if (errorMessageID != 0) {
+          LPSTR messageBuffer = nullptr;
+          //The api creates the buffer that holds the message
+          size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                                      NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+          //Copy the error message into a std::string.
+          std::string message(messageBuffer, size);
+          error_msg += message;
+          LocalFree(messageBuffer);
+        }
+      #else
+        error_msg += dlerror();
+      #endif
+      detail::dynamic_check(false, error_msg.c_str());
     }
   }
 
   inline void impl_destroy_sandbox() {
-    dlclose(sandbox);
+    #if defined(_WIN32)
+      FreeLibrary((HMODULE) sandbox);
+    #else
+      dlclose(sandbox);
+    #endif
+    sandbox = nullptr;
   }
 
   template<typename T>
@@ -166,7 +198,11 @@ protected:
 
   void* impl_lookup_symbol(const char* func_name)
   {
-    auto ret = dlsym(sandbox, func_name);
+    #if defined(_WIN32)
+      void* ret = GetProcAddress((HMODULE) sandbox, func_name);
+    #else
+      void* ret = dlsym(sandbox, func_name);
+    #endif
     detail::dynamic_check(ret != nullptr, "Symbol not found");
     return ret;
   }

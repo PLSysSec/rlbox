@@ -252,6 +252,7 @@ add_executable(test_rlbox_glue_dylib
                code/tests/rlbox_glue/test_dylib_sandbox_glue.cpp)
 target_include_directories(test_rlbox_glue_dylib PUBLIC code/tests/rlbox_glue
                                                         code/tests/rlbox_glue/lib)
+target_compile_definitions(test_rlbox_glue_dylib PUBLIC GLUE_LIB_PATH="$<TARGET_FILE:rlbox_glue_lib_shared>")
 
 target_link_libraries(test_rlbox_glue_dylib
                       Catch2::Catch2
