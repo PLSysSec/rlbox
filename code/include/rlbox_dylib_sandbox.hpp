@@ -9,11 +9,12 @@
 #include <utility>
 
 #if defined(_WIN32)
-// Ensure the min/max macro in the header doesn't collide with functions in std::
-#define NOMINMAX
-#include <Windows.h>
+// Ensure the min/max macro in the header doesn't collide with functions in
+// std::
+#  define NOMINMAX
+#  include <Windows.h>
 #else
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 #include "rlbox_helpers.hpp"
@@ -31,13 +32,13 @@ struct rlbox_dylib_sandbox_thread_data
 #ifdef RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
 
 rlbox_dylib_sandbox_thread_data* get_rlbox_dylib_sandbox_thread_data();
-#  define RLBOX_DYLIB_SANDBOX_STATIC_VARIABLES()                                \
-    thread_local rlbox::rlbox_dylib_sandbox_thread_data                         \
-      rlbox_dylib_sandbox_thread_info{ 0, 0 };                                  \
+#  define RLBOX_DYLIB_SANDBOX_STATIC_VARIABLES()                               \
+    thread_local rlbox::rlbox_dylib_sandbox_thread_data                        \
+      rlbox_dylib_sandbox_thread_info{ 0, 0 };                                 \
     namespace rlbox {                                                          \
-      rlbox_dylib_sandbox_thread_data* get_rlbox_dylib_sandbox_thread_data()     \
+      rlbox_dylib_sandbox_thread_data* get_rlbox_dylib_sandbox_thread_data()   \
       {                                                                        \
-        return &rlbox_dylib_sandbox_thread_info;                                \
+        return &rlbox_dylib_sandbox_thread_info;                               \
       }                                                                        \
     }                                                                          \
     static_assert(true, "Enforce semi-colon")
@@ -71,7 +72,8 @@ private:
   void* callbacks[MAX_CALLBACKS]{ 0 };
 
 #ifndef RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
-  thread_local static inline rlbox_dylib_sandbox_thread_data thread_data{ 0, 0 };
+  thread_local static inline rlbox_dylib_sandbox_thread_data thread_data{ 0,
+                                                                          0 };
 #endif
 
   template<uint32_t N, typename T_Ret, typename... T_Args>
@@ -94,40 +96,49 @@ private:
   }
 
 protected:
-  inline void impl_create_sandbox(const char* path) {
-    #if defined(_WIN32)
+  inline void impl_create_sandbox(const char* path)
+  {
+#if defined(_WIN32)
     sandbox = LoadLibraryA(wasm2c_module_path);
-    #else
+#else
     sandbox = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-    #endif
+#endif
 
     if (!sandbox) {
       std::string error_msg = "Could not load dynamic library: ";
-      #if defined(_WIN32)
-        DWORD errorMessageID  = GetLastError();
-        if (errorMessageID != 0) {
-          LPSTR messageBuffer = nullptr;
-          //The api creates the buffer that holds the message
-          size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                      NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-          //Copy the error message into a std::string.
-          std::string message(messageBuffer, size);
-          error_msg += message;
-          LocalFree(messageBuffer);
-        }
-      #else
-        error_msg += dlerror();
-      #endif
+#if defined(_WIN32)
+      DWORD errorMessageID = GetLastError();
+      if (errorMessageID != 0) {
+        LPSTR messageBuffer = nullptr;
+        // The api creates the buffer that holds the message
+        size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                                       FORMAT_MESSAGE_FROM_SYSTEM |
+                                       FORMAT_MESSAGE_IGNORE_INSERTS,
+                                     NULL,
+                                     errorMessageID,
+                                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                                     (LPSTR)&messageBuffer,
+                                     0,
+                                     NULL);
+        // Copy the error message into a std::string.
+        std::string message(messageBuffer, size);
+        error_msg += message;
+        LocalFree(messageBuffer);
+      }
+#else
+      error_msg += dlerror();
+#endif
       detail::dynamic_check(false, error_msg.c_str());
     }
   }
 
-  inline void impl_destroy_sandbox() {
-    #if defined(_WIN32)
-      FreeLibrary((HMODULE) sandbox);
-    #else
-      dlclose(sandbox);
-    #endif
+  inline void impl_destroy_sandbox()
+  {
+#if defined(_WIN32)
+    FreeLibrary((HMODULE)sandbox);
+#else
+    dlclose(sandbox);
+#endif
     sandbox = nullptr;
   }
 
@@ -147,8 +158,8 @@ protected:
   static inline void* impl_get_unsandboxed_pointer_no_ctx(
     T_PointerType p,
     const void* /* example_unsandboxed_ptr */,
-    rlbox_dylib_sandbox* (*/* expensive_sandbox_finder */)(
-      const void* example_unsandboxed_ptr))
+    rlbox_dylib_sandbox* (
+      */* expensive_sandbox_finder */)(const void* example_unsandboxed_ptr))
   {
     return p;
   }
@@ -157,8 +168,8 @@ protected:
   static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
     const void* p,
     const void* /* example_unsandboxed_ptr */,
-    rlbox_dylib_sandbox* (*/* expensive_sandbox_finder */)(
-      const void* example_unsandboxed_ptr))
+    rlbox_dylib_sandbox* (
+      */* expensive_sandbox_finder */)(const void* example_unsandboxed_ptr))
   {
     return const_cast<T_PointerType>(p);
   }
@@ -169,10 +180,7 @@ protected:
     return p;
   }
 
-  inline void impl_free_in_sandbox(T_PointerType p)
-  {
-    free(p);
-  }
+  inline void impl_free_in_sandbox(T_PointerType p) { free(p); }
 
   static inline bool impl_is_in_same_sandbox(const void*, const void*)
   {
@@ -198,11 +206,11 @@ protected:
 
   void* impl_lookup_symbol(const char* func_name)
   {
-    #if defined(_WIN32)
-      void* ret = GetProcAddress((HMODULE) sandbox, func_name);
-    #else
-      void* ret = dlsym(sandbox, func_name);
-    #endif
+#if defined(_WIN32)
+    void* ret = GetProcAddress((HMODULE)sandbox, func_name);
+#else
+    void* ret = dlsym(sandbox, func_name);
+#endif
     detail::dynamic_check(ret != nullptr, "Symbol not found");
     return ret;
   }
