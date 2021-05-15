@@ -99,7 +99,7 @@ protected:
   inline void impl_create_sandbox(const char* path)
   {
 #if defined(_WIN32)
-    sandbox = LoadLibraryA(wasm2c_module_path);
+    sandbox = LoadLibraryA(path);
 #else
     sandbox = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 #endif
