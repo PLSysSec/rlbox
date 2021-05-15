@@ -153,7 +153,7 @@ struct testStruct* simpleTestStructPtrBadPtr()
 
 long simpleTestStructParam(struct testStruct param)
 {
-  return param.fieldLong + (param.fieldString ? strlen(param.fieldString) : 0);
+  return (long) param.fieldLong + (long) (param.fieldString? strlen(param.fieldString) : 0);
 }
 
 int* echoPointer(int* pointer)
@@ -195,7 +195,7 @@ struct pointersStruct* initializePointerStructPtr(char* initVal)
 int internalCallback(unsigned a, const char* b, unsigned c[1])
 {
   (void)c;
-  return a + strlen(b);
+  return (int) a + (int) strlen(b);
 }
 
 void simplePointerWrite(int* ptr, int val)
