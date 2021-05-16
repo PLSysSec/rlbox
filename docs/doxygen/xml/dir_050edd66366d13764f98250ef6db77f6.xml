@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="dir_050edd66366d13764f98250ef6db77f6" kind="dir">
-    <compoundname>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code</compoundname>
-    <innerdir refid="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include</innerdir>
+    <compoundname>/home/d/hack/rlbox_sandboxing_api/code</compoundname>
+    <innerdir refid="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c">/home/d/hack/rlbox_sandboxing_api/code/include</innerdir>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/"/>
   </compounddef>
 </doxygen>

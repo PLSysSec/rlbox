@@ -1,73 +1,73 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="rlbox__wrapper__traits_8hpp" kind="file" language="C++">
     <compoundname>rlbox_wrapper_traits.hpp</compoundname>
     <includes local="no">type_traits</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
-    <includedby refid="rlbox__stdlib_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</includedby>
-    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox__stdlib_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</includedby>
+    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</includedby>
     <incdepgraph>
-      <node id="3">
-        <label>rlbox_types.hpp</label>
-        <link refid="rlbox__types_8hpp_source"/>
-      </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp</label>
         <link refid="rlbox__wrapper__traits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
+      </node>
+      <node id="3">
+        <label>rlbox_types.hpp</label>
+        <link refid="rlbox__types_8hpp_source"/>
       </node>
       <node id="2">
         <label>type_traits</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="5">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="4" relation="include">
-        </childnode>
-      </node>
       <node id="3">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="4" relation="include">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
+        <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="4">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
-      </node>
-      <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp</label>
-        <link refid="rlbox__wrapper__traits_8hpp"/>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</label>
+        <link refid="rlbox__stdlib_8hpp_source"/>
         <childnode refid="2" relation="include">
         </childnode>
-        <childnode refid="5" relation="include">
+      </node>
+      <node id="5">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
+        <childnode refid="2" relation="include">
         </childnode>
         <childnode refid="6" relation="include">
         </childnode>
-        <childnode refid="4" relation="include">
+        <childnode refid="3" relation="include">
         </childnode>
       </node>
       <node id="2">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
       </node>
       <node id="6">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</label>
-        <link refid="rlbox__stdlib_8hpp_source"/>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp</label>
+        <link refid="rlbox__wrapper__traits_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
         <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
@@ -113,7 +113,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="11" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="11" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="11" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" bodystart="11" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -276,6 +276,6 @@
 <codeline lineno="153"><highlight class="normal"></highlight></codeline>
 <codeline lineno="154"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp"/>
   </compounddef>
 </doxygen>

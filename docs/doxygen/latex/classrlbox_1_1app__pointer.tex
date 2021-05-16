@@ -3,8 +3,11 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classrlbox_1_1app__pointer_a9a779d2058178928e060a2d69c78b719}\label{classrlbox_1_1app__pointer_a9a779d2058178928e060a2d69c78b719}} 
-{\bfseries app\+\_\+pointer} (\mbox{\hyperlink{classrlbox_1_1app__pointer__map}{app\+\_\+pointer\+\_\+map}}$<$ typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Pointer\+Type $>$ $\ast$a\+\_\+map, typename T\+\_\+\+Sbx\+::\+T\+\_\+\+Pointer\+Type a\+\_\+idx, T a\+\_\+idx\+\_\+unsandboxed)
+\mbox{\Hypertarget{classrlbox_1_1app__pointer_a845c3f2be96091b1ab10ccab774a785b}\label{classrlbox_1_1app__pointer_a845c3f2be96091b1ab10ccab774a785b}} 
+{\bfseries app\+\_\+pointer} (\mbox{\hyperlink{classrlbox_1_1app__pointer}{app\+\_\+pointer}} \&\&other)
+\item 
+\mbox{\Hypertarget{classrlbox_1_1app__pointer_a73630a8d71f38f268b5348518f0cc93d}\label{classrlbox_1_1app__pointer_a73630a8d71f38f268b5348518f0cc93d}} 
+\mbox{\hyperlink{classrlbox_1_1app__pointer}{app\+\_\+pointer}} \& {\bfseries operator=} (\mbox{\hyperlink{classrlbox_1_1app__pointer}{app\+\_\+pointer}} \&\&other)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1app__pointer_a91150874c356edccc9ba9e18256c3a77}\label{classrlbox_1_1app__pointer_a91150874c356edccc9ba9e18256c3a77}} 
 void {\bfseries unregister} ()
@@ -13,15 +16,15 @@ void {\bfseries unregister} ()
 \mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T, T\+\_\+\+Sbx $>$ {\bfseries to\+\_\+tainted} ()
 \item 
 \mbox{\Hypertarget{classrlbox_1_1app__pointer_a71209edbd57c65cd36d0b5c2c03fde3f}\label{classrlbox_1_1app__pointer_a71209edbd57c65cd36d0b5c2c03fde3f}} 
-auto \mbox{\hyperlink{classrlbox_1_1app__pointer_a71209edbd57c65cd36d0b5c2c03fde3f}{U\+N\+S\+A\+F\+E\+\_\+unverified}} () const noexcept
+auto \mbox{\hyperlink{classrlbox_1_1app__pointer_a71209edbd57c65cd36d0b5c2c03fde3f}{UNSAFE\+\_\+unverified}} () const noexcept
 \begin{DoxyCompactList}\small\item\em Unwrap a callback without verification. This is an unsafe operation and should be used with care. \end{DoxyCompactList}\item 
-auto \mbox{\hyperlink{classrlbox_1_1app__pointer_a1e5d8a1865acf9d29d53f0e8543e3fa2}{U\+N\+S\+A\+F\+E\+\_\+sandboxed}} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const noexcept
-\begin{DoxyCompactList}\small\item\em Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classrlbox_1_1app__pointer_a1e5d8a1865acf9d29d53f0e8543e3fa2}{UNSAFE\+\_\+sandboxed}} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox) const noexcept
+\begin{DoxyCompactList}\small\item\em Like UNSAFE\+\_\+unverified, but get the underlying sandbox representation. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1app__pointer_af226dfc5118370a104707438292febdd}\label{classrlbox_1_1app__pointer_af226dfc5118370a104707438292febdd}} 
-auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+unverified} () noexcept
+auto {\bfseries UNSAFE\+\_\+unverified} () noexcept
 \item 
 \mbox{\Hypertarget{classrlbox_1_1app__pointer_a76996c5b562243af1ac52a2ae2ac5333}\label{classrlbox_1_1app__pointer_a76996c5b562243af1ac52a2ae2ac5333}} 
-auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox) noexcept
+auto {\bfseries UNSAFE\+\_\+sandboxed} (\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&sandbox) noexcept
 \end{DoxyCompactItemize}
 
 
@@ -31,11 +34,11 @@ auto {\bfseries U\+N\+S\+A\+F\+E\+\_\+sandboxed} (\mbox{\hyperlink{classrlbox_1_
 \index{UNSAFE\_sandboxed@{UNSAFE\_sandboxed}!rlbox::app\_pointer$<$ T, T\_Sbx $>$@{rlbox::app\_pointer$<$ T, T\_Sbx $>$}}
 \doxysubsubsection{\texorpdfstring{UNSAFE\_sandboxed()}{UNSAFE\_sandboxed()}}
 {\footnotesize\ttfamily template$<$typename T , typename T\+\_\+\+Sbx $>$ \\
-auto \mbox{\hyperlink{classrlbox_1_1app__pointer}{rlbox\+::app\+\_\+pointer}}$<$ T, T\+\_\+\+Sbx $>$\+::U\+N\+S\+A\+F\+E\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+auto \mbox{\hyperlink{classrlbox_1_1app__pointer}{rlbox\+::app\+\_\+pointer}}$<$ T, T\+\_\+\+Sbx $>$\+::UNSAFE\+\_\+sandboxed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$ \&}]{sandbox }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
 
 
 
-Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representation. 
+Like UNSAFE\+\_\+unverified, but get the underlying sandbox representation. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -46,4 +49,4 @@ Like U\+N\+S\+A\+F\+E\+\_\+unverified, but get the underlying sandbox representa
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+policy\+\_\+types.\+hpp\end{DoxyCompactItemize}
+/home/d/hack/rlbox\+\_\+sandboxing\+\_\+api/code/include/rlbox\+\_\+policy\+\_\+types.\+hpp\end{DoxyCompactItemize}

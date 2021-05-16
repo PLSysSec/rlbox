@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted&lt; T, T_Sbx &gt; &gt;</compoundname>
     <templateparamlist>
@@ -22,7 +22,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="75" column="5" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="75" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="75" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" bodystart="75" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4_1ac91e2c99e60e54c181ccce11433741ec" prot="public" static="no">
         <type>T_Sbx</type>
@@ -35,14 +35,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="76" column="5" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="76" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="76" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" bodystart="76" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="74" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="73" bodyend="77"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="73" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" bodystart="74" bodyend="77"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4_1ace6e380e9e64a1681492c3a4f93f3cf5" prot="public" virt="non-virtual"><scope>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted&lt; T, T_Sbx &gt; &gt;</scope><name>type</name></member>
       <member refid="structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper_3_01tainted_3_01T_00_01T__Sbx_01_4_01_4_1ac91e2c99e60e54c181ccce11433741ec" prot="public" virt="non-virtual"><scope>rlbox::detail::detail_rlbox_remove_wrapper::unwrapper&lt; tainted&lt; T, T_Sbx &gt; &gt;</scope><name>type_sbx</name></member>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helpee69bf317a02bfc969249f3ef45e9cd31" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==1 &gt; &gt;</compoundname>
     <templateparamlist>
@@ -19,14 +19,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="484" column="5" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="484" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="501" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="501" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="483" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="482" bodyend="485"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="499" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="500" bodyend="502"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helpee69bf317a02bfc969249f3ef45e9cd31_1a9fd78cb4a7309565554ea9d0028b595b" prot="public" virt="non-virtual"><scope>rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==1 &gt; &gt;</scope><name>type</name></member>
     </listofallmembers>

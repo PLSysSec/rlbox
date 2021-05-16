@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="namespacerlbox_1_1detail_1_1base__type__detail" kind="namespace" language="C++">
     <compoundname>rlbox::detail::base_type_detail</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1base__type__detail_1_1base__type" prot="public">rlbox::detail::base_type_detail::base_type</innerclass>
@@ -10,6 +10,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="238" column="26"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="255" column="1"/>
   </compounddef>
 </doxygen>

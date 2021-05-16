@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="classrlbox_1_1tainted__opaque" kind="class" language="C++" prot="public">
     <compoundname>rlbox::tainted_opaque</compoundname>
     <templateparamlist>
@@ -23,7 +23,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="11" column="5" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="11" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" line="11" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" bodystart="11" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -44,14 +44,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="15" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="15" bodyend="18"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" line="15" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" bodystart="15" bodyend="18"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="9" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="8" bodyend="19"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" line="8" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_types.hpp" bodystart="9" bodyend="19"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__opaque_1a73d4d29275cb2c76258cd00eb097bde5" prot="private" virt="non-virtual"><scope>rlbox::tainted_opaque</scope><name>data</name></member>
       <member refid="classrlbox_1_1tainted__opaque_1a04c0acc924d20dbef92b2c348fc799e8" prot="public" virt="non-virtual"><scope>rlbox::tainted_opaque</scope><name>set_zero</name></member>

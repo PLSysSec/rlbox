@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::std_array_el_detail::W</compoundname>
     <templateparamlist>
@@ -19,14 +19,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="153" column="5" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="153" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="170" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="170" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="152" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="151" bodyend="154"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="168" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="169" bodyend="171"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W_1a40a0b72602d7250352c6adc3947e8ccc" prot="public" virt="non-virtual"><scope>rlbox::detail::std_array_el_detail::W</scope><name>type</name></member>
     </listofallmembers>

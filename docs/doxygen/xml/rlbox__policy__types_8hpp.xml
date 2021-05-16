@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="rlbox__policy__types_8hpp" kind="file" language="C++">
     <compoundname>rlbox_policy_types.hpp</compoundname>
     <includes local="no">type_traits</includes>
@@ -7,64 +7,13 @@
     <includes refid="rlbox__helpers_8hpp" local="yes">rlbox_helpers.hpp</includes>
     <includes refid="rlbox__struct__support_8hpp" local="yes">rlbox_struct_support.hpp</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
     <incdepgraph>
       <node id="11">
         <label>functional</label>
       </node>
       <node id="14">
         <label>limits</label>
-      </node>
-      <node id="16">
-        <label>rlbox_types.hpp</label>
-        <link refid="rlbox__types_8hpp_source"/>
-      </node>
-      <node id="8">
-        <label>rlbox_stdlib_polyfill.hpp</label>
-        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
-      </node>
-      <node id="12">
-        <label>rlbox_conversion.hpp</label>
-        <link refid="rlbox__conversion_8hpp_source"/>
-        <childnode refid="13" relation="include">
-        </childnode>
-        <childnode refid="10" relation="include">
-        </childnode>
-        <childnode refid="14" relation="include">
-        </childnode>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="15" relation="include">
-        </childnode>
-        <childnode refid="16" relation="include">
-        </childnode>
-      </node>
-      <node id="7">
-        <label>stdexcept</label>
-      </node>
-      <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="9" relation="include">
-        </childnode>
-        <childnode refid="16" relation="include">
-        </childnode>
-      </node>
-      <node id="17">
-        <label>rlbox_wrapper_traits.hpp</label>
-        <link refid="rlbox__wrapper__traits_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="16" relation="include">
-        </childnode>
       </node>
       <node id="9">
         <label>rlbox_struct_support.hpp</label>
@@ -84,6 +33,27 @@
         <childnode refid="17" relation="include">
         </childnode>
       </node>
+      <node id="7">
+        <label>stdexcept</label>
+      </node>
+      <node id="8">
+        <label>rlbox_stdlib_polyfill.hpp</label>
+        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
+      </node>
+      <node id="1">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
       <node id="15">
         <label>rlbox_type_traits.hpp</label>
         <link refid="rlbox__type__traits_8hpp_source"/>
@@ -91,21 +61,6 @@
         </childnode>
         <childnode refid="2" relation="include">
         </childnode>
-      </node>
-      <node id="3">
-        <label>utility</label>
-      </node>
-      <node id="13">
-        <label>array</label>
-      </node>
-      <node id="5">
-        <label>cstdlib</label>
-      </node>
-      <node id="6">
-        <label>iostream</label>
-      </node>
-      <node id="2">
-        <label>type_traits</label>
       </node>
       <node id="4">
         <label>rlbox_helpers.hpp</label>
@@ -123,20 +78,65 @@
         <childnode refid="8" relation="include">
         </childnode>
       </node>
+      <node id="3">
+        <label>utility</label>
+      </node>
+      <node id="13">
+        <label>array</label>
+      </node>
+      <node id="17">
+        <label>rlbox_wrapper_traits.hpp</label>
+        <link refid="rlbox__wrapper__traits_8hpp_source"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>rlbox_types.hpp</label>
+        <link refid="rlbox__types_8hpp_source"/>
+      </node>
+      <node id="5">
+        <label>cstdlib</label>
+      </node>
+      <node id="6">
+        <label>iostream</label>
+      </node>
+      <node id="2">
+        <label>type_traits</label>
+      </node>
       <node id="10">
         <label>cstring</label>
       </node>
+      <node id="12">
+        <label>rlbox_conversion.hpp</label>
+        <link refid="rlbox__conversion_8hpp_source"/>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
     </incdepgraph>
     <invincdepgraph>
+      <node id="2">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
+      </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
         <link refid="rlbox__policy__types_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
-      </node>
-      <node id="2">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
       </node>
     </invincdepgraph>
     <innerclass refid="classrlbox_1_1sandbox__callback" prot="public">rlbox::sandbox_callback</innerclass>
@@ -351,49 +351,68 @@
 <codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>idx;</highlight></codeline>
 <codeline lineno="212"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="213"><highlight class="normal"></highlight></codeline>
-<codeline lineno="214"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="215"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>(<ref refid="classrlbox_1_1app__pointer__map" kindref="compound">app_pointer_map&lt;typename T_Sbx::T_PointerType&gt;</ref>*<sp/>a_map,</highlight></codeline>
-<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T_Sbx::T_PointerType<sp/>a_idx,</highlight></codeline>
-<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/>a_idx_unsandboxed)</highlight></codeline>
-<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>map(a_map)</highlight></codeline>
-<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx(a_idx)</highlight></codeline>
-<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx_unsandboxed(a_idx_unsandboxed)</highlight></codeline>
-<codeline lineno="221"><highlight class="normal"><sp/><sp/>{}</highlight></codeline>
-<codeline lineno="222"><highlight class="normal"></highlight></codeline>
-<codeline lineno="223"><highlight class="normal"><sp/><sp/>~<ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>()<sp/>{<sp/>unregister();<sp/>}</highlight></codeline>
-<codeline lineno="224"><highlight class="normal"></highlight></codeline>
-<codeline lineno="225"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>unregister()</highlight></codeline>
-<codeline lineno="226"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(idx<sp/>!=<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>map-&gt;remove_app_ptr(idx);</highlight></codeline>
-<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>map<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>idx<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>idx_unsandboxed<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="233"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="234"><highlight class="normal"></highlight></codeline>
-<codeline lineno="235"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T, T_Sbx&gt;</ref><sp/>to_tainted()</highlight></codeline>
-<codeline lineno="236"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T, T_Sbx&gt;::internal_factory</ref>(</highlight></codeline>
-<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">reinterpret_cast&lt;</highlight><highlight class="normal">T</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(idx_unsandboxed));</highlight></codeline>
-<codeline lineno="239"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="240"><highlight class="normal"></highlight></codeline>
-<codeline lineno="245" refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" kindref="member">UNSAFE_unverified</ref>()<sp/>const<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
-<codeline lineno="252" refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" kindref="member">UNSAFE_sandboxed</ref>(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>&amp;<sp/>sandbox)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>noexcept</highlight></codeline>
-<codeline lineno="253"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
-<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
-<codeline lineno="256"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="257"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" kindref="member">UNSAFE_unverified</ref>()<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
-<codeline lineno="258"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" kindref="member">UNSAFE_sandboxed</ref>(rlbox_sandbox&lt;T_Sbx&gt;&amp;<sp/>sandbox)<sp/>noexcept</highlight></codeline>
-<codeline lineno="259"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
-<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
-<codeline lineno="262"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="263"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="264"><highlight class="normal"></highlight></codeline>
-<codeline lineno="265"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>(<ref refid="classrlbox_1_1app__pointer__map" kindref="compound">app_pointer_map&lt;typename T_Sbx::T_PointerType&gt;</ref>*<sp/>a_map,</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T_Sbx::T_PointerType<sp/>a_idx,</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/>a_idx_unsandboxed)</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>map(a_map)</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx(a_idx)</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx_unsandboxed(a_idx_unsandboxed)</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>()</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>map(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx(0)</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/>,<sp/>idx_unsandboxed(0)</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/>~<ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>()<sp/>{<sp/>unregister();<sp/>}</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>(<ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>&amp;&amp;<sp/>other)</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>move_obj(std::forward&lt;app_pointer&gt;(other));</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>&amp;<sp/>operator=(<ref refid="classrlbox_1_1app__pointer" kindref="compound">app_pointer</ref>&amp;&amp;<sp/>other)</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">this</highlight><highlight class="normal"><sp/>!=<sp/>&amp;other)<sp/>{</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>move_obj(std::forward&lt;app_pointer&gt;(other));</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">this</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>unregister()</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(idx<sp/>!=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>map-&gt;remove_app_ptr(idx);</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>map<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>idx<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>idx_unsandboxed<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T, T_Sbx&gt;</ref><sp/>to_tainted()</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1tainted" kindref="compound">tainted&lt;T, T_Sbx&gt;::internal_factory</ref>(</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">reinterpret_cast&lt;</highlight><highlight class="normal">T</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(idx_unsandboxed));</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight></codeline>
+<codeline lineno="264" refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" kindref="member">UNSAFE_unverified</ref>()<sp/>const<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
+<codeline lineno="271" refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" kindref="member">UNSAFE_sandboxed</ref>(<ref refid="classrlbox_1_1rlbox__sandbox" kindref="compound">rlbox_sandbox&lt;T_Sbx&gt;</ref>&amp;<sp/>sandbox)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>noexcept</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" kindref="member">UNSAFE_unverified</ref>()<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_value();<sp/>}</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" kindref="member">UNSAFE_sandboxed</ref>(rlbox_sandbox&lt;T_Sbx&gt;&amp;<sp/>sandbox)<sp/>noexcept</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/>RLBOX_UNUSED(sandbox);</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_raw_sandbox_value();</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="282"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"></highlight></codeline>
+<codeline lineno="284"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp"/>
   </compounddef>
 </doxygen>
