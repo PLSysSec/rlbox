@@ -58,8 +58,8 @@ TEST_CASE("Tainted struct pointer assignment", "[tainted_struct]")
   ps->fieldLong = fieldLong;
   ps->fieldString = sandbox_reinterpret_cast<const char*>(fieldString);
   ps->fieldBool = fieldBool;
-  char* temp = (&(ps->fieldFixedArr[0])).UNSAFE_unverified();
-  std::strncpy(temp, "Bye", sizeof(ps->fieldFixedArr));
+  tainted<char*, TestSandbox> arrayAddr = sandbox_reinterpret_cast<char*>(&(ps->fieldFixedArr));
+  std::strncpy(arrayAddr.UNSAFE_unverified(), "Bye", sizeof(ps->fieldFixedArr));
   ps->voidPtr = nullptr;
 
   REQUIRE(ps->fieldLong.UNSAFE_unverified() == fieldLong);
