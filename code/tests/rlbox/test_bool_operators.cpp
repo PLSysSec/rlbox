@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "test_include.hpp"
 
 using rlbox::tainted;

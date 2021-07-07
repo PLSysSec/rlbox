@@ -1,5 +1,8 @@
 #include <cstddef>
 #include <cstdint>
+#include <limits>
+#include <stdlib.h>
+#include <string.h>
 #include <type_traits>
 
 #include "test_include.hpp"

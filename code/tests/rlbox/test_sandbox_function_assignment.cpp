@@ -1,3 +1,5 @@
+#include <vector>
+
 // NOLINTNEXTLINE
 #define RLBOX_USE_STATIC_CALLS() rlbox_test_sandbox_lookup_symbol
 #include "test_include.hpp"

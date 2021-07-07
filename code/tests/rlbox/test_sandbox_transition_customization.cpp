@@ -17,11 +17,7 @@ void on_transition_out(rlbox::rlbox_transition transition,
   on_transition_in(transition, func_name, func_ptr, state)
 #define RLBOX_TRANSITION_ACTION_OUT(transition, func_name, func_ptr, state)    \
   on_transition_out(transition, func_name, func_ptr, state)
-#include "rlbox_noop_sandbox.hpp"
 #include "test_include.hpp"
-
-#include <iostream>
-#include <vector>
 
 using RL = rlbox::rlbox_sandbox<rlbox::rlbox_noop_sandbox>;
 

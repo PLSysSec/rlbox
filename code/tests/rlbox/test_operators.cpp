@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <limits>
+#include <memory>
 
 #include "test_include.hpp"
 

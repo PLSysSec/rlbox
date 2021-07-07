@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <vector>
+
 #include "test_include.hpp"
 
 using rlbox::app_pointer;

@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <vector>
 
 #include "test_include.hpp"
 

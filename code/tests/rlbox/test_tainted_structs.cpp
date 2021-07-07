@@ -1,6 +1,7 @@
 #include <array>
 #include <cstring>
 #include <type_traits>
+#include <vector>
 
 #include "test_include.hpp"
 #include "test_tainted_structs.hpp"
