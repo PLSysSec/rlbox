@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
 
-[![CMake](https://github.com/PLSysSec/rlbox_wasm2c_sandbox/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
+[![CMake](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
 RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev). This code has been tested on 64-bit versions of Ubuntu, Mac OSX and Windows.
 
