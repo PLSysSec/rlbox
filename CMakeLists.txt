@@ -266,6 +266,8 @@ target_link_libraries(test_rlbox_glue_dylib
                       rlbox-cpp17-lib
                       ${CMAKE_DL_LIBS})
 
+add_dependencies(test_rlbox_glue_dylib rlbox_glue_lib_shared)
+
 catch_discover_tests(test_rlbox_glue_dylib)
 
 
