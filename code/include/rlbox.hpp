@@ -1152,6 +1152,7 @@ private:
   inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(
     rlbox_sandbox<T_Sbx>& sandbox) const noexcept
   {
+    RLBOX_UNUSED(sandbox);
     return data;
   };
 
@@ -1169,6 +1170,7 @@ private:
   inline std::remove_cv_t<T_SandboxedType> get_raw_sandbox_value(
     rlbox_sandbox<T_Sbx>& sandbox) noexcept
   {
+    RLBOX_UNUSED(sandbox);
     rlbox_detail_forward_to_const(get_raw_sandbox_value,
                                   std::remove_cv_t<T_SandboxedType>);
   };
