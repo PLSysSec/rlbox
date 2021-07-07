@@ -158,8 +158,9 @@ protected:
   static inline void* impl_get_unsandboxed_pointer_no_ctx(
     T_PointerType p,
     const void* /* example_unsandboxed_ptr */,
-    rlbox_dylib_sandbox* (
-      */* expensive_sandbox_finder */)(const void* example_unsandboxed_ptr))
+    rlbox_dylib_sandbox* (* // Func ptr
+                          /* param: expensive_sandbox_finder */)(
+      const void* example_unsandboxed_ptr))
   {
     return p;
   }
@@ -168,8 +169,9 @@ protected:
   static inline T_PointerType impl_get_sandboxed_pointer_no_ctx(
     const void* p,
     const void* /* example_unsandboxed_ptr */,
-    rlbox_dylib_sandbox* (
-      */* expensive_sandbox_finder */)(const void* example_unsandboxed_ptr))
+    rlbox_dylib_sandbox* (* // Func ptr
+                          /* param: expensive_sandbox_finder */)(
+      const void* example_unsandboxed_ptr))
   {
     return const_cast<T_PointerType>(p);
   }

@@ -226,7 +226,8 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
                                                bool& copied)
 {
   // Malloc in sandbox takes a uint32_t as the parameter, need a bounds check
-  detail::dynamic_check(num <= std::numeric_limits<uint32_t>::max(), "Granting access too large a region");
+  detail::dynamic_check(num <= std::numeric_limits<uint32_t>::max(),
+                        "Granting access too large a region");
   uint32_t num_trunc = num;
 
   // sandbox can grant access if it includes the following line

@@ -29,7 +29,7 @@ using valid_param_t = std::conditional_t<std::is_void_v<T>, void*, T>;
 
 namespace func_arg_nums_v_detail {
   template<typename T_Ret, typename... T_Args>
-  constexpr size_t helper_two(T_Ret(*)(T_Args...))
+  constexpr size_t helper_two(T_Ret (*)(T_Args...))
   {
     return sizeof...(T_Args);
   }

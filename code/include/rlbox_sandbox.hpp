@@ -583,7 +583,8 @@ public:
    */
   static inline bool is_in_same_sandbox(const void* p1, const void* p2)
   {
-    const size_t num_args = detail::func_arg_nums_v<decltype(T_Sbx::impl_is_in_same_sandbox)>;
+    const size_t num_args =
+      detail::func_arg_nums_v<decltype(T_Sbx::impl_is_in_same_sandbox)>;
     if constexpr (num_args == 2) {
       return T_Sbx::impl_is_in_same_sandbox(p1, p2);
     } else {
