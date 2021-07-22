@@ -4,11 +4,21 @@
 
 [![CMake](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
-RLBox sandboxing API (in C++ 17). See the [online docs](https://docs.rlbox.dev). This code has been tested on 64-bit versions of Ubuntu, Mac OSX and Windows.
+RLBox sandboxing API (in C++ 17). This code has been tested on 64-bit versions of Ubuntu, Mac OSX and Windows.
 
 ## Reporting security bugs
 
 If you find a security bug, please do not create a public issue. Instead, file a security bug on bugzilla using the [following template link](https://bugzilla.mozilla.org/enter_bug.cgi?cc=tom%40mozilla.com&cc=nfroyd%40mozilla.com&cc=deian%40cs.ucsd.edu&cc=shravanrn%40gmail.com&component=Security%3A%20Process%20Sandboxing&defined_groups=1&groups=core-security&product=Core&bug_type=defect).
+
+## Using this library
+
+RLBox is a general purpose sandboxing API that can be used to interact with library sandboxed with different backends --- WebAssembly, Native Client, libraries running in a separate process etc. Support for each backend is provided by a separate plugin that must also be downloaded separately.
+
+See the [online docs](https://docs.rlbox.dev) for more details.
+
+The RLBox library is a header only library, so you can directly download this repo and use include the contents of `code/include/` in your application. On Linux/Mac machines, you can optionally install the headers as well with `make install`.
+
+Support for cmake's `find_package` API is also included. See the example in `examples/hello-world-cmake`.
 
 ## Running the tests
 
