@@ -1,6 +1,5 @@
 This is a simple hello-world example that uses the RLBox API to call functions
-in a simple sandboxed library. This example uses the NOOP-sandbox; we will
-extend the example to use the Wasm-based sandboxed in a later example.
+in a simple sandboxed library. This example uses the NOOP-sandbox.
 
 - `mylib.{h,c}` is the simple library
 - `main.cpp` is our main program
