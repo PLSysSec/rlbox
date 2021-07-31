@@ -41,6 +41,24 @@ Currently rlbox has been tested and should work with gcc-7 or later and clang-5,
 If you are using other compilers/compiler versions (like mingw), these may also be supported.
 Simply run the test suite and check that everything passes.
 
+3. Disable tests
+
+Add `-DBUILD_TESTING=OFF` when invoking cmake the first time. This will also remove Catch2 dependency.
+
+   ```bash
+   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+   ...
+   ```
+
+## Install the library
+
+Configure the build with cmake in the same way that previous paragraph. Then simply run:
+
+   ```bash
+   cd build
+   make install
+   ```
+
 ## Using/Building docs
 
 You can view the pre-built docs checked in to the repo in the docs folder.

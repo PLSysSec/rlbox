@@ -63,8 +63,8 @@ if(DEV)
   find_program(IWYU "iwyu")
   if("")#IWYU)# TODO: Still have to ensure this checks .hpp files, which it
          # doesn't right now. See bug below about "check_also"... which doesn't
-         # seem to work https://github.com/include-what-you-use/include-what-
-         # you-use/issues/633
+         # seem to work
+         # https://github.com/include-what-you-use/include-what-you-use/issues/633
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
         iwyu
         -Xiwyu
@@ -80,21 +80,25 @@ endif()
 
 # Dependencies ###################
 
-find_package(Catch2 QUIET)
-if(NOT Catch2_FOUND)
-  include(FetchContent)
-  FetchContent_Declare(catch2
-                       GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-                       GIT_TAG v2.9.1)
+include(CTest)
 
-  FetchContent_GetProperties(catch2)
-  if(NOT catch2_POPULATED)
-    FetchContent_Populate(catch2)
+if(BUILD_TESTING)
+  find_package(Catch2 QUIET)
+  if(NOT Catch2_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(catch2
+                         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+                         GIT_TAG v2.9.1)
+
+    FetchContent_GetProperties(catch2)
+    if(NOT catch2_POPULATED)
+      FetchContent_Populate(catch2)
+    endif()
+
+    add_subdirectory("${catch2_SOURCE_DIR}")
+    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
   endif()
-
-  add_subdirectory("${catch2_SOURCE_DIR}")
-  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
-endif()
+endif(BUILD_TESTING)
 
 file(GLOB_RECURSE
      RLBOX_SOURCE_FILES
@@ -198,129 +202,131 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 
 # Tests ###################
 
-include(CTest)
-include(Catch)
+if(BUILD_TESTING)
 
-# Test rlbox features
+  include(Catch)
 
-add_executable(test_rlbox
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_app_pointers.cpp
-               code/tests/rlbox/test_bool_operators.cpp
-               code/tests/rlbox/test_callback.cpp
-               code/tests/rlbox/test_comparison.cpp
-               code/tests/rlbox/test_conversion.cpp
-               code/tests/rlbox/test_operators.cpp
-               code/tests/rlbox/test_sandbox_function_assignment.cpp
-               code/tests/rlbox/test_sandbox_noop_sandbox.cpp
-               code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
-               code/tests/rlbox/test_sandbox_ptr_conversion.cpp
-               code/tests/rlbox/test_stdlib.cpp
-               code/tests/rlbox/test_tainted_assignment.cpp
-               code/tests/rlbox/test_tainted_opaque.cpp
-               code/tests/rlbox/test_tainted_sizes.cpp
-               code/tests/rlbox/test_tainted_structs.cpp
-               code/tests/rlbox/test_type_traits.cpp
-               code/tests/rlbox/test_verification.cpp
-               code/tests/rlbox/test_verify_arrays.cpp
-               code/tests/rlbox/test_wrapper_traits.cpp)
+  # Test rlbox features
 
-target_include_directories(test_rlbox PRIVATE code/tests/rlbox)
+  add_executable(test_rlbox
+                 code/tests/test_main.cpp
+                 code/tests/rlbox/test_app_pointers.cpp
+                 code/tests/rlbox/test_bool_operators.cpp
+                 code/tests/rlbox/test_callback.cpp
+                 code/tests/rlbox/test_comparison.cpp
+                 code/tests/rlbox/test_conversion.cpp
+                 code/tests/rlbox/test_operators.cpp
+                 code/tests/rlbox/test_sandbox_function_assignment.cpp
+                 code/tests/rlbox/test_sandbox_noop_sandbox.cpp
+                 code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
+                 code/tests/rlbox/test_sandbox_ptr_conversion.cpp
+                 code/tests/rlbox/test_stdlib.cpp
+                 code/tests/rlbox/test_tainted_assignment.cpp
+                 code/tests/rlbox/test_tainted_opaque.cpp
+                 code/tests/rlbox/test_tainted_sizes.cpp
+                 code/tests/rlbox/test_tainted_structs.cpp
+                 code/tests/rlbox/test_type_traits.cpp
+                 code/tests/rlbox/test_verification.cpp
+                 code/tests/rlbox/test_verify_arrays.cpp
+                 code/tests/rlbox/test_wrapper_traits.cpp)
 
-target_link_libraries(test_rlbox Catch2::Catch2 ${PROJECT_NAME})
+  target_include_directories(test_rlbox PRIVATE code/tests/rlbox)
 
-catch_discover_tests(test_rlbox)
+  target_link_libraries(test_rlbox Catch2::Catch2 ${PROJECT_NAME})
 
-# Test rlbox overheads
+  catch_discover_tests(test_rlbox)
 
-add_executable(test_rlbox_transition_timers
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_sandbox_transition_timings.cpp)
+  # Test rlbox overheads
 
-target_include_directories(test_rlbox_transition_timers PRIVATE code/tests/rlbox)
+  add_executable(test_rlbox_transition_timers
+                 code/tests/test_main.cpp
+                 code/tests/rlbox/test_sandbox_transition_timings.cpp)
 
-target_link_libraries(test_rlbox_transition_timers Catch2::Catch2 ${PROJECT_NAME})
+  target_include_directories(test_rlbox_transition_timers PRIVATE code/tests/rlbox)
 
-catch_discover_tests(test_rlbox_transition_timers)
+  target_link_libraries(test_rlbox_transition_timers Catch2::Catch2 ${PROJECT_NAME})
 
-# Test rlbox transition customization
+  catch_discover_tests(test_rlbox_transition_timers)
 
-add_executable(test_rlbox_transition_customization
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_sandbox_transition_customization.cpp)
+  # Test rlbox transition customization
 
-target_include_directories(test_rlbox_transition_customization PRIVATE code/tests/rlbox)
+  add_executable(test_rlbox_transition_customization
+                 code/tests/test_main.cpp
+                 code/tests/rlbox/test_sandbox_transition_customization.cpp)
 
-target_link_libraries(test_rlbox_transition_customization Catch2::Catch2 ${PROJECT_NAME})
+  target_include_directories(test_rlbox_transition_customization PRIVATE code/tests/rlbox)
 
-catch_discover_tests(test_rlbox_transition_customization)
+  target_link_libraries(test_rlbox_transition_customization Catch2::Catch2 ${PROJECT_NAME})
 
-# Test rlbox glue
+  catch_discover_tests(test_rlbox_transition_customization)
 
-add_library(rlbox_glue_lib_static STATIC code/tests/rlbox_glue/lib/libtest.c)
-target_include_directories(rlbox_glue_lib_static
-                           PUBLIC code/tests/rlbox_glue/lib)
+  # Test rlbox glue
 
-add_library(rlbox_glue_lib_shared SHARED code/tests/rlbox_glue/lib/libtest.c)
-target_include_directories(rlbox_glue_lib_shared
-                           PUBLIC code/tests/rlbox_glue/lib)
+  add_library(rlbox_glue_lib_static STATIC code/tests/rlbox_glue/lib/libtest.c)
+  target_include_directories(rlbox_glue_lib_static
+                             PUBLIC code/tests/rlbox_glue/lib)
 
-add_executable(test_rlbox_glue
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue.cpp)
-target_include_directories(test_rlbox_glue PUBLIC code/tests/rlbox_glue)
+  add_library(rlbox_glue_lib_shared SHARED code/tests/rlbox_glue/lib/libtest.c)
+  target_include_directories(rlbox_glue_lib_shared
+                             PUBLIC code/tests/rlbox_glue/lib)
 
-target_link_libraries(test_rlbox_glue
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      rlbox_glue_lib_static)
+  add_executable(test_rlbox_glue
+                 code/tests/test_main.cpp
+                 code/tests/rlbox_glue/test_noop_sandbox_glue.cpp)
+  target_include_directories(test_rlbox_glue PUBLIC code/tests/rlbox_glue)
 
-catch_discover_tests(test_rlbox_glue)
+  target_link_libraries(test_rlbox_glue
+                        Catch2::Catch2
+                        ${PROJECT_NAME}
+                        rlbox_glue_lib_static)
 
-add_executable(test_rlbox_glue_embedder_vars
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue_embedder_vars.cpp)
-target_include_directories(test_rlbox_glue_embedder_vars PUBLIC code/tests/rlbox_glue)
+  catch_discover_tests(test_rlbox_glue)
 
-target_link_libraries(test_rlbox_glue_embedder_vars
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      rlbox_glue_lib_static)
+  add_executable(test_rlbox_glue_embedder_vars
+                 code/tests/test_main.cpp
+                 code/tests/rlbox_glue/test_noop_sandbox_glue_embedder_vars.cpp)
+  target_include_directories(test_rlbox_glue_embedder_vars PUBLIC code/tests/rlbox_glue)
 
-catch_discover_tests(test_rlbox_glue_embedder_vars)
+  target_link_libraries(test_rlbox_glue_embedder_vars
+                        Catch2::Catch2
+                        ${PROJECT_NAME}
+                        rlbox_glue_lib_static)
 
-add_executable(test_rlbox_glue_dylib
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_dylib_sandbox_glue.cpp)
-target_include_directories(test_rlbox_glue_dylib PUBLIC code/tests/rlbox_glue
-                                                        code/tests/rlbox_glue/lib)
-target_compile_definitions(test_rlbox_glue_dylib PUBLIC GLUE_LIB_PATH="$<TARGET_FILE:rlbox_glue_lib_shared>")
+  catch_discover_tests(test_rlbox_glue_embedder_vars)
 
-target_link_libraries(test_rlbox_glue_dylib
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      ${CMAKE_DL_LIBS})
+  add_executable(test_rlbox_glue_dylib
+                 code/tests/test_main.cpp
+                 code/tests/rlbox_glue/test_dylib_sandbox_glue.cpp)
+  target_include_directories(test_rlbox_glue_dylib PUBLIC code/tests/rlbox_glue
+                                                          code/tests/rlbox_glue/lib)
+  target_compile_definitions(test_rlbox_glue_dylib PUBLIC GLUE_LIB_PATH="$<TARGET_FILE:rlbox_glue_lib_shared>")
 
-add_dependencies(test_rlbox_glue_dylib rlbox_glue_lib_shared)
+  target_link_libraries(test_rlbox_glue_dylib
+                        Catch2::Catch2
+                        ${PROJECT_NAME}
+                        ${CMAKE_DL_LIBS})
 
-catch_discover_tests(test_rlbox_glue_dylib)
+  add_dependencies(test_rlbox_glue_dylib rlbox_glue_lib_shared)
 
-# make check
+  catch_discover_tests(test_rlbox_glue_dylib)
 
-add_custom_target(
-  check
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMAND
-    ${CMAKE_COMMAND} -E env
-    LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
-    UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
-    ${CMAKE_CTEST_COMMAND} -V
-  DEPENDS test_rlbox
-          test_rlbox_transition_timers
-          test_rlbox_transition_customization
-          test_rlbox_glue
-          test_rlbox_glue_embedder_vars
-          test_rlbox_glue_dylib
-  COMMENT "Running tests"
-)
+  # make check
 
+  add_custom_target(
+    check
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND
+      ${CMAKE_COMMAND} -E env
+      LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
+      UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
+      ${CMAKE_CTEST_COMMAND} -V
+    DEPENDS test_rlbox
+            test_rlbox_transition_timers
+            test_rlbox_transition_customization
+            test_rlbox_glue
+            test_rlbox_glue_embedder_vars
+            test_rlbox_glue_dylib
+    COMMENT "Running tests"
+  )
+
+endif(BUILD_TESTING)
