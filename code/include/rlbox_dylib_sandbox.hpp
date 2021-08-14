@@ -62,6 +62,8 @@ public:
   // no-op sandbox can transfer buffers as there is no sandboxings
   // Thus transfer is a noop
   using can_grant_deny_access = void;
+  // if this plugin uses a separate function to lookup internal callbacks
+  using needs_internal_lookup_symbol = void;
 
 private:
   void* sandbox = nullptr;
@@ -215,6 +217,11 @@ protected:
 #endif
     detail::dynamic_check(ret != nullptr, "Symbol not found");
     return ret;
+  }
+
+  void* impl_internal_lookup_symbol(const char* func_name)
+  {
+    return impl_lookup_symbol(func_name);
   }
 
   template<typename T, typename T_Converted, typename... T_Args>

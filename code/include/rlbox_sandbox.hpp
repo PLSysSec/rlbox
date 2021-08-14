@@ -675,6 +675,28 @@ public:
     return func_ptr;
   }
 
+  void* internal_lookup_symbol(const char* func_name)
+  {
+    {
+      RLBOX_ACQUIRE_SHARED_GUARD(lock, func_ptr_cache_lock);
+
+      auto func_ptr_ref = func_ptr_map.find(func_name);
+      if (func_ptr_ref != func_ptr_map.end()) {
+        return func_ptr_ref->second;
+      }
+    }
+
+    void* func_ptr = 0;
+    if constexpr(rlbox::detail::has_member_using_needs_internal_lookup_symbol_v<T_Sbx>) {
+      func_ptr = this->impl_internal_lookup_symbol(func_name);
+    } else {
+      func_ptr = this->impl_lookup_symbol(func_name);
+    }
+    RLBOX_ACQUIRE_UNIQUE_GUARD(lock, func_ptr_cache_lock);
+    func_ptr_map[func_name] = func_ptr;
+    return func_ptr;
+  }
+
   // this is an internal function invoked from macros, so it has be public
   template<typename T, typename... T_Args>
   inline auto INTERNAL_invoke_with_func_name(const char* func_name,
@@ -907,7 +929,7 @@ public:
   inline tainted<T*, T_Sbx> INTERNAL_get_sandbox_function_name(
     const char* func_name)
   {
-    return INTERNAL_get_sandbox_function_ptr<T>(lookup_symbol(func_name));
+    return INTERNAL_get_sandbox_function_ptr<T>(internal_lookup_symbol(func_name));
   }
 
   // this is an internal function invoked from macros, so it has be public
