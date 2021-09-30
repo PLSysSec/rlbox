@@ -13,7 +13,12 @@
 #  error "Missing definition for GLUE_LIB_PATH"
 #endif
 
+#if defined(_WIN32)
+// NOLINTNEXTLINE
+#define CreateSandbox(sandbox) sandbox.create_sandbox(L"" GLUE_LIB_PATH)
+#else
 // NOLINTNEXTLINE
 #define CreateSandbox(sandbox) sandbox.create_sandbox(GLUE_LIB_PATH)
+#endif
 
 #include "test_sandbox_glue.inc.cpp"

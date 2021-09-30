@@ -11,8 +11,10 @@
 #if defined(_WIN32)
 // Ensure the min/max macro in the header doesn't collide with functions in
 // std::
-#  define NOMINMAX
-#  include <Windows.h>
+#  ifndef NOMINMAX
+#    define NOMINMAX
+#  endif
+#  include <windows.h>
 #else
 #  include <dlfcn.h>
 #endif
@@ -101,7 +103,7 @@ protected:
   inline void impl_create_sandbox(const char* path)
   {
 #if defined(_WIN32)
-    sandbox = LoadLibraryA(path);
+    sandbox = (void*)LoadLibraryW(path);
 #else
     sandbox = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 #endif
