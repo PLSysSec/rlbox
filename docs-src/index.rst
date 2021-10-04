@@ -501,8 +501,8 @@ sandbox (e.g., by passing the pointer as an argument to a function).
 
 .. _free_in_sandbox:
 
-Migrating code by temporarily removing tainting (TODO)
-------------------------------------------------------
+Migrating code by temporarily removing tainting
+-----------------------------------------------
 
 RLBox is designed to simplify working with existing applications/code bases.
 Rather than migrating an application to use RLBox's APIs in a single shot, RLBox
