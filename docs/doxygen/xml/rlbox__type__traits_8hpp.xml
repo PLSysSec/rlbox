@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="rlbox__type__traits_8hpp" kind="file" language="C++">
     <compoundname>rlbox_type_traits.hpp</compoundname>
     <includes local="no">array</includes>
     <includes local="no">type_traits</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
-    <includedby refid="rlbox__app__pointer_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp</includedby>
-    <includedby refid="rlbox__conversion_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_conversion.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
-    <includedby refid="rlbox__unwrap_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_unwrap.hpp</includedby>
+    <includedby refid="rlbox__app__pointer_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp</includedby>
+    <includedby refid="rlbox__conversion_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox__unwrap_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_unwrap.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp</label>
         <link refid="rlbox__type__traits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -26,82 +26,84 @@
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="5">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="9">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</label>
-        <link refid="rlbox__stdlib_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="8">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_unwrap.hpp</label>
-        <link refid="rlbox__unwrap_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="9" relation="include">
-        </childnode>
-      </node>
-      <node id="6">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-      </node>
-      <node id="2">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
-      </node>
       <node id="7">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="1">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp</label>
-        <link refid="rlbox__type__traits_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
         <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-      </node>
-      <node id="3">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp</label>
-        <link refid="rlbox__app__pointer_8hpp_source"/>
-        <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="4">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_conversion.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
         <link refid="rlbox__conversion_8hpp_source"/>
-        <childnode refid="2" relation="include">
+        <childnode refid="3" relation="include">
         </childnode>
         <childnode refid="5" relation="include">
         </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_unwrap.hpp</label>
+        <link refid="rlbox__unwrap_8hpp_source"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
+      </node>
+      <node id="2">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp</label>
+        <link refid="rlbox__app__pointer_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
         <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp</label>
+        <link refid="rlbox__type__traits_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</label>
+        <link refid="rlbox__stdlib_8hpp_source"/>
+        <childnode refid="3" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
     <innerclass refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" prot="public">rlbox::detail::std_array_to_c_arr_detail::W</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper" prot="public">rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00e23e81f699b5338ffda7a4814dc1a20e" prot="public">rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; std::is_array_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_00f7133443f751f75ceb0fc3a4cd3f63ff" prot="public">rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt; is_std_array_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1is__c__or__std__array__detail_1_1is__c__or__std__array__helper_3_01T_006917f5978f5075d5dadfc94abedf439f" prot="public">rlbox::detail::is_c_or_std_array_detail::is_c_or_std_array_helper&lt; T, std::enable_if_t&lt;!std::is_array_v&lt; T &gt; &amp;&amp;!is_std_array_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1std__array__el__detail_1_1W" prot="public">rlbox::detail::std_array_el_detail::W</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper" prot="public">rlbox::detail::all_extents_same_detail::all_extents_same_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T2294706b16288b9be4bf3918e129d9f96" prot="public">rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt; !=std::rank_v&lt; T2 &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T258771663e90eb8e999cffbdabdafda93" prot="public">rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt;==std::rank_v&lt; T2 &gt; &amp;&amp;!std::is_array_v&lt; T1 &gt; &amp;&amp;!std::is_array_v&lt; T2 &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T20ea5dc1c122986b6d2bb6f4fb185397c" prot="public">rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt;==std::rank_v&lt; T2 &gt; &amp;&amp;std::is_array_v&lt; T1 &gt; &amp;&amp;std::is_array_v&lt; T2 &gt; &amp;&amp;std::extent_v&lt; T1 &gt; !=std::extent_v&lt; T2 &gt; &gt; &gt;</innerclass>
@@ -112,6 +114,7 @@
     <innerclass refid="structrlbox_1_1detail_1_1base__type__detail_1_1base__type_3_01T_01_5_01_4" prot="public">rlbox::detail::base_type_detail::base_type&lt; T * &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1base__type__detail_1_1base__type_3_01T_0f_0e_4" prot="public">rlbox::detail::base_type_detail::base_type&lt; T[]&gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1base__type__detail_1_1base__type_3_01T_0fN_0e_4" prot="public">rlbox::detail::base_type_detail::base_type&lt; T[N]&gt;</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTd09a1c93590178c260005e6430499871" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_same_v&lt; short, T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTc2ed7d8e5c23ce6ae87cc658a172a860" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_same_v&lt; int, T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT956ceb54575cc1a39f8f361203064da2" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_same_v&lt; long, T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
@@ -121,6 +124,7 @@
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT41f332e5739cb01a38793b9f298d17c3" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt;(std::is_same_v&lt; bool, T &gt;||std::is_same_v&lt; void, T &gt;||std::is_same_v&lt; char, T &gt;||std::is_same_v&lt; signed char, T &gt;||std::is_floating_point_v&lt; T &gt;||std::is_enum_v&lt; T &gt;)&amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortT9669a45f33d18c9be6a22efe2b66d10c" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_array_v&lt; T &gt; &amp;&amp;!std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__detail_1_1convert__base__types__t__helper_3_01T_00_01T__ShortTc61ef72b6a1c5b4e6ef41be35597aa72" prot="public">rlbox::detail::convert_detail::convert_base_types_t_helper&lt; T, T_ShortType, T_IntType, T_LongType, T_LongLongType, T_PointerType, std::enable_if_t&lt; std::is_const_v&lt; T &gt; &gt; &gt;</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helper" prot="public">rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helpee69bf317a02bfc969249f3ef45e9cd31" prot="public">rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==1 &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helped0b31135d5e82a8cd26c07aa9e6980e3" prot="public">rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==2 &gt; &gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helpea4ceef9688ab2e479cf30f9b90489c25" prot="public">rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==4 &gt; &gt;</innerclass>
@@ -147,7 +151,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="10" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="10" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="10" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="10" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -186,7 +190,7 @@
 <codeline lineno="29"><highlight class="normal"></highlight></codeline>
 <codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">func_arg_nums_v_detail<sp/>{</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T_Ret,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>T_Args&gt;</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/>constexpr<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>helper_two(T_Ret(*)(T_Args...))</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/>constexpr<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>helper_two(T_Ret<sp/>(*)(T_Args...))</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">...(T_Args);</highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
@@ -684,6 +688,6 @@
 <codeline lineno="527"><highlight class="normal"></highlight></codeline>
 <codeline lineno="528"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp"/>
   </compounddef>
 </doxygen>

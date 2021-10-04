@@ -1,94 +1,94 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="rlbox__stdlib__polyfill_8hpp" kind="file" language="C++">
     <compoundname>rlbox_stdlib_polyfill.hpp</compoundname>
-    <includedby refid="rlbox__helpers_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_helpers.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox__helpers_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
     <invincdepgraph>
-      <node id="6">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
       <node id="11">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</label>
-        <link refid="rlbox__stdlib_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
-      <node id="7">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_noop_sandbox.hpp</label>
+        <link refid="rlbox__noop__sandbox_8hpp_source"/>
       </node>
       <node id="1">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp</label>
         <link refid="rlbox__stdlib__polyfill_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
-        <childnode refid="6" relation="include">
+        <childnode refid="8" relation="include">
         </childnode>
-      </node>
-      <node id="10">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_noop_sandbox.hpp</label>
-        <link refid="rlbox__noop__sandbox_8hpp_source"/>
-      </node>
-      <node id="3">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
       </node>
       <node id="8">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="3" relation="include">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
+        <childnode refid="4" relation="include">
         </childnode>
       </node>
-      <node id="9">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp</label>
-        <link refid="rlbox__dylib__sandbox_8hpp_source"/>
+      <node id="5">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
+        <link refid="rlbox__conversion_8hpp_source"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
       </node>
-      <node id="2">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_helpers.hpp</label>
-        <link refid="rlbox__helpers_8hpp_source"/>
-        <childnode refid="3" relation="include">
+      <node id="7">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
+      </node>
+      <node id="3">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp</label>
+        <link refid="rlbox__app__pointer_8hpp_source"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
         </childnode>
         <childnode refid="4" relation="include">
         </childnode>
+      </node>
+      <node id="10">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp</label>
+        <link refid="rlbox__dylib__sandbox_8hpp_source"/>
+      </node>
+      <node id="2">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp</label>
+        <link refid="rlbox__helpers_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
         <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
         </childnode>
         <childnode refid="9" relation="include">
         </childnode>
         <childnode refid="10" relation="include">
         </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
         <childnode refid="11" relation="include">
         </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
       </node>
-      <node id="4">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp</label>
-        <link refid="rlbox__app__pointer_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
-      <node id="5">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_conversion.hpp</label>
-        <link refid="rlbox__conversion_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="7" relation="include">
+      <node id="9">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</label>
+        <link refid="rlbox__stdlib_8hpp_source"/>
+        <childnode refid="4" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
@@ -109,14 +109,14 @@
       <memberdef kind="define" id="rlbox__stdlib__polyfill_8hpp_1a8e7b7f53bfb1ceecb65ca5e6d11283f1" prot="public" static="no">
         <name>INVOKE_RETURN</name>
         <param><defname>...</defname></param>
-        <initializer>  noexcept(noexcept(__VA_ARGS__))-&gt;decltype(__VA_ARGS__) { return __VA_ARGS__; }</initializer>
+        <initializer>noexcept(noexcept(__VA_ARGS__))-&gt;decltype(__VA_ARGS__) { return __VA_ARGS__; }</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp" line="36" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp" bodystart="36" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="36" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -300,6 +300,6 @@
 <codeline lineno="174"><highlight class="normal"></highlight></codeline>
 <codeline lineno="175"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp"/>
   </compounddef>
 </doxygen>

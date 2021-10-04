@@ -1,73 +1,73 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
   <compounddef id="rlbox__wrapper__traits_8hpp" kind="file" language="C++">
     <compoundname>rlbox_wrapper_traits.hpp</compoundname>
     <includes local="no">type_traits</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
-    <includedby refid="rlbox__stdlib_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</includedby>
-    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</includedby>
+    <includedby refid="rlbox__struct__support_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox__stdlib_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
     <incdepgraph>
+      <node id="3">
+        <label>rlbox_types.hpp</label>
+        <link refid="rlbox__types_8hpp_source"/>
+      </node>
       <node id="1">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp</label>
         <link refid="rlbox__wrapper__traits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
-      </node>
-      <node id="3">
-        <label>rlbox_types.hpp</label>
-        <link refid="rlbox__types_8hpp_source"/>
       </node>
       <node id="2">
         <label>type_traits</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="3">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
+      <node id="5">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
         <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="2" relation="include">
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="4" relation="include">
         </childnode>
       </node>
       <node id="4">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</label>
-        <link refid="rlbox__stdlib_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
-      <node id="5">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
-      <node id="2">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
         <link refid="rlbox_8hpp_source"/>
       </node>
-      <node id="6">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-      </node>
       <node id="1">
-        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp</label>
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp</label>
         <link refid="rlbox__wrapper__traits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
-        <childnode refid="3" relation="include">
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
         </childnode>
         <childnode refid="4" relation="include">
         </childnode>
+      </node>
+      <node id="2">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
         <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</label>
+        <link refid="rlbox__stdlib_8hpp_source"/>
+        <childnode refid="4" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
@@ -82,12 +82,15 @@
     <innerclass refid="structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail_586dbac5071c7fb9e9b52cfd4627c31a" prot="public">rlbox::detail::detail_is_member_of_rlbox_detail::is_member_of_rlbox_detail_helper&lt; T, decltype(struct_is_member_of_rlbox_detail(std::declval&lt; T &gt;()))&gt;</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access_1_1has__member__using__can__grant__deny__access" prot="public">rlbox::detail::detail_has_member_using_can_grant_deny_access::has_member_using_can_grant_deny_access</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access_1_1has__member__usa1599aee900b234d66c2ad3df184f09f" prot="public">rlbox::detail::detail_has_member_using_can_grant_deny_access::has_member_using_can_grant_deny_access&lt; T, std::void_t&lt; typename T::can_grant_deny_access &gt; &gt;</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87" prot="public">rlbox::detail::detail_has_member_using_needs_internal_lookup_symbol::has_member_using_needs_internal_lookup_symbol</innerclass>
+    <innerclass refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mem0f5bf58b037991cde10c9c603022c62f" prot="public">rlbox::detail::detail_has_member_using_needs_internal_lookup_symbol::has_member_using_needs_internal_lookup_symbol&lt; T, std::void_t&lt; typename T::needs_internal_lookup_symbol &gt; &gt;</innerclass>
     <innernamespace refid="namespacerlbox">rlbox</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint">rlbox::detail::detail_rlbox_is_tainted_boolean_hint</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__rlbox__remove__wrapper">rlbox::detail::detail_rlbox_remove_wrapper</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__is__member__of__rlbox__detail">rlbox::detail::detail_is_member_of_rlbox_detail</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access">rlbox::detail::detail_has_member_using_can_grant_deny_access</innernamespace>
+    <innernamespace refid="namespacerlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol">rlbox::detail::detail_has_member_using_needs_internal_lookup_symbol</innernamespace>
       <sectiondef kind="define">
       <memberdef kind="define" id="rlbox__wrapper__traits_8hpp_1a2435b8b056ba6155d4d323b9d20044ca" prot="public" static="no">
         <name>rlbox_generate_wrapper_check</name>
@@ -113,7 +116,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="11" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" bodystart="11" bodyend="-1"/>
+        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="11" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" bodystart="11" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -274,8 +277,25 @@
 <codeline lineno="151"><highlight class="normal"><sp/><sp/>detail_has_member_using_can_grant_deny_access::</highlight></codeline>
 <codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>has_member_using_can_grant_deny_access&lt;T&gt;::value;</highlight></codeline>
 <codeline lineno="153"><highlight class="normal"></highlight></codeline>
-<codeline lineno="154"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">detail_has_member_using_needs_internal_lookup_symbol<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Enable<sp/>=<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="156" refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87" kindref="compound">has_member_using_needs_internal_lookup_symbol</ref><sp/>:<sp/>std::false_type</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/>{};</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="160" refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mem0f5bf58b037991cde10c9c603022c62f" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87" kindref="compound">has_member_using_needs_internal_lookup_symbol</ref>&lt;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>T,</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>std::void_t&lt;typename<sp/>T::needs_internal_lookup_symbol&gt;&gt;<sp/>:<sp/>std::true_type</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/>{};</highlight></codeline>
+<codeline lineno="164"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">constexpr<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>has_member_using_needs_internal_lookup_symbol_v<sp/>=</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/>detail_has_member_using_needs_internal_lookup_symbol::</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>has_member_using_needs_internal_lookup_symbol&lt;T&gt;::value;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp"/>
+    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp"/>
   </compounddef>
 </doxygen>

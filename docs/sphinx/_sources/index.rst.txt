@@ -1,3 +1,4 @@
+.. sectnum::
 
 .. contents::
 
@@ -15,9 +16,10 @@ RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
 application code to interface with a sandboxed library.  The Wasm-based sandbox
 is documented in its `corresponding repository
-<https://wasm-sandbox.rlbox.dev>`_.  This documentation focuses on
-the API and the interface you will use when sandboxing code, independent of the
-underlying sandboxing mechanism.
+<https://github.com/PLSysSec/rlbox_wasm2c_sandbox>`_. While, the RLBox API can
+be used with different sandbox implementations (discussed :ref:`later
+<stdlib>`), this documentation focuses on the API and the interface you will use
+when sandboxing code, independent of the underlying sandboxing mechanism.
 
 **Why do we need a sandboxing API?**
 Sandboxing libraries without the RLBox API is both tedious and error-prone.
@@ -107,6 +109,10 @@ library ``mylib`` that has four functions::
       cb("hi again!");
    }
 
+   int get_error_code() {
+      return 0;
+   }
+
 This is not the most interesting library, security-wise, but it is complicated
 enough to demonstrate various RLBox features.
 
@@ -186,7 +192,7 @@ want to pass to ``echo`` into this region::
       std::strncpy(taintedStr.unverified_safe_pointer_because(helloSize, "writing to region"), helloStr, helloSize);
    ...
 
-Note that ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
+Here ``taintedStr`` is actually a :ref:`tainted <tainted>` string: it
 lives in the sandbox memory and could be written to by the (compromised)
 library code concurrently. As such, it's unsafe for us to use this pointer
 without verification. Above, we use the "unverified_safe_pointer_because"
@@ -194,6 +200,14 @@ verifier which basically removes the taint without
 any verification. This is safe because we copy the ``helloStr`` to sandbox
 memory: at worst, the sandboxed library can overwrite the memory region pointed
 to by ``taintedStr`` and crash when it tries to print it.
+
+Note that the string "writing to region" does not have any special meaning in
+the code. Rather the RLBox API asks you to provide a free-form string that acts
+as documentation. Essentially you are providing a string saying "it is safe to
+remove the tainting from this type because ...". Such documentation may be
+useful to other developers who read your code. As discussed, in the above
+example, a write to the region cannot cause a memory safety error in the
+application".
 
 Now, we can just call the function and free the allocated string::
 
@@ -238,6 +252,11 @@ disallow the library-application call -- and pass the callback to the
       // register callback and call it
       auto cb = sandbox.register_callback(hello_cb);
       sandbox.invoke_sandbox_function(call_cb, cb);
+
+      // `cb` is unregistered automatically once it goes out of scope
+      // Once unregistered, the callback cannot be invoked any further
+      // We can also manually unregister it if we want to unregister it sooner
+      cb.unregister();
    ...
 
 Finally, let's destroy the sandbox and exit::
@@ -314,7 +333,7 @@ Exposing functions to sandboxed code
 
 Application code can expose :ref:`callback functions <callback>` to sandbox via
 :ref:`register_callback() <register_callback>`.  These functions can be called
-by the sandboxed code until they are :ref:`unregistered <unregister_callback>`.
+by the sandboxed code until they are unregistered via the `unregister()` function.
 
 .. _register_callback:
 
@@ -336,9 +355,6 @@ A *callback function* is a function that has a special type:
 Forcing arguments to be :ref:`tainted <tainted>` forces the application to
 handled values coming from the sandbox with care. Dually, the return type
 ensures that the application cannot accidentally leak data to the sandbox.
-
-.. _unregister_callback:
-.. doxygenfunction:: unregister_callback
 
 Tainted values
 --------------
@@ -453,11 +469,21 @@ values the result is always tainted.
 RLBox also defines several comparison operators on tainted values that sometime
 unwrap the result:
 
-* Operators ``==``, ``!=`` on tainted pointers is allowed if the rhs is ``nullptr_t`` and return unwrapped ``bool``.
+* Operators ``==``, ``!=`` on tainted pointers is allowed if the rhs is
+  ``nullptr_t`` and return unwrapped ``bool``.
+
 * Operator ``!`` on tainted pointers retruns an unwrapped ``bool``.
-* Operators ``==``, ``!=``, ``!`` on non-pointer tainted values return a ``tainted<bool>``
-* Operators ``==``, ``!=``, ``!`` on :ref:`tainted_volatile <tainted_volatile>` values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
-* Operators ``&&`` and ``||`` on booleans are only permitted when arguments are variables (not expressions). This is because C++ does not permit safe overloading of && and || operations with expression arguments as this affects the short circuiting behaviour of these operations.
+
+* Operators ``==``, ``!=``, ``!`` on non-pointer tainted values return a
+  ``tainted<bool>``
+
+* Operators ``==``, ``!=``, ``!`` on :ref:`tainted_volatile <tainted_volatile>`
+  values returns a :ref:`tainted_boolean_hint <tainted_boolean_hint>`
+
+* Operators ``&&`` and ``||`` on booleans are only permitted when arguments are
+  variables (not expressions). This is because C++ does not permit safe
+  overloading of && and || operations with expression arguments as this affects
+  the short circuiting behaviour of these operations.
 
 Application-sandbox shared memory
 ---------------------------------
@@ -475,32 +501,193 @@ sandbox (e.g., by passing the pointer as an argument to a function).
 
 .. _free_in_sandbox:
 
-To distinguish between different pointer types, RLBox also provides some helper functions:
+Migrating code by temporarily removing tainting (TODO)
+------------------------------------------------------
 
-.. doxygenfunction:: is_pointer_in_app_memory
-.. doxygenfunction:: is_pointer_in_sandbox_memory
-.. doxygenfunction:: is_in_same_sandbox
+RLBox is designed to simplify working with existing applications/code bases.
+Rather than migrating an application to use RLBox's APIs in a single shot, RLBox
+allows "incremental migration" to simplify this step. In particular, migrating
+existing code to use RLBox APIs i.e. using `tainted` types and replacing
+function calls to libraries with :ref:`invoke_sandbox_function()
+<invoke_sandbox_function>` method, can be performed one line at a time. After
+each such migration, you can continue to build, run/test the program with full
+functionality to make sure the migration step is correct.
+
+For example consider migrating some existing code that uses ``mylib``::
+
+   // app.c:
+
+   void print_error_message() {
+      char* msgs[] = { "Success", "Fail" };
+      int result = get_error_code();
+      printf("Result: %s\n", msgs[result]);
+      ...
+   }
+
+
+Rather that migrating the full function to use RLBox, you can migrate just the
+call to ``get_error_code`` by leveraging the :ref:`UNSAFE_unverified
+<UNSAFE_unverified>` APIs to removing the tainting::
+
+   // app.c:
+
+   void print_error_message() {
+      char* msgs[] = { "Success", "Fail" };
+
+      // Migrate this line to use the RLBox API
+      tainted<int, rlbox_noop_sandbox> tainted_result = get_error_code();
+      int result = tainted_result.UNSAFE_unverified();
+
+      // Not migrated
+      printf("Result: %s\n", msgs[result]);
+      ...
+   }
+
+Observe that by renaming variables, we can easily leave the other lines of code unmodified.
+After building and testing this step, we can now migrate the line that prints the message::
+
+   // app.c:
+
+   void print_error_message() {
+      char* msgs[] = { "Success", "Fail" };
+
+      // Migrate this line to use the RLBox API
+      auto tainted_result = get_error_code();
+
+      // Not migrated
+      printf("Result: %s\n", msgs[tainted_result.UNSAFE_unverified()]);
+
+      int result = tainted_result.UNSAFE_unverified();
+      ...
+   }
+
+Similarly, we can proceed with replacing all uses of result in the ``...`` portion of code as well.
+
+As the "UNSAFE" portion of the ``UNSAFE_unverified`` API indicates, migration is
+**NOT** complete until we replace the uses of ``UNSAFE_unverified`` with
+``copy_and_verify`` or ``unverified_safe_because`` as discussed in
+:ref:`verification`. Here, the since ``tainted_result`` is being used to access
+an array of size 2, we can verify it as shown below::
+
+   printf("Result: %s\n", msgs[tainted_result.copy_and_verify([](int val){
+      if (val < 0 or val >= 2) { abort(); }
+      return val;
+   }));
+
+The exact opposite of the ``UNSAFE_unverified`` function i.e. converting
+regularly "untainted" data to ``tainted`` is also available:
+
++------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
+| Tainted type kind      |  Example type | Converted type                         | Conversion API                                                    |
++========================+===============+========================================+===================================================================+
+| Simple type            |  ``int``      | ``tainted<int, rlbox_noop_sandbox>``   | Automatic conversion. No code change needed.                      |
++------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
+| Pointer to type        |  ``Foo*``     | ``tainted<Foo*, rlbox_noop_sandbox>``  | ``tainted<Foo*, rlbox_noop_sandbox>::UNSAFE_accept_pointer(ptr)`` |
++------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
 
 .. _stdlib:
 
 Standard library
 ----------------
 
-RLBox provides several helper functions to application for handling sandboxed
-memory regions and values.
+RLBox provides several helper functions to application for handling tainted data
+(memory influenced by or located in sandoxed regions) similar to the C/C++
+standard library. We list a few of these below; they operate similar to the
+standard library equivalents, but they accept tainted data.
 
 .. doxygenfunction:: memset
+
+|
+
 .. doxygenfunction:: memcpy
+
+|
+
 .. doxygenfunction:: sandbox_reinterpret_cast
+
+|
+
 .. doxygenfunction:: sandbox_const_cast
+
+|
+
 .. doxygenfunction:: sandbox_static_cast
+
+Handling more complex ABIs
+==========================
+
+Passing structs to/from a sandbox (TODO)
+----------------------------------------
+
+TODO
+
+
+Invoking varargs functions in a sandbox (TODO)
+----------------------------------------------
+
+TODO
+
+Invoking C++ functions in a sandbox (TODO)
+------------------------------------------
+
+TODO
+
+Accessing global variables inside a sandbox (TODO)
+--------------------------------------------------
+
+TODO
+
+Allowing the sandbox to safely pass through application data with `app_pointer` (TODO)
+------------------------------------------------------------------------------------------
+
+TODO
+
+.. _plugins:
+
+Using RLBox with different sandboxes (TODO)
+============================================
+
+TODO
+
+Additional material
+===================
+
+Here is some additional material on how to use RLBox.
+
+* A good next step after this tutorial is to get hands-on migrating an application
+  to using a library that you want to sandbox. The `simple library example repo
+  <https://github.com/shravanrn/simple_library_example>`_ is a "toy" application
+  that uses a potentially "buggy" library. Try migrating the application to use
+  the RLBox API based on what you've learnt in this tutorial. The solution is
+  available in the solution folder in the same repo.
+
+* Here is an `alternate short tutorial
+  <https://github.com/ayushagarwal95/tutorial-rlbox>`_ on using the RLBox APIs.
+  Note that this tutorial uses an alternate RLBox sandbox plugin (which uses the
+  Lucet Wasm compiler and RLBox plugin rather than the wasm2c based plugin
+  recommended in this tutorial, but this does not affect the use of the RLBox APIs
+  themselves).
+
+* Another useful example of using the RLBox APIs is the `RLBox test suite
+  <https://github.com/PLSysSec/rlbox_sandboxing_api/tree/master/code/tests>`_
+  itself.
+
+* You can also see usage of the RLBox APIs in the Firefox browser by using the
+  `Firefox code search
+  <https://searchfox.org/mozilla-central/search?q=create_sandbox&path=>`_.
+
+* Finally, the academic paper discussing the development of RLBox and its use in
+  Firefox [RLBoxPaper] at the USENIX Security conference 2020 and the accompanying
+  `video explanations
+  <https://cns.ucsd.edu/videos/members/CNS-RR-2020/Captioned/2020_10_15_CNS_Narayan.mp4>`_
+  are a good way to get an overview of RLBox.
 
 References
 ==========
 
-.. [RLBoxPaper] `*Retrofitting Fine Grain Isolation in the Firefox Renderer*. S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan. <https://usenix2020.rlbox.dev>`_
+.. [RLBoxPaper] `Retrofitting Fine Grain Isolation in the Firefox Renderer <https://usenix2020.rlbox.dev>`_
+  by S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan
 .. [Doxygen] `RLBox Doxygen Documentation <https://doxygen.rlbox.dev/>`_
-
 
 Indices and tables
 ==================

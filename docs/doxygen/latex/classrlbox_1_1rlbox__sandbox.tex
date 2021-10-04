@@ -42,7 +42,7 @@ Collaboration diagram for rlbox\+::rlbox\+\_\+sandbox$<$ T\+\_\+\+Sbx $>$\+:\nop
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a32de91755a582024dc43b879ef192b2c}\label{classrlbox_1_1rlbox__sandbox_a32de91755a582024dc43b879ef192b2c}} 
 T\+\_\+\+Sbx $\ast$ {\bfseries get\+\_\+sandbox\+\_\+impl} ()
 \item 
-{\footnotesize template$<$typename... T\+\_\+\+Args$>$ }\\auto \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}{create\+\_\+sandbox}} (T\+\_\+\+Args... args)
+{\footnotesize template$<$typename... T\+\_\+\+Args$>$ }\\bool \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a8d10eac11ee829943be5aa3bb8f43137}{create\+\_\+sandbox}} (T\+\_\+\+Args... args)
 \begin{DoxyCompactList}\small\item\em Create a new sandbox. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}\label{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}} 
 auto \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}{destroy\+\_\+sandbox}} ()
@@ -81,21 +81,24 @@ void $\ast$ {\bfseries get\+\_\+transition\+\_\+state} ()
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a96d6a841818c4342bb905670cfc3ca11}\label{classrlbox_1_1rlbox__sandbox_a96d6a841818c4342bb905670cfc3ca11}} 
 void {\bfseries set\+\_\+transition\+\_\+state} (void $\ast$new\+\_\+state)
 \item 
-{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ada1ed84dee64fc8fae57c38b36d77f02}{INTERNAL\+\_\+grant\+\_\+access}} (T $\ast$src, size\+\_\+t num, bool \&success)
-\begin{DoxyCompactList}\small\item\em For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal APIs only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a559c3f9ba49a099f959a0bdc9e48090d}{INTERNAL\+\_\+deny\+\_\+access}} (\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ src, size\+\_\+t num, bool \&success)
-\begin{DoxyCompactList}\small\item\em For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal APIs only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ada1ed84dee64fc8fae57c38b36d77f02}{I\+N\+T\+E\+R\+N\+A\+L\+\_\+grant\+\_\+access}} (T $\ast$src, size\+\_\+t num, bool \&success)
+\begin{DoxyCompactList}\small\item\em For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal A\+P\+Is only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a559c3f9ba49a099f959a0bdc9e48090d}{I\+N\+T\+E\+R\+N\+A\+L\+\_\+deny\+\_\+access}} (\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ src, size\+\_\+t num, bool \&success)
+\begin{DoxyCompactList}\small\item\em For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal A\+P\+Is only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a38b2f18b1db0dbd789477a93d0dc40eb}\label{classrlbox_1_1rlbox__sandbox_a38b2f18b1db0dbd789477a93d0dc40eb}} 
 void $\ast$ {\bfseries lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
 \item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a0507c3fad2196aa1dc2d58aa19a814a6}\label{classrlbox_1_1rlbox__sandbox_a0507c3fad2196aa1dc2d58aa19a814a6}} 
+void $\ast$ {\bfseries internal\+\_\+lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
+\item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a9f9e13680f09205f25a520fc04ef3f9a}\label{classrlbox_1_1rlbox__sandbox_a9f9e13680f09205f25a520fc04ef3f9a}} 
-{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries INTERNAL\+\_\+invoke\+\_\+with\+\_\+func\+\_\+name} (const char $\ast$func\+\_\+name, T\+\_\+\+Args \&\&... params)
+{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+invoke\+\_\+with\+\_\+func\+\_\+name} (const char $\ast$func\+\_\+name, T\+\_\+\+Args \&\&... params)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a5eacf092a66c9d4f850b726ffdcd9926}\label{classrlbox_1_1rlbox__sandbox_a5eacf092a66c9d4f850b726ffdcd9926}} 
-{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries INTERNAL\+\_\+invoke\+\_\+with\+\_\+func\+\_\+ptr} (const char $\ast$func\+\_\+name, void $\ast$func\+\_\+ptr, T\+\_\+\+Args \&\&... params)
+{\footnotesize template$<$typename T , typename... T\+\_\+\+Args$>$ }\\auto {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+invoke\+\_\+with\+\_\+func\+\_\+ptr} (const char $\ast$func\+\_\+name, void $\ast$func\+\_\+ptr, T\+\_\+\+Args \&\&... params)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_acd10ff63b848c01690ba1f8977621a72}\label{classrlbox_1_1rlbox__sandbox_acd10ff63b848c01690ba1f8977621a72}} 
-{\footnotesize template$<$typename T2 $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T2, T\+\_\+\+Sbx $>$ {\bfseries UNSAFE\+\_\+accept\+\_\+pointer} (T2 ptr)
+{\footnotesize template$<$typename T2 $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T2, T\+\_\+\+Sbx $>$ {\bfseries U\+N\+S\+A\+F\+E\+\_\+accept\+\_\+pointer} (T2 ptr)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ad2cf7d6b28eca1cdc04cb3cbee338189}\label{classrlbox_1_1rlbox__sandbox_ad2cf7d6b28eca1cdc04cb3cbee338189}} 
 {\footnotesize template$<$typename T\+\_\+\+Ret $>$ }\\\mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\+\_\+callback}}$<$ T\+\_\+\+Cb\+\_\+no\+\_\+wrap$<$ T\+\_\+\+Ret $>$ $\ast$, T\+\_\+\+Sbx $>$ {\bfseries register\+\_\+callback} (T\+\_\+\+Ret($\ast$)())
@@ -103,10 +106,10 @@ void $\ast$ {\bfseries lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
 {\footnotesize template$<$typename T\+\_\+\+RL , typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ }\\\mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\+\_\+callback}}$<$ T\+\_\+\+Cb\+\_\+no\+\_\+wrap$<$ T\+\_\+\+Ret, T\+\_\+\+Args... $>$ $\ast$, T\+\_\+\+Sbx $>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ae4f4cc7825bcb613ab5405e0f6cae7f3}{register\+\_\+callback}} (T\+\_\+\+Ret($\ast$func\+\_\+ptr)(T\+\_\+\+RL, T\+\_\+\+Args...))
 \begin{DoxyCompactList}\small\item\em Expose a callback function to the sandboxed code. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ad65b42ed5e903655cc23cc9e33672b16}\label{classrlbox_1_1rlbox__sandbox_ad65b42ed5e903655cc23cc9e33672b16}} 
-{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries INTERNAL\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+name} (const char $\ast$func\+\_\+name)
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+name} (const char $\ast$func\+\_\+name)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a912906aabd93bf8358153b7a4c7e0adc}\label{classrlbox_1_1rlbox__sandbox_a912906aabd93bf8358153b7a4c7e0adc}} 
-{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries INTERNAL\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+ptr} (void $\ast$func\+\_\+ptr)
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ {\bfseries I\+N\+T\+E\+R\+N\+A\+L\+\_\+get\+\_\+sandbox\+\_\+function\+\_\+ptr} (void $\ast$func\+\_\+ptr)
 \item 
 {\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classrlbox_1_1app__pointer}{app\+\_\+pointer}}$<$ T $\ast$, T\+\_\+\+Sbx $>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_acc0f5bdfa77546148ed15d06641659a5}{get\+\_\+app\+\_\+pointer}} (T $\ast$ptr)
 \begin{DoxyCompactList}\small\item\em Create a \char`\"{}fake\char`\"{} pointer referring to a location in the application memory. \end{DoxyCompactList}\item 
@@ -146,13 +149,13 @@ Encapsulation for sandboxes.
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}\label{classrlbox_1_1rlbox__sandbox_a7b938866462f607bcc069770c1bc1ba6}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a8d10eac11ee829943be5aa3bb8f43137}\label{classrlbox_1_1rlbox__sandbox_a8d10eac11ee829943be5aa3bb8f43137}} 
 \index{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$@{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$}!create\_sandbox@{create\_sandbox}}
 \index{create\_sandbox@{create\_sandbox}!rlbox::rlbox\_sandbox$<$ T\_Sbx $>$@{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$}}
 \doxysubsubsection{\texorpdfstring{create\_sandbox()}{create\_sandbox()}}
 {\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx $>$ \\
 template$<$typename... T\+\_\+\+Args$>$ \\
-auto \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::create\+\_\+sandbox (\begin{DoxyParamCaption}\item[{T\+\_\+\+Args...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+bool \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::create\+\_\+sandbox (\begin{DoxyParamCaption}\item[{T\+\_\+\+Args...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -240,16 +243,15 @@ The \mbox{\hyperlink{classrlbox_1_1app__pointer}{app\+\_\+pointer}} object that 
 \doxysubsubsection{\texorpdfstring{INTERNAL\_deny\_access()}{INTERNAL\_deny\_access()}}
 {\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T $>$ \\
-T$\ast$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::INTERNAL\+\_\+deny\+\_\+access (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$}]{src,  }\item[{size\+\_\+t}]{num,  }\item[{bool \&}]{success }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+T$\ast$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::I\+N\+T\+E\+R\+N\+A\+L\+\_\+deny\+\_\+access (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$ T $\ast$, T\+\_\+\+Sbx $>$}]{src,  }\item[{size\+\_\+t}]{num,  }\item[{bool \&}]{success }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal APIs only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. 
+For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal A\+P\+Is only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. 
 
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{using} can\_grant\_deny\_access = void;}
-
 \end{DoxyCode}
  \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_ada1ed84dee64fc8fae57c38b36d77f02}\label{classrlbox_1_1rlbox__sandbox_ada1ed84dee64fc8fae57c38b36d77f02}} 
 \index{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$@{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$}!INTERNAL\_grant\_access@{INTERNAL\_grant\_access}}
@@ -257,16 +259,15 @@ For internal use only. Grant access of the passed in buffer in to the sandbox in
 \doxysubsubsection{\texorpdfstring{INTERNAL\_grant\_access()}{INTERNAL\_grant\_access()}}
 {\footnotesize\ttfamily template$<$typename T\+\_\+\+Sbx $>$ \\
 template$<$typename T $>$ \\
-\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$T$\ast$, T\+\_\+\+Sbx$>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::INTERNAL\+\_\+grant\+\_\+access (\begin{DoxyParamCaption}\item[{T $\ast$}]{src,  }\item[{size\+\_\+t}]{num,  }\item[{bool \&}]{success }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}$<$T$\ast$, T\+\_\+\+Sbx$>$ \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\+::rlbox\+\_\+sandbox}}$<$ T\+\_\+\+Sbx $>$\+::I\+N\+T\+E\+R\+N\+A\+L\+\_\+grant\+\_\+access (\begin{DoxyParamCaption}\item[{T $\ast$}]{src,  }\item[{size\+\_\+t}]{num,  }\item[{bool \&}]{success }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal APIs only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. 
+For internal use only. Grant access of the passed in buffer in to the sandbox instance. Called by internal A\+P\+Is only if the underlying sandbox supports can\+\_\+grant\+\_\+deny\+\_\+access by including the line. 
 
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{using} can\_grant\_deny\_access = void;}
-
 \end{DoxyCode}
  \mbox{\Hypertarget{classrlbox_1_1rlbox__sandbox_a2ed22fa984d2b3cba5352afbd4211bcd}\label{classrlbox_1_1rlbox__sandbox_a2ed22fa984d2b3cba5352afbd4211bcd}} 
 \index{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$@{rlbox::rlbox\_sandbox$<$ T\_Sbx $>$}!lookup\_app\_ptr@{lookup\_app\_ptr}}
@@ -366,4 +367,4 @@ Wrapped callback function pointer that can be passed to the sandbox.
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/d/hack/rlbox\+\_\+sandboxing\+\_\+api/code/include/rlbox\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}
+/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}
