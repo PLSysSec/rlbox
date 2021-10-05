@@ -577,13 +577,13 @@ an array of size 2, we can verify it as shown below::
 The exact opposite of the ``UNSAFE_unverified`` function i.e. converting
 regularly "untainted" data to ``tainted`` is also available:
 
-+------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
-| Tainted type kind      |  Example type | Converted type                         | Conversion API                                                    |
-+========================+===============+========================================+===================================================================+
-| Simple type            |  ``int``      | ``tainted<int, rlbox_noop_sandbox>``   | Automatic conversion. No code change needed.                      |
-+------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
-| Pointer to type        |  ``Foo*``     | ``tainted<Foo*, rlbox_noop_sandbox>``  | ``tainted<Foo*, rlbox_noop_sandbox>::UNSAFE_accept_pointer(ptr)`` |
-+------------------------+---------------+----------------------------------------+-------------------------------------------------------------------+
++------------------------+---------------+----------------------------------------+----------------------------------------------+
+| Tainted type kind      |  Example type | Converted type                         | Conversion API                               |
++========================+===============+========================================+==============================================+
+| Simple type            |  ``int``      | ``tainted<int, rlbox_noop_sandbox>``   | Automatic conversion. No code change needed. |
++------------------------+---------------+----------------------------------------+----------------------------------------------+
+| Pointer to type        |  ``Foo*``     | ``tainted<Foo*, rlbox_noop_sandbox>``  | ``sandbox.UNSAFE_accept_pointer(ptr)``       |
++------------------------+---------------+----------------------------------------+----------------------------------------------+
 
 .. _stdlib:
 
