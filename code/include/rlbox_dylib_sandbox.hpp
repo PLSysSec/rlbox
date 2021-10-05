@@ -100,7 +100,14 @@ private:
   }
 
 protected:
-  inline void impl_create_sandbox(const char* path)
+
+  #if defined(_WIN32)
+  using path_buf = const LPCWSTR;
+  #else
+  using path_buf = const char*;
+  #endif
+
+  inline void impl_create_sandbox(path_buf path)
   {
 #if defined(_WIN32)
     sandbox = (void*)LoadLibraryW(path);
