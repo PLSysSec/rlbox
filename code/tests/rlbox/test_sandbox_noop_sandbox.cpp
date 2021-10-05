@@ -92,3 +92,24 @@ TEST_CASE("callback in no_op sandbox", "[no_op_sandbox]")
 
   sandbox.destroy_sandbox();
 }
+
+static void simplePointerWrite(int* ptr, int val)
+{
+  *ptr = val;
+}
+
+TEST_CASE("incremental porting operates correctly", "[port]")
+{
+  RL sandbox;
+  sandbox.create_sandbox();
+
+  int ptr_loc = 0;
+  int* ptr = &ptr_loc;
+  auto tainted_ptr = sandbox.UNSAFE_accept_pointer(ptr);
+
+  const int test_val = 42;
+  sandbox.invoke_sandbox_function(simplePointerWrite, tainted_ptr, test_val);
+
+  REQUIRE(*ptr == test_val);
+  REQUIRE(tainted_ptr.UNSAFE_unverified() == ptr);
+}
