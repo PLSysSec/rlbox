@@ -92,13 +92,25 @@ TEST_CASE("RLBox test string verification", "[verification]")
 
   std::strncpy(pc.UNSAFE_unverified(), "Hello", max_length);
 
-  auto checked_string =
-    pc.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
-      return val;
-    });
+  {
+    auto checked_string =
+      pc.copy_and_verify_string([](std::unique_ptr<char[]> val) { // NOLINT
+        return val;
+      });
 
-  REQUIRE(strcmp(checked_string.get(), "Hello") == 0); // NOLINT
-  REQUIRE(sandbox.is_pointer_in_app_memory(checked_string.get()));
+    REQUIRE(strcmp(checked_string.get(), "Hello") == 0); // NOLINT
+    REQUIRE(sandbox.is_pointer_in_app_memory(checked_string.get()));
+  }
+
+  {
+    auto checked_string =
+      pc.copy_and_verify_string([](std::string val) { // NOLINT
+        return val;
+      });
+
+    REQUIRE(strcmp(checked_string.c_str(), "Hello") == 0); // NOLINT
+    REQUIRE(sandbox.is_pointer_in_app_memory(checked_string.c_str()));
+  }
 
   sandbox.destroy_sandbox();
 }
