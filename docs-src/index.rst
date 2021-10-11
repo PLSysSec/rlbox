@@ -433,6 +433,7 @@ These functions are also available for :ref:`callback <callback>`
 
 .. _tainted_ops:
 
+
 Operating on tainted values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Unwrapping tainted values requires care -- getting a verifier wrong could lead
@@ -525,7 +526,7 @@ For example consider migrating some existing code that uses ``mylib``::
    }
 
 
-Rather that migrating the full function to use RLBox, you can migrate just the
+Rather than migrating the full function to use RLBox, you can migrate just the
 call to ``get_error_code`` by leveraging the :ref:`UNSAFE_unverified
 <UNSAFE_unverified>` APIs to removing the tainting::
 
@@ -616,11 +617,117 @@ standard library equivalents, but they accept tainted data.
 Handling more complex ABIs
 ==========================
 
-Passing structs to/from a sandbox (TODO)
-----------------------------------------
+Passing structs to/from a sandbox 
+---------------------------------
 
-TODO
+Passing a struct from the sandbox to the application code requires the tainted
+struct be unwrapped. To do this, a file is needed to provide rlbox with the 
+memory layout of the struct. Below we describe the steps to allow the unwrapping
+of a tainted struct.
 
+To use the struct definition file from the application code, the following two 
+lines should be added::
+
+   // main.cpp:
+   
+   #include "lib_struct_file.h"
+   rlbox_load_structs_from_library(mylib); 
+
+The first line includes the struct file which is named lib_struct_file.h in this 
+example. The second line loads the struct definitions via the alias “mylib” 
+defined inside the struct file. 
+
+Assume the user is trying to untaint the member variable width within Foo given 
+the below struct definitions::
+
+   // mylib.h:
+
+   struct Inner {
+      int val;
+   }
+   
+   struct Foo {
+      unsigned char[5] status_array;
+      Inner internal;
+      unsigned int width;
+   }
+
+The struct definition for Foo alone would be as follows::
+
+   ...
+   #define sandbox_fields_reflection_mylib_class_Foo(f, g, ...)         \
+     f(unsigned char[5], status_array, FIELD_NORMAL, ##__VA_ARGS__) g() \
+     f(Inner, internal, FIELD_NORMAL, ##__VA_ARGS__) g()                \
+     f(unsigned int, width, FIELD_NORMAL, ##__VA_ARGS__) g()
+     
+   #define sandbox_fields_reflection_mylib_allClasses(f, ...)  \
+     f(Foo, mylib, ##__VA_ARGS__)    
+   ...
+
+However, since Foo holds an instance of another struct, Inner, as a member, 
+Foo's memory layout is impacted by Inner's layout. As a result, Inner's 
+layout must also be defined in the struct file. It would then appear as 
+follows::
+
+   ...
+   #define sandbox_fields_reflection_mylib_class_Inner(f, g, ...)    \
+     f(int, val, FIELD_NORMAL, ##__VA_ARGS__) g()        
+
+   #define sandbox_fields_reflection_mylib_class_Foo(f, g, ...)         \
+     f(unsigned char[5], status_array, FIELD_NORMAL, ##__VA_ARGS__) g() \
+     f(Inner, internal, FIELD_NORMAL, ##__VA_ARGS__) g()                \
+     f(unsigned int, width, FIELD_NORMAL, ##__VA_ARGS__) g()
+
+   #define sandbox_fields_reflection_mylib_allClasses(f, ...)  \
+     f(Inner, mylib, ##__VA_ARGS__)                            \
+     f(Foo, mylib, ##__VA_ARGS__)                           
+   ...
+
+Each struct file is intended to hold all struct definitions associated with 
+a library.
+
+Note: The compiler currently doesn’t catch type mismatches, missing members, 
+or incorrectly ordered members in the struct definition, but these things 
+will still affect the correctness of your program. 
+
+Here is an example of the same struct definition file complete with the headers 
+and footers that don't require user modification::
+
+   // lib_struct_file.h:
+
+   #if defined(__clang__)
+   #  pragma clang diagnostic push
+   #  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+   #elif defined(__GNUC__) || defined(__GNUG__)
+   // Can't turn off the variadic macro warning emitted from -pedantic
+   #  pragma GCC system_header
+   #elif defined(_MSC_VER)
+   // Doesn't seem to emit the warning
+   #else
+   // Don't know the compiler... just let it go through
+   #endif
+  
+   #define sandbox_fields_reflection_mylib_class_Inner(f, g, ...)    \
+     f(int, val, FIELD_NORMAL, ##__VA_ARGS__) g()        
+
+   #define sandbox_fields_reflection_mylib_class_Foo(f, g, ...)         \
+     f(unsigned char[5], status_array, FIELD_NORMAL, ##__VA_ARGS__) g() \
+     f(Inner, internal, FIELD_NORMAL, ##__VA_ARGS__) g()                \
+     f(unsigned int, width, FIELD_NORMAL, ##__VA_ARGS__) g()
+
+   #define sandbox_fields_reflection_mylib_allClasses(f, ...)  \
+     f(Inner, mylib, ##__VA_ARGS__)                            \
+     f(Foo, mylib, ##__VA_ARGS__)                           
+
+   // clang-format on
+
+   #if defined(__clang__)
+   #  pragma clang diagnostic pop
+   #elif defined(__GNUC__) || defined(__GNUG__)
+   #elif defined(_MSC_VER)
+   #else
+   #endif
+   
 
 Invoking varargs functions in a sandbox (TODO)
 ----------------------------------------------
