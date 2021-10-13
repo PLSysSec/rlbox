@@ -622,8 +622,8 @@ Passing structs to/from a sandbox (TODO)
 TODO
 
 
-Invoking varargs functions in a sandbox (TODO)
-----------------------------------------------
+Invoking varargs functions in a sandbox 
+---------------------------------------
 
 RLBox does not support calling functions with variable arguments currently. So, if the library being
 sandboxed, has APIs with variable arguments - special handling is needed. The way to handle varargs
