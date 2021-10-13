@@ -625,7 +625,33 @@ TODO
 Invoking varargs functions in a sandbox (TODO)
 ----------------------------------------------
 
-TODO
+RLBox does not support calling functions with variable arguments currently. So, if the library being
+sandboxed, has APIs with variable arguments - special handling is needed. The way to handle varargs
+based functions is to create wrapper functions around them in the library, and from the application,
+these wrapper functions need to be invoked. Consider the following example::
+   //Original library function
+   int example_call(int x, int y, ...);
+
+   //Application calls are as follows:
+   rv = example_call(x, y, RESET_FLAG);
+   rv = example_call(x, y, INVERT_FLAG, 'c');
+
+Since the calls from the application to the library include 2 different types of prototypes, we would
+need 2 wrapper functions to be added to the library::
+
+   int example_call_reset(int x, int y, uint8_t flag) {
+      return example_call(x, y, flag);
+   }
+
+   int example_call_invert(int x, int y, uint8_t flag, char c) {
+      return example_call(x, y, flag, c);
+   }
+
+   //and the call can now be changed in the application
+   //to be made via sandbox_invoke
+   auto rv = lSandbox.sandbox_invoke(example_call_reset, x, y, RESET_FLAG);
+   auto rv = lSandbox.sandbox_invoke(example_call_invert, x, y, INVERT_FLAG, 'c');
+
 
 Invoking C++ functions in a sandbox (TODO)
 ------------------------------------------
