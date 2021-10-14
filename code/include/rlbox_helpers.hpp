@@ -26,7 +26,7 @@ namespace detail {
     #else
       std::cerr << msg << std::endl;
       #ifdef RLBOX_USE_CUSTOM_ABORT
-        RLBOX_USE_CUSTOM_ABORT();
+        RLBOX_USE_CUSTOM_ABORT(msg);
       #else
         std::abort();
       #endif
