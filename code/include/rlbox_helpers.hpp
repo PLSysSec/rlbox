@@ -25,7 +25,11 @@ namespace detail {
       throw std::runtime_error(msg);
     #else
       std::cerr << msg << std::endl;
-      std::abort();
+      #ifdef RLBOX_USE_CUSTOM_ABORT
+        RLBOX_USE_CUSTOM_ABORT();
+      #else
+        std::abort();
+      #endif
     #endif
   }
     // clang-format on
