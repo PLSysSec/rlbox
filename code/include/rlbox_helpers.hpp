@@ -25,8 +25,8 @@ namespace detail {
       throw std::runtime_error(msg);
     #else
       std::cerr << msg << std::endl;
-      #ifdef RLBOX_USE_CUSTOM_ABORT
-        RLBOX_USE_CUSTOM_ABORT(msg);
+      #ifdef RLBOX_CUSTOM_ABORT
+        RLBOX_CUSTOM_ABORT(msg);
       #else
         std::abort();
       #endif
