@@ -24,10 +24,10 @@ namespace detail {
     #if __cpp_exceptions && defined(RLBOX_USE_EXCEPTIONS)
       throw std::runtime_error(msg);
     #else
-      std::cerr << msg << std::endl;
       #ifdef RLBOX_CUSTOM_ABORT
         RLBOX_CUSTOM_ABORT(msg);
       #else
+        std::cerr << msg << std::endl;
         std::abort();
       #endif
     #endif
