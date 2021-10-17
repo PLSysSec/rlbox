@@ -200,7 +200,10 @@ private:
       tainted<T_NoRef, T_Sbx> ret = param;
       return ret.UNSAFE_sandboxed(*this);
     } else {
-      rlbox_detail_static_fail_because(detail::true_v<T_NoRef>, "Unknown case");
+      rlbox_detail_static_fail_because(detail::true_v<T_NoRef>,
+        "Note only tainted types, callbacks or primitive values such as ints can be passed as parameters. \n"
+        "To make a parameter tainted, try moving the allocation into the sandbox. \n"
+        "If the parameter is a callback, try registering the callback via the register_callback API");
     }
   }
 
