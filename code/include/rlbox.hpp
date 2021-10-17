@@ -884,7 +884,7 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
     "Missing specialization for class T. This error occurs for one "
     "of 2 reasons.\n"
     "  1) Make sure you have include a call rlbox_load_structs_from_library "
-    "for this library.\n"
+    "for this library with this class included.\n"
     "  2) Make sure you run (re-run) the struct-dump tool to list "
     "all structs in use by your program.\n");
 
