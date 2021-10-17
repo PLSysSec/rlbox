@@ -73,7 +73,9 @@ public:
       "Change this to \n\n"
       "tainted<int> val = tainted_ptr->member\n"
       "if ((val == 5).copy_and_verify(...)) { ... } \n\n"
-      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...}\n");
+      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...} \n\n"
+      "Alternately, if you are sure your code is safe you can use the "
+      "unverified_safe_because API to remove tainting\n");
 
     // this is never executed, but we need it for the function to type-check
     return false;
@@ -129,7 +131,9 @@ public:
       "Change this to \n\n"
       "tainted<int> val = tainted_ptr->member\n"
       "if ((val == 5).copy_and_verify(...)) { ... } \n\n"
-      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...}\n");
+      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...} \n\n"
+      "Alternately, if you are sure your code is safe you can use the "
+      "unverified_safe_because API to remove tainting\n");
 
     // this is never executed, but we need it for the function to type-check
     return 0;
