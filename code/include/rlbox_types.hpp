@@ -56,6 +56,28 @@ public:
   inline bool UNSAFE_unverified() { return val; }
   inline auto INTERNAL_unverified_safe() { return UNSAFE_unverified(); }
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
+
+  // Add a template parameter to make sure the assert only fires when called
+  template<typename T=void>
+  inline bool copy_and_verify(...) const
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T>,
+      "You can't call copy_and_verify on this value, as this is a result of a "
+      "comparison with memory accessible by the sandbox. \n"
+      "The sandbox could unexpectedly change the value leading to "
+      "time-of-check-time-of-use attacks. \n"
+      "You can avoid this by making a local copy of the data."
+      "For example, if your original code, looked like \n"
+      "if ((tainted_ptr->member == 5).copy_and_verify(...)) { ... } \n\n"
+      "Change this to \n\n"
+      "tainted<int> val = tainted_ptr->member\n"
+      "if ((val == 5).copy_and_verify(...)) { ... } \n\n"
+      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...}\n");
+
+    // this is never executed, but we need it for the function to type-check
+    return false;
+  }
 };
 
 /**
@@ -90,6 +112,28 @@ public:
   inline int UNSAFE_unverified() { return val; }
   inline auto INTERNAL_unverified_safe() { return UNSAFE_unverified(); }
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
+
+  // Add a template parameter to make sure the assert only fires when called
+  template<typename T=void>
+  inline int copy_and_verify(...) const
+  {
+    rlbox_detail_static_fail_because(
+      detail::true_v<T>,
+      "You can't call copy_and_verify on this value, as this is a result of a "
+      "comparison with memory accessible by the sandbox. \n"
+      "The sandbox could unexpectedly change the value leading to "
+      "time-of-check-time-of-use attacks. \n"
+      "You can avoid this by making a local copy of the data."
+      "For example, if your original code, looked like \n"
+      "if ((tainted_ptr->member == 5).copy_and_verify(...)) { ... } \n\n"
+      "Change this to \n\n"
+      "tainted<int> val = tainted_ptr->member\n"
+      "if ((val == 5).copy_and_verify(...)) { ... } \n\n"
+      "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox) {...}\n");
+
+    // this is never executed, but we need it for the function to type-check
+    return 0;
+  }
 };
 
 template<typename T_Sbx>

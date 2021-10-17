@@ -5,6 +5,8 @@
 #include "test_include.hpp"
 
 using rlbox::tainted;
+using rlbox::tainted_boolean_hint;
+using rlbox::tainted_int_hint;
 
 // NOLINTNEXTLINE
 TEST_CASE("RLBox test basic verification", "[verification]")
@@ -81,6 +83,18 @@ TEST_CASE("RLBox test function pointer verification", "[verification]")
   // *b = a;
 
   sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("RLBox tainted hint verification", "[verification]")
+{
+  tainted_boolean_hint a = true;
+  REQUIRE_COMPILE_ERR(a.copy_and_verify([](bool val) {
+    return val;
+  }));
+
+  tainted_int_hint b = 1;
+  REQUIRE_COMPILE_ERR(b.copy_and_verify());
 }
 
 // NOLINTNEXTLINE
