@@ -881,7 +881,7 @@ class tainted : public tainted_base_impl<tainted, T, T_Sbx>
   // Classes recieve their own specialization
   static_assert(
     !std::is_class_v<T>,
-    "Missing specialization for class T. This error occurs for one "
+    "Missing definition for class T. This error occurs for one "
     "of 2 reasons.\n"
     "  1) Make sure you have include a call rlbox_load_structs_from_library "
     "for this library with this class included.\n"
