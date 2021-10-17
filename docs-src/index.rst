@@ -333,7 +333,8 @@ Exposing functions to sandboxed code
 
 Application code can expose :ref:`callback functions <callback>` to sandbox via
 :ref:`register_callback() <register_callback>`.  These functions can be called
-by the sandboxed code until they are unregistered via the `unregister()` function.
+by the sandboxed code until they (1) are no longer in scope or (2) are
+explicitly unregistered via the `unregister()` function.
 
 .. _register_callback:
 
@@ -500,6 +501,8 @@ sandbox (e.g., by passing the pointer as an argument to a function).
 .. doxygenfunction:: malloc_in_sandbox()
 .. doxygenfunction:: malloc_in_sandbox(uint32_t)
 
+Manually allocated memory is freed explicitly:
+
 .. _free_in_sandbox:
 
 Migrating code by temporarily removing tainting
@@ -614,45 +617,55 @@ standard library equivalents, but they accept tainted data.
 
 .. doxygenfunction:: sandbox_static_cast
 
+RLBox also provides helper functions for allocating memory in the sandbox (resp
+application) and transferring it from the application (resp sandbox) with:
+
+.. doxygenfunction:: copy_memory_or_grant_access
+
+|
+
+.. doxygenfunction:: copy_memory_or_deny_access
+
+
+These functions copy when using a sandbox like Wasm. For the nop-sandbox, they
+don't copy and only move pointers, though.
+
+
 Handling more complex ABIs
 ==========================
 
 Passing structs to/from a sandbox 
 ---------------------------------
 
-Passing a struct from the sandbox to the application code requires the tainted
-struct be unwrapped. To do this, a file is needed to provide rlbox with the 
-memory layout of the struct. Below we describe the steps to allow the unwrapping
-of a tainted struct.
+RLBox currently doesn't automatically let you use fields of structs.  To use
+fields of a tainted struct you need to essentially tell RLBox about the struct
+type and layout. You typically do this in a separate header file and include
+this file in your application code as follows::
 
-To use the struct definition file from the application code, the following two 
-lines should be added::
-
-   // main.cpp:
+   // app code:
    
    #include "lib_struct_file.h"
    rlbox_load_structs_from_library(mylib); 
 
-The first line includes the struct file which is named lib_struct_file.h in this 
-example. The second line loads the struct definitions via the alias “mylib” 
-defined inside the struct file. 
+The first line includes the header file (we will populate shortly).  The second
+line loads the struct definitions using the library name ``mylib``.
 
-Assume the user is trying to untaint the member variable width within Foo given 
-the below struct definitions::
+Let's suppose our library has two structs::
 
    // mylib.h:
 
    struct Inner {
       int val;
-   }
+   };
    
    struct Foo {
       unsigned char[5] status_array;
       Inner internal;
       unsigned int width;
-   }
+   };
 
-The struct definition for Foo alone would be as follows::
+In ``_lib_struct_file.h`` you will then provide a definition for ``Foo`` alone
+would be as follows::
 
    ...
    #define sandbox_fields_reflection_mylib_class_Foo(f, g, ...)         \
@@ -664,10 +677,8 @@ The struct definition for Foo alone would be as follows::
      f(Foo, mylib, ##__VA_ARGS__)    
    ...
 
-However, since Foo holds an instance of another struct, Inner, as a member, 
-Foo's memory layout is impacted by Inner's layout. As a result, Inner's 
-layout must also be defined in the struct file. It would then appear as 
-follows::
+Since ``Foo`` has an ``Inner`` struct, though, we'll need to also provide a
+definition for this struct if we want to access the ``val`` value::
 
    ...
    #define sandbox_fields_reflection_mylib_class_Inner(f, g, ...)    \
@@ -686,65 +697,35 @@ follows::
 Each struct file is intended to hold all struct definitions associated with 
 a library.
 
-Note: The compiler currently doesn’t catch type mismatches, missing members, 
-or incorrectly ordered members in the struct definition, but these things 
-will still affect the correctness of your program. 
+.. danger::  The compiler currently doesn't catch type mismatches, missing
+   members, or incorrectly ordered members in the struct definition.
 
-Here is an example of the same struct definition file complete with the headers 
-and footers that don't require user modification::
+Take a look at the `ogg struct layout in Firefox
+<https://searchfox.org/mozilla-central/source/media/libogg/geckoextra/include/OggStructsForRLBox.h>`_
+for a complete example.
 
-   // lib_struct_file.h:
+In the future we will likely generate these kinds of files automatically.
 
-   #if defined(__clang__)
-   #  pragma clang diagnostic push
-   #  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-   #elif defined(__GNUC__) || defined(__GNUG__)
-   // Can't turn off the variadic macro warning emitted from -pedantic
-   #  pragma GCC system_header
-   #elif defined(_MSC_VER)
-   // Doesn't seem to emit the warning
-   #else
-   // Don't know the compiler... just let it go through
-   #endif
-  
-   #define sandbox_fields_reflection_mylib_class_Inner(f, g, ...)    \
-     f(int, val, FIELD_NORMAL, ##__VA_ARGS__) g()        
-
-   #define sandbox_fields_reflection_mylib_class_Foo(f, g, ...)         \
-     f(unsigned char[5], status_array, FIELD_NORMAL, ##__VA_ARGS__) g() \
-     f(Inner, internal, FIELD_NORMAL, ##__VA_ARGS__) g()                \
-     f(unsigned int, width, FIELD_NORMAL, ##__VA_ARGS__) g()
-
-   #define sandbox_fields_reflection_mylib_allClasses(f, ...)  \
-     f(Inner, mylib, ##__VA_ARGS__)                            \
-     f(Foo, mylib, ##__VA_ARGS__)                           
-
-   // clang-format on
-
-   #if defined(__clang__)
-   #  pragma clang diagnostic pop
-   #elif defined(__GNUC__) || defined(__GNUG__)
-   #elif defined(_MSC_VER)
-   #else
-   #endif
-   
-
-Invoking varargs functions in a sandbox 
+Invoking varargs functions
 ---------------------------------------
 
-RLBox does not support calling functions with variable arguments currently. So, if the library being
-sandboxed, has APIs with variable arguments - special handling is needed. The way to handle varargs
-based functions is to create wrapper functions around them in the library, and from the application,
-these wrapper functions need to be invoked. Consider the following example::
-   //Original library function
-   int example_call(int x, int y, ...);
+RLBox does not (yet) support calling functions with variable arguments
+currently. So, if the library you are sandboxing has APIs with variable
+arguments you need to monomorphize the usages. Specifically, you need to create
+wrapper functions for each usage you wish to expose.  Consider the following
+example::
 
-   //Application calls are as follows:
+   // Original library function:
+   int example_call(int x, int y, ...);
+   
+   ...
+
+   // Original invocations in application code:
    rv = example_call(x, y, RESET_FLAG);
    rv = example_call(x, y, INVERT_FLAG, 'c');
 
-Since the calls from the application to the library include 2 different types of prototypes, we would
-need 2 wrapper functions to be added to the library::
+
+One way to handle this in RLBox is to expose two functions as follows::
 
    int example_call_reset(int x, int y, uint8_t flag) {
       return example_call(x, y, flag);
@@ -754,33 +735,55 @@ need 2 wrapper functions to be added to the library::
       return example_call(x, y, flag, c);
    }
 
-   //and the call can now be changed in the application
-   //to be made via sandbox_invoke
-   auto rv = lSandbox.sandbox_invoke(example_call_reset, x, y, RESET_FLAG);
-   auto rv = lSandbox.sandbox_invoke(example_call_invert, x, y, INVERT_FLAG, 'c');
+Then, you can call them as usual::
 
+   rv = sandbox.invoke_sandbox_function(example_call_reset, x, y, RESET_FLAG);
+   rv = sandbox.invoke_sandbox_function(example_call_invert, x, y, INVERT_FLAG, 'c');
 
-Invoking C++ functions in a sandbox (TODO)
+Invoking C++ functions in a sandbox
 ------------------------------------------
 
-TODO
+RLBox does not currently let you invoke C++ library functions directly. Instead
+you need to expose a C ABI. Functions are largely straightforward. Methods
+require a bit of work since the receiver object is implicit: The simplest way
+to do this for class methods is to expose C functions and just pass a pointer
+to the receiver object as the first argument.
 
-Accessing global variables inside a sandbox (TODO)
---------------------------------------------------
-
-TODO
-
-Allowing the sandbox to safely pass through application data with `app_pointer` (TODO)
+Passing application pointers into the sandbox with `app_pointer`
 ------------------------------------------------------------------------------------------
 
-TODO
+It's sometimes useful to pass application pointers into the sandbox. For
+example, you may need to pass a pointer to the receiver (``this``) so sandbox
+library can pass this pointer back in a callback. We can't trust the sandbox with
+actual applications pointers. RLBox instead provides a level of indirection.
+
+If you want to pass a pointer into the sandbox you can use the
+`get_app_pointer() <get_app_pointer>` API, which returns an `app_pointer`. For
+example, in the expat library we need to pass a pointer to the receiver::
+
+  mAppPtr = mSandbox->get_app_pointer(static_cast<void*>(this));
+  // convert the app_pointer to tainted
+  tainted_expat<void*> t_driver = mAppPtr.to_tainted();
+  // call function as usual:
+  mSandbox->invoke_sandbox_function(..., t_driver);
+
+where ``mAppPtr`` is a member of the class::
+
+   app_pointer_expat<void*> mAppPtr;
+
+Internally, RLBox keeps a map between app pointers and the corresponding
+tainted pointers exposed to the sandbox. This lets you lookup the pointers in
+callbacks, for example::
+
+  void callback(rlbox_sandbox_expat& aSandbox, ... tainted_expat<void*> t_driver) {
+    nsExpatDriver* self = aSandbox.lookup_app_ptr(rlbox::sandbox_static_cast<nsExpatDriver*>(t_driver));
+
+Like callbacks, you need to keep app pointers alive and unregister them when
+you're done::
+
+  mAppPtr.unregister();
 
 .. _plugins:
-
-Using RLBox with different sandboxes (TODO)
-============================================
-
-TODO
 
 Additional material
 ===================
