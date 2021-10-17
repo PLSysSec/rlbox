@@ -10,16 +10,17 @@ Overview
 ========
 
 This is a short tutorial on the RLBox API. If you are looking for a reference
-of all APIs, see [Doxygen]_.
+of all APIs, see [Doxygen]_.  If you are looking for motivation, see
+[RLBoxLogin]_, [RLBoxFirefox]_, and [RLBoxPaper]_.
 
 RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
 application code to interface with a sandboxed library.  The Wasm-based sandbox
 is documented in its `corresponding repository
 <https://github.com/PLSysSec/rlbox_wasm2c_sandbox>`_. While, the RLBox API can
-be used with different sandbox implementations (discussed :ref:`later
-<stdlib>`), this documentation focuses on the API and the interface you will use
-when sandboxing code, independent of the underlying sandboxing mechanism.
+be used with different sandbox implementations, this documentation focuses on
+the API and the interface you will use when sandboxing code, independent of the
+underlying sandboxing mechanism.
 
 **Why do we need a sandboxing API?**
 Sandboxing libraries without the RLBox API is both tedious and error-prone.
@@ -30,9 +31,9 @@ is no longer trusted -- we need to modify this application-library boundary.
 For example, we need to add security checks in Firefox to ensure that any value
 from the sandboxed library is properly validated before it is used.  Otherwise,
 the library (when compromised) may be able to abuse Firefox code to hijack its
-control flow (see [RLBoxPaper]_ for details). The RLBox API is explicitly
-designed to make retrofitting of existing application code simpler and less
-error-prone.
+control flow (see [RLBoxPaper]_ for details). The RLBox API
+is explicitly designed to make retrofitting of existing application code
+simpler and less error-prone.
 
 
 **Sandboxing architecture overview** As shown in :numref:`arch-fig`, RLBox ensures that a
@@ -503,7 +504,7 @@ sandbox (e.g., by passing the pointer as an argument to a function).
 
 Manually allocated memory is freed explicitly:
 
-.. _free_in_sandbox:
+.. doxygenfunction:: free_in_sandbox(tainted<T*, T_Sbx> ptr)
 
 Migrating code by temporarily removing tainting
 -----------------------------------------------
@@ -823,6 +824,8 @@ References
 
 .. [RLBoxPaper] `Retrofitting Fine Grain Isolation in the Firefox Renderer <https://usenix2020.rlbox.dev>`_
   by S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan
+.. [RLBoxLogin] `The Road to Less Trusted Code: Lowering the Barrier to In-Process Sandboxing <https://www.usenix.org/publications/login/winter2020/garfinkel-tal>`_
+.. [RLBoxFirefox] `Securing Firefox with WebAssembly <https://hacks.mozilla.org/2020/02/securing-firefox-with-webassembly/>`_ by N. Froyd
 .. [Doxygen] `RLBox Doxygen Documentation <https://doxygen.rlbox.dev/>`_
 
 Indices and tables

@@ -34,52 +34,53 @@
   <div class="contents topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="auto-toc simple">
-<li><p><a class="reference internal" href="#overview" id="id5"><span class="sectnum">1</span> Overview</a></p>
+<li><p><a class="reference internal" href="#overview" id="id8"><span class="sectnum">1</span> Overview</a></p>
 <ul class="auto-toc">
-<li><p><a class="reference internal" href="#example-library-sandboxing" id="id6"><span class="sectnum">1.1</span> Example library sandboxing</a></p></li>
+<li><p><a class="reference internal" href="#example-library-sandboxing" id="id9"><span class="sectnum">1.1</span> Example library sandboxing</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#core-api" id="id7"><span class="sectnum">2</span> Core API</a></p>
+<li><p><a class="reference internal" href="#core-api" id="id10"><span class="sectnum">2</span> Core API</a></p>
 <ul class="auto-toc">
-<li><p><a class="reference internal" href="#creating-and-destroying-sandboxes" id="id8"><span class="sectnum">2.1</span> Creating (and destroying) sandboxes</a></p></li>
-<li><p><a class="reference internal" href="#calling-sandboxed-library-functions" id="id9"><span class="sectnum">2.2</span> Calling sandboxed library functions</a></p></li>
-<li><p><a class="reference internal" href="#exposing-functions-to-sandboxed-code" id="id10"><span class="sectnum">2.3</span> Exposing functions to sandboxed code</a></p></li>
-<li><p><a class="reference internal" href="#tainted-values" id="id11"><span class="sectnum">2.4</span> Tainted values</a></p>
+<li><p><a class="reference internal" href="#creating-and-destroying-sandboxes" id="id11"><span class="sectnum">2.1</span> Creating (and destroying) sandboxes</a></p></li>
+<li><p><a class="reference internal" href="#calling-sandboxed-library-functions" id="id12"><span class="sectnum">2.2</span> Calling sandboxed library functions</a></p></li>
+<li><p><a class="reference internal" href="#exposing-functions-to-sandboxed-code" id="id13"><span class="sectnum">2.3</span> Exposing functions to sandboxed code</a></p></li>
+<li><p><a class="reference internal" href="#tainted-values" id="id14"><span class="sectnum">2.4</span> Tainted values</a></p>
 <ul class="auto-toc">
-<li><p><a class="reference internal" href="#unwrapping-tainted-values" id="id12"><span class="sectnum">2.4.1</span> Unwrapping tainted values</a></p></li>
-<li><p><a class="reference internal" href="#operating-on-tainted-values" id="id13"><span class="sectnum">2.4.2</span> Operating on tainted values</a></p></li>
+<li><p><a class="reference internal" href="#unwrapping-tainted-values" id="id15"><span class="sectnum">2.4.1</span> Unwrapping tainted values</a></p></li>
+<li><p><a class="reference internal" href="#operating-on-tainted-values" id="id16"><span class="sectnum">2.4.2</span> Operating on tainted values</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#application-sandbox-shared-memory" id="id14"><span class="sectnum">2.5</span> Application-sandbox shared memory</a></p></li>
-<li><p><a class="reference internal" href="#migrating-code-by-temporarily-removing-tainting" id="id15"><span class="sectnum">2.6</span> Migrating code by temporarily removing tainting</a></p></li>
-<li><p><a class="reference internal" href="#standard-library" id="id16"><span class="sectnum">2.7</span> Standard library</a></p></li>
+<li><p><a class="reference internal" href="#application-sandbox-shared-memory" id="id17"><span class="sectnum">2.5</span> Application-sandbox shared memory</a></p></li>
+<li><p><a class="reference internal" href="#migrating-code-by-temporarily-removing-tainting" id="id18"><span class="sectnum">2.6</span> Migrating code by temporarily removing tainting</a></p></li>
+<li><p><a class="reference internal" href="#standard-library" id="id19"><span class="sectnum">2.7</span> Standard library</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#handling-more-complex-abis" id="id17"><span class="sectnum">3</span> Handling more complex ABIs</a></p>
+<li><p><a class="reference internal" href="#handling-more-complex-abis" id="id20"><span class="sectnum">3</span> Handling more complex ABIs</a></p>
 <ul class="auto-toc">
-<li><p><a class="reference internal" href="#passing-structs-to-from-a-sandbox" id="id18"><span class="sectnum">3.1</span> Passing structs to/from a sandbox</a></p></li>
-<li><p><a class="reference internal" href="#invoking-varargs-functions" id="id19"><span class="sectnum">3.2</span> Invoking varargs functions</a></p></li>
-<li><p><a class="reference internal" href="#invoking-c-functions-in-a-sandbox" id="id20"><span class="sectnum">3.3</span> Invoking C++ functions in a sandbox</a></p></li>
-<li><p><a class="reference internal" href="#passing-application-pointers-into-the-sandbox-with-app-pointer" id="id21"><span class="sectnum">3.4</span> Passing application pointers into the sandbox with <cite>app_pointer</cite></a></p></li>
+<li><p><a class="reference internal" href="#passing-structs-to-from-a-sandbox" id="id21"><span class="sectnum">3.1</span> Passing structs to/from a sandbox</a></p></li>
+<li><p><a class="reference internal" href="#invoking-varargs-functions" id="id22"><span class="sectnum">3.2</span> Invoking varargs functions</a></p></li>
+<li><p><a class="reference internal" href="#invoking-c-functions-in-a-sandbox" id="id23"><span class="sectnum">3.3</span> Invoking C++ functions in a sandbox</a></p></li>
+<li><p><a class="reference internal" href="#passing-application-pointers-into-the-sandbox-with-app-pointer" id="id24"><span class="sectnum">3.4</span> Passing application pointers into the sandbox with <cite>app_pointer</cite></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#additional-material" id="id22"><span class="sectnum">4</span> Additional material</a></p></li>
-<li><p><a class="reference internal" href="#references" id="id23"><span class="sectnum">5</span> References</a></p></li>
-<li><p><a class="reference internal" href="#indices-and-tables" id="id24"><span class="sectnum">6</span> Indices and tables</a></p></li>
+<li><p><a class="reference internal" href="#additional-material" id="id25"><span class="sectnum">4</span> Additional material</a></p></li>
+<li><p><a class="reference internal" href="#references" id="id26"><span class="sectnum">5</span> References</a></p></li>
+<li><p><a class="reference internal" href="#indices-and-tables" id="id27"><span class="sectnum">6</span> Indices and tables</a></p></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 </div>
 <section id="overview">
-<h1><a class="toc-backref" href="#id5"><span class="sectnum">1</span> Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id8"><span class="sectnum">1</span> Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 <p>This is a short tutorial on the RLBox API. If you are looking for a reference
-of all APIs, see <a class="reference internal" href="#doxygen" id="id1"><span>[Doxygen]</span></a>.</p>
+of all APIs, see <a class="reference internal" href="#doxygen" id="id1"><span>[Doxygen]</span></a>.  If you are looking for motivation, see <a class="reference internal" href="#rlboxlogin" id="id2"><span>[RLBoxLogin]</span></a>, <a class="reference internal" href="#rlboxfirefox" id="id3"><span>[RLBoxFirefox]</span></a>, and <a class="reference internal" href="#rlboxpaper" id="id4"><span>[RLBoxPaper]</span></a>.</p>
 <p>RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing
 application code to interface with a sandboxed library.  The Wasm-based sandbox
 is documented in its <a class="reference external" href="https://github.com/PLSysSec/rlbox_wasm2c_sandbox">corresponding repository</a>. While, the RLBox API can
-be used with different sandbox implementations (discussed <a class="reference internal" href="#stdlib"><span class="std std-ref">later</span></a>), this documentation focuses on the API and the interface you will use
-when sandboxing code, independent of the underlying sandboxing mechanism.</p>
+be used with different sandbox implementations, this documentation focuses on
+the API and the interface you will use when sandboxing code, independent of the
+underlying sandboxing mechanism.</p>
 <p><strong>Why do we need a sandboxing API?</strong>
 Sandboxing libraries without the RLBox API is both tedious and error-prone.
 This is especially the case when retrofitting an existing codebase like Firefox
@@ -89,9 +90,9 @@ is no longer trusted – we need to modify this application-library boundary.
 For example, we need to add security checks in Firefox to ensure that any value
 from the sandboxed library is properly validated before it is used.  Otherwise,
 the library (when compromised) may be able to abuse Firefox code to hijack its
-control flow (see <a class="reference internal" href="#rlboxpaper" id="id2"><span>[RLBoxPaper]</span></a> for details). The RLBox API is explicitly
-designed to make retrofitting of existing application code simpler and less
-error-prone.</p>
+control flow (see <a class="reference internal" href="#rlboxpaper" id="id5"><span>[RLBoxPaper]</span></a> for details). The RLBox API
+is explicitly designed to make retrofitting of existing application code
+simpler and less error-prone.</p>
 <p><strong>Sandboxing architecture overview</strong> As shown in <a class="reference internal" href="#arch-fig"><span class="std std-numref">Fig. 1</span></a>, RLBox ensures that a
 sandboxed library is <em>memory isolated</em> from the rest of the application – the
 library cannot directly access memory outside its designated region – and that
@@ -99,13 +100,13 @@ all <em>boundary crossings are explicit</em>. This ensures that the library cann
 for example, corrupt Firefox’s address space. It also ensures that Firefox
 cannot inadvertently expose sensitive data to the library (e.g., pointers that
 would leak its ASLR).</p>
-<figure class="align-center" id="id4">
+<figure class="align-center" id="id7">
 <span id="arch-fig"></span><img alt="RLBox architecture" src="_images/arch.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 1 </span><span class="caption-text">Sandboxed libraries are isolated from the application and all communication
 between the sandboxed library and application code is mediated. This ensures
 that the application code is robust and does not use untrusted,
-<a class="reference internal" href="#tainted"><span class="std std-ref">tainted values</span></a> without checking them.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<a class="reference internal" href="#tainted"><span class="std std-ref">tainted values</span></a> without checking them.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Memory isolation is enforced by the underlying sandboxing mechanism (from the
@@ -137,7 +138,7 @@ thus out of the reach of the attacker – and <em>verifying</em> it. Indeed, RLB
 forces application code to perform the copy and verification in sync using
 <a class="reference internal" href="#verification"><span class="std std-ref">verifiction functions</span></a>.</p>
 <section id="example-library-sandboxing">
-<h2><a class="toc-backref" href="#id6"><span class="sectnum">1.1</span> Example library sandboxing</a><a class="headerlink" href="#example-library-sandboxing" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9"><span class="sectnum">1.1</span> Example library sandboxing</a><a class="headerlink" href="#example-library-sandboxing" title="Permalink to this headline">¶</a></h2>
 <p>To get a feel for what it’s like to use RLBox, we’re going to sandbox a tiny
 library <code class="docutils literal notranslate"><span class="pre">mylib</span></code> that has four functions:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">mylib</span><span class="o">.</span><span class="n">c</span><span class="p">:</span>
@@ -315,14 +316,14 @@ disallow the library-application call – and pass the callback to the
 </section>
 </section>
 <section id="core-api">
-<h1><a class="toc-backref" href="#id7"><span class="sectnum">2</span> Core API</a><a class="headerlink" href="#core-api" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id10"><span class="sectnum">2</span> Core API</a><a class="headerlink" href="#core-api" title="Permalink to this headline">¶</a></h1>
 <p>In this section we describe a large part of the RLBox API you are likely to
 encounter when porting libraries. The API has some more advanced features and
-types that are necessary but not as commonly used (see <a class="reference internal" href="#doxygen" id="id3"><span>[Doxygen]</span></a>).  In most
+types that are necessary but not as commonly used (see <a class="reference internal" href="#doxygen" id="id6"><span>[Doxygen]</span></a>).  In most
 cases the RLBox type system will give you an informative error if and how to
 use these features.</p>
 <section id="creating-and-destroying-sandboxes">
-<h2><a class="toc-backref" href="#id8"><span class="sectnum">2.1</span> Creating (and destroying) sandboxes</a><a class="headerlink" href="#creating-and-destroying-sandboxes" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11"><span class="sectnum">2.1</span> Creating (and destroying) sandboxes</a><a class="headerlink" href="#creating-and-destroying-sandboxes" title="Permalink to this headline">¶</a></h2>
 <p>RLBox encapsulates sandboxes with <a class="reference internal" href="#rlbox-sandbox"><span class="std std-ref">rlbox_sandbox</span></a> class.
 For now, RLBox supports two sandboxes: a Wasm-based sandboxed and the <em>null</em>
 sandbox. The null sandbox doesn’t actually enforce any isolation, but is very
@@ -378,7 +379,7 @@ that the memory footprint of sandboxing remains low. Once you destroy a sandbox
 though, it is an error to use the sandbox object.</p>
 </section>
 <section id="calling-sandboxed-library-functions">
-<h2><a class="toc-backref" href="#id9"><span class="sectnum">2.2</span> Calling sandboxed library functions</a><a class="headerlink" href="#calling-sandboxed-library-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12"><span class="sectnum">2.2</span> Calling sandboxed library functions</a><a class="headerlink" href="#calling-sandboxed-library-functions" title="Permalink to this headline">¶</a></h2>
 <p>RLBox disallows code from calling sandboxed library functions directly.
 Instead, application code must use the <a class="reference internal" href="#invoke-sandbox-function"><span class="std std-ref">invoke_sandbox_function()</span></a>
 method.</p>
@@ -408,7 +409,7 @@ general, you can call sandboxed library functions as:</p>
 </div>
 </section>
 <section id="exposing-functions-to-sandboxed-code">
-<h2><a class="toc-backref" href="#id10"><span class="sectnum">2.3</span> Exposing functions to sandboxed code</a><a class="headerlink" href="#exposing-functions-to-sandboxed-code" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id13"><span class="sectnum">2.3</span> Exposing functions to sandboxed code</a><a class="headerlink" href="#exposing-functions-to-sandboxed-code" title="Permalink to this headline">¶</a></h2>
 <p>Application code can expose <a class="reference internal" href="#callback"><span class="std std-ref">callback functions</span></a> to sandbox via
 <a class="reference internal" href="#register-callback"><span class="std std-ref">register_callback()</span></a>.  These functions can be called
 by the sandboxed code until they (1) are no longer in scope or (2) are
@@ -429,7 +430,7 @@ handled values coming from the sandbox with care. Dually, the return type
 ensures that the application cannot accidentally leak data to the sandbox.</p>
 </section>
 <section id="tainted-values">
-<h2><a class="toc-backref" href="#id11"><span class="sectnum">2.4</span> Tainted values</a><a class="headerlink" href="#tainted-values" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14"><span class="sectnum">2.4</span> Tainted values</a><a class="headerlink" href="#tainted-values" title="Permalink to this headline">¶</a></h2>
 <p>Values that originate in the sandbox are <em>tainted</em>. We use a special tainted
 type <a class="reference internal" href="#tainted"><span class="std std-ref">tainted</span></a> to encapsulate such values and prevent the
 application from using tainted values unsafely.</p>
@@ -453,7 +454,7 @@ Thse, however, are slightly less pervasive in the surface API.</p>
 </dd></dl>
 
 <section id="unwrapping-tainted-values">
-<span id="verification"></span><h3><a class="toc-backref" href="#id12"><span class="sectnum">2.4.1</span> Unwrapping tainted values</a><a class="headerlink" href="#unwrapping-tainted-values" title="Permalink to this headline">¶</a></h3>
+<span id="verification"></span><h3><a class="toc-backref" href="#id15"><span class="sectnum">2.4.1</span> Unwrapping tainted values</a><a class="headerlink" href="#unwrapping-tainted-values" title="Permalink to this headline">¶</a></h3>
 <p>To use tainted values, the application can copy
 the value to application memory, verify the value, and unwrap it. RLBox
 provides several functions to do this.</p>
@@ -611,7 +612,7 @@ or malicious library to potentially compromise the application.</p>
 </div>
 </section>
 <section id="operating-on-tainted-values">
-<span id="tainted-ops"></span><h3><a class="toc-backref" href="#id13"><span class="sectnum">2.4.2</span> Operating on tainted values</a><a class="headerlink" href="#operating-on-tainted-values" title="Permalink to this headline">¶</a></h3>
+<span id="tainted-ops"></span><h3><a class="toc-backref" href="#id16"><span class="sectnum">2.4.2</span> Operating on tainted values</a><a class="headerlink" href="#operating-on-tainted-values" title="Permalink to this headline">¶</a></h3>
 <p>Unwrapping tainted values requires care – getting a verifier wrong could lead
 to a security vulnerability. It’s also not cheap: we need to copy data to the
 application memory to ensure that the sandboxed code cannot modify the data
@@ -674,7 +675,7 @@ the short circuiting behaviour of these operations.</p></li>
 </section>
 </section>
 <section id="application-sandbox-shared-memory">
-<h2><a class="toc-backref" href="#id14"><span class="sectnum">2.5</span> Application-sandbox shared memory</a><a class="headerlink" href="#application-sandbox-shared-memory" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17"><span class="sectnum">2.5</span> Application-sandbox shared memory</a><a class="headerlink" href="#application-sandbox-shared-memory" title="Permalink to this headline">¶</a></h2>
 <p>Since sandboxed code cannot access application memory, to share objects across
 the boundary you need to explicitly allocate memory that both the application
 and sandbox can access. To this end, <a class="reference internal" href="#malloc-in-sandbox"><span class="std std-ref">malloc_in_sandbox()</span></a> allocates memory within the sandbox region and returns a
@@ -712,9 +713,20 @@ sandbox (e.g., by passing the pointer as an argument to a function).</p>
 </dd></dl>
 
 <p>Manually allocated memory is freed explicitly:</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN5rlbox13rlbox_sandbox15free_in_sandboxEv7taintedIP1T5T_SbxE">
+<span id="_CPPv3I0EN5rlbox13rlbox_sandbox15free_in_sandboxE7taintedIP1T5T_SbxE"></span><span id="_CPPv2I0EN5rlbox13rlbox_sandbox15free_in_sandboxE7taintedIP1T5T_SbxE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classrlbox_1_1rlbox__sandbox_1a775b1828f996dc8f14f24a296096e0e3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">rlbox</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0EN5rlbox13rlbox_sandboxE" title="rlbox::rlbox_sandbox"><span class="n"><span class="pre">rlbox_sandbox</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">free_in_sandbox</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN5rlbox7taintedE" title="rlbox::tainted"><span class="n"><span class="pre">tainted</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN5rlbox13rlbox_sandbox15free_in_sandboxEv7taintedIP1T5T_SbxE" title="rlbox::rlbox_sandbox::free_in_sandbox::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">T_Sbx</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ptr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5rlbox13rlbox_sandbox15free_in_sandboxEv7taintedIP1T5T_SbxE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Free the memory referenced by the tainted pointer. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ptr</strong> – Pointer to sandbox memory to free. </p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="migrating-code-by-temporarily-removing-tainting">
-<span id="free-in-sandbox"></span><h2><a class="toc-backref" href="#id15"><span class="sectnum">2.6</span> Migrating code by temporarily removing tainting</a><a class="headerlink" href="#migrating-code-by-temporarily-removing-tainting" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18"><span class="sectnum">2.6</span> Migrating code by temporarily removing tainting</a><a class="headerlink" href="#migrating-code-by-temporarily-removing-tainting" title="Permalink to this headline">¶</a></h2>
 <p>RLBox is designed to simplify working with existing applications/code bases.
 Rather than migrating an application to use RLBox’s APIs in a single shot, RLBox
 allows “incremental migration” to simplify this step. In particular, migrating
@@ -811,7 +823,7 @@ regularly “untainted” data to <code class="docutils literal notranslate"><sp
 </table>
 </section>
 <section id="standard-library">
-<span id="stdlib"></span><h2><a class="toc-backref" href="#id16"><span class="sectnum">2.7</span> Standard library</a><a class="headerlink" href="#standard-library" title="Permalink to this headline">¶</a></h2>
+<span id="stdlib"></span><h2><a class="toc-backref" href="#id19"><span class="sectnum">2.7</span> Standard library</a><a class="headerlink" href="#standard-library" title="Permalink to this headline">¶</a></h2>
 <p>RLBox provides several helper functions to application for handling tainted data
 (memory influenced by or located in sandoxed regions) similar to the C/C++
 standard library. We list a few of these below; they operate similar to the
@@ -912,9 +924,9 @@ don’t copy and only move pointers, though.</p>
 </section>
 </section>
 <section id="handling-more-complex-abis">
-<h1><a class="toc-backref" href="#id17"><span class="sectnum">3</span> Handling more complex ABIs</a><a class="headerlink" href="#handling-more-complex-abis" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id20"><span class="sectnum">3</span> Handling more complex ABIs</a><a class="headerlink" href="#handling-more-complex-abis" title="Permalink to this headline">¶</a></h1>
 <section id="passing-structs-to-from-a-sandbox">
-<h2><a class="toc-backref" href="#id18"><span class="sectnum">3.1</span> Passing structs to/from a sandbox</a><a class="headerlink" href="#passing-structs-to-from-a-sandbox" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id21"><span class="sectnum">3.1</span> Passing structs to/from a sandbox</a><a class="headerlink" href="#passing-structs-to-from-a-sandbox" title="Permalink to this headline">¶</a></h2>
 <p>RLBox currently doesn’t automatically let you use fields of structs.  To use
 fields of a tainted struct you need to essentially tell RLBox about the struct
 type and layout. You typically do this in a separate header file and include
@@ -983,7 +995,7 @@ for a complete example.</p>
 <p>In the future we will likely generate these kinds of files automatically.</p>
 </section>
 <section id="invoking-varargs-functions">
-<h2><a class="toc-backref" href="#id19"><span class="sectnum">3.2</span> Invoking varargs functions</a><a class="headerlink" href="#invoking-varargs-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id22"><span class="sectnum">3.2</span> Invoking varargs functions</a><a class="headerlink" href="#invoking-varargs-functions" title="Permalink to this headline">¶</a></h2>
 <p>RLBox does not (yet) support calling functions with variable arguments
 currently. So, if the library you are sandboxing has APIs with variable
 arguments you need to monomorphize the usages. Specifically, you need to create
@@ -1016,7 +1028,7 @@ example:</p>
 </div>
 </section>
 <section id="invoking-c-functions-in-a-sandbox">
-<h2><a class="toc-backref" href="#id20"><span class="sectnum">3.3</span> Invoking C++ functions in a sandbox</a><a class="headerlink" href="#invoking-c-functions-in-a-sandbox" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id23"><span class="sectnum">3.3</span> Invoking C++ functions in a sandbox</a><a class="headerlink" href="#invoking-c-functions-in-a-sandbox" title="Permalink to this headline">¶</a></h2>
 <p>RLBox does not currently let you invoke C++ library functions directly. Instead
 you need to expose a C ABI. Functions are largely straightforward. Methods
 require a bit of work since the receiver object is implicit: The simplest way
@@ -1024,7 +1036,7 @@ to do this for class methods is to expose C functions and just pass a pointer
 to the receiver object as the first argument.</p>
 </section>
 <section id="passing-application-pointers-into-the-sandbox-with-app-pointer">
-<h2><a class="toc-backref" href="#id21"><span class="sectnum">3.4</span> Passing application pointers into the sandbox with <cite>app_pointer</cite></a><a class="headerlink" href="#passing-application-pointers-into-the-sandbox-with-app-pointer" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id24"><span class="sectnum">3.4</span> Passing application pointers into the sandbox with <cite>app_pointer</cite></a><a class="headerlink" href="#passing-application-pointers-into-the-sandbox-with-app-pointer" title="Permalink to this headline">¶</a></h2>
 <p>It’s sometimes useful to pass application pointers into the sandbox. For
 example, you may need to pass a pointer to the receiver (<code class="docutils literal notranslate"><span class="pre">this</span></code>) so sandbox
 library can pass this pointer back in a callback. We can’t trust the sandbox with
@@ -1058,7 +1070,7 @@ you’re done:</p>
 </section>
 </section>
 <section id="additional-material">
-<span id="plugins"></span><h1><a class="toc-backref" href="#id22"><span class="sectnum">4</span> Additional material</a><a class="headerlink" href="#additional-material" title="Permalink to this headline">¶</a></h1>
+<span id="plugins"></span><h1><a class="toc-backref" href="#id25"><span class="sectnum">4</span> Additional material</a><a class="headerlink" href="#additional-material" title="Permalink to this headline">¶</a></h1>
 <p>Here is some additional material on how to use RLBox.</p>
 <ul class="simple">
 <li><p>A good next step after this tutorial is to get hands-on migrating an application
@@ -1082,19 +1094,25 @@ are a good way to get an overview of RLBox.</p></li>
 </ul>
 </section>
 <section id="references">
-<h1><a class="toc-backref" href="#id23"><span class="sectnum">5</span> References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id26"><span class="sectnum">5</span> References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
 <dl class="citation">
-<dt class="label" id="rlboxpaper"><span class="brackets"><a class="fn-backref" href="#id2">RLBoxPaper</a></span></dt>
+<dt class="label" id="rlboxpaper"><span class="brackets">RLBoxPaper</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id5">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://usenix2020.rlbox.dev">Retrofitting Fine Grain Isolation in the Firefox Renderer</a>
 by S. Narayan, C. Disselkoen, T. Garfinkel, S. Lerner, H. Shacham, D. Stefan</p>
 </dd>
-<dt class="label" id="doxygen"><span class="brackets">Doxygen</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
+<dt class="label" id="rlboxlogin"><span class="brackets"><a class="fn-backref" href="#id2">RLBoxLogin</a></span></dt>
+<dd><p><a class="reference external" href="https://www.usenix.org/publications/login/winter2020/garfinkel-tal">The Road to Less Trusted Code: Lowering the Barrier to In-Process Sandboxing</a></p>
+</dd>
+<dt class="label" id="rlboxfirefox"><span class="brackets"><a class="fn-backref" href="#id3">RLBoxFirefox</a></span></dt>
+<dd><p><a class="reference external" href="https://hacks.mozilla.org/2020/02/securing-firefox-with-webassembly/">Securing Firefox with WebAssembly</a> by N. Froyd</p>
+</dd>
+<dt class="label" id="doxygen"><span class="brackets">Doxygen</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id6">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://doxygen.rlbox.dev/">RLBox Doxygen Documentation</a></p>
 </dd>
 </dl>
 </section>
 <section id="indices-and-tables">
-<h1><a class="toc-backref" href="#id24"><span class="sectnum">6</span> Indices and tables</a><a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id27"><span class="sectnum">6</span> Indices and tables</a><a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
