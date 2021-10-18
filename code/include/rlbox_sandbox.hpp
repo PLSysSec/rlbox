@@ -174,7 +174,7 @@ private:
       constexpr auto unknownCase = !(cond1 || cond2);
       rlbox_detail_static_fail_because(
         unknownCase,
-        "Arguments to a sandbox function call should be primitives  or wrapped "
+        "Arguments to a sandbox function call should be primitives or wrapped "
         "types like tainted, callbacks etc.");
     }
   }
@@ -201,9 +201,9 @@ private:
       return ret.UNSAFE_sandboxed(*this);
     } else {
       rlbox_detail_static_fail_because(detail::true_v<T_NoRef>,
-        "Note only tainted types, callbacks or primitive values such as ints can be passed as parameters. \n"
-        "To make a parameter tainted, try moving the allocation into the sandbox. \n"
-        "If the parameter is a callback, try registering the callback via the register_callback API");
+        "Only tainted types, callbacks or primitive values such as ints can be passed as parameters.\n"
+        "To make a parameter tainted, try moving the allocation into the sandbox.\n"
+        "If the parameter is a callback, try registering the callback via the register_callback API.");
     }
   }
 
@@ -816,7 +816,7 @@ public:
   {
     rlbox_detail_static_fail_because(
       detail::true_v<T_Ret>,
-      "Modify the callback to change the first parameter to a sandbox."
+      "Modify the callback to change the first parameter to a sandbox. "
       "For instance if a callback has type\n\n"
       "int foo() {...}\n\n"
       "Change this to \n\n"
@@ -849,11 +849,11 @@ public:
     {
       rlbox_detail_static_fail_because(
         cond1,
-        "Modify the callback to change the first parameter to a sandbox."
+        "Modify the callback to change the first parameter to a sandbox. "
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox, "
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else if_constexpr_named(
@@ -862,11 +862,11 @@ public:
       rlbox_detail_static_fail_because(
         cond2,
         "Change all arguments to the callback have to be tainted or "
-        "tainted_opaque."
+        "tainted_opaque. "
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox, "
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else if_constexpr_named(
@@ -874,11 +874,11 @@ public:
     {
       rlbox_detail_static_fail_because(
         cond3,
-        "Change all static array arguments to the callback to be pointers."
+        "Change all static array arguments to the callback to be pointers. "
         "For instance if a callback has type\n\n"
         "int foo(int a[4]) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox, "
         "tainted<int*, T_Sbx> a) {...}\n");
     }
     else if_constexpr_named(
@@ -888,11 +888,11 @@ public:
       rlbox_detail_static_fail_because(
         cond4,
         "Change the callback return type to be tainted or tainted_opaque if it "
-        "is not void."
+        "is not void. "
         "For instance if a callback has type\n\n"
         "int foo(int a, int b) {...}\n\n"
         "Change this to \n\n"
-        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox,"
+        "tainted<int, T_Sbx> foo(rlbox_sandbox<T_Sbx>& sandbox, "
         "tainted<int, T_Sbx> a, tainted<int, T_Sbx> b) {...}\n");
     }
     else
