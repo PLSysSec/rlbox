@@ -4,10 +4,11 @@
 #define RLBOX_ENABLE_DEBUG_ASSERTIONS
 #define RLBOX_SINGLE_THREADED_INVOCATIONS
 #define RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
+#define RLBOX_DISABLE_CALLBACK_INVOKE_READLOCKS
 #include "rlbox_noop_sandbox.hpp"
 
 // NOLINTNEXTLINE
-#define TestName "rlbox_noop_sandbox embedder"
+#define TestName "rlbox_noop_sandbox configs"
 // NOLINTNEXTLINE
 #define TestType rlbox::rlbox_noop_sandbox
 // NOLINTNEXTLINE

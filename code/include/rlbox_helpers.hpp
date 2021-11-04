@@ -89,6 +89,15 @@ namespace detail {
 #  endif
 #endif
 
+// Callbacks locks can optionally be disabled the host application if it is
+// being used in a single threaded context
+#ifdef RLBOX_DISABLE_CALLBACK_INVOKE_READLOCKS
+#  define RLBOX_ACQUIRE_CALLBACK_SHARED_GUARD(name, ...)
+#else
+#  define RLBOX_ACQUIRE_CALLBACK_SHARED_GUARD(name, ...)                       \
+    RLBOX_ACQUIRE_SHARED_GUARD(name, __VA_ARGS__)
+#endif
+
 #define rlbox_detail_forward_binop_to_base(opSymbol, ...)                      \
   template<typename T_Rhs>                                                     \
   inline auto operator opSymbol(T_Rhs rhs)                                     \

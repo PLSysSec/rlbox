@@ -277,17 +277,17 @@ target_link_libraries(test_rlbox_glue
 
 catch_discover_tests(test_rlbox_glue)
 
-add_executable(test_rlbox_glue_embedder_vars
+add_executable(test_rlbox_glue_configs
                code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue_embedder_vars.cpp)
-target_include_directories(test_rlbox_glue_embedder_vars PUBLIC code/tests/rlbox_glue)
+               code/tests/rlbox_glue/test_noop_sandbox_glue_configs.cpp)
+target_include_directories(test_rlbox_glue_configs PUBLIC code/tests/rlbox_glue)
 
-target_link_libraries(test_rlbox_glue_embedder_vars
+target_link_libraries(test_rlbox_glue_configs
                       Catch2::Catch2
                       ${PROJECT_NAME}
                       rlbox_glue_lib_static)
 
-catch_discover_tests(test_rlbox_glue_embedder_vars)
+catch_discover_tests(test_rlbox_glue_configs)
 
 add_executable(test_rlbox_glue_dylib
                code/tests/test_main.cpp
@@ -319,7 +319,7 @@ add_custom_target(
           test_rlbox_transition_timers
           test_rlbox_transition_customization
           test_rlbox_glue
-          test_rlbox_glue_embedder_vars
+          test_rlbox_glue_configs
           test_rlbox_glue_dylib
   COMMENT "Running tests"
 )
