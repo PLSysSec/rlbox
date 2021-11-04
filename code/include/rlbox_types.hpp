@@ -42,17 +42,11 @@ class rlbox_noop_sandbox;
 class rlbox_dylib_sandbox;
 }
 
-#define RLBOX_DEFINE_SANDBOX_TYPE_W2C(SBXNAME)                      \
+#define RLBOX_DEFINE_SANDBOX_TYPE(SBXNAME, SBXTYPE)                 \
   namespace rlbox {                                                 \
-  class rlbox_wasm2c_sandbox;                                       \
+  class rlbox_##SBXTYPE_sandbox;                                    \
   }                                                                 \
-  using rlbox_##SBXNAME_sandbox_type = rlbox::rlbox_wasm2c_sandbox;
-
-#define RLBOX_DEFINE_SANDBOX_TYPE_NOOP(SBXNAME)                     \
-  using rlbox_##SBXNAME_sandbox_type = rlbox::rlbox_noop_sandbox;
-
-#define RLBOX_DEFINE_SANDBOX_TYPE_DYLIB(SBXNAME)                    \
-  using rlbox_##SBXNAME_sandbox_type = rlbox::rlbox_dylib_sandbox;
+  using rlbox_##SBXNAME_sandbox_type = rlbox::rlbox_##SBXTYPE_sandbox;
 
 #define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME)                                         \
   using rlbox_sandbox_##SBXNAME =                                                    \
