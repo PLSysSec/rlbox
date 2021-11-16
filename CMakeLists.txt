@@ -15,6 +15,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(MSVC)
+  # ignore warnings about macro invocations with no parameters
+  add_compile_options(/wd4002)
+  # ignore warnings about using unsafe strcpy vs strcpy_s define _CRT_SECURE_NO_WARNINGS.
+  add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
