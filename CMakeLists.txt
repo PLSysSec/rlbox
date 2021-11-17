@@ -219,6 +219,7 @@ add_executable(test_rlbox
                code/tests/rlbox/test_sandbox_noop_sandbox.cpp
                code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
                code/tests/rlbox/test_sandbox_ptr_conversion.cpp
+               code/tests/rlbox/test_sandbox_types.cpp
                code/tests/rlbox/test_stdlib.cpp
                code/tests/rlbox/test_tainted_assignment.cpp
                code/tests/rlbox/test_tainted_opaque.cpp

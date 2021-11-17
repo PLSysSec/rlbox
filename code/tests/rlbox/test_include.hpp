@@ -48,7 +48,14 @@ struct testVarietyStruct
   CallbackType fnArray[8];                               // NOLINT
 };
 
-class TestSandbox
+namespace rlbox {
+class rlbox_test_sandbox;
+}
+
+using TestSandbox = rlbox::rlbox_test_sandbox;
+
+namespace rlbox {
+class rlbox_test_sandbox
 {
 private:
   std::pair<std::byte*, std::byte*> pow2SizeAlignedMalloc(size_t size)
@@ -253,3 +260,4 @@ protected:
   inline void impl_unregister_callback(void*)
   {}
 };
+}
