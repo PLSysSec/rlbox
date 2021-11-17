@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="classrlbox_1_1app__pointer__map" kind="class" language="C++" prot="public">
     <compoundname>rlbox::app_pointer_map</compoundname>
     <templateparamlist>
@@ -19,7 +19,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="22" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="22" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="22" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="22" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-attrib">
@@ -34,7 +34,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="24" column="12" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="24" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="24" column="12" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classrlbox_1_1app__pointer__map_1a8917cf48ca470acb8f363c770d3a9e55" prot="private" static="no" mutable="no">
         <type>T_PointerTypeUnsigned</type>
@@ -48,7 +48,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="25" column="25" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="25" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="25" column="25" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="25" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -66,20 +66,24 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="26" column="3"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="27" column="3"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a71c760d2f0a268865d2e213d110d3cd5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a9a9b5018b03fdf6e6c4416269e70e5af" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>T_PointerType</type>
         <definition>T_PointerType rlbox::app_pointer_map&lt; T_PointerType &gt;::get_unused_index</definition>
-        <argsstring>()</argsstring>
+        <argsstring>(T_PointerType max_ptr_val)</argsstring>
         <name>get_unused_index</name>
+        <param>
+          <type>T_PointerType</type>
+          <declname>max_ptr_val</declname>
+        </param>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="28" column="17" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="28" bodyend="46"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="30" column="17" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="30" bodyend="47"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -94,16 +98,20 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="49" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="49" bodyend="54"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="50" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="50" bodyend="55"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1aabdf160f0f7832866524ad96f434f870" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a9f232ecdc7c24b76c523e9018967b669" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>T_PointerType</type>
         <definition>T_PointerType rlbox::app_pointer_map&lt; T_PointerType &gt;::get_app_pointer_idx</definition>
-        <argsstring>(void *ptr)</argsstring>
+        <argsstring>(void *ptr, T_PointerType max_ptr_val)</argsstring>
         <name>get_app_pointer_idx</name>
         <param>
           <type>void *</type>
           <declname>ptr</declname>
+        </param>
+        <param>
+          <type>T_PointerType</type>
+          <declname>max_ptr_val</declname>
         </param>
         <briefdescription>
         </briefdescription>
@@ -111,7 +119,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="56" column="17" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="56" bodyend="63"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="57" column="17" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="57" bodyend="66"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a2d30dd92545875cb011d2ad557ee5d74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -128,11 +136,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="65" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="65" bodyend="73"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="68" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="68" bodyend="78"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a2ee22d266d142f98f810427ead4929c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1app__pointer__map_1a55d32464e1576f33eb711407f7ae34f0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void *</type>
-        <definition>void* rlbox::app_pointer_map&lt; T_PointerType &gt;::lookup_index</definition>
+        <definition>void * rlbox::app_pointer_map&lt; T_PointerType &gt;::lookup_index</definition>
         <argsstring>(T_PointerType idx)</argsstring>
         <name>lookup_index</name>
         <param>
@@ -145,20 +153,20 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="75" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="75" bodyend="83"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="80" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="80" bodyend="90"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" line="19" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp" bodystart="18" bodyend="84"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" line="18" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp" bodystart="19" bodyend="91"/>
     <listofallmembers>
       <member refid="classrlbox_1_1app__pointer__map_1a882d96f9a0f139ab9683315c5695ca85" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>app_pointer_map</name></member>
       <member refid="classrlbox_1_1app__pointer__map_1a8917cf48ca470acb8f363c770d3a9e55" prot="private" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>counter</name></member>
-      <member refid="classrlbox_1_1app__pointer__map_1aabdf160f0f7832866524ad96f434f870" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>get_app_pointer_idx</name></member>
-      <member refid="classrlbox_1_1app__pointer__map_1a71c760d2f0a268865d2e213d110d3cd5" prot="private" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>get_unused_index</name></member>
-      <member refid="classrlbox_1_1app__pointer__map_1a2ee22d266d142f98f810427ead4929c5" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>lookup_index</name></member>
+      <member refid="classrlbox_1_1app__pointer__map_1a9f232ecdc7c24b76c523e9018967b669" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>get_app_pointer_idx</name></member>
+      <member refid="classrlbox_1_1app__pointer__map_1a9a9b5018b03fdf6e6c4416269e70e5af" prot="private" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>get_unused_index</name></member>
+      <member refid="classrlbox_1_1app__pointer__map_1a55d32464e1576f33eb711407f7ae34f0" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>lookup_index</name></member>
       <member refid="classrlbox_1_1app__pointer__map_1a184de9c1c922275c7ec98788c273a02d" prot="private" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>pointer_map</name></member>
       <member refid="classrlbox_1_1app__pointer__map_1a2d30dd92545875cb011d2ad557ee5d74" prot="public" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>remove_app_ptr</name></member>
       <member refid="classrlbox_1_1app__pointer__map_1ae5e90783fe0d9b669ddb717c3b721066" prot="private" virt="non-virtual"><scope>rlbox::app_pointer_map</scope><name>RLBOX_SHARED_LOCK</name></member>

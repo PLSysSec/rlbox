@@ -1,34 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="rlbox__range_8hpp" kind="file" language="C++">
     <compoundname>rlbox_range.hpp</compoundname>
     <includes local="no">cstdint</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
-    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
     <incdepgraph>
-      <node id="2">
-        <label>cstdint</label>
-      </node>
-      <node id="3">
-        <label>rlbox_types.hpp</label>
-        <link refid="rlbox__types_8hpp_source"/>
-      </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_range.hpp</label>
         <link refid="rlbox__range_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
       </node>
+      <node id="3">
+        <label>rlbox_types.hpp</label>
+        <link refid="rlbox__types_8hpp_source"/>
+      </node>
+      <node id="2">
+        <label>cstdint</label>
+      </node>
     </incdepgraph>
     <invincdepgraph>
       <node id="2">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
         <link refid="rlbox_8hpp_source"/>
       </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_range.hpp</label>
         <link refid="rlbox__range_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -74,6 +74,6 @@
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
 <codeline lineno="32"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_range.hpp"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_range.hpp"/>
   </compounddef>
 </doxygen>

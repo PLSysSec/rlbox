@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="rlbox__struct__support_8hpp" kind="file" language="C++">
     <compoundname>rlbox_struct_support.hpp</compoundname>
     <includes local="no">cstring</includes>
@@ -9,24 +9,10 @@
     <includes refid="rlbox__helpers_8hpp" local="yes">rlbox_helpers.hpp</includes>
     <includes refid="rlbox__types_8hpp" local="yes">rlbox_types.hpp</includes>
     <includes refid="rlbox__wrapper__traits_8hpp" local="yes">rlbox_wrapper_traits.hpp</includes>
-    <includedby refid="rlbox__policy__types_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
-    <includedby refid="rlbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</includedby>
+    <includedby refid="rlbox__policy__types_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
     <incdepgraph>
-      <node id="3">
-        <label>functional</label>
-      </node>
-      <node id="7">
-        <label>limits</label>
-      </node>
-      <node id="16">
-        <label>rlbox_types.hpp</label>
-        <link refid="rlbox__types_8hpp_source"/>
-      </node>
-      <node id="14">
-        <label>rlbox_stdlib_polyfill.hpp</label>
-        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
-      </node>
       <node id="5">
         <label>rlbox_conversion.hpp</label>
         <link refid="rlbox__conversion_8hpp_source"/>
@@ -45,19 +31,30 @@
         <childnode refid="16" relation="include">
         </childnode>
       </node>
-      <node id="11">
-        <label>stdexcept</label>
-      </node>
-      <node id="17">
-        <label>rlbox_wrapper_traits.hpp</label>
-        <link refid="rlbox__wrapper__traits_8hpp_source"/>
+      <node id="8">
+        <label>rlbox_helpers.hpp</label>
+        <link refid="rlbox__helpers_8hpp_source"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
         <childnode refid="4" relation="include">
         </childnode>
-        <childnode refid="16" relation="include">
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
         </childnode>
       </node>
+      <node id="14">
+        <label>rlbox_stdlib_polyfill.hpp</label>
+        <link refid="rlbox__stdlib__polyfill_8hpp_source"/>
+      </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
         <link refid="rlbox__struct__support_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -82,8 +79,17 @@
         <childnode refid="4" relation="include">
         </childnode>
       </node>
-      <node id="12">
-        <label>utility</label>
+      <node id="16">
+        <label>rlbox_types.hpp</label>
+        <link refid="rlbox__types_8hpp_source"/>
+      </node>
+      <node id="17">
+        <label>rlbox_wrapper_traits.hpp</label>
+        <link refid="rlbox__wrapper__traits_8hpp_source"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
       </node>
       <node id="6">
         <label>array</label>
@@ -91,66 +97,59 @@
       <node id="9">
         <label>cstdlib</label>
       </node>
+      <node id="2">
+        <label>cstring</label>
+      </node>
+      <node id="3">
+        <label>functional</label>
+      </node>
       <node id="10">
         <label>iostream</label>
+      </node>
+      <node id="7">
+        <label>limits</label>
       </node>
       <node id="13">
         <label>mutex</label>
       </node>
+      <node id="11">
+        <label>stdexcept</label>
+      </node>
       <node id="4">
         <label>type_traits</label>
       </node>
-      <node id="8">
-        <label>rlbox_helpers.hpp</label>
-        <link refid="rlbox__helpers_8hpp_source"/>
-        <childnode refid="9" relation="include">
-        </childnode>
-        <childnode refid="10" relation="include">
-        </childnode>
-        <childnode refid="11" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
-        <childnode refid="12" relation="include">
-        </childnode>
-        <childnode refid="13" relation="include">
-        </childnode>
-        <childnode refid="14" relation="include">
-        </childnode>
-      </node>
-      <node id="2">
-        <label>cstring</label>
+      <node id="12">
+        <label>utility</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="4">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
       <node id="2">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="3" relation="include">
-        </childnode>
-      </node>
-      <node id="3">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
         <link refid="rlbox_8hpp_source"/>
       </node>
+      <node id="3">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
       <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
         <link refid="rlbox__struct__support_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
         <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
-    <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper</innerclass>
     <innerclass refid="structrlbox_1_1detail_1_1convert__to__sandbox__equivalent__helper_3_01T_00_01T__Sbx_00_01std_1_1201f48555b4b2007b214b5f3cfa39c9f" prot="public">rlbox::detail::convert_to_sandbox_equivalent_helper&lt; T, T_Sbx, std::enable_if_t&lt;!std::is_class_v&lt; T &gt; &gt; &gt;</innerclass>
     <innernamespace refid="namespacerlbox">rlbox</innernamespace>
     <innernamespace refid="namespacerlbox_1_1detail">rlbox::detail</innernamespace>
@@ -160,14 +159,14 @@
         <param><defname>fieldType</defname></param>
         <param><defname>fieldName</defname></param>
         <param><defname>isFrozen</defname></param>
-        <initializer>typename detail::convert_to_sandbox_equivalent_t&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
+        <initializer>  typename detail::convert_to_sandbox_equivalent_t&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="35" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="35" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="35" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1a6aab7b7774b5d9a2803a549ee9c4a2ec" prot="public" static="no">
         <name>helper_no_op</name>
@@ -178,7 +177,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="38" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="38" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="38" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="38" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1a3efed6645b59af600a7045c74c51ff41" prot="public" static="no">
         <name>sandbox_equivalent_specialization</name>
@@ -209,7 +208,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="40" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="40" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="40" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1adfc1222dc6c153916e2ab3370425fbd1" prot="public" static="no">
         <name>helper_create_tainted_field</name>
@@ -217,14 +216,14 @@
         <param><defname>fieldName</defname></param>
         <param><defname>isFrozen</defname></param>
         <param><defname>MaybeConst</defname></param>
-        <initializer>MaybeConst tainted&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
+        <initializer>  MaybeConst tainted&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="62" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="61" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="62" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1ac300f7cdcd5fb3bdbe034465fbe2048f" prot="public" static="no">
         <name>helper_create_tainted_vol_field</name>
@@ -232,14 +231,14 @@
         <param><defname>fieldName</defname></param>
         <param><defname>isFrozen</defname></param>
         <param><defname>MaybeConst</defname></param>
-        <initializer>MaybeConst tainted_volatile&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
+        <initializer>  MaybeConst tainted_volatile&lt;fieldType, T_Sbx&gt; fieldName;</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="66" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="65" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="66" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="65" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1acf76d2e53d2e3c64e3fbbcde972b2cf7" prot="public" static="no">
         <name>helper_convert_type</name>
@@ -254,7 +253,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="69" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="69" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="69" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="69" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1ac961029f6961360f32b911c05c08a023" prot="public" static="no">
         <name>helper_find_example_pointer_or_null</name>
@@ -273,7 +272,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="73" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="73" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="73" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="73" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1a011914c063f7799a917d1cd48bc54c3e" prot="public" static="no">
         <name>tainted_data_specialization_helper</name>
@@ -286,7 +285,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="81" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="81" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="81" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="81" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1a004dfaa7b53941d083afe0e887cd4b8b" prot="public" static="no">
         <name>tainted_data_specialization</name>
@@ -300,7 +299,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="335" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="330" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="335" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="330" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1acc5385061d624a4a66cdb2704a4c1aac" prot="public" static="no">
         <name>convert_type_specialization</name>
@@ -312,7 +311,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="339" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="334" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="339" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="334" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="rlbox__struct__support_8hpp_1aef6ea4843af5989fe70be21b0957da85" prot="public" static="no">
         <name>rlbox_load_structs_from_library</name>
@@ -343,7 +342,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" line="381" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp" bodystart="376" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" line="381" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp" bodystart="376" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -740,21 +739,21 @@
 <codeline lineno="387"><highlight class="preprocessor"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>check<sp/>that<sp/>this<sp/>macro<sp/>is<sp/>called<sp/>in<sp/>a<sp/>global<sp/>namespace<sp/>*/</highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
 <codeline lineno="388"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>static_assert(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
 <codeline lineno="389"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>::rlbox::detail::is_member_of_rlbox_detail&lt;detail::markerStruct&gt;,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="390"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;Invoke<sp/>rlbox_load_structs_from_library<sp/>in<sp/>the<sp/>global<sp/>namespace&quot;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="391"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="392"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="393"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_equivalent_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="394"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="395"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="396"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>tainted_data_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="397"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="398"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="399"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>convert_type_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="400"><highlight class="preprocessor"><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="401"><highlight class="preprocessor"><sp/><sp/>RLBOX_REQUIRE_SEMI_COLON</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="390"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;Invoke<sp/>rlbox_load_structs_from_library<sp/>in<sp/>the<sp/>global<sp/>namespace&quot;</highlight><highlight class="normal">);<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="391"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="392"><highlight class="normal"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="393"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>sandbox_equivalent_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="394"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="395"><highlight class="normal"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="396"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>tainted_data_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="397"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="398"><highlight class="normal"><sp/><sp/><sp/><sp/>sandbox_fields_reflection_##libId##_allClasses(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="399"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>convert_type_specialization)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="400"><highlight class="normal"><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="401"><highlight class="normal"><sp/><sp/>RLBOX_REQUIRE_SEMI_COLON</highlight></codeline>
 <codeline lineno="402"><highlight class="normal"></highlight></codeline>
 <codeline lineno="403"><highlight class="normal"></highlight><highlight class="comment">//<sp/>clang-format<sp/>on</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp"/>
   </compounddef>
 </doxygen>

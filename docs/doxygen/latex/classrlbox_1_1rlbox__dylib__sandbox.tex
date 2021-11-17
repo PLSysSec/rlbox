@@ -2,7 +2,7 @@
 \label{classrlbox_1_1rlbox__dylib__sandbox}\index{rlbox::rlbox\_dylib\_sandbox@{rlbox::rlbox\_dylib\_sandbox}}
 
 
-Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the R\+L\+Box A\+PI.  
+Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the RLBox API.  
 
 
 
@@ -33,16 +33,22 @@ using {\bfseries can\+\_\+grant\+\_\+deny\+\_\+access} = void
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ae5c93a46ffaddf1e63f0e022ba42444e}\label{classrlbox_1_1rlbox__dylib__sandbox_ae5c93a46ffaddf1e63f0e022ba42444e}} 
 using {\bfseries needs\+\_\+internal\+\_\+lookup\+\_\+symbol} = void
 \end{DoxyCompactItemize}
+\doxysubsection*{Protected Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a88ed4dc223bbe9af32d641b91e645454}\label{classrlbox_1_1rlbox__dylib__sandbox_a88ed4dc223bbe9af32d641b91e645454}} 
+using {\bfseries path\+\_\+buf} = const char $\ast$
+\end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ae46bf2cc50ece641936c5ae3c92903e4}\label{classrlbox_1_1rlbox__dylib__sandbox_ae46bf2cc50ece641936c5ae3c92903e4}} 
-void {\bfseries impl\+\_\+create\+\_\+sandbox} (const char $\ast$path)
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a2fb52c06b9543574564602d3d9fad093}\label{classrlbox_1_1rlbox__dylib__sandbox_a2fb52c06b9543574564602d3d9fad093}} 
+void {\bfseries impl\+\_\+create\+\_\+sandbox} (path\+\_\+buf path)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_aa67120a8150558406fc0f27ee8f994a7}\label{classrlbox_1_1rlbox__dylib__sandbox_aa67120a8150558406fc0f27ee8f994a7}} 
 void {\bfseries impl\+\_\+destroy\+\_\+sandbox} ()
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a31be5f4e8f19f08680ffbf403edef27e}\label{classrlbox_1_1rlbox__dylib__sandbox_a31be5f4e8f19f08680ffbf403edef27e}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a745c49475c21351eafa2b772a2bc9663}\label{classrlbox_1_1rlbox__dylib__sandbox_a745c49475c21351eafa2b772a2bc9663}} 
 {\footnotesize template$<$typename T $>$ }\\void $\ast$ {\bfseries impl\+\_\+get\+\_\+unsandboxed\+\_\+pointer} (T\+\_\+\+Pointer\+Type p) const
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_aaff60bad8dad97f127d208b0ef932c31}\label{classrlbox_1_1rlbox__dylib__sandbox_aaff60bad8dad97f127d208b0ef932c31}} 
@@ -63,13 +69,13 @@ bool {\bfseries impl\+\_\+is\+\_\+pointer\+\_\+in\+\_\+app\+\_\+memory} (const v
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ac3ea0ef7845dc2b0532b506439e938f7}\label{classrlbox_1_1rlbox__dylib__sandbox_ac3ea0ef7845dc2b0532b506439e938f7}} 
 size\+\_\+t {\bfseries impl\+\_\+get\+\_\+total\+\_\+memory} ()
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a6ba7e68b673b86edde35b0fadae84ba7}\label{classrlbox_1_1rlbox__dylib__sandbox_a6ba7e68b673b86edde35b0fadae84ba7}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_aa28f8e0f68d89de51b98d7d5bf008412}\label{classrlbox_1_1rlbox__dylib__sandbox_aa28f8e0f68d89de51b98d7d5bf008412}} 
 void $\ast$ {\bfseries impl\+\_\+get\+\_\+memory\+\_\+location} ()
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_adabc909636e2ee11a953152ad715cb42}\label{classrlbox_1_1rlbox__dylib__sandbox_adabc909636e2ee11a953152ad715cb42}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a4dc2c03d28678ea4aa611d143a67f9f9}\label{classrlbox_1_1rlbox__dylib__sandbox_a4dc2c03d28678ea4aa611d143a67f9f9}} 
 void $\ast$ {\bfseries impl\+\_\+lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ae32e9d40a251d9f95706716af5a50d7f}\label{classrlbox_1_1rlbox__dylib__sandbox_ae32e9d40a251d9f95706716af5a50d7f}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ae01787779f381b414d072c42c7b805ad}\label{classrlbox_1_1rlbox__dylib__sandbox_ae01787779f381b414d072c42c7b805ad}} 
 void $\ast$ {\bfseries impl\+\_\+internal\+\_\+lookup\+\_\+symbol} (const char $\ast$func\+\_\+name)
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a256dbd8afd0bfc0a2d6ed1d5b9b20893}\label{classrlbox_1_1rlbox__dylib__sandbox_a256dbd8afd0bfc0a2d6ed1d5b9b20893}} 
@@ -81,16 +87,16 @@ void $\ast$ {\bfseries impl\+\_\+internal\+\_\+lookup\+\_\+symbol} (const char $
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_adf7041e7bfa0f751b773ab85aeb0e0d2}\label{classrlbox_1_1rlbox__dylib__sandbox_adf7041e7bfa0f751b773ab85aeb0e0d2}} 
 {\footnotesize template$<$typename T\+\_\+\+Ret , typename... T\+\_\+\+Args$>$ }\\void {\bfseries impl\+\_\+unregister\+\_\+callback} (void $\ast$key)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a8053f05949062d16c7a577d7c6435d4b}\label{classrlbox_1_1rlbox__dylib__sandbox_a8053f05949062d16c7a577d7c6435d4b}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_adc02b0be9052ed414ba79dd424947fc5}\label{classrlbox_1_1rlbox__dylib__sandbox_adc02b0be9052ed414ba79dd424947fc5}} 
 {\footnotesize template$<$typename T $>$ }\\T $\ast$ {\bfseries impl\+\_\+grant\+\_\+access} (T $\ast$src, size\+\_\+t num, bool \&success)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_abfc9ba962b691f2d6dd3d5ee4aa679fe}\label{classrlbox_1_1rlbox__dylib__sandbox_abfc9ba962b691f2d6dd3d5ee4aa679fe}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_aba16c85409a2cabce2580722be319133}\label{classrlbox_1_1rlbox__dylib__sandbox_aba16c85409a2cabce2580722be319133}} 
 {\footnotesize template$<$typename T $>$ }\\T $\ast$ {\bfseries impl\+\_\+deny\+\_\+access} (T $\ast$src, size\+\_\+t num, bool \&success)
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a47ef3f5d41ddfc2c1288032d6badc43c}\label{classrlbox_1_1rlbox__dylib__sandbox_a47ef3f5d41ddfc2c1288032d6badc43c}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a7902a16d2021d13d6b55596b881d25a7}\label{classrlbox_1_1rlbox__dylib__sandbox_a7902a16d2021d13d6b55596b881d25a7}} 
 {\footnotesize template$<$typename T $>$ }\\static void $\ast$ {\bfseries impl\+\_\+get\+\_\+unsandboxed\+\_\+pointer\+\_\+no\+\_\+ctx} (T\+\_\+\+Pointer\+Type p, const void $\ast$, \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\+\_\+dylib\+\_\+sandbox}} $\ast$($\ast$)(const void $\ast$example\+\_\+unsandboxed\+\_\+ptr))
 \item 
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_ad81421cfc97c3ca3fd6cc095062e5da3}\label{classrlbox_1_1rlbox__dylib__sandbox_ad81421cfc97c3ca3fd6cc095062e5da3}} 
@@ -99,14 +105,14 @@ void $\ast$ {\bfseries impl\+\_\+internal\+\_\+lookup\+\_\+symbol} (const char $
 \mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_aa79a4fe27101d61146c1e84c349b7d95}\label{classrlbox_1_1rlbox__dylib__sandbox_aa79a4fe27101d61146c1e84c349b7d95}} 
 static bool {\bfseries impl\+\_\+is\+\_\+in\+\_\+same\+\_\+sandbox} (const void $\ast$, const void $\ast$)
 \item 
-\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a67e89df45f9c90d63c4154cc657ec1ab}\label{classrlbox_1_1rlbox__dylib__sandbox_a67e89df45f9c90d63c4154cc657ec1ab}} 
+\mbox{\Hypertarget{classrlbox_1_1rlbox__dylib__sandbox_a9519eb78284c00b288260c1b9b19fb81}\label{classrlbox_1_1rlbox__dylib__sandbox_a9519eb78284c00b288260c1b9b19fb81}} 
 static std\+::pair$<$ \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\+\_\+dylib\+\_\+sandbox}} $\ast$, void $\ast$ $>$ {\bfseries impl\+\_\+get\+\_\+executed\+\_\+callback\+\_\+sandbox\+\_\+and\+\_\+key} ()
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the R\+L\+Box A\+PI. 
+Class that implements the null sandbox. This sandbox doesn\textquotesingle{}t actually provide any isolation and only serves as a stepping stone towards migrating an application to use the RLBox API. 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/shr/\+Code/\+Library\+Sandboxing/rlbox\+\_\+api\+\_\+cpp17/code/include/rlbox\+\_\+dylib\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}
+/home/d/hack/rlbox\+\_\+sandboxing\+\_\+api/code/include/rlbox\+\_\+dylib\+\_\+sandbox.\+hpp\end{DoxyCompactItemize}

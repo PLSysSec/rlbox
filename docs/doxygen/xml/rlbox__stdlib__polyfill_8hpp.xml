@@ -1,94 +1,94 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="rlbox__stdlib__polyfill_8hpp" kind="file" language="C++">
     <compoundname>rlbox_stdlib_polyfill.hpp</compoundname>
-    <includedby refid="rlbox__helpers_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp</includedby>
-    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</includedby>
+    <includedby refid="rlbox__helpers_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_helpers.hpp</includedby>
+    <includedby refid="rlbox__sandbox_8hpp" local="yes">/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</includedby>
     <invincdepgraph>
-      <node id="11">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_noop_sandbox.hpp</label>
-        <link refid="rlbox__noop__sandbox_8hpp_source"/>
+      <node id="3">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp</label>
+        <link refid="rlbox_8hpp_source"/>
       </node>
-      <node id="1">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp</label>
-        <link refid="rlbox__stdlib__polyfill_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-      </node>
-      <node id="8">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_sandbox.hpp</label>
-        <link refid="rlbox__sandbox_8hpp_source"/>
-        <childnode refid="4" relation="include">
+      <node id="4">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_app_pointer.hpp</label>
+        <link refid="rlbox__app__pointer_8hpp_source"/>
+        <childnode refid="3" relation="include">
         </childnode>
       </node>
       <node id="5">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_conversion.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_conversion.hpp</label>
         <link refid="rlbox__conversion_8hpp_source"/>
-        <childnode refid="4" relation="include">
+        <childnode refid="3" relation="include">
         </childnode>
         <childnode refid="6" relation="include">
         </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-      </node>
-      <node id="7">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_policy_types.hpp</label>
-        <link refid="rlbox__policy__types_8hpp_source"/>
-        <childnode refid="4" relation="include">
-        </childnode>
-      </node>
-      <node id="4">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox.hpp</label>
-        <link refid="rlbox_8hpp_source"/>
-      </node>
-      <node id="3">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_app_pointer.hpp</label>
-        <link refid="rlbox__app__pointer_8hpp_source"/>
-        <childnode refid="4" relation="include">
-        </childnode>
-      </node>
-      <node id="6">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_struct_support.hpp</label>
-        <link refid="rlbox__struct__support_8hpp_source"/>
         <childnode refid="7" relation="include">
         </childnode>
-        <childnode refid="8" relation="include">
-        </childnode>
-        <childnode refid="4" relation="include">
-        </childnode>
       </node>
-      <node id="10">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp</label>
+      <node id="9">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp</label>
         <link refid="rlbox__dylib__sandbox_8hpp_source"/>
       </node>
       <node id="2">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_helpers.hpp</label>
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_helpers.hpp</label>
         <link refid="rlbox__helpers_8hpp_source"/>
         <childnode refid="3" relation="include">
         </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
         <childnode refid="4" relation="include">
         </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="8" relation="include">
+        <childnode refid="5" relation="include">
         </childnode>
         <childnode refid="9" relation="include">
         </childnode>
         <childnode refid="10" relation="include">
         </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
         <childnode refid="11" relation="include">
         </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
       </node>
-      <node id="9">
-        <label>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib.hpp</label>
+      <node id="10">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_noop_sandbox.hpp</label>
+        <link refid="rlbox__noop__sandbox_8hpp_source"/>
+      </node>
+      <node id="8">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp</label>
+        <link refid="rlbox__policy__types_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_sandbox.hpp</label>
+        <link refid="rlbox__sandbox_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib.hpp</label>
         <link refid="rlbox__stdlib_8hpp_source"/>
-        <childnode refid="4" relation="include">
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp</label>
+        <link refid="rlbox__stdlib__polyfill_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_struct_support.hpp</label>
+        <link refid="rlbox__struct__support_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
@@ -109,14 +109,14 @@
       <memberdef kind="define" id="rlbox__stdlib__polyfill_8hpp_1a8e7b7f53bfb1ceecb65ca5e6d11283f1" prot="public" static="no">
         <name>INVOKE_RETURN</name>
         <param><defname>...</defname></param>
-        <initializer>noexcept(noexcept(__VA_ARGS__))-&gt;decltype(__VA_ARGS__) { return __VA_ARGS__; }</initializer>
+        <initializer>  noexcept(noexcept(__VA_ARGS__))-&gt;decltype(__VA_ARGS__) { return __VA_ARGS__; }</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" line="36" column="9" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp" bodystart="36" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp" line="36" column="9" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -150,7 +150,7 @@
 <codeline lineno="24"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>()<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="26"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>&amp;<sp/>operator=(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/>~<ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref>()<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">~__nat</ref>()<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="28"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"></highlight></codeline>
 <codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>_Val&gt;</highlight></codeline>
@@ -167,7 +167,7 @@
 <codeline lineno="41"><highlight class="normal"><sp/><sp/>INVOKE_RETURN(std::forward&lt;_Fp&gt;(__f)(std::forward&lt;_Args&gt;(__args)...))</highlight></codeline>
 <codeline lineno="42"><highlight class="normal"></highlight></codeline>
 <codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>helper__invoke_constexpr(_Fp&amp;&amp;<sp/>__f,<sp/>_Args&amp;&amp;...<sp/>__args)</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>helper__invoke_constexpr(_Fp&amp;&amp;<sp/>__f,<sp/>_Args&amp;&amp;...<sp/>__args)</highlight></codeline>
 <codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>INVOKE_RETURN(std::forward&lt;_Fp&gt;(__f)(std::forward&lt;_Args&gt;(__args)...))</highlight></codeline>
 <codeline lineno="46"><highlight class="normal"></highlight></codeline>
 <codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>INVOKE_RETURN</highlight><highlight class="normal"></highlight></codeline>
@@ -178,14 +178,14 @@
 <codeline lineno="52"><highlight class="normal">{</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_XFp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_XArgs&gt;</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>__try_call(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>-&gt;<sp/>decltype(helper__invoke(std::declval&lt;_XFp&gt;(),</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>-&gt;<sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(helper__invoke(std::declval&lt;_XFp&gt;(),</highlight></codeline>
 <codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::declval&lt;_XArgs&gt;()...));</highlight></codeline>
 <codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_XFp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_XArgs&gt;</highlight></codeline>
 <codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nat" kindref="compound">__nat</ref><sp/>__try_call(...);</highlight></codeline>
 <codeline lineno="59"><highlight class="normal"></highlight></codeline>
 <codeline lineno="60"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>FIXME:<sp/>Check<sp/>that<sp/>_Ret,<sp/>_Fp,<sp/>and<sp/>_Args...<sp/>are<sp/>all<sp/>complete<sp/>types,<sp/>cv<sp/>void,</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="61"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>or<sp/>incomplete<sp/>array<sp/>types<sp/>as<sp/>required<sp/>by<sp/>the<sp/>standard.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>_Result<sp/>=<sp/>decltype(__try_call&lt;_Fp,<sp/>_Args...&gt;(0));</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>_Result<sp/>=<sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(__try_call&lt;_Fp,<sp/>_Args...&gt;(0));</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"></highlight></codeline>
 <codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>type<sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>std::conditional&lt;</highlight></codeline>
 <codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>_IsNotSame&lt;_Result,<sp/>__nat&gt;::value,</highlight></codeline>
@@ -214,9 +214,9 @@
 <codeline lineno="88"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kindref="compound">__nothrow_invokable_r_imp</ref><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kindref="compound">_ThisT</ref>;</highlight></codeline>
 <codeline lineno="89"><highlight class="normal"></highlight></codeline>
 <codeline lineno="90"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>_Tp&gt;</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>__test_noexcept(_Tp)<sp/>noexcept;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>__test_noexcept(_Tp)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="92"><highlight class="normal"></highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>value<sp/>=<sp/>noexcept(_ThisT::__test_noexcept&lt;_Ret&gt;(</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>value<sp/>=<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">(_ThisT::__test_noexcept&lt;_Ret&gt;(</highlight></codeline>
 <codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>helper__invoke(std::declval&lt;_Fp&gt;(),<sp/>std::declval&lt;_Args&gt;()...)));</highlight></codeline>
 <codeline lineno="95"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="96"><highlight class="normal"></highlight></codeline>
@@ -224,7 +224,7 @@
 <codeline lineno="98" refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp_3_01true_00_01true_00_01__Re94b011956b38a71c476d923b84fea4ba" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp" kindref="compound">__nothrow_invokable_r_imp</ref>&lt;true,<sp/>true,<sp/>_Ret,<sp/>_Fp,<sp/>_Args...&gt;</highlight></codeline>
 <codeline lineno="99"><highlight class="normal">{</highlight></codeline>
 <codeline lineno="100"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>value<sp/>=</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>noexcept(helper__invoke(std::declval&lt;_Fp&gt;(),<sp/>std::declval&lt;_Args&gt;()...));</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">(helper__invoke(std::declval&lt;_Fp&gt;(),<sp/>std::declval&lt;_Args&gt;()...));</highlight></codeline>
 <codeline lineno="102"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="103"><highlight class="normal"></highlight></codeline>
 <codeline lineno="104"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Ret,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
@@ -271,10 +271,10 @@
 <codeline lineno="145"><highlight class="normal">{};</highlight></codeline>
 <codeline lineno="146"><highlight class="normal"></highlight></codeline>
 <codeline lineno="147"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fn,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
-<codeline lineno="148"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_invocable_v<sp/>=<sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable" kindref="compound">is_invocable</ref>&lt;_Fn,<sp/>_Args...&gt;::value;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_invocable_v<sp/>=<sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable" kindref="compound">is_invocable</ref>&lt;_Fn,<sp/>_Args...&gt;::value;</highlight></codeline>
 <codeline lineno="149"><highlight class="normal"></highlight></codeline>
 <codeline lineno="150"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Ret,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fn,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
-<codeline lineno="151"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_invocable_r_v<sp/>=</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_invocable_r_v<sp/>=</highlight></codeline>
 <codeline lineno="152"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r" kindref="compound">is_invocable_r</ref>&lt;_Ret,<sp/>_Fn,<sp/>_Args...&gt;::value;</highlight></codeline>
 <codeline lineno="153"><highlight class="normal"></highlight></codeline>
 <codeline lineno="154"><highlight class="normal"></highlight><highlight class="comment">//<sp/>is_nothrow_invocable</highlight><highlight class="normal"></highlight></codeline>
@@ -291,15 +291,15 @@
 <codeline lineno="165"><highlight class="normal">{};</highlight></codeline>
 <codeline lineno="166"><highlight class="normal"></highlight></codeline>
 <codeline lineno="167"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fn,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
-<codeline lineno="168"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_nothrow_invocable_v<sp/>=</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_nothrow_invocable_v<sp/>=</highlight></codeline>
 <codeline lineno="169"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable" kindref="compound">is_nothrow_invocable</ref>&lt;_Fn,<sp/>_Args...&gt;::value;</highlight></codeline>
 <codeline lineno="170"><highlight class="normal"></highlight></codeline>
 <codeline lineno="171"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Ret,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">_Fn,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>_Args&gt;</highlight></codeline>
-<codeline lineno="172"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_nothrow_invocable_r_v<sp/>=</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_nothrow_invocable_r_v<sp/>=</highlight></codeline>
 <codeline lineno="173"><highlight class="normal"><sp/><sp/><ref refid="structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r" kindref="compound">is_nothrow_invocable_r</ref>&lt;_Ret,<sp/>_Fn,<sp/>_Args...&gt;::value;</highlight></codeline>
 <codeline lineno="174"><highlight class="normal"></highlight></codeline>
 <codeline lineno="175"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_stdlib_polyfill.hpp"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_stdlib_polyfill.hpp"/>
   </compounddef>
 </doxygen>

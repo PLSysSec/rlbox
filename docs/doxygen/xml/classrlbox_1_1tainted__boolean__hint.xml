@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="classrlbox_1_1tainted__boolean__hint" kind="class" language="C++" prot="public">
     <compoundname>rlbox::tainted_boolean_hint</compoundname>
-    <includes refid="rlbox__types_8hpp" local="no">rlbox_types.hpp</includes>
+    <includes refid="rlbox__policy__types_8hpp" local="no">rlbox_policy_types.hpp</includes>
       <sectiondef kind="private-attrib">
       <memberdef kind="variable" id="classrlbox_1_1tainted__boolean__hint_1ac56b1b2bb81216a563c6a65287c8b93d" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="36" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="36" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="303" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="303" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -34,7 +34,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="39" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="39" bodyend="41"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="306" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="306" bodyend="308"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1adea514e39039a1278dc00b59ec911ce2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -50,11 +50,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="42" column="3"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="309" column="3"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1accd26753a15b8c1510418a1b0ef6ac81" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1a5e291fd3590243b2f581fc77df8c1415" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__boolean__hint" kindref="compound">tainted_boolean_hint</ref> &amp;</type>
-        <definition>tainted_boolean_hint&amp; rlbox::tainted_boolean_hint::operator=</definition>
+        <definition>tainted_boolean_hint &amp; rlbox::tainted_boolean_hint::operator=</definition>
         <argsstring>(bool rhs)</argsstring>
         <name>operator=</name>
         <param>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="43" column="31" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="43" bodyend="47"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="310" column="31" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="310" bodyend="314"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1ae47718163139bbc69009f5d853700690" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__boolean__hint" kindref="compound">tainted_boolean_hint</ref></type>
@@ -80,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="48" column="31" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="48" bodyend="48"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="315" column="31" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="315" bodyend="315"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1abf39ef53dfd6b06017c127ef9370bb19" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -105,7 +105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="50" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="50" bodyend="54"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="317" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="317" bodyend="321"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1a6e23142c021bb326ab1d6d700a493b6f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -118,7 +118,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="55" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="55" bodyend="55"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="322" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="322" bodyend="322"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1a5bcd23163c04db9f85ee68a6e06ab57e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -131,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="56" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="56" bodyend="56"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="323" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="323" bodyend="323"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1aa686dad271f4d9ed7e908d38313706d5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -144,7 +144,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="57" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="57" bodyend="57"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="324" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="324" bodyend="324"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1a6e329c5d66230f3d7af46482c84ba3a4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -157,7 +157,29 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="58" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="58" bodyend="58"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="325" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="325" bodyend="325"/>
+      </memberdef>
+      <memberdef kind="function" id="classrlbox_1_1tainted__boolean__hint_1a4b895e5d6728b24462d5baf0c5fa4664" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+            <defval>void</defval>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool rlbox::tainted_boolean_hint::copy_and_verify</definition>
+        <argsstring>(...) const</argsstring>
+        <name>copy_and_verify</name>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="329" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="329" bodyend="349"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -165,12 +187,13 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" line="34" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_types.hpp" bodystart="33" bodyend="59"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="300" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="301" bodyend="350"/>
     <listofallmembers>
+      <member refid="classrlbox_1_1tainted__boolean__hint_1a4b895e5d6728b24462d5baf0c5fa4664" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>copy_and_verify</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1aa686dad271f4d9ed7e908d38313706d5" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>INTERNAL_unverified_safe</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1a6e329c5d66230f3d7af46482c84ba3a4" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>INTERNAL_unverified_safe</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1ae47718163139bbc69009f5d853700690" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>operator!</name></member>
-      <member refid="classrlbox_1_1tainted__boolean__hint_1accd26753a15b8c1510418a1b0ef6ac81" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>operator=</name></member>
+      <member refid="classrlbox_1_1tainted__boolean__hint_1a5e291fd3590243b2f581fc77df8c1415" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>operator=</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1a14cea878f2d1cbf8722491cc0abe875f" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>tainted_boolean_hint</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1adea514e39039a1278dc00b59ec911ce2" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>tainted_boolean_hint</name></member>
       <member refid="classrlbox_1_1tainted__boolean__hint_1a6e23142c021bb326ab1d6d700a493b6f" prot="public" virt="non-virtual"><scope>rlbox::tainted_boolean_hint</scope><name>UNSAFE_unverified</name></member>

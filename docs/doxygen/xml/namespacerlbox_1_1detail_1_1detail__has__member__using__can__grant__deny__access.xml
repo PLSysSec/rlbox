@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="namespacerlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access" kind="namespace" language="C++">
     <compoundname>rlbox::detail::detail_has_member_using_can_grant_deny_access</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access_1_1has__member__using__can__grant__deny__access" prot="public">rlbox::detail::detail_has_member_using_can_grant_deny_access::has_member_using_can_grant_deny_access</innerclass>
@@ -8,6 +8,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_wrapper_traits.hpp" line="137" column="55"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_wrapper_traits.hpp" line="137" column="1"/>
   </compounddef>
 </doxygen>

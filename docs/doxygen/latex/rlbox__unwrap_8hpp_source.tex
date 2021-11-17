@@ -1,0 +1,31 @@
+\hypertarget{rlbox__unwrap_8hpp_source}{}\doxysection{rlbox\+\_\+unwrap.\+hpp}
+\label{rlbox__unwrap_8hpp_source}\index{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_unwrap.hpp@{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_unwrap.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 \textcolor{comment}{// IWYU pragma: private, include "{}rlbox.hpp"{}}}
+\DoxyCodeLine{3 \textcolor{comment}{// IWYU pragma: friend "{}rlbox\_.*\(\backslash\).hpp"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <type\_traits>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}rlbox\_type\_traits.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}rlbox\_types.hpp"{}}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{namespace }rlbox::detail \{}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
+\DoxyCodeLine{13 \textcolor{keyword}{inline} \textcolor{keyword}{auto} unwrap\_value(T\_Rhs\&\& rhs) \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{14 \{}
+\DoxyCodeLine{15   \textcolor{keyword}{using} T\_RhsNoQ = detail::remove\_cv\_ref\_t<T\_Rhs>;}
+\DoxyCodeLine{16   \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (detail::rlbox\_is\_wrapper\_v<T\_RhsNoQ>) \{}
+\DoxyCodeLine{17     \textcolor{keywordflow}{return} rhs.INTERNAL\_unverified\_safe();}
+\DoxyCodeLine{18   \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_RhsNoQ>) \{}
+\DoxyCodeLine{19     \textcolor{keywordflow}{return} rhs.INTERNAL\_unverified\_safe();}
+\DoxyCodeLine{20   \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{21     \textcolor{keywordflow}{return} rhs;}
+\DoxyCodeLine{22   \}}
+\DoxyCodeLine{23 \}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \}}
+
+\end{DoxyCode}

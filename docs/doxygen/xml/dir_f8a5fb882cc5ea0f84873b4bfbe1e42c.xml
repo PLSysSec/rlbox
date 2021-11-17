@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c" kind="dir">
-    <compoundname>/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include</compoundname>
+    <compoundname>/home/d/hack/rlbox_sandboxing_api/code/include</compoundname>
     <innerfile refid="rlbox_8hpp">rlbox.hpp</innerfile>
     <innerfile refid="rlbox__app__pointer_8hpp">rlbox_app_pointer.hpp</innerfile>
     <innerfile refid="rlbox__conversion_8hpp">rlbox_conversion.hpp</innerfile>
@@ -22,6 +22,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/"/>
   </compounddef>
 </doxygen>

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="namespacerlbox_1_1detail_1_1std__array__to__c__arr__detail" kind="namespace" language="C++">
     <compoundname>rlbox::detail::std_array_to_c_arr_detail</compoundname>
     <innerclass refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" prot="public">rlbox::detail::std_array_to_c_arr_detail::W</innerclass>
       <sectiondef kind="var">
-      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1acb4d29f0c49fdcca664dbb6d59ed7590" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a874f65fa6221b6c1c180e4a072cf48a7" prot="public" static="no" mutable="no">
         <templateparamlist>
           <param>
             <type>typename T</type>
@@ -16,7 +16,7 @@
           </param>
         </templateparamlist>
         <type><ref refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kindref="compound">W</ref>&lt; T[N]&gt;</type>
-        <definition>W&lt;T[N]&gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper(std::array&lt; T, N &gt;)</definition>
+        <definition>W&lt; T[N]&gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper(std::array&lt; T, N &gt;)</definition>
         <argsstring>(std::array&lt; T, N &gt;)</argsstring>
         <name>std_array_to_c_arr_helper</name>
         <briefdescription>
@@ -25,18 +25,18 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="98" column="5"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="115" column="5"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
-      <memberdef kind="function" id="rlbox__type__traits_8hpp_1a233d900a31a4e947c74e13cb90d467a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="rlbox__type__traits_8hpp_1a680d889a510706c5036fc0d6e382e94a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T</type>
           </param>
         </templateparamlist>
         <type><ref refid="structrlbox_1_1detail_1_1std__array__to__c__arr__detail_1_1W" kindref="compound">W</ref>&lt; T &gt;</type>
-        <definition>W&lt;T&gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper</definition>
+        <definition>W&lt; T &gt; rlbox::detail::std_array_to_c_arr_detail::std_array_to_c_arr_helper</definition>
         <argsstring>(T &amp;&amp;)</argsstring>
         <name>std_array_to_c_arr_helper</name>
         <param>
@@ -48,13 +48,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="101" column="5" declfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" declline="101" declcolumn="5"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="118" column="5" declfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" declline="118" declcolumn="5"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="90" column="35"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="107" column="1"/>
   </compounddef>
 </doxygen>

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="structrlbox_1_1detail_1_1all__extents__same__detail_1_1all__extents__same__helper_3_01T1_00_01T258771663e90eb8e999cffbdabdafda93" kind="struct" language="C++" prot="public">
     <compoundname>rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt;==std::rank_v&lt; T2 &gt; &amp;&amp;!std::is_array_v&lt; T1 &gt; &amp;&amp;!std::is_array_v&lt; T2 &gt; &gt; &gt;</compoundname>
-    <basecompoundref prot="public" virt="non-virtual">true_type</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">std::true_type</basecompoundref>
     <templateparamlist>
       <param>
         <type>typename T1</type>
@@ -23,7 +23,7 @@
         </childnode>
       </node>
       <node id="2">
-        <label>true_type</label>
+        <label>std::true_type</label>
       </node>
     </inheritancegraph>
     <collaborationgraph>
@@ -34,10 +34,10 @@
         </childnode>
       </node>
       <node id="2">
-        <label>true_type</label>
+        <label>std::true_type</label>
       </node>
     </collaborationgraph>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" line="206" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_type_traits.hpp" bodystart="200" bodyend="206"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="217" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="223" bodyend="223"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>

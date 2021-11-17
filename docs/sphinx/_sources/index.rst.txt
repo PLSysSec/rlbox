@@ -10,7 +10,8 @@ Overview
 ========
 
 This is a short tutorial on the RLBox API. If you are looking for a reference
-of all APIs, see [Doxygen]_.  If you are looking for motivation, see [RLBoxLogin]_, [RLBoxFirefox]_, and [RLBoxPaper]_.
+of all APIs, see [Doxygen]_.  If you are looking for motivation, see
+[RLBoxLogin]_, [RLBoxFirefox]_, and [RLBoxPaper]_.
 
 RLBox is a toolkit for sandboxing third-party libraries. The toolkit consists
 of (1) a Wasm-based sandbox and (2) an API for retrofitting existing

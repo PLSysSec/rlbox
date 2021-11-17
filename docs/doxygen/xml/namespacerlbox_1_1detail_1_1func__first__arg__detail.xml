@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
+  <compounddef id="namespacerlbox_1_1detail_1_1func__first__arg__detail" kind="namespace" language="C++">
+    <compoundname>rlbox::detail::func_first_arg_detail</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rlbox__type__traits_8hpp_1a3ea2bee8c0e5a1d2553563d84141a2a3" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename F</type>
+          </param>
+        </templateparamlist>
+        <type>decltype(func_first_arg_t_helper(&amp;F::operator()))</type>
+        <definition>decltype(func_first_arg_t_helper(&amp;F::operator())) rlbox::detail::func_first_arg_detail::first_argument_helper(F)</definition>
+        <argsstring>(F)</argsstring>
+        <name>first_argument_helper</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="41" column="12" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rlbox__type__traits_8hpp_1aee79a87a9b4ec5413639f7dc8668ae66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Ret</type>
+          </param>
+          <param>
+            <type>typename Arg</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Rest</declname>
+            <defname>Rest</defname>
+          </param>
+        </templateparamlist>
+        <type>Arg</type>
+        <definition>Arg rlbox::detail::func_first_arg_detail::func_first_arg_t_helper</definition>
+        <argsstring>(Ret(*)(Arg, Rest...))</argsstring>
+        <name>func_first_arg_t_helper</name>
+        <param>
+          <type>Ret(*)(Arg, Rest...)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="32" column="7" declfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" declline="32" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="rlbox__type__traits_8hpp_1ade0290c3d94cc9b48618b44dbf581ef2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Ret</type>
+          </param>
+          <param>
+            <type>typename F</type>
+          </param>
+          <param>
+            <type>typename Arg</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Rest</declname>
+            <defname>Rest</defname>
+          </param>
+        </templateparamlist>
+        <type>Arg</type>
+        <definition>Arg rlbox::detail::func_first_arg_detail::func_first_arg_t_helper</definition>
+        <argsstring>(Ret(F::*)(Arg, Rest...))</argsstring>
+        <name>func_first_arg_t_helper</name>
+        <param>
+          <type>Ret(F::*)(Arg, Rest...)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="35" column="7" declfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" declline="35" declcolumn="7"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="30" column="1"/>
+  </compounddef>
+</doxygen>
