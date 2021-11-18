@@ -154,6 +154,14 @@ public:
   ~sandbox_callback() { unregister(); }
 
   /**
+   * @brief Check if callback is _not_ registered.
+   */
+  inline bool is_unregistered() const noexcept
+  {
+    return get_raw_value() == nullptr;
+  }
+
+  /**
    * @brief Unwrap a callback without verification. This is an unsafe operation
    * and should be used with care.
    */
@@ -258,7 +266,12 @@ public:
   }
 
   /**
-   * @brief Unwrap a callback without verification. This is an unsafe operation
+   * @brief Check if app pointer is _not_ registered.
+   */
+  inline bool is_unregistered() const noexcept { return idx == 0; }
+
+  /**
+   * @brief Unwrap app_pointer without verification. This is an unsafe operation
    * and should be used with care.
    */
   inline auto UNSAFE_unverified() const noexcept { return get_raw_value(); }

@@ -1,0 +1,181 @@
+\hypertarget{rlbox__stdlib__polyfill_8hpp_source}{}\doxysection{rlbox\+\_\+stdlib\+\_\+polyfill.\+hpp}
+\label{rlbox__stdlib__polyfill_8hpp_source}\index{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_stdlib\_polyfill.hpp@{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_stdlib\_polyfill.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{comment}{// This file is a polyfill for parts of the C++ standard library available only}}
+\DoxyCodeLine{4 \textcolor{comment}{// in newer compilers. Since these are only compile time requirements, we can}}
+\DoxyCodeLine{5 \textcolor{comment}{// just include these as part of the rlbox library in case the target compiler}}
+\DoxyCodeLine{6 \textcolor{comment}{// doesn't support these features. For instance clang-\/5 which rlbox supports}}
+\DoxyCodeLine{7 \textcolor{comment}{// does not support std::invocable and related functionality in <type\_traits>}}
+\DoxyCodeLine{8 \textcolor{comment}{// and is polyfilled here.}}
+\DoxyCodeLine{9 \textcolor{comment}{//}}
+\DoxyCodeLine{10 \textcolor{comment}{// This code was borrowed from clang's standard library -\/ libc++}}
+\DoxyCodeLine{11 \textcolor{comment}{//}}
+\DoxyCodeLine{12 \textcolor{comment}{// Link:}}
+\DoxyCodeLine{13 \textcolor{comment}{// https://github.com/llvm-\/mirror/libcxx/blob/master/include/type\_traits}}
+\DoxyCodeLine{14 \textcolor{comment}{//}}
+\DoxyCodeLine{15 \textcolor{comment}{// libc++ is dual licensed under the MIT license and the UIUC License (a}}
+\DoxyCodeLine{16 \textcolor{comment}{// BSD-\/like license) and is therefore compatible with our code base}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{comment}{// std::invocable and friends}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{namespace }rlbox::detail::polyfill \{}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}}
+\DoxyCodeLine{23 \{}
+\DoxyCodeLine{24   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}() = \textcolor{keyword}{delete};}
+\DoxyCodeLine{25   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}(\textcolor{keyword}{const} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{26   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}\& operator=(\textcolor{keyword}{const} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}}\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{27   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\string~\_\_nat}}() = \textcolor{keyword}{delete};}
+\DoxyCodeLine{28 \};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{keyword}{template}<\textcolor{keywordtype}{bool} \_Val>}
+\DoxyCodeLine{31 \textcolor{keyword}{using} \_BoolConstant = std::integral\_constant<bool, \_Val>;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{template}<\textcolor{keyword}{class} \_Tp, \textcolor{keyword}{class} \_Up>}
+\DoxyCodeLine{34 \textcolor{keyword}{using} \_IsNotSame = \_BoolConstant<!std::is\_same<\_Tp, \_Up>::value>;}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define INVOKE\_RETURN(...)                                                     \(\backslash\)}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{  noexcept(noexcept(\_\_VA\_ARGS\_\_))-\/>decltype(\_\_VA\_ARGS\_\_) \{ return \_\_VA\_ARGS\_\_; \}}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{40 \textcolor{keyword}{inline} \textcolor{keyword}{auto} helper\_\_invoke(\_Fp\&\& \_\_f, \_Args\&\&... \_\_args)}
+\DoxyCodeLine{41   INVOKE\_RETURN(std::forward<\_Fp>(\_\_f)(std::forward<\_Args>(\_\_args)...))}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{44     \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} helper\_\_invoke\_constexpr(\_Fp\&\& \_\_f, \_Args\&\&... \_\_args)}
+\DoxyCodeLine{45       INVOKE\_RETURN(std::forward<\_Fp>(\_\_f)(std::forward<\_Args>(\_\_args)...))}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#undef INVOKE\_RETURN}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49   \textcolor{comment}{// \_\_invokable}}
+\DoxyCodeLine{50   \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{51   \textcolor{keyword}{struct }\_\_invokable\_r}
+\DoxyCodeLine{52 \{}
+\DoxyCodeLine{53   \textcolor{keyword}{template}<\textcolor{keyword}{class }\_XFp, \textcolor{keyword}{class}... \_XArgs>}
+\DoxyCodeLine{54   \textcolor{keyword}{static} \textcolor{keyword}{auto} \_\_try\_call(\textcolor{keywordtype}{int})}
+\DoxyCodeLine{55     -\/> \textcolor{keyword}{decltype}(helper\_\_invoke(std::declval<\_XFp>(),}
+\DoxyCodeLine{56                                std::declval<\_XArgs>()...));}
+\DoxyCodeLine{57   \textcolor{keyword}{template}<\textcolor{keyword}{class }\_XFp, \textcolor{keyword}{class}... \_XArgs>}
+\DoxyCodeLine{58   \textcolor{keyword}{static} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nat}{\_\_nat}} \_\_try\_call(...);}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60   \textcolor{comment}{// FIXME: Check that \_Ret, \_Fp, and \_Args... are all complete types, cv void,}}
+\DoxyCodeLine{61   \textcolor{comment}{// or incomplete array types as required by the standard.}}
+\DoxyCodeLine{62   \textcolor{keyword}{using} \_Result = \textcolor{keyword}{decltype}(\_\_try\_call<\_Fp, \_Args...>(0));}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64   \textcolor{keyword}{using} type = \textcolor{keyword}{typename} std::conditional<}
+\DoxyCodeLine{65     \_IsNotSame<\_Result, \_\_nat>::value,}
+\DoxyCodeLine{66     \textcolor{keyword}{typename} std::conditional<std::is\_void<\_Ret>::value,}
+\DoxyCodeLine{67                               std::true\_type,}
+\DoxyCodeLine{68                               std::is\_convertible<\_Result, \_Ret>>::type,}
+\DoxyCodeLine{69     std::false\_type>::type;}
+\DoxyCodeLine{70   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = type::value;}
+\DoxyCodeLine{71 \};}
+\DoxyCodeLine{72 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{73 \textcolor{keyword}{using} \_\_invokable = \_\_invokable\_r<void, \_Fp, \_Args...>;}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75 \textcolor{keyword}{template}<\textcolor{keywordtype}{bool} \_IsInvokable,}
+\DoxyCodeLine{76          \textcolor{keywordtype}{bool} \_IsCVVoid,}
+\DoxyCodeLine{77          \textcolor{keyword}{class }\_Ret,}
+\DoxyCodeLine{78          \textcolor{keyword}{class }\_Fp,}
+\DoxyCodeLine{79          \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{80 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}}}
+\DoxyCodeLine{81 \{}
+\DoxyCodeLine{82   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \textcolor{keyword}{false};}
+\DoxyCodeLine{83 \};}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{86 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}}<true, false, \_Ret, \_Fp, \_Args...>}
+\DoxyCodeLine{87 \{}
+\DoxyCodeLine{88   \textcolor{keyword}{typedef} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_ThisT}};}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90   \textcolor{keyword}{template}<\textcolor{keyword}{class} \_Tp>}
+\DoxyCodeLine{91   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_\_test\_noexcept(\_Tp) \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \textcolor{keyword}{noexcept}(\_ThisT::\_\_test\_noexcept<\_Ret>(}
+\DoxyCodeLine{94     helper\_\_invoke(std::declval<\_Fp>(), std::declval<\_Args>()...)));}
+\DoxyCodeLine{95 \};}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{98 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}}<true, true, \_Ret, \_Fp, \_Args...>}
+\DoxyCodeLine{99 \{}
+\DoxyCodeLine{100   \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value =}
+\DoxyCodeLine{101     \textcolor{keyword}{noexcept}(helper\_\_invoke(std::declval<\_Fp>(), std::declval<\_Args>()...));}
+\DoxyCodeLine{102 \};}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{105 \textcolor{keyword}{using} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r}} =}
+\DoxyCodeLine{106   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}}<\_\_invokable\_r<\_Ret, \_Fp, \_Args...>::value,}
+\DoxyCodeLine{107                             std::is\_void<\_Ret>::value,}
+\DoxyCodeLine{108                             \_Ret,}
+\DoxyCodeLine{109                             \_Fp,}
+\DoxyCodeLine{110                             \_Args...>;}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{113 \textcolor{keyword}{using} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable}} =}
+\DoxyCodeLine{114   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1____nothrow__invokable__r__imp}{\_\_nothrow\_invokable\_r\_imp}}<\_\_invokable<\_Fp, \_Args...>::value,}
+\DoxyCodeLine{115                             \textcolor{keyword}{true},}
+\DoxyCodeLine{116                             void,}
+\DoxyCodeLine{117                             \_Fp,}
+\DoxyCodeLine{118                             \_Args...>;}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fp, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{121 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of}{helper\_\_invoke\_of}}}
+\DoxyCodeLine{122   : \textcolor{keyword}{public} std::enable\_if<\_\_invokable<\_Fp, \_Args...>::value,}
+\DoxyCodeLine{123                           typename \_\_invokable\_r<void, \_Fp, \_Args...>::\_Result>}
+\DoxyCodeLine{124 \{\};}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{comment}{// invoke\_result}}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{129 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1invoke__result}{invoke\_result}} : \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1helper____invoke__of}{helper\_\_invoke\_of}}<\_Fn, \_Args...>}
+\DoxyCodeLine{130 \{\};}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{133 \textcolor{keyword}{using} invoke\_result\_t = \textcolor{keyword}{typename} \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1invoke__result}{invoke\_result}}<\_Fn, \_Args...>::type;}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{135 \textcolor{comment}{// is\_invocable}}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{138 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__invocable}{is\_invocable}}}
+\DoxyCodeLine{139   : std::integral\_constant<bool, \_\_invokable<\_Fn, \_Args...>::value>}
+\DoxyCodeLine{140 \{\};}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{143 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r}{is\_invocable\_r}}}
+\DoxyCodeLine{144   : std::integral\_constant<bool, \_\_invokable\_r<\_Ret, \_Fn, \_Args...>::value>}
+\DoxyCodeLine{145 \{\};}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{148 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} is\_invocable\_v = \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__invocable}{is\_invocable}}<\_Fn, \_Args...>::value;}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{151 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} is\_invocable\_r\_v =}
+\DoxyCodeLine{152   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__invocable__r}{is\_invocable\_r}}<\_Ret, \_Fn, \_Args...>::value;}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{comment}{// is\_nothrow\_invocable}}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{157 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable}{is\_nothrow\_invocable}}}
+\DoxyCodeLine{158   : std::integral\_constant<bool, \_\_nothrow\_invokable<\_Fn, \_Args...>::value>}
+\DoxyCodeLine{159 \{\};}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{162 \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r}{is\_nothrow\_invocable\_r}}}
+\DoxyCodeLine{163   : std::integral\_constant<bool,}
+\DoxyCodeLine{164                            \_\_nothrow\_invokable\_r<\_Ret, \_Fn, \_Args...>::value>}
+\DoxyCodeLine{165 \{\};}
+\DoxyCodeLine{166 }
+\DoxyCodeLine{167 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{168 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} is\_nothrow\_invocable\_v =}
+\DoxyCodeLine{169   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable}{is\_nothrow\_invocable}}<\_Fn, \_Args...>::value;}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 \textcolor{keyword}{template}<\textcolor{keyword}{class }\_Ret, \textcolor{keyword}{class }\_Fn, \textcolor{keyword}{class}... \_Args>}
+\DoxyCodeLine{172 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} is\_nothrow\_invocable\_r\_v =}
+\DoxyCodeLine{173   \mbox{\hyperlink{structrlbox_1_1detail_1_1polyfill_1_1is__nothrow__invocable__r}{is\_nothrow\_invocable\_r}}<\_Ret, \_Fn, \_Args...>::value;}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175 \}}
+
+\end{DoxyCode}

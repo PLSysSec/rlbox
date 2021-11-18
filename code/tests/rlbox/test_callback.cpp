@@ -147,3 +147,20 @@ TEST_CASE("callback re-register", "[sandbox_callback]")
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTNEXTLINE
+TEST_CASE("callback is-registered", "[sandbox_callback]")
+{
+  RL sandbox;
+  sandbox.create_sandbox();
+
+  using T_F = int (*)(int);
+  auto cb = std::make_unique<rlbox::sandbox_callback<T_F, TestSandbox>>(
+    sandbox.register_callback(test_cb));
+
+  REQUIRE(!cb->is_unregistered());
+  cb->unregister();
+  REQUIRE(cb->is_unregistered());
+
+  sandbox.destroy_sandbox();
+}

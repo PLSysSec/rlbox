@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.17">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.2" xml:lang="en-US">
   <compounddef id="classrlbox_1_1rlbox__dylib__sandbox" kind="class" language="C++" prot="public">
     <compoundname>rlbox::rlbox_dylib_sandbox</compoundname>
     <includes refid="rlbox__dylib__sandbox_8hpp" local="no">rlbox_dylib_sandbox.hpp</includes>
@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="59" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="59" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="59" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="59" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1ae450f8ab3bcd8664d0e4cd58a3a9ddca" prot="public" static="no">
         <type>long</type>
@@ -28,7 +28,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="60" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="60" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="60" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="60" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1adf8653ca9afd22135569b9ab85afab11" prot="public" static="no">
         <type>int</type>
@@ -41,7 +41,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="61" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="61" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="61" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1a8ea2cbce20bfddc3eb5f1cdbed31d4d5" prot="public" static="no">
         <type>void *</type>
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="62" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="62" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="62" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="62" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1a003548d314f8574f50c126eccadf6a16" prot="public" static="no">
         <type>short</type>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="63" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="63" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="63" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="63" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1a6a92cfb5ebbaa60831bfb25c08746a3d" prot="public" static="no">
         <type>void</type>
@@ -80,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="66" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="66" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="66" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="66" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1ae5c93a46ffaddf1e63f0e022ba42444e" prot="public" static="no">
         <type>void</type>
@@ -93,7 +93,22 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="68" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="68" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="68" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-type">
+      <memberdef kind="typedef" id="classrlbox_1_1rlbox__dylib__sandbox_1a88ed4dc223bbe9af32d641b91e645454" prot="protected" static="no">
+        <type>const char *</type>
+        <definition>using rlbox::rlbox_dylib_sandbox::path_buf =  const char*</definition>
+        <argsstring></argsstring>
+        <name>path_buf</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="109" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="109" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-attrib">
@@ -109,7 +124,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="71" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="71" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="71" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="71" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classrlbox_1_1rlbox__dylib__sandbox_1a9ab4c8fbf5ae62453f196b9bb08b54df" prot="private" static="no" mutable="no">
         <type>void *</type>
@@ -123,7 +138,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="75" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="75" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="75" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="75" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classrlbox_1_1rlbox__dylib__sandbox_1a3d2a42bb66fd03df1e5aad33698d26fb" prot="private" static="no" mutable="no">
         <type>void *</type>
@@ -137,7 +152,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="76" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="76" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="76" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="76" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-static-attrib">
@@ -153,7 +168,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="74" column="32" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="74" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="74" column="32" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="74" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classrlbox_1_1rlbox__dylib__sandbox_1a7e51defd092953945a0292c9a3fc5659" prot="private" static="yes" mutable="no">
         <type>thread_local <ref refid="structrlbox_1_1rlbox__dylib__sandbox__thread__data" kindref="compound">rlbox_dylib_sandbox_thread_data</ref></type>
@@ -168,7 +183,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="79" column="62" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="79" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="79" column="62" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="79" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -186,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="73" column="3"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="73" column="3"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-static-func">
@@ -220,17 +235,17 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="84" column="16" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="84" bodyend="100"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="84" column="16" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="84" bodyend="102"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1ae46bf2cc50ece641936c5ae3c92903e4" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a2fb52c06b9543574564602d3d9fad093" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
         <definition>void rlbox::rlbox_dylib_sandbox::impl_create_sandbox</definition>
-        <argsstring>(const char *path)</argsstring>
+        <argsstring>(path_buf path)</argsstring>
         <name>impl_create_sandbox</name>
         <param>
-          <type>const char *</type>
+          <type>path_buf</type>
           <declname>path</declname>
         </param>
         <briefdescription>
@@ -239,7 +254,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="103" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="103" bodyend="137"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="112" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="112" bodyend="146"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aa67120a8150558406fc0f27ee8f994a7" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -252,16 +267,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="139" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="139" bodyend="147"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="148" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="148" bodyend="156"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a31be5f4e8f19f08680ffbf403edef27e" prot="protected" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a745c49475c21351eafa2b772a2bc9663" prot="protected" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T</type>
           </param>
         </templateparamlist>
         <type>void *</type>
-        <definition>void* rlbox::rlbox_dylib_sandbox::impl_get_unsandboxed_pointer</definition>
+        <definition>void * rlbox::rlbox_dylib_sandbox::impl_get_unsandboxed_pointer</definition>
         <argsstring>(T_PointerType p) const</argsstring>
         <name>impl_get_unsandboxed_pointer</name>
         <param>
@@ -274,7 +289,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="150" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="150" bodyend="153"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="159" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="159" bodyend="162"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aaff60bad8dad97f127d208b0ef932c31" prot="protected" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -296,7 +311,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="156" column="24" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="156" bodyend="159"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="165" column="24" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="165" bodyend="168"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aa64df1f75f6b504e5293c31e6d8dd4aa" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>T_PointerType</type>
@@ -313,7 +328,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="183" column="24" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="183" bodyend="187"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="192" column="24" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="192" bodyend="196"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a85e06710dd389b866f2f321cfcb4dcd7" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -330,7 +345,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="189" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="189" bodyend="189"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="198" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="198" bodyend="198"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a95d050a603932565e5d5a40b5ca1d1a9" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -346,7 +361,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="196" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="196" bodyend="196"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="205" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="205" bodyend="205"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a56f3632f90d1c6cb5451eb2090d8e364" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -362,7 +377,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="197" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="197" bodyend="197"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="206" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="206" bodyend="206"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1ac3ea0ef7845dc2b0532b506439e938f7" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>size_t</type>
@@ -375,11 +390,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="199" column="17" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="199" bodyend="202"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="208" column="17" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="208" bodyend="211"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a6ba7e68b673b86edde35b0fadae84ba7" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aa28f8e0f68d89de51b98d7d5bf008412" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void *</type>
-        <definition>void* rlbox::rlbox_dylib_sandbox::impl_get_memory_location</definition>
+        <definition>void * rlbox::rlbox_dylib_sandbox::impl_get_memory_location</definition>
         <argsstring>()</argsstring>
         <name>impl_get_memory_location</name>
         <briefdescription>
@@ -388,11 +403,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="204" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="204" bodyend="211"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="213" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="213" bodyend="220"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1adabc909636e2ee11a953152ad715cb42" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a4dc2c03d28678ea4aa611d143a67f9f9" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void *</type>
-        <definition>void* rlbox::rlbox_dylib_sandbox::impl_lookup_symbol</definition>
+        <definition>void * rlbox::rlbox_dylib_sandbox::impl_lookup_symbol</definition>
         <argsstring>(const char *func_name)</argsstring>
         <name>impl_lookup_symbol</name>
         <param>
@@ -405,11 +420,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="213" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="213" bodyend="222"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="222" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="222" bodyend="231"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1ae32e9d40a251d9f95706716af5a50d7f" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1ae01787779f381b414d072c42c7b805ad" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void *</type>
-        <definition>void* rlbox::rlbox_dylib_sandbox::impl_internal_lookup_symbol</definition>
+        <definition>void * rlbox::rlbox_dylib_sandbox::impl_internal_lookup_symbol</definition>
         <argsstring>(const char *func_name)</argsstring>
         <name>impl_internal_lookup_symbol</name>
         <param>
@@ -422,7 +437,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="224" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="224" bodyend="227"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="233" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="233" bodyend="236"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a256dbd8afd0bfc0a2d6ed1d5b9b20893" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -456,7 +471,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="230" column="8" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="230" bodyend="237"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="239" column="8" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="239" bodyend="246"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1af8f16113e61170272619e0fa625c9723" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -487,7 +502,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="240" column="24" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="240" bodyend="258"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="249" column="24" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="249" bodyend="267"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1adf7041e7bfa0f751b773ab85aeb0e0d2" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -514,16 +529,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="273" column="15" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="273" bodyend="283"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="282" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="282" bodyend="292"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a8053f05949062d16c7a577d7c6435d4b" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1adc02b0be9052ed414ba79dd424947fc5" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T</type>
           </param>
         </templateparamlist>
         <type>T *</type>
-        <definition>T* rlbox::rlbox_dylib_sandbox::impl_grant_access</definition>
+        <definition>T * rlbox::rlbox_dylib_sandbox::impl_grant_access</definition>
         <argsstring>(T *src, size_t num, bool &amp;success)</argsstring>
         <name>impl_grant_access</name>
         <param>
@@ -544,16 +559,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="286" column="12" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="286" bodyend="291"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="295" column="12" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="295" bodyend="300"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1abfc9ba962b691f2d6dd3d5ee4aa679fe" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aba16c85409a2cabce2580722be319133" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T</type>
           </param>
         </templateparamlist>
         <type>T *</type>
-        <definition>T* rlbox::rlbox_dylib_sandbox::impl_deny_access</definition>
+        <definition>T * rlbox::rlbox_dylib_sandbox::impl_deny_access</definition>
         <argsstring>(T *src, size_t num, bool &amp;success)</argsstring>
         <name>impl_deny_access</name>
         <param>
@@ -574,18 +589,18 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="294" column="12" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="294" bodyend="299"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="303" column="12" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="303" bodyend="308"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-static-func">
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a47ef3f5d41ddfc2c1288032d6badc43c" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a7902a16d2021d13d6b55596b881d25a7" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
             <type>typename T</type>
           </param>
         </templateparamlist>
         <type>void *</type>
-        <definition>static void* rlbox::rlbox_dylib_sandbox::impl_get_unsandboxed_pointer_no_ctx</definition>
+        <definition>static void * rlbox::rlbox_dylib_sandbox::impl_get_unsandboxed_pointer_no_ctx</definition>
         <argsstring>(T_PointerType p, const void *, rlbox_dylib_sandbox *(*)(const void *example_unsandboxed_ptr))</argsstring>
         <name>impl_get_unsandboxed_pointer_no_ctx</name>
         <param>
@@ -605,7 +620,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="162" column="22" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="162" bodyend="170"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="171" column="22" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="171" bodyend="179"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1ad81421cfc97c3ca3fd6cc095062e5da3" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -634,7 +649,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="173" column="31" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="173" bodyend="181"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="182" column="31" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="182" bodyend="190"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1aa79a4fe27101d61146c1e84c349b7d95" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -653,11 +668,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="191" column="22" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="191" bodyend="194"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="200" column="22" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="200" bodyend="203"/>
       </memberdef>
-      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a67e89df45f9c90d63c4154cc657ec1ab" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classrlbox_1_1rlbox__dylib__sandbox_1a9519eb78284c00b288260c1b9b19fb81" prot="protected" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::pair&lt; <ref refid="classrlbox_1_1rlbox__dylib__sandbox" kindref="compound">rlbox_dylib_sandbox</ref> *, void * &gt;</type>
-        <definition>static std::pair&lt;rlbox_dylib_sandbox*, void*&gt; rlbox::rlbox_dylib_sandbox::impl_get_executed_callback_sandbox_and_key</definition>
+        <definition>static std::pair&lt; rlbox_dylib_sandbox *, void * &gt; rlbox::rlbox_dylib_sandbox::impl_get_executed_callback_sandbox_and_key</definition>
         <argsstring>()</argsstring>
         <name>impl_get_executed_callback_sandbox_and_key</name>
         <briefdescription>
@@ -666,7 +681,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="261" column="3" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="261" bodyend="270"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="270" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="270" bodyend="279"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -674,35 +689,36 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" line="56" column="1" bodyfile="/home/shr/Code/LibrarySandboxing/rlbox_api_cpp17/code/include/rlbox_dylib_sandbox.hpp" bodystart="55" bodyend="300"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" line="55" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_dylib_sandbox.hpp" bodystart="56" bodyend="309"/>
     <listofallmembers>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a869fc94b5bc9732b56b9f77c0715cfd2" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>callback_trampoline</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a9ab4c8fbf5ae62453f196b9bb08b54df" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>callback_unique_keys</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a3d2a42bb66fd03df1e5aad33698d26fb" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>callbacks</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a6a92cfb5ebbaa60831bfb25c08746a3d" prot="public" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>can_grant_deny_access</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ae46bf2cc50ece641936c5ae3c92903e4" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_create_sandbox</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1abfc9ba962b691f2d6dd3d5ee4aa679fe" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_deny_access</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a2fb52c06b9543574564602d3d9fad093" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_create_sandbox</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aba16c85409a2cabce2580722be319133" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_deny_access</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aa67120a8150558406fc0f27ee8f994a7" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_destroy_sandbox</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a85e06710dd389b866f2f321cfcb4dcd7" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_free_in_sandbox</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a67e89df45f9c90d63c4154cc657ec1ab" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_executed_callback_sandbox_and_key</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a6ba7e68b673b86edde35b0fadae84ba7" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_memory_location</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a9519eb78284c00b288260c1b9b19fb81" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_executed_callback_sandbox_and_key</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aa28f8e0f68d89de51b98d7d5bf008412" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_memory_location</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aaff60bad8dad97f127d208b0ef932c31" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_sandboxed_pointer</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ad81421cfc97c3ca3fd6cc095062e5da3" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_sandboxed_pointer_no_ctx</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ac3ea0ef7845dc2b0532b506439e938f7" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_total_memory</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a31be5f4e8f19f08680ffbf403edef27e" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_unsandboxed_pointer</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a47ef3f5d41ddfc2c1288032d6badc43c" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_unsandboxed_pointer_no_ctx</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a8053f05949062d16c7a577d7c6435d4b" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_grant_access</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ae32e9d40a251d9f95706716af5a50d7f" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_internal_lookup_symbol</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a745c49475c21351eafa2b772a2bc9663" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_unsandboxed_pointer</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a7902a16d2021d13d6b55596b881d25a7" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_get_unsandboxed_pointer_no_ctx</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1adc02b0be9052ed414ba79dd424947fc5" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_grant_access</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ae01787779f381b414d072c42c7b805ad" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_internal_lookup_symbol</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a256dbd8afd0bfc0a2d6ed1d5b9b20893" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_invoke_with_func_ptr</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aa79a4fe27101d61146c1e84c349b7d95" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_is_in_same_sandbox</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a56f3632f90d1c6cb5451eb2090d8e364" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_is_pointer_in_app_memory</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a95d050a603932565e5d5a40b5ca1d1a9" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_is_pointer_in_sandbox_memory</name></member>
-      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1adabc909636e2ee11a953152ad715cb42" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_lookup_symbol</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a4dc2c03d28678ea4aa611d143a67f9f9" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_lookup_symbol</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1aa64df1f75f6b504e5293c31e6d8dd4aa" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_malloc_in_sandbox</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1af8f16113e61170272619e0fa625c9723" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_register_callback</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1adf7041e7bfa0f751b773ab85aeb0e0d2" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>impl_unregister_callback</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a45514f40fd9097678992f73bdebbf6e7" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>MAX_CALLBACKS</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1ae5c93a46ffaddf1e63f0e022ba42444e" prot="public" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>needs_internal_lookup_symbol</name></member>
+      <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a88ed4dc223bbe9af32d641b91e645454" prot="protected" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>path_buf</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1a9b982a2e7fddac2ac165a42e1a463d03" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>RLBOX_SHARED_LOCK</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1abb3aff0ae8829dcc894c46f9324a6d50" prot="private" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>sandbox</name></member>
       <member refid="classrlbox_1_1rlbox__dylib__sandbox_1adf8653ca9afd22135569b9ab85afab11" prot="public" virt="non-virtual"><scope>rlbox::rlbox_dylib_sandbox</scope><name>T_IntType</name></member>

@@ -1,0 +1,279 @@
+\hypertarget{rlbox__conversion_8hpp_source}{}\doxysection{rlbox\+\_\+conversion.\+hpp}
+\label{rlbox__conversion_8hpp_source}\index{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_conversion.hpp@{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_conversion.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 \textcolor{comment}{// IWYU pragma: private, include "{}rlbox.hpp"{}}}
+\DoxyCodeLine{3 \textcolor{comment}{// IWYU pragma: friend "{}rlbox\_.*\(\backslash\).hpp"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <array>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <limits>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <type\_traits>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}rlbox\_helpers.hpp"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}rlbox\_type\_traits.hpp"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}rlbox\_types.hpp"{}}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }rlbox::detail \{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_To, \textcolor{keyword}{typename} T\_From>}
+\DoxyCodeLine{17 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{void} convert\_type\_fundamental(T\_To\& to,}
+\DoxyCodeLine{18                                                \textcolor{keyword}{const} \textcolor{keyword}{volatile} T\_From\& from)}
+\DoxyCodeLine{19 \{}
+\DoxyCodeLine{20   \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22   if\_constexpr\_named(cond1, !is\_fundamental\_or\_enum\_v<T\_To>)}
+\DoxyCodeLine{23   \{}
+\DoxyCodeLine{24     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{25       cond1, \textcolor{stringliteral}{"{}Conversion target should be fundamental or enum type"{}});}
+\DoxyCodeLine{26   \}}
+\DoxyCodeLine{27   \textcolor{keywordflow}{else} if\_constexpr\_named(cond2, !is\_fundamental\_or\_enum\_v<T\_From>)}
+\DoxyCodeLine{28   \{}
+\DoxyCodeLine{29     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{30       cond2, \textcolor{stringliteral}{"{}Conversion source should be fundamental or enum type"{}});}
+\DoxyCodeLine{31   \}}
+\DoxyCodeLine{32   \textcolor{keywordflow}{else} if\_constexpr\_named(cond3, is\_enum\_v<T\_To> || is\_enum\_v<T\_From>)}
+\DoxyCodeLine{33   \{}
+\DoxyCodeLine{34     \textcolor{keyword}{static\_assert}(std::is\_same\_v<detail::remove\_cv\_ref\_t<T\_To>,}
+\DoxyCodeLine{35                                  detail::remove\_cv\_ref\_t<T\_From>>);}
+\DoxyCodeLine{36     to = from;}
+\DoxyCodeLine{37   \}}
+\DoxyCodeLine{38   \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{39     cond4, is\_floating\_point\_v<T\_To> || is\_floating\_point\_v<T\_From>)}
+\DoxyCodeLine{40   \{}
+\DoxyCodeLine{41     \textcolor{keyword}{static\_assert}(is\_floating\_point\_v<T\_To> \&\& is\_floating\_point\_v<T\_From>);}
+\DoxyCodeLine{42     \textcolor{comment}{// language coerces different float types}}
+\DoxyCodeLine{43     to = from;}
+\DoxyCodeLine{44   \}}
+\DoxyCodeLine{45   \textcolor{keywordflow}{else} if\_constexpr\_named(cond5, is\_integral\_v<T\_To> || is\_integral\_v<T\_From>)}
+\DoxyCodeLine{46   \{}
+\DoxyCodeLine{47     \textcolor{keyword}{static\_assert}(is\_integral\_v<T\_To> \&\& is\_integral\_v<T\_From>);}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{keyword}{const} \textcolor{keywordtype}{char}* err\_msg =}
+\DoxyCodeLine{50       \textcolor{stringliteral}{"{}Over/Underflow when converting between integer types"{}};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{comment}{// Some branches don't use the param}}
+\DoxyCodeLine{53     RLBOX\_UNUSED(err\_msg);}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_signed\_v<T\_To> == is\_signed\_v<T\_From> \&\&}
+\DoxyCodeLine{56                   \textcolor{keyword}{sizeof}(T\_To) >= \textcolor{keyword}{sizeof}(T\_From)) \{}
+\DoxyCodeLine{57       \textcolor{comment}{// Eg: int64\_t from int32\_t, uint64\_t from uint32\_t}}
+\DoxyCodeLine{58     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_unsigned\_v<T\_To> \&\& is\_unsigned\_v<T\_From>) \{}
+\DoxyCodeLine{59       \textcolor{comment}{// Eg: uint32\_t from uint64\_t}}
+\DoxyCodeLine{60       dynamic\_check(from <= numeric\_limits<T\_To>::max(), err\_msg);}
+\DoxyCodeLine{61     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_signed\_v<T\_To> \&\& is\_signed\_v<T\_From>) \{}
+\DoxyCodeLine{62       \textcolor{comment}{// Eg: int32\_t from int64\_t}}
+\DoxyCodeLine{63       dynamic\_check(from >= numeric\_limits<T\_To>::min(), err\_msg);}
+\DoxyCodeLine{64       dynamic\_check(from <= numeric\_limits<T\_To>::max(), err\_msg);}
+\DoxyCodeLine{65     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_unsigned\_v<T\_To> \&\& is\_signed\_v<T\_From>) \{}
+\DoxyCodeLine{66       \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(T\_To) < \textcolor{keyword}{sizeof}(T\_From)) \{}
+\DoxyCodeLine{67         \textcolor{comment}{// Eg: uint32\_t from int64\_t}}
+\DoxyCodeLine{68         dynamic\_check(from >= 0, err\_msg);}
+\DoxyCodeLine{69         \textcolor{keyword}{auto} to\_max = numeric\_limits<T\_To>::max();}
+\DoxyCodeLine{70         dynamic\_check(from <= \textcolor{keyword}{static\_cast<}T\_From\textcolor{keyword}{>}(to\_max), err\_msg);}
+\DoxyCodeLine{71       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{72         \textcolor{comment}{// Eg: uint32\_t from int32\_t, uint64\_t from int32\_t}}
+\DoxyCodeLine{73         dynamic\_check(from >= 0, err\_msg);}
+\DoxyCodeLine{74       \}}
+\DoxyCodeLine{75     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_signed\_v<T\_To> \&\& is\_unsigned\_v<T\_From>) \{}
+\DoxyCodeLine{76       \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(T\_To) <= \textcolor{keyword}{sizeof}(T\_From)) \{}
+\DoxyCodeLine{77         \textcolor{comment}{// Eg: int32\_t from uint32\_t, int32\_t from uint64\_t}}
+\DoxyCodeLine{78         \textcolor{keyword}{auto} to\_max = numeric\_limits<T\_To>::max();}
+\DoxyCodeLine{79         dynamic\_check(from <= \textcolor{keyword}{static\_cast<}T\_From\textcolor{keyword}{>}(to\_max), err\_msg);}
+\DoxyCodeLine{80       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{81         \textcolor{comment}{// Eg: int64\_t from uint32\_t}}
+\DoxyCodeLine{82       \}}
+\DoxyCodeLine{83     \}}
+\DoxyCodeLine{84     to = \textcolor{keyword}{static\_cast<}T\_To\textcolor{keyword}{>}(from);}
+\DoxyCodeLine{85   \}}
+\DoxyCodeLine{86   \textcolor{keywordflow}{else}}
+\DoxyCodeLine{87   \{}
+\DoxyCodeLine{88     \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} unknownCase = !(cond1 || cond2 || cond3 || cond4 || cond5);}
+\DoxyCodeLine{89     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{90       unknownCase, \textcolor{stringliteral}{"{}Unexpected case for convert\_type\_fundamental"{}});}
+\DoxyCodeLine{91   \}}
+\DoxyCodeLine{92 \}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_To, \textcolor{keyword}{typename} T\_From>}
+\DoxyCodeLine{95 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{void} convert\_type\_fundamental\_or\_array(T\_To\& to,}
+\DoxyCodeLine{96                                                         \textcolor{keyword}{const} T\_From\& from)}
+\DoxyCodeLine{97 \{}
+\DoxyCodeLine{98   \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100   \textcolor{keyword}{using} T\_To\_C = std\_array\_to\_c\_arr\_t<T\_To>;}
+\DoxyCodeLine{101   \textcolor{keyword}{using} T\_From\_C = std\_array\_to\_c\_arr\_t<T\_From>;}
+\DoxyCodeLine{102   \textcolor{keyword}{using} T\_To\_El = remove\_all\_extents\_t<T\_To\_C>;}
+\DoxyCodeLine{103   \textcolor{keyword}{using} T\_From\_El = remove\_all\_extents\_t<T\_From\_C>;}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105   if\_constexpr\_named(cond1, is\_array\_v<T\_To\_C> != is\_array\_v<T\_From\_C>)}
+\DoxyCodeLine{106   \{}
+\DoxyCodeLine{107     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{108       cond1, \textcolor{stringliteral}{"{}Conversion should not go between array and non array types"{}});}
+\DoxyCodeLine{109   \}}
+\DoxyCodeLine{110   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!is\_array\_v<T\_To\_C>)}
+\DoxyCodeLine{111   \{}
+\DoxyCodeLine{112     convert\_type\_fundamental(to, from);}
+\DoxyCodeLine{113   \}}
+\DoxyCodeLine{114   \textcolor{keywordflow}{else} if\_constexpr\_named(cond2, !all\_extents\_same<T\_To\_C, T\_From\_C>)}
+\DoxyCodeLine{115   \{}
+\DoxyCodeLine{116     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{117       cond2, \textcolor{stringliteral}{"{}Conversion between arrays should have same dimensions"{}});}
+\DoxyCodeLine{118   \}}
+\DoxyCodeLine{119   \textcolor{keywordflow}{else} if\_constexpr\_named(cond3,}
+\DoxyCodeLine{120                           is\_pointer\_v<T\_To\_El> || is\_pointer\_v<T\_From\_El>)}
+\DoxyCodeLine{121   \{}
+\DoxyCodeLine{122     rlbox\_detail\_static\_fail\_because(cond3,}
+\DoxyCodeLine{123                                      \textcolor{stringliteral}{"{}convert\_type\_fundamental\_or\_array "{}}}
+\DoxyCodeLine{124                                      \textcolor{stringliteral}{"{}does not allow arrays of pointers"{}});}
+\DoxyCodeLine{125   \}}
+\DoxyCodeLine{126   \textcolor{keywordflow}{else}}
+\DoxyCodeLine{127   \{}
+\DoxyCodeLine{128     \textcolor{comment}{// Explicitly using size to check for element type as we may be going across}}
+\DoxyCodeLine{129     \textcolor{comment}{// different types of the same width such as void* and uintptr\_t}}
+\DoxyCodeLine{130     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(T\_To\_El) == \textcolor{keyword}{sizeof}(T\_From\_El) \&\&}
+\DoxyCodeLine{131                   is\_signed\_v<T\_To\_El> == is\_signed\_v<T\_From\_El>) \{}
+\DoxyCodeLine{132       \textcolor{comment}{// Sanity check -\/ this should definitely be true}}
+\DoxyCodeLine{133       \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(T\_From\_C) == \textcolor{keyword}{sizeof}(T\_To\_C));}
+\DoxyCodeLine{134       std::memcpy(\&to, \&from, \textcolor{keyword}{sizeof}(T\_To\_C));}
+\DoxyCodeLine{135     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{136       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < std::extent\_v<T\_To\_C>; i++) \{}
+\DoxyCodeLine{137         convert\_type\_fundamental\_or\_array(to[i], from[i]);}
+\DoxyCodeLine{138       \}}
+\DoxyCodeLine{139     \}}
+\DoxyCodeLine{140   \}}
+\DoxyCodeLine{141 \}}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143 \textcolor{keyword}{enum class} adjust\_type\_direction}
+\DoxyCodeLine{144 \{}
+\DoxyCodeLine{145   TO\_SANDBOX,}
+\DoxyCodeLine{146   TO\_APPLICATION,}
+\DoxyCodeLine{147   NO\_CHANGE}
+\DoxyCodeLine{148 \};}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150 \textcolor{keyword}{enum class} adjust\_type\_context}
+\DoxyCodeLine{151 \{}
+\DoxyCodeLine{152   EXAMPLE,}
+\DoxyCodeLine{153   SANDBOX}
+\DoxyCodeLine{154 \};}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Sbx,}
+\DoxyCodeLine{157          adjust\_type\_direction Direction,}
+\DoxyCodeLine{158          adjust\_type\_context Context,}
+\DoxyCodeLine{159          \textcolor{keyword}{typename} T\_To,}
+\DoxyCodeLine{160          \textcolor{keyword}{typename} T\_From>}
+\DoxyCodeLine{161 \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{void} convert\_type\_non\_class(}
+\DoxyCodeLine{162   T\_To\& to,}
+\DoxyCodeLine{163   \textcolor{keyword}{const} T\_From\& from,}
+\DoxyCodeLine{164   \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr,}
+\DoxyCodeLine{165   rlbox\_sandbox<T\_Sbx>* sandbox\_ptr)}
+\DoxyCodeLine{166 \{}
+\DoxyCodeLine{167   \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169   \textcolor{comment}{// Some branches don't use the param}}
+\DoxyCodeLine{170   RLBOX\_UNUSED(example\_unsandboxed\_ptr);}
+\DoxyCodeLine{171   RLBOX\_UNUSED(sandbox\_ptr);}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173   \textcolor{keyword}{using} T\_To\_C = std\_array\_to\_c\_arr\_t<T\_To>;}
+\DoxyCodeLine{174   \textcolor{keyword}{using} T\_From\_C = std\_array\_to\_c\_arr\_t<T\_From>;}
+\DoxyCodeLine{175   \textcolor{keyword}{using} T\_To\_El = remove\_all\_extents\_t<T\_To\_C>;}
+\DoxyCodeLine{176   \textcolor{keyword}{using} T\_From\_El = remove\_all\_extents\_t<T\_From\_C>;}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178   \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_pointer\_v<T\_To\_C> || is\_pointer\_v<T\_From\_C>) \{}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Direction == adjust\_type\_direction::NO\_CHANGE) \{}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182       \textcolor{keyword}{static\_assert}(is\_pointer\_v<T\_To\_C> \&\& is\_pointer\_v<T\_From\_C> \&\&}
+\DoxyCodeLine{183                     \textcolor{keyword}{sizeof}(T\_To\_C) == \textcolor{keyword}{sizeof}(T\_From\_C));}
+\DoxyCodeLine{184       to = from;}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Direction == adjust\_type\_direction::TO\_SANDBOX) \{}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188       \textcolor{keyword}{static\_assert}(is\_pointer\_v<T\_From\_C>);}
+\DoxyCodeLine{189       \textcolor{comment}{// Maybe a function pointer, so convert}}
+\DoxyCodeLine{190       \textcolor{keyword}{auto} from\_c = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(from);}
+\DoxyCodeLine{191       \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Context == adjust\_type\_context::SANDBOX) \{}
+\DoxyCodeLine{192         RLBOX\_DEBUG\_ASSERT(sandbox\_ptr != \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{193         to = sandbox\_ptr-\/>template get\_sandboxed\_pointer<T\_From\_C>(from\_c);}
+\DoxyCodeLine{194       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{195         RLBOX\_DEBUG\_ASSERT(from\_c == \textcolor{keyword}{nullptr} ||}
+\DoxyCodeLine{196                            example\_unsandboxed\_ptr != \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{197         to =}
+\DoxyCodeLine{198           rlbox\_sandbox<T\_Sbx>::template get\_sandboxed\_pointer\_no\_ctx<T\_From\_C>(}
+\DoxyCodeLine{199             from\_c, example\_unsandboxed\_ptr);}
+\DoxyCodeLine{200       \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Direction == adjust\_type\_direction::TO\_APPLICATION) \{}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204       \textcolor{keyword}{static\_assert}(is\_pointer\_v<T\_To\_C>);}
+\DoxyCodeLine{205       \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Context == adjust\_type\_context::SANDBOX) \{}
+\DoxyCodeLine{206         RLBOX\_DEBUG\_ASSERT(sandbox\_ptr != \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{207         to = sandbox\_ptr-\/>template get\_unsandboxed\_pointer<T\_To\_C>(from);}
+\DoxyCodeLine{208       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{209         RLBOX\_DEBUG\_ASSERT(from == 0 || example\_unsandboxed\_ptr != \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{210         to =}
+\DoxyCodeLine{211           rlbox\_sandbox<T\_Sbx>::template get\_unsandboxed\_pointer\_no\_ctx<T\_To\_C>(}
+\DoxyCodeLine{212             from, example\_unsandboxed\_ptr);}
+\DoxyCodeLine{213       \}}
+\DoxyCodeLine{214     \}}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216   \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (is\_pointer\_v<T\_To\_El> || is\_pointer\_v<T\_From\_El>) \{}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (Direction == adjust\_type\_direction::NO\_CHANGE) \{}
+\DoxyCodeLine{219       \textcolor{comment}{// Sanity check -\/ this should definitely be true}}
+\DoxyCodeLine{220       \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(T\_To\_El) == \textcolor{keyword}{sizeof}(T\_From\_El) \&\&}
+\DoxyCodeLine{221                     \textcolor{keyword}{sizeof}(T\_From\_C) == \textcolor{keyword}{sizeof}(T\_To\_C));}
+\DoxyCodeLine{222       memcpy(\&to, \&from, \textcolor{keyword}{sizeof}(T\_To\_C));}
+\DoxyCodeLine{223     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{224       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < std::extent\_v<T\_To\_C>; i++) \{}
+\DoxyCodeLine{225         convert\_type\_non\_class<T\_Sbx, Direction, Context>(}
+\DoxyCodeLine{226           to[i], from[i], example\_unsandboxed\_ptr, sandbox\_ptr);}
+\DoxyCodeLine{227       \}}
+\DoxyCodeLine{228     \}}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230   \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{231     convert\_type\_fundamental\_or\_array(to, from);}
+\DoxyCodeLine{232   \}}
+\DoxyCodeLine{233 \}}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235 \textcolor{comment}{// Structs implement their own convert\_type by specializing this class}}
+\DoxyCodeLine{236 \textcolor{comment}{// Have to do this via a class, as functions can't be partially specialized}}
+\DoxyCodeLine{237 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Sbx,}
+\DoxyCodeLine{238          adjust\_type\_direction Direction,}
+\DoxyCodeLine{239          adjust\_type\_context Context,}
+\DoxyCodeLine{240          \textcolor{keyword}{typename} T\_To,}
+\DoxyCodeLine{241          \textcolor{keyword}{typename} T\_From>}
+\DoxyCodeLine{242 \textcolor{keyword}{class }\mbox{\hyperlink{classrlbox_1_1detail_1_1convert__type__class}{convert\_type\_class}};}
+\DoxyCodeLine{243 \textcolor{comment}{// The specialization implements the following}}
+\DoxyCodeLine{244 \textcolor{comment}{// \{}}
+\DoxyCodeLine{245 \textcolor{comment}{//   static inline void run(T\_To\& to,}}
+\DoxyCodeLine{246 \textcolor{comment}{//                          const T\_From\& from,}}
+\DoxyCodeLine{247 \textcolor{comment}{//                          const void* example\_unsandboxed\_ptr);}}
+\DoxyCodeLine{248 \textcolor{comment}{// \}}}
+\DoxyCodeLine{249 }
+\DoxyCodeLine{250 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Sbx,}
+\DoxyCodeLine{251          adjust\_type\_direction Direction,}
+\DoxyCodeLine{252          adjust\_type\_context Context,}
+\DoxyCodeLine{253          \textcolor{keyword}{typename} T\_To,}
+\DoxyCodeLine{254          \textcolor{keyword}{typename} T\_From>}
+\DoxyCodeLine{255 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} convert\_type(T\_To\& to,}
+\DoxyCodeLine{256                          \textcolor{keyword}{const} T\_From\& from,}
+\DoxyCodeLine{257                          \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr,}
+\DoxyCodeLine{258                          \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}* sandbox\_ptr)}
+\DoxyCodeLine{259 \{}
+\DoxyCodeLine{260   \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} ((std::is\_class\_v<T\_To> ||}
+\DoxyCodeLine{261                  std::is\_class\_v<T\_From>)\&\&!detail::is\_std\_array\_v<T\_To> \&\&}
+\DoxyCodeLine{262                 !detail::is\_std\_array\_v<T\_From>) \{}
+\DoxyCodeLine{263     \textcolor{comment}{// Sanity check}}
+\DoxyCodeLine{264     \textcolor{keyword}{static\_assert}(std::is\_class\_v<T\_From> \&\& std::is\_class\_v<T\_To>);}
+\DoxyCodeLine{265     \mbox{\hyperlink{classrlbox_1_1detail_1_1convert__type__class}{convert\_type\_class<T\_Sbx, Direction, Context, T\_To, T\_From>::run}}(}
+\DoxyCodeLine{266       to, from, example\_unsandboxed\_ptr, sandbox\_ptr);}
+\DoxyCodeLine{267   \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{268     convert\_type\_non\_class<T\_Sbx, Direction, Context>(}
+\DoxyCodeLine{269       to, from, example\_unsandboxed\_ptr, sandbox\_ptr);}
+\DoxyCodeLine{270   \}}
+\DoxyCodeLine{271 \}}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273 \}}
+
+\end{DoxyCode}

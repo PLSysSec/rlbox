@@ -1,0 +1,177 @@
+\hypertarget{rlbox__wrapper__traits_8hpp_source}{}\doxysection{rlbox\+\_\+wrapper\+\_\+traits.\+hpp}
+\label{rlbox__wrapper__traits_8hpp_source}\index{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_wrapper\_traits.hpp@{/home/d/hack/rlbox\_sandboxing\_api/code/include/rlbox\_wrapper\_traits.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 \textcolor{comment}{// IWYU pragma: private, include "{}rlbox.hpp"{}}}
+\DoxyCodeLine{3 \textcolor{comment}{// IWYU pragma: friend "{}rlbox\_.*\(\backslash\).hpp"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <type\_traits>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}rlbox\_types.hpp"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }rlbox::detail \{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define rlbox\_generate\_wrapper\_check(name)                                     \(\backslash\)}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{  namespace detail\_rlbox\_is\_\#\#name                                             \(\backslash\)}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{    template<typename T>                                                       \(\backslash\)}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{    struct unwrapper : std::false\_type                                         \(\backslash\)}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{    \{\};                                                                        \(\backslash\)}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{                                                                               \(\backslash\)}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{    template<typename T, typename T\_Sbx>                                       \(\backslash\)}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{    struct unwrapper<name<T, T\_Sbx>> : std::true\_type                          \(\backslash\)}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{    \{\};                                                                        \(\backslash\)}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{  \}                                                                            \(\backslash\)}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{                                                                               \(\backslash\)}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{  constexpr bool rlbox\_is\_\#\#name\#\#\_v =                                         \(\backslash\)}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{    detail\_rlbox\_is\_\#\#name::unwrapper<T>::value;                               \(\backslash\)}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{  RLBOX\_REQUIRE\_SEMI\_COLON}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 rlbox\_generate\_wrapper\_check(tainted);}
+\DoxyCodeLine{29 rlbox\_generate\_wrapper\_check(tainted\_volatile);}
+\DoxyCodeLine{30 rlbox\_generate\_wrapper\_check(tainted\_opaque);}
+\DoxyCodeLine{31 rlbox\_generate\_wrapper\_check(sandbox\_callback);}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#undef rlbox\_generate\_wrapper\_check}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{namespace }detail\_rlbox\_is\_tainted\_boolean\_hint \{}
+\DoxyCodeLine{36   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{37   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper}{unwrapper}} : std::false\_type}
+\DoxyCodeLine{38   \{\};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40   \textcolor{keyword}{template}<>}
+\DoxyCodeLine{41   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper}{unwrapper}}<\mbox{\hyperlink{classrlbox_1_1tainted__boolean__hint}{tainted\_boolean\_hint}}> : std::true\_type}
+\DoxyCodeLine{42   \{\};}
+\DoxyCodeLine{43 \}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{46 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} rlbox\_is\_tainted\_boolean\_hint\_v =}
+\DoxyCodeLine{47   \mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__is__tainted__boolean__hint_1_1unwrapper}{detail\_rlbox\_is\_tainted\_boolean\_hint::unwrapper<T>::value}};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{50 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} rlbox\_is\_tainted\_or\_vol\_v =}
+\DoxyCodeLine{51   rlbox\_is\_tainted\_v<T> || rlbox\_is\_tainted\_volatile\_v<T>;}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{54 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} rlbox\_is\_tainted\_or\_opaque\_v =}
+\DoxyCodeLine{55   rlbox\_is\_tainted\_v<T> || rlbox\_is\_tainted\_opaque\_v<T>;}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{// tainted\_hint is NOT considered a wrapper type... This carries no particular}}
+\DoxyCodeLine{58 \textcolor{comment}{// significant and is just a convention choice}}
+\DoxyCodeLine{59 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{60 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} rlbox\_is\_wrapper\_v =}
+\DoxyCodeLine{61   rlbox\_is\_tainted\_v<T> || rlbox\_is\_tainted\_volatile\_v<T> ||}
+\DoxyCodeLine{62   rlbox\_is\_tainted\_opaque\_v<T> || rlbox\_is\_sandbox\_callback\_v<T>;}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{keyword}{namespace }detail\_rlbox\_remove\_wrapper \{}
+\DoxyCodeLine{65   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{66   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper}{unwrapper}}}
+\DoxyCodeLine{67   \{}
+\DoxyCodeLine{68     \textcolor{keyword}{using} type = T;}
+\DoxyCodeLine{69     \textcolor{keyword}{using} type\_sbx = void;}
+\DoxyCodeLine{70   \};}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{73   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper}{unwrapper}}<\mbox{\hyperlink{classrlbox_1_1tainted}{tainted}}<T, T\_Sbx>>}
+\DoxyCodeLine{74   \{}
+\DoxyCodeLine{75     \textcolor{keyword}{using} type = T;}
+\DoxyCodeLine{76     \textcolor{keyword}{using} type\_sbx = T\_Sbx;}
+\DoxyCodeLine{77   \};}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{80   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper}{unwrapper}}<\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}}<T, T\_Sbx>>}
+\DoxyCodeLine{81   \{}
+\DoxyCodeLine{82     \textcolor{keyword}{using} type = T;}
+\DoxyCodeLine{83     \textcolor{keyword}{using} type\_sbx = T\_Sbx;}
+\DoxyCodeLine{84   \};}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{87   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper}{unwrapper}}<\mbox{\hyperlink{classrlbox_1_1tainted__opaque}{tainted\_opaque}}<T, T\_Sbx>>}
+\DoxyCodeLine{88   \{}
+\DoxyCodeLine{89     \textcolor{keyword}{using} type = T;}
+\DoxyCodeLine{90     \textcolor{keyword}{using} type\_sbx = T\_Sbx;}
+\DoxyCodeLine{91   \};}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{94   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__rlbox__remove__wrapper_1_1unwrapper}{unwrapper}}<\mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\_callback}}<T, T\_Sbx>>}
+\DoxyCodeLine{95   \{}
+\DoxyCodeLine{96     \textcolor{keyword}{using} type = T;}
+\DoxyCodeLine{97     \textcolor{keyword}{using} type\_sbx = T\_Sbx;}
+\DoxyCodeLine{98   \};}
+\DoxyCodeLine{99 \}}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{102 \textcolor{keyword}{using} rlbox\_remove\_wrapper\_t =}
+\DoxyCodeLine{103   \textcolor{keyword}{typename} detail\_rlbox\_remove\_wrapper::unwrapper<T>::type;}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{106 \textcolor{keyword}{using} rlbox\_get\_wrapper\_sandbox\_t =}
+\DoxyCodeLine{107   \textcolor{keyword}{typename} detail\_rlbox\_remove\_wrapper::unwrapper<T>::type\_sbx;}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{110 \textcolor{keyword}{using} rlbox\_tainted\_opaque\_to\_tainted\_t =}
+\DoxyCodeLine{111   std::conditional\_t<rlbox\_is\_tainted\_opaque\_v<T>,}
+\DoxyCodeLine{112                      \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<rlbox\_remove\_wrapper\_t<T>}}, T\_Sbx>,}
+\DoxyCodeLine{113                      T>;}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115 \textcolor{comment}{// https://stackoverflow.com/questions/34974844/check-\/if-\/a-\/type-\/is-\/from-\/a-\/particular-\/namespace}}
+\DoxyCodeLine{116 \textcolor{keyword}{namespace }detail\_is\_member\_of\_rlbox\_detail \{}
+\DoxyCodeLine{117   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} = \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{118   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper}{is\_member\_of\_rlbox\_detail\_helper}} : std::false\_type}
+\DoxyCodeLine{119   \{\};}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{122   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper}{is\_member\_of\_rlbox\_detail\_helper}}<}
+\DoxyCodeLine{123     T,}
+\DoxyCodeLine{124     decltype(struct\_is\_member\_of\_rlbox\_detail(std::declval<T>()))>}
+\DoxyCodeLine{125     : std::true\_type}
+\DoxyCodeLine{126   \{\};}
+\DoxyCodeLine{127 \}}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{130 \textcolor{keywordtype}{void} struct\_is\_member\_of\_rlbox\_detail(T\&\&);}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{133 \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} is\_member\_of\_rlbox\_detail =}
+\DoxyCodeLine{134   \mbox{\hyperlink{structrlbox_1_1detail_1_1detail__is__member__of__rlbox__detail_1_1is__member__of__rlbox__detail__helper}{detail\_is\_member\_of\_rlbox\_detail::is\_member\_of\_rlbox\_detail\_helper<T>::value}};}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 \textcolor{comment}{// https://stackoverflow.com/questions/9644477/how-\/to-\/check-\/whether-\/a-\/class-\/has-\/specified-\/nested-\/class-\/definition-\/or-\/typedef-\/in}}
+\DoxyCodeLine{137 \textcolor{keyword}{namespace }detail\_has\_member\_using\_can\_grant\_deny\_access \{}
+\DoxyCodeLine{138   \textcolor{keyword}{template}<\textcolor{keyword}{class} T, \textcolor{keyword}{class} Enable = \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{139   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access_1_1has__member__using__can__grant__deny__access}{has\_member\_using\_can\_grant\_deny\_access}} : std::false\_type}
+\DoxyCodeLine{140   \{\};}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142   \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{143   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__has__member__using__can__grant__deny__access_1_1has__member__using__can__grant__deny__access}{has\_member\_using\_can\_grant\_deny\_access}}<}
+\DoxyCodeLine{144     T,}
+\DoxyCodeLine{145     std::void\_t<typename T::can\_grant\_deny\_access>> : std::true\_type}
+\DoxyCodeLine{146   \{\};}
+\DoxyCodeLine{147 \}}
+\DoxyCodeLine{148 }
+\DoxyCodeLine{149 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{150 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} has\_member\_using\_can\_grant\_deny\_access\_v =}
+\DoxyCodeLine{151   detail\_has\_member\_using\_can\_grant\_deny\_access::}
+\DoxyCodeLine{152     has\_member\_using\_can\_grant\_deny\_access<T>::value;}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{keyword}{namespace }detail\_has\_member\_using\_needs\_internal\_lookup\_symbol \{}
+\DoxyCodeLine{155   \textcolor{keyword}{template}<\textcolor{keyword}{class} T, \textcolor{keyword}{class} Enable = \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{156   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87}{has\_member\_using\_needs\_internal\_lookup\_symbol}} : std::false\_type}
+\DoxyCodeLine{157   \{\};}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159   \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{160   \textcolor{keyword}{struct }\mbox{\hyperlink{structrlbox_1_1detail_1_1detail__has__member__using__needs__internal__lookup__symbol_1_1has__mema9a8aa96edd3462f6eb62a39c91ffd87}{has\_member\_using\_needs\_internal\_lookup\_symbol}}<}
+\DoxyCodeLine{161     T,}
+\DoxyCodeLine{162     std::void\_t<typename T::needs\_internal\_lookup\_symbol>> : std::true\_type}
+\DoxyCodeLine{163   \{\};}
+\DoxyCodeLine{164 \}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{167 \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} has\_member\_using\_needs\_internal\_lookup\_symbol\_v =}
+\DoxyCodeLine{168   detail\_has\_member\_using\_needs\_internal\_lookup\_symbol::}
+\DoxyCodeLine{169     has\_member\_using\_needs\_internal\_lookup\_symbol<T>::value;}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 \}}
+
+\end{DoxyCode}

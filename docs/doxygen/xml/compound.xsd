@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
   <xsd:element name="doxygen" type="DoxygenType"/>
 
   <!-- Complex types -->
@@ -9,6 +11,7 @@
       <xsd:element name="compounddef" type="compounddefType" minOccurs="0" />
     </xsd:sequence>
     <xsd:attribute name="version" type="DoxVersionNumber" use="required" />
+    <xsd:attribute ref="xml:lang" use="required"/>
   </xsd:complexType>
 
   <xsd:complexType name="compounddefType">
@@ -30,6 +33,8 @@
       <xsd:element name="templateparamlist" type="templateparamlistType" minOccurs="0" />
       <xsd:element name="sectiondef" type="sectiondefType" minOccurs="0" maxOccurs="unbounded" />
       <xsd:element name="tableofcontents" type="tableofcontentsType" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="requiresclause" type="linkedTextType" minOccurs="0" />
+      <xsd:element name="initializer" type="linkedTextType" minOccurs="0" />
       <xsd:element name="briefdescription" type="descriptionType" minOccurs="0" />
       <xsd:element name="detaileddescription" type="descriptionType" minOccurs="0" />
       <xsd:element name="inheritancegraph" type="graphType" minOccurs="0" />
@@ -43,6 +48,7 @@
     <xsd:attribute name="language" type="DoxLanguage" use="optional"/>
     <xsd:attribute name="prot" type="DoxProtectionKind" />
     <xsd:attribute name="final" type="DoxBool" use="optional"/>
+    <xsd:attribute name="inline" type="DoxBool" use="optional"/>
     <xsd:attribute name="sealed" type="DoxBool" use="optional"/>
     <xsd:attribute name="abstract" type="DoxBool" use="optional"/>
   </xsd:complexType>
@@ -104,6 +110,7 @@
       <xsd:extension base="xsd:string">
         <xsd:attribute name="refid" type="xsd:string" />
         <xsd:attribute name="prot" type="DoxProtectionKind" use="optional"/>
+        <xsd:attribute name="inline" type="DoxBool" use="optional"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -142,6 +149,7 @@
       <xsd:element name="reimplementedby" type="reimplementType" minOccurs="0" maxOccurs="unbounded" />
       <xsd:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded" />
       <xsd:element name="enumvalue" type="enumvalueType" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="requiresclause" type="linkedTextType" minOccurs="0" />
       <xsd:element name="initializer" type="linkedTextType" minOccurs="0" />
       <xsd:element name="exceptions" type="linkedTextType" minOccurs="0" />
       <xsd:element name="briefdescription" type="descriptionType" minOccurs="0" />
@@ -426,6 +434,7 @@
       <xsd:element name="xmlonly" type="xsd:string" />
       <xsd:element name="rtfonly" type="xsd:string" />
       <xsd:element name="latexonly" type="xsd:string" />
+      <xsd:element name="docbookonly" type="xsd:string" />
       <xsd:element name="image" type="docImageType" />
       <xsd:element name="dot" type="docImageType" />
       <xsd:element name="msc" type="docImageType" />
@@ -694,7 +703,6 @@
   <xsd:group name="docCmdGroup">
     <xsd:choice>
       <xsd:group ref="docTitleCmdGroup"/>
-      <xsd:element name="linebreak" type="docEmptyType" />
       <xsd:element name="hruler" type="docEmptyType" />
       <xsd:element name="preformatted" type="docMarkupType" />
       <xsd:element name="programlisting" type="listingType" />
@@ -707,7 +715,6 @@
       <xsd:element name="variablelist" type="docVariableListType" />
       <xsd:element name="table" type="docTableType" />
       <xsd:element name="heading" type="docHeadingType" />
-      <xsd:element name="image" type="docImageType" />
       <xsd:element name="dotfile" type="docImageType" />
       <xsd:element name="mscfile" type="docImageType" />
       <xsd:element name="diafile" type="docImageType" />
@@ -753,6 +760,8 @@
     <xsd:sequence>
       <xsd:element name="listitem" type="docListItemType" maxOccurs="unbounded" />
     </xsd:sequence>
+    <xsd:attribute name="type" type="DoxOlType" />
+    <xsd:attribute name="start" type="xsd:integer" />
   </xsd:complexType>
 
   <xsd:complexType name="docListItemType">
@@ -804,6 +813,7 @@
     </xsd:sequence>
     <xsd:attribute name="rows" type="xsd:integer" />
     <xsd:attribute name="cols" type="xsd:integer" />
+    <xsd:attribute name="width" type="xsd:string" />
   </xsd:complexType>
 
   <xsd:complexType name="docRowType">
@@ -817,6 +827,13 @@
       <xsd:element name="para" type="docParaType" minOccurs="0" maxOccurs="unbounded" />
     </xsd:sequence>
     <xsd:attribute name="thead" type="DoxBool" />
+    <xsd:attribute name="colspan" type="xsd:integer" />
+    <xsd:attribute name="rowspan" type="xsd:integer" />
+    <xsd:attribute name="align" type="DoxAlign" />
+    <xsd:attribute name="valign" type="DoxVerticalAlign" />
+    <xsd:attribute name="width" type="xsd:string" />
+    <xsd:attribute name="class" type="xsd:string" />
+    <xsd:anyAttribute processContents="skip"/>
   </xsd:complexType>
 
   <xsd:complexType name="docCaptionType" mixed="true">
@@ -834,6 +851,7 @@
     <xsd:attribute name="name" type="xsd:string" use="optional"/>
     <xsd:attribute name="width" type="xsd:string" use="optional"/>
     <xsd:attribute name="height" type="xsd:string" use="optional"/>
+    <xsd:attribute name="alt" type="xsd:string" use="optional"/>
     <xsd:attribute name="inline" type="DoxBool" use="optional"/>
     <xsd:attribute name="caption" type="xsd:string" use="optional"/>
   </xsd:complexType>
@@ -1019,7 +1037,6 @@
       <xsd:enumeration value="VHDL" />
       <xsd:enumeration value="XML" />
       <xsd:enumeration value="SQL" />
-      <xsd:enumeration value="Tcl" />
       <xsd:enumeration value="Markdown" />
     </xsd:restriction>
   </xsd:simpleType>
@@ -1051,6 +1068,7 @@
       <xsd:enumeration value="page" />
       <xsd:enumeration value="example" />
       <xsd:enumeration value="dir" />
+      <xsd:enumeration value="concept" />
     </xsd:restriction>
   </xsd:simpleType>
 
@@ -1180,6 +1198,32 @@
       <xsd:enumeration value="weak"/>
       <xsd:enumeration value="strong"/>
       <xsd:enumeration value="unretained"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="DoxAlign">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="left"/>
+      <xsd:enumeration value="right"/>
+      <xsd:enumeration value="center"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="DoxVerticalAlign">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="bottom"/>
+      <xsd:enumeration value="top"/>
+      <xsd:enumeration value="middle"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="DoxOlType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="1" />
+      <xsd:enumeration value="a" />
+      <xsd:enumeration value="A" />
+      <xsd:enumeration value="i" />
+      <xsd:enumeration value="I" />
     </xsd:restriction>
   </xsd:simpleType>
 
