@@ -19,14 +19,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="530" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="530" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="531" column="5" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="531" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="528" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="529" bodyend="531"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="529" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="530" bodyend="532"/>
     <listofallmembers>
       <member refid="structrlbox_1_1detail_1_1unsigned__int__of__size__t__detail_1_1unsigned__int__of__size__t__helpea4ceef9688ab2e479cf30f9b90489c25_1a68682975b9e0678e554cfc2fd86d85b1" prot="public" virt="non-virtual"><scope>rlbox::detail::unsigned_int_of_size_t_detail::unsigned_int_of_size_t_helper&lt; T, std::enable_if_t&lt; sizeof(T)==4 &gt; &gt;</scope><name>type</name></member>
     </listofallmembers>

@@ -46,26 +46,27 @@
 \DoxyCodeLine{42 \textcolor{keyword}{class }\mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\_dylib\_sandbox}};}
 \DoxyCodeLine{43 \}}
 \DoxyCodeLine{44 }
-\DoxyCodeLine{45 \textcolor{preprocessor}{\#define RLBOX\_DEFINE\_BASE\_TYPES\_FOR(SBXNAME, SBXTYPE)                                      \(\backslash\)}}
-\DoxyCodeLine{46 \textcolor{preprocessor}{  namespace rlbox \{                                                                        \(\backslash\)}}
-\DoxyCodeLine{47 \textcolor{preprocessor}{  class rlbox\_ \#\# SBXTYPE \#\# \_sandbox;                                                     \(\backslash\)}}
-\DoxyCodeLine{48 \textcolor{preprocessor}{  \}                                                                                        \(\backslash\)}}
-\DoxyCodeLine{49 \textcolor{preprocessor}{  using rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type = rlbox::rlbox\_ \#\# SBXTYPE \#\# \_sandbox;         \(\backslash\)}}
-\DoxyCodeLine{50 \textcolor{preprocessor}{  using rlbox\_sandbox\_\#\#SBXNAME =                                                          \(\backslash\)}}
-\DoxyCodeLine{51 \textcolor{preprocessor}{      rlbox::rlbox\_sandbox<rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;                            \(\backslash\)}}
-\DoxyCodeLine{52 \textcolor{preprocessor}{  template <typename T>                                                                    \(\backslash\)}}
-\DoxyCodeLine{53 \textcolor{preprocessor}{  using sandbox\_callback\_\#\#SBXNAME =                                                       \(\backslash\)}}
-\DoxyCodeLine{54 \textcolor{preprocessor}{      rlbox::sandbox\_callback<T, rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;                      \(\backslash\)}}
-\DoxyCodeLine{55 \textcolor{preprocessor}{  template <typename T>                                                                    \(\backslash\)}}
-\DoxyCodeLine{56 \textcolor{preprocessor}{  using tainted\_\#\#SBXNAME = rlbox::tainted<T, rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;         \(\backslash\)}}
-\DoxyCodeLine{57 \textcolor{preprocessor}{  template <typename T>                                                                    \(\backslash\)}}
-\DoxyCodeLine{58 \textcolor{preprocessor}{  using tainted\_opaque\_\#\#SBXNAME =                                                         \(\backslash\)}}
-\DoxyCodeLine{59 \textcolor{preprocessor}{      rlbox::tainted\_opaque<T, rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;                        \(\backslash\)}}
-\DoxyCodeLine{60 \textcolor{preprocessor}{  template <typename T>                                                                    \(\backslash\)}}
-\DoxyCodeLine{61 \textcolor{preprocessor}{  using tainted\_volatile\_\#\#SBXNAME =                                                       \(\backslash\)}}
-\DoxyCodeLine{62 \textcolor{preprocessor}{      rlbox::tainted\_volatile<T, rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;                      \(\backslash\)}}
-\DoxyCodeLine{63 \textcolor{preprocessor}{  using rlbox::tainted\_boolean\_hint;                                                       \(\backslash\)}}
-\DoxyCodeLine{64 \textcolor{preprocessor}{  template <typename T>                                                                    \(\backslash\)}}
-\DoxyCodeLine{65 \textcolor{preprocessor}{  using app\_pointer\_\#\#SBXNAME = rlbox::app\_pointer<T, rlbox\_ \#\# SBXNAME \#\# \_sandbox\_type>;}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define RLBOX\_DEFINE\_BASE\_TYPES\_FOR(SBXNAME, SBXTYPE)                          \(\backslash\)}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{  namespace rlbox \{                                                            \(\backslash\)}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{    class rlbox\_\#\#SBXTYPE\#\#\_sandbox;                                           \(\backslash\)}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{  \}                                                                            \(\backslash\)}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{  using rlbox\_\#\#SBXNAME\#\#\_sandbox\_type = rlbox::rlbox\_\#\#SBXTYPE\#\#\_sandbox;     \(\backslash\)}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{  using rlbox\_sandbox\_\#\#SBXNAME =                                              \(\backslash\)}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{    rlbox::rlbox\_sandbox<rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>;                      \(\backslash\)}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{  using sandbox\_callback\_\#\#SBXNAME =                                           \(\backslash\)}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{    rlbox::sandbox\_callback<T, rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>;                \(\backslash\)}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{  using tainted\_\#\#SBXNAME = rlbox::tainted<T, rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>; \(\backslash\)}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{  using tainted\_opaque\_\#\#SBXNAME =                                             \(\backslash\)}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{    rlbox::tainted\_opaque<T, rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>;                  \(\backslash\)}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{  using tainted\_volatile\_\#\#SBXNAME =                                           \(\backslash\)}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{    rlbox::tainted\_volatile<T, rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>;                \(\backslash\)}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{  using rlbox::tainted\_boolean\_hint;                                           \(\backslash\)}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{  template<typename T>                                                         \(\backslash\)}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{  using app\_pointer\_\#\#SBXNAME =                                                \(\backslash\)}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{    rlbox::app\_pointer<T, rlbox\_\#\#SBXNAME\#\#\_sandbox\_type>;}}
 
 \end{DoxyCode}

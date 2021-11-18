@@ -32,7 +32,6 @@ TEST_CASE("Test app pointers", "[app pointer]")
 
   free(ptr);
 
-
   app_ptr.unregister();
   REQUIRE(app_ptr.is_unregistered());
 

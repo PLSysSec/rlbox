@@ -610,700 +610,708 @@
 \DoxyCodeLine{651     \textcolor{keywordflow}{return} verifier(std::move(target));}
 \DoxyCodeLine{652   \}}
 \DoxyCodeLine{653 }
-\DoxyCodeLine{661   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
-\DoxyCodeLine{662   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}{copy\_and\_verify\_string}}(T\_Func verifier)\textcolor{keyword}{ const}}
-\DoxyCodeLine{663 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{664     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
-\DoxyCodeLine{665                   \textcolor{stringliteral}{"{}Can only call copy\_and\_verify\_string on pointers"{}});}
-\DoxyCodeLine{666 }
-\DoxyCodeLine{667     \textcolor{keyword}{static\_assert}(std::is\_same\_v<char, T\_CopyAndVerifyRangeEl>,}
-\DoxyCodeLine{668                   \textcolor{stringliteral}{"{}copy\_and\_verify\_string only allows char*"{}});}
-\DoxyCodeLine{669 }
-\DoxyCodeLine{670     \textcolor{keyword}{using} T\_VerifParam = detail::func\_first\_arg\_t<T\_Func>;}
-\DoxyCodeLine{671 }
-\DoxyCodeLine{672     \textcolor{keyword}{auto} start = impl().get\_raw\_value();}
-\DoxyCodeLine{673     if\_constexpr\_named(cond1, std::is\_same\_v<T\_VerifParam, std::unique\_ptr<\textcolor{keywordtype}{char}[]>> || std::is\_same\_v<T\_VerifParam, std::unique\_ptr<\textcolor{keyword}{const} \textcolor{keywordtype}{char}[]>>) \{}
-\DoxyCodeLine{674       \textcolor{keywordflow}{if} (start == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{675         \textcolor{keywordflow}{return} verifier(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{676       \}}
-\DoxyCodeLine{677 }
-\DoxyCodeLine{678       \textcolor{comment}{// it is safe to run strlen on a tainted<string> as worst case, the string}}
-\DoxyCodeLine{679       \textcolor{comment}{// does not have a null and we try to copy all the memory out of the sandbox}}
-\DoxyCodeLine{680       \textcolor{comment}{// however, copy\_and\_verify\_range ensures that we never copy memory outsider}}
-\DoxyCodeLine{681       \textcolor{comment}{// the range}}
-\DoxyCodeLine{682       \textcolor{keyword}{auto} str\_len = std::strlen(start) + 1;}
-\DoxyCodeLine{683       std::unique\_ptr<T\_CopyAndVerifyRangeEl[]> target =}
-\DoxyCodeLine{684         copy\_and\_verify\_range\_helper(str\_len);}
-\DoxyCodeLine{685 }
-\DoxyCodeLine{686       \textcolor{comment}{// ensure the string has a trailing null}}
-\DoxyCodeLine{687       target[str\_len -\/ 1] = \textcolor{charliteral}{'\(\backslash\)0'};}
-\DoxyCodeLine{688 }
-\DoxyCodeLine{689       \textcolor{keywordflow}{return} verifier(std::move(target));}
-\DoxyCodeLine{690     \} \textcolor{keywordflow}{else} if\_constexpr\_named (cond2, std::is\_same\_v<T\_VerifParam, std::string>) \{}
-\DoxyCodeLine{691       \textcolor{keywordflow}{if} (start == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{692         std::string param = \textcolor{stringliteral}{"{}"{}};}
-\DoxyCodeLine{693         \textcolor{keywordflow}{return} verifier(param);}
-\DoxyCodeLine{694       \}}
-\DoxyCodeLine{695 }
-\DoxyCodeLine{696       \textcolor{comment}{// it is safe to run strlen on a tainted<string> as worst case, the string}}
-\DoxyCodeLine{697       \textcolor{comment}{// does not have a null and we try to copy all the memory out of the sandbox}}
-\DoxyCodeLine{698       \textcolor{comment}{// however, copy\_and\_verify\_range ensures that we never copy memory outsider}}
-\DoxyCodeLine{699       \textcolor{comment}{// the range}}
-\DoxyCodeLine{700       \textcolor{keyword}{auto} str\_len = std::strlen(start) + 1;}
-\DoxyCodeLine{701 }
-\DoxyCodeLine{702       \textcolor{keyword}{const} \textcolor{keywordtype}{char}* checked\_start = (\textcolor{keyword}{const} \textcolor{keywordtype}{char}*) verify\_range\_helper(str\_len);}
-\DoxyCodeLine{703       \textcolor{keywordflow}{if} (checked\_start == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{704         std::string param = \textcolor{stringliteral}{"{}"{}};}
-\DoxyCodeLine{705         \textcolor{keywordflow}{return} verifier(param);}
-\DoxyCodeLine{706       \}}
-\DoxyCodeLine{707 }
-\DoxyCodeLine{708       std::string copy(checked\_start, str\_len -\/ 1);}
-\DoxyCodeLine{709       \textcolor{keywordflow}{return} verifier(std::move(copy));}
-\DoxyCodeLine{710     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{711       \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} unknownCase = !(cond1 || cond2);}
-\DoxyCodeLine{712       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{713         unknownCase,}
-\DoxyCodeLine{714         \textcolor{stringliteral}{"{}copy\_and\_verify\_string verifier parameter should either be unique\_ptr<char[]>, unique\_ptr<const char[]> or std::string"{}}}
-\DoxyCodeLine{715       );}
-\DoxyCodeLine{716     \}}
-\DoxyCodeLine{717   \}}
-\DoxyCodeLine{718 }
-\DoxyCodeLine{730   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
-\DoxyCodeLine{731   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}{copy\_and\_verify\_address}}(T\_Func verifier)}
-\DoxyCodeLine{732   \{}
-\DoxyCodeLine{733     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
-\DoxyCodeLine{734                   \textcolor{stringliteral}{"{}copy\_and\_verify\_address must be used on pointers"{}});}
-\DoxyCodeLine{735     \textcolor{keyword}{auto} val = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(impl().get\_raw\_value());}
-\DoxyCodeLine{736     \textcolor{keywordflow}{return} verifier(val);}
-\DoxyCodeLine{737   \}}
-\DoxyCodeLine{738 }
-\DoxyCodeLine{753   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
-\DoxyCodeLine{754   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}{copy\_and\_verify\_buffer\_address}}(T\_Func verifier, std::size\_t size)}
-\DoxyCodeLine{755   \{}
-\DoxyCodeLine{756     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
-\DoxyCodeLine{757                   \textcolor{stringliteral}{"{}copy\_and\_verify\_address must be used on pointers"{}});}
-\DoxyCodeLine{758     \textcolor{keyword}{auto} val = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(verify\_range\_helper(size));}
-\DoxyCodeLine{759     \textcolor{keywordflow}{return} verifier(val);}
-\DoxyCodeLine{760   \}}
-\DoxyCodeLine{761 \};}
-\DoxyCodeLine{762 }
-\DoxyCodeLine{763 \textcolor{preprocessor}{\#define BinaryOpWrappedRhs(opSymbol)                                           \(\backslash\)}}
-\DoxyCodeLine{764 \textcolor{preprocessor}{  template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}}
-\DoxyCodeLine{765 \textcolor{preprocessor}{           typename T,                                                         \(\backslash\)}}
-\DoxyCodeLine{766 \textcolor{preprocessor}{           typename T\_Sbx,                                                     \(\backslash\)}}
-\DoxyCodeLine{767 \textcolor{preprocessor}{           typename T\_Lhs,                                                     \(\backslash\)}}
-\DoxyCodeLine{768 \textcolor{preprocessor}{           RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}}
-\DoxyCodeLine{769 \textcolor{preprocessor}{                           !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}}
-\DoxyCodeLine{770 \textcolor{preprocessor}{  inline constexpr auto operator opSymbol(                                     \(\backslash\)}}
-\DoxyCodeLine{771 \textcolor{preprocessor}{    const T\_Lhs\& lhs, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\& rhs)          \(\backslash\)}}
-\DoxyCodeLine{772 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{773 \textcolor{preprocessor}{    }\textcolor{comment}{/* Handles the case for "{}3 + tainted"{}, where + is a binary op */}\textcolor{preprocessor}{           \(\backslash\)}}
-\DoxyCodeLine{774 \textcolor{preprocessor}{    }\textcolor{comment}{/* Technically pointer arithmetic can be performed as 3 + tainted\_ptr */}\textcolor{preprocessor}{   \(\backslash\)}}
-\DoxyCodeLine{775 \textcolor{preprocessor}{    }\textcolor{comment}{/* as well. However, this is unusual and to keep the code simple we do */}\textcolor{preprocessor}{  \(\backslash\)}}
-\DoxyCodeLine{776 \textcolor{preprocessor}{    }\textcolor{comment}{/* not support this. */}\textcolor{preprocessor}{                                                    \(\backslash\)}}
-\DoxyCodeLine{777 \textcolor{preprocessor}{    static\_assert(                                                             \(\backslash\)}}
-\DoxyCodeLine{778 \textcolor{preprocessor}{      std::is\_arithmetic\_v<T\_Lhs>,                                             \(\backslash\)}}
-\DoxyCodeLine{779 \textcolor{preprocessor}{      "{}Binary expressions between an non tainted type and tainted"{}}             \(\backslash\)}
-\DoxyCodeLine{780       "{}type is only permitted if the first value is the tainted type. Try "{}    \(\backslash\)}
-\DoxyCodeLine{781       "{}changing the order of the binary expression accordingly"{});              \(\backslash\)}
-\DoxyCodeLine{782     auto ret = tainted<T\_Lhs, T\_Sbx>(lhs) opSymbol rhs.impl();                 \(\backslash\)}
-\DoxyCodeLine{783     return ret;                                                                \(\backslash\)}
-\DoxyCodeLine{784   \}                                                                            \(\backslash\)}
-\DoxyCodeLine{785   RLBOX\_REQUIRE\_SEMI\_COLON}
-\DoxyCodeLine{786 }
-\DoxyCodeLine{787 BinaryOpWrappedRhs(+);}
-\DoxyCodeLine{788 BinaryOpWrappedRhs(-\/);}
-\DoxyCodeLine{789 BinaryOpWrappedRhs(*);}
-\DoxyCodeLine{790 BinaryOpWrappedRhs(/);}
-\DoxyCodeLine{791 BinaryOpWrappedRhs(\%);}
-\DoxyCodeLine{792 BinaryOpWrappedRhs(\string^);}
-\DoxyCodeLine{793 BinaryOpWrappedRhs(\&);}
-\DoxyCodeLine{794 BinaryOpWrappedRhs(|);}
-\DoxyCodeLine{795 BinaryOpWrappedRhs(<<);}
-\DoxyCodeLine{796 BinaryOpWrappedRhs(>>);}
-\DoxyCodeLine{797 BinaryOpWrappedRhs(==);}
-\DoxyCodeLine{798 BinaryOpWrappedRhs(!=);}
-\DoxyCodeLine{799 BinaryOpWrappedRhs(<);}
-\DoxyCodeLine{800 BinaryOpWrappedRhs(<=);}
-\DoxyCodeLine{801 BinaryOpWrappedRhs(>);}
-\DoxyCodeLine{802 BinaryOpWrappedRhs(>=);}
-\DoxyCodeLine{803 \textcolor{preprocessor}{\#undef BinaryOpWrappedRhs}}
-\DoxyCodeLine{804 }
-\DoxyCodeLine{805 \textcolor{preprocessor}{\#define BooleanBinaryOpWrappedRhs(opSymbol)                                    \(\backslash\)}}
-\DoxyCodeLine{806 \textcolor{preprocessor}{  template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}}
-\DoxyCodeLine{807 \textcolor{preprocessor}{           typename T,                                                         \(\backslash\)}}
-\DoxyCodeLine{808 \textcolor{preprocessor}{           typename T\_Sbx,                                                     \(\backslash\)}}
-\DoxyCodeLine{809 \textcolor{preprocessor}{           typename T\_Lhs,                                                     \(\backslash\)}}
-\DoxyCodeLine{810 \textcolor{preprocessor}{           RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}}
-\DoxyCodeLine{811 \textcolor{preprocessor}{                           !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}}
-\DoxyCodeLine{812 \textcolor{preprocessor}{  inline constexpr auto operator opSymbol(                                     \(\backslash\)}}
-\DoxyCodeLine{813 \textcolor{preprocessor}{    const T\_Lhs\& lhs, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\& rhs)          \(\backslash\)}}
-\DoxyCodeLine{814 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{815 \textcolor{preprocessor}{    static\_assert(                                                             \(\backslash\)}}
-\DoxyCodeLine{816 \textcolor{preprocessor}{      std::is\_arithmetic\_v<T\_Lhs>,                                             \(\backslash\)}}
-\DoxyCodeLine{817 \textcolor{preprocessor}{      "{}Binary expressions between an non tainted type and tainted"{}}             \(\backslash\)}
-\DoxyCodeLine{818       "{}type is only permitted if the first value is the tainted type. Try "{}    \(\backslash\)}
-\DoxyCodeLine{819       "{}changing the order of the binary expression accordingly"{});              \(\backslash\)}
-\DoxyCodeLine{820     auto ret = tainted<T\_Lhs, T\_Sbx>(lhs) opSymbol rhs.impl();                 \(\backslash\)}
-\DoxyCodeLine{821     return ret;                                                                \(\backslash\)}
-\DoxyCodeLine{822   \}                                                                            \(\backslash\)}
-\DoxyCodeLine{823                                                                                \(\backslash\)}
-\DoxyCodeLine{824   template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}
-\DoxyCodeLine{825            typename T,                                                         \(\backslash\)}
-\DoxyCodeLine{826            typename T\_Sbx,                                                     \(\backslash\)}
-\DoxyCodeLine{827            typename T\_Lhs,                                                     \(\backslash\)}
-\DoxyCodeLine{828            RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}
-\DoxyCodeLine{829                            !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}
-\DoxyCodeLine{830   inline constexpr auto operator opSymbol(                                     \(\backslash\)}
-\DoxyCodeLine{831     const T\_Lhs\&, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\&\&)                 \(\backslash\)}
-\DoxyCodeLine{832   \{                                                                            \(\backslash\)}
-\DoxyCodeLine{833     rlbox\_detail\_static\_fail\_because(                                          \(\backslash\)}
-\DoxyCodeLine{834       detail::true\_v<T\_Lhs>,                                                   \(\backslash\)}
-\DoxyCodeLine{835       "{}C++ does not permit safe overloading of \&\& and || operations as this "{}  \(\backslash\)}
-\DoxyCodeLine{836       "{}affects the short circuiting behaviour of these operations. RLBox "{}     \(\backslash\)}
-\DoxyCodeLine{837       "{}does let you use \&\& and || with tainted in limited situations -\/ when "{}  \(\backslash\)}
-\DoxyCodeLine{838       "{}all arguments starting from the second are local variables. It does "{}   \(\backslash\)}
-\DoxyCodeLine{839       "{}not allow it if arguments starting from the second  are expressions.\(\backslash\)n"{} \(\backslash\)}
-\DoxyCodeLine{840       "{}For example the following is not allowed\(\backslash\)n"{}                             \(\backslash\)}
-\DoxyCodeLine{841       "{}\(\backslash\)n"{}                                                                     \(\backslash\)}
-\DoxyCodeLine{842       "{}tainted<bool, T\_Sbx> a = true;\(\backslash\)n"{}                                       \(\backslash\)}
-\DoxyCodeLine{843       "{}auto r = a \&\& true \&\& sandbox.invoke\_sandbox\_function(getBool);\(\backslash\)n"{}      \(\backslash\)}
-\DoxyCodeLine{844       "{}\(\backslash\)n"{}                                                                     \(\backslash\)}
-\DoxyCodeLine{845       "{}However the following would be allowed\(\backslash\)n"{}                               \(\backslash\)}
-\DoxyCodeLine{846       "{}tainted<bool, T\_Sbx> a = true;\(\backslash\)n"{}                                       \(\backslash\)}
-\DoxyCodeLine{847       "{}auto b = true\(\backslash\)n"{}                                                        \(\backslash\)}
-\DoxyCodeLine{848       "{}auto c = sandbox.invoke\_sandbox\_function(getBool);\(\backslash\)n"{}                   \(\backslash\)}
-\DoxyCodeLine{849       "{}auto r = a \&\& b \&\& c;\(\backslash\)n"{}                                                \(\backslash\)}
+\DoxyCodeLine{662   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
+\DoxyCodeLine{663   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_aa377cc4d0ea6768ada5032234ac89aab}{copy\_and\_verify\_string}}(T\_Func verifier)\textcolor{keyword}{ const}}
+\DoxyCodeLine{664 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{665     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
+\DoxyCodeLine{666                   \textcolor{stringliteral}{"{}Can only call copy\_and\_verify\_string on pointers"{}});}
+\DoxyCodeLine{667 }
+\DoxyCodeLine{668     \textcolor{keyword}{static\_assert}(std::is\_same\_v<char, T\_CopyAndVerifyRangeEl>,}
+\DoxyCodeLine{669                   \textcolor{stringliteral}{"{}copy\_and\_verify\_string only allows char*"{}});}
+\DoxyCodeLine{670 }
+\DoxyCodeLine{671     \textcolor{keyword}{using} T\_VerifParam = detail::func\_first\_arg\_t<T\_Func>;}
+\DoxyCodeLine{672 }
+\DoxyCodeLine{673     \textcolor{keyword}{auto} start = impl().get\_raw\_value();}
+\DoxyCodeLine{674     if\_constexpr\_named(}
+\DoxyCodeLine{675       cond1,}
+\DoxyCodeLine{676       std::is\_same\_v<T\_VerifParam, std::unique\_ptr<\textcolor{keywordtype}{char}[]>> ||}
+\DoxyCodeLine{677         std::is\_same\_v<T\_VerifParam, std::unique\_ptr<\textcolor{keyword}{const} \textcolor{keywordtype}{char}[]>>)}
+\DoxyCodeLine{678     \{}
+\DoxyCodeLine{679       \textcolor{keywordflow}{if} (start == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{680         \textcolor{keywordflow}{return} verifier(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{681       \}}
+\DoxyCodeLine{682 }
+\DoxyCodeLine{683       \textcolor{comment}{// it is safe to run strlen on a tainted<string> as worst case, the string}}
+\DoxyCodeLine{684       \textcolor{comment}{// does not have a null and we try to copy all the memory out of the}}
+\DoxyCodeLine{685       \textcolor{comment}{// sandbox however, copy\_and\_verify\_range ensures that we never copy}}
+\DoxyCodeLine{686       \textcolor{comment}{// memory outsider the range}}
+\DoxyCodeLine{687       \textcolor{keyword}{auto} str\_len = std::strlen(start) + 1;}
+\DoxyCodeLine{688       std::unique\_ptr<T\_CopyAndVerifyRangeEl[]> target =}
+\DoxyCodeLine{689         copy\_and\_verify\_range\_helper(str\_len);}
+\DoxyCodeLine{690 }
+\DoxyCodeLine{691       \textcolor{comment}{// ensure the string has a trailing null}}
+\DoxyCodeLine{692       target[str\_len -\/ 1] = \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{693 }
+\DoxyCodeLine{694       \textcolor{keywordflow}{return} verifier(std::move(target));}
+\DoxyCodeLine{695     \}}
+\DoxyCodeLine{696     \textcolor{keywordflow}{else} if\_constexpr\_named(cond2, std::is\_same\_v<T\_VerifParam, std::string>)}
+\DoxyCodeLine{697     \{}
+\DoxyCodeLine{698       \textcolor{keywordflow}{if} (start == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{699         std::string param = \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{700         \textcolor{keywordflow}{return} verifier(param);}
+\DoxyCodeLine{701       \}}
+\DoxyCodeLine{702 }
+\DoxyCodeLine{703       \textcolor{comment}{// it is safe to run strlen on a tainted<string> as worst case, the string}}
+\DoxyCodeLine{704       \textcolor{comment}{// does not have a null and we try to copy all the memory out of the}}
+\DoxyCodeLine{705       \textcolor{comment}{// sandbox however, copy\_and\_verify\_range ensures that we never copy}}
+\DoxyCodeLine{706       \textcolor{comment}{// memory outsider the range}}
+\DoxyCodeLine{707       \textcolor{keyword}{auto} str\_len = std::strlen(start) + 1;}
+\DoxyCodeLine{708 }
+\DoxyCodeLine{709       \textcolor{keyword}{const} \textcolor{keywordtype}{char}* checked\_start = (\textcolor{keyword}{const} \textcolor{keywordtype}{char}*)verify\_range\_helper(str\_len);}
+\DoxyCodeLine{710       \textcolor{keywordflow}{if} (checked\_start == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{711         std::string param = \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{712         \textcolor{keywordflow}{return} verifier(param);}
+\DoxyCodeLine{713       \}}
+\DoxyCodeLine{714 }
+\DoxyCodeLine{715       std::string copy(checked\_start, str\_len -\/ 1);}
+\DoxyCodeLine{716       \textcolor{keywordflow}{return} verifier(std::move(copy));}
+\DoxyCodeLine{717     \}}
+\DoxyCodeLine{718     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{719     \{}
+\DoxyCodeLine{720       \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} unknownCase = !(cond1 || cond2);}
+\DoxyCodeLine{721       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{722         unknownCase,}
+\DoxyCodeLine{723         \textcolor{stringliteral}{"{}copy\_and\_verify\_string verifier parameter should either be "{}}}
+\DoxyCodeLine{724         \textcolor{stringliteral}{"{}unique\_ptr<char[]>, unique\_ptr<const char[]> or std::string"{}});}
+\DoxyCodeLine{725     \}}
+\DoxyCodeLine{726   \}}
+\DoxyCodeLine{727 }
+\DoxyCodeLine{739   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
+\DoxyCodeLine{740   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_ad34419b3444d0bf37e25ecf7d37fbe0b}{copy\_and\_verify\_address}}(T\_Func verifier)}
+\DoxyCodeLine{741   \{}
+\DoxyCodeLine{742     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
+\DoxyCodeLine{743                   \textcolor{stringliteral}{"{}copy\_and\_verify\_address must be used on pointers"{}});}
+\DoxyCodeLine{744     \textcolor{keyword}{auto} val = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(impl().get\_raw\_value());}
+\DoxyCodeLine{745     \textcolor{keywordflow}{return} verifier(val);}
+\DoxyCodeLine{746   \}}
+\DoxyCodeLine{747 }
+\DoxyCodeLine{762   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Func>}
+\DoxyCodeLine{763   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl_a4f739a0994af23036cce2d06b10953ee}{copy\_and\_verify\_buffer\_address}}(T\_Func verifier, std::size\_t size)}
+\DoxyCodeLine{764   \{}
+\DoxyCodeLine{765     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
+\DoxyCodeLine{766                   \textcolor{stringliteral}{"{}copy\_and\_verify\_address must be used on pointers"{}});}
+\DoxyCodeLine{767     \textcolor{keyword}{auto} val = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(verify\_range\_helper(size));}
+\DoxyCodeLine{768     \textcolor{keywordflow}{return} verifier(val);}
+\DoxyCodeLine{769   \}}
+\DoxyCodeLine{770 \};}
+\DoxyCodeLine{771 }
+\DoxyCodeLine{772 \textcolor{preprocessor}{\#define BinaryOpWrappedRhs(opSymbol)                                           \(\backslash\)}}
+\DoxyCodeLine{773 \textcolor{preprocessor}{  template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}}
+\DoxyCodeLine{774 \textcolor{preprocessor}{           typename T,                                                         \(\backslash\)}}
+\DoxyCodeLine{775 \textcolor{preprocessor}{           typename T\_Sbx,                                                     \(\backslash\)}}
+\DoxyCodeLine{776 \textcolor{preprocessor}{           typename T\_Lhs,                                                     \(\backslash\)}}
+\DoxyCodeLine{777 \textcolor{preprocessor}{           RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}}
+\DoxyCodeLine{778 \textcolor{preprocessor}{                           !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}}
+\DoxyCodeLine{779 \textcolor{preprocessor}{  inline constexpr auto operator opSymbol(                                     \(\backslash\)}}
+\DoxyCodeLine{780 \textcolor{preprocessor}{    const T\_Lhs\& lhs, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\& rhs)          \(\backslash\)}}
+\DoxyCodeLine{781 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{782 \textcolor{preprocessor}{    }\textcolor{comment}{/* Handles the case for "{}3 + tainted"{}, where + is a binary op */}\textcolor{preprocessor}{           \(\backslash\)}}
+\DoxyCodeLine{783 \textcolor{preprocessor}{    }\textcolor{comment}{/* Technically pointer arithmetic can be performed as 3 + tainted\_ptr */}\textcolor{preprocessor}{   \(\backslash\)}}
+\DoxyCodeLine{784 \textcolor{preprocessor}{    }\textcolor{comment}{/* as well. However, this is unusual and to keep the code simple we do */}\textcolor{preprocessor}{  \(\backslash\)}}
+\DoxyCodeLine{785 \textcolor{preprocessor}{    }\textcolor{comment}{/* not support this. */}\textcolor{preprocessor}{                                                    \(\backslash\)}}
+\DoxyCodeLine{786 \textcolor{preprocessor}{    static\_assert(                                                             \(\backslash\)}}
+\DoxyCodeLine{787 \textcolor{preprocessor}{      std::is\_arithmetic\_v<T\_Lhs>,                                             \(\backslash\)}}
+\DoxyCodeLine{788 \textcolor{preprocessor}{      "{}Binary expressions between an non tainted type and tainted"{}}             \(\backslash\)}
+\DoxyCodeLine{789       "{}type is only permitted if the first value is the tainted type. Try "{}    \(\backslash\)}
+\DoxyCodeLine{790       "{}changing the order of the binary expression accordingly"{});              \(\backslash\)}
+\DoxyCodeLine{791     auto ret = tainted<T\_Lhs, T\_Sbx>(lhs) opSymbol rhs.impl();                 \(\backslash\)}
+\DoxyCodeLine{792     return ret;                                                                \(\backslash\)}
+\DoxyCodeLine{793   \}                                                                            \(\backslash\)}
+\DoxyCodeLine{794   RLBOX\_REQUIRE\_SEMI\_COLON}
+\DoxyCodeLine{795 }
+\DoxyCodeLine{796 BinaryOpWrappedRhs(+);}
+\DoxyCodeLine{797 BinaryOpWrappedRhs(-\/);}
+\DoxyCodeLine{798 BinaryOpWrappedRhs(*);}
+\DoxyCodeLine{799 BinaryOpWrappedRhs(/);}
+\DoxyCodeLine{800 BinaryOpWrappedRhs(\%);}
+\DoxyCodeLine{801 BinaryOpWrappedRhs(\string^);}
+\DoxyCodeLine{802 BinaryOpWrappedRhs(\&);}
+\DoxyCodeLine{803 BinaryOpWrappedRhs(|);}
+\DoxyCodeLine{804 BinaryOpWrappedRhs(<<);}
+\DoxyCodeLine{805 BinaryOpWrappedRhs(>>);}
+\DoxyCodeLine{806 BinaryOpWrappedRhs(==);}
+\DoxyCodeLine{807 BinaryOpWrappedRhs(!=);}
+\DoxyCodeLine{808 BinaryOpWrappedRhs(<);}
+\DoxyCodeLine{809 BinaryOpWrappedRhs(<=);}
+\DoxyCodeLine{810 BinaryOpWrappedRhs(>);}
+\DoxyCodeLine{811 BinaryOpWrappedRhs(>=);}
+\DoxyCodeLine{812 \textcolor{preprocessor}{\#undef BinaryOpWrappedRhs}}
+\DoxyCodeLine{813 }
+\DoxyCodeLine{814 \textcolor{preprocessor}{\#define BooleanBinaryOpWrappedRhs(opSymbol)                                    \(\backslash\)}}
+\DoxyCodeLine{815 \textcolor{preprocessor}{  template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}}
+\DoxyCodeLine{816 \textcolor{preprocessor}{           typename T,                                                         \(\backslash\)}}
+\DoxyCodeLine{817 \textcolor{preprocessor}{           typename T\_Sbx,                                                     \(\backslash\)}}
+\DoxyCodeLine{818 \textcolor{preprocessor}{           typename T\_Lhs,                                                     \(\backslash\)}}
+\DoxyCodeLine{819 \textcolor{preprocessor}{           RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}}
+\DoxyCodeLine{820 \textcolor{preprocessor}{                           !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}}
+\DoxyCodeLine{821 \textcolor{preprocessor}{  inline constexpr auto operator opSymbol(                                     \(\backslash\)}}
+\DoxyCodeLine{822 \textcolor{preprocessor}{    const T\_Lhs\& lhs, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\& rhs)          \(\backslash\)}}
+\DoxyCodeLine{823 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{824 \textcolor{preprocessor}{    static\_assert(                                                             \(\backslash\)}}
+\DoxyCodeLine{825 \textcolor{preprocessor}{      std::is\_arithmetic\_v<T\_Lhs>,                                             \(\backslash\)}}
+\DoxyCodeLine{826 \textcolor{preprocessor}{      "{}Binary expressions between an non tainted type and tainted"{}}             \(\backslash\)}
+\DoxyCodeLine{827       "{}type is only permitted if the first value is the tainted type. Try "{}    \(\backslash\)}
+\DoxyCodeLine{828       "{}changing the order of the binary expression accordingly"{});              \(\backslash\)}
+\DoxyCodeLine{829     auto ret = tainted<T\_Lhs, T\_Sbx>(lhs) opSymbol rhs.impl();                 \(\backslash\)}
+\DoxyCodeLine{830     return ret;                                                                \(\backslash\)}
+\DoxyCodeLine{831   \}                                                                            \(\backslash\)}
+\DoxyCodeLine{832                                                                                \(\backslash\)}
+\DoxyCodeLine{833   template<template<typename, typename> typename T\_Wrap,                       \(\backslash\)}
+\DoxyCodeLine{834            typename T,                                                         \(\backslash\)}
+\DoxyCodeLine{835            typename T\_Sbx,                                                     \(\backslash\)}
+\DoxyCodeLine{836            typename T\_Lhs,                                                     \(\backslash\)}
+\DoxyCodeLine{837            RLBOX\_ENABLE\_IF(!detail::rlbox\_is\_wrapper\_v<T\_Lhs> \&\&               \(\backslash\)}
+\DoxyCodeLine{838                            !detail::rlbox\_is\_tainted\_boolean\_hint\_v<T\_Lhs>)>   \(\backslash\)}
+\DoxyCodeLine{839   inline constexpr auto operator opSymbol(                                     \(\backslash\)}
+\DoxyCodeLine{840     const T\_Lhs\&, const tainted\_base\_impl<T\_Wrap, T, T\_Sbx>\&\&)                 \(\backslash\)}
+\DoxyCodeLine{841   \{                                                                            \(\backslash\)}
+\DoxyCodeLine{842     rlbox\_detail\_static\_fail\_because(                                          \(\backslash\)}
+\DoxyCodeLine{843       detail::true\_v<T\_Lhs>,                                                   \(\backslash\)}
+\DoxyCodeLine{844       "{}C++ does not permit safe overloading of \&\& and || operations as this "{}  \(\backslash\)}
+\DoxyCodeLine{845       "{}affects the short circuiting behaviour of these operations. RLBox "{}     \(\backslash\)}
+\DoxyCodeLine{846       "{}does let you use \&\& and || with tainted in limited situations -\/ when "{}  \(\backslash\)}
+\DoxyCodeLine{847       "{}all arguments starting from the second are local variables. It does "{}   \(\backslash\)}
+\DoxyCodeLine{848       "{}not allow it if arguments starting from the second  are expressions.\(\backslash\)n"{} \(\backslash\)}
+\DoxyCodeLine{849       "{}For example the following is not allowed\(\backslash\)n"{}                             \(\backslash\)}
 \DoxyCodeLine{850       "{}\(\backslash\)n"{}                                                                     \(\backslash\)}
-\DoxyCodeLine{851       "{}Note that these 2 programs are not identical. The first program may "{}   \(\backslash\)}
-\DoxyCodeLine{852       "{}or may not call getBool, while second program always calls getBool"{});   \(\backslash\)}
-\DoxyCodeLine{853     return tainted<bool, T\_Sbx>(false);                                        \(\backslash\)}
-\DoxyCodeLine{854   \}                                                                            \(\backslash\)}
-\DoxyCodeLine{855   RLBOX\_REQUIRE\_SEMI\_COLON}
-\DoxyCodeLine{856 }
-\DoxyCodeLine{857 BooleanBinaryOpWrappedRhs(\&\&);}
-\DoxyCodeLine{858 BooleanBinaryOpWrappedRhs(||);}
-\DoxyCodeLine{859 \textcolor{preprocessor}{\#undef BooleanBinaryOpWrappedRhs}}
-\DoxyCodeLine{860 }
-\DoxyCodeLine{861 \textcolor{keyword}{namespace }tainted\_detail \{}
-\DoxyCodeLine{862   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
-\DoxyCodeLine{863   \textcolor{keyword}{using} tainted\_repr\_t = detail::c\_to\_std\_array\_t<T>;}
-\DoxyCodeLine{864 }
-\DoxyCodeLine{865   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
-\DoxyCodeLine{866   \textcolor{keyword}{using} tainted\_vol\_repr\_t =}
-\DoxyCodeLine{867     detail::c\_to\_std\_array\_t<std::add\_volatile\_t<\textcolor{keyword}{typename} rlbox\_sandbox<}
-\DoxyCodeLine{868       T\_Sbx>::template convert\_to\_sandbox\_equivalent\_nonclass\_t<T>>>;}
-\DoxyCodeLine{869 \}}
-\DoxyCodeLine{870 }
-\DoxyCodeLine{875 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
-\DoxyCodeLine{876 \textcolor{keyword}{class }tainted : \textcolor{keyword}{public} tainted\_base\_impl<tainted, T, T\_Sbx>}
-\DoxyCodeLine{877 \{}
-\DoxyCodeLine{878   KEEP\_CLASSES\_FRIENDLY}
-\DoxyCodeLine{879   KEEP\_CAST\_FRIENDLY}
-\DoxyCodeLine{880 }
-\DoxyCodeLine{881   \textcolor{comment}{// Classes recieve their own specialization}}
-\DoxyCodeLine{882   \textcolor{keyword}{static\_assert}(}
-\DoxyCodeLine{883     !std::is\_class\_v<T>,}
-\DoxyCodeLine{884     \textcolor{stringliteral}{"{}Missing definition for class T. This error occurs for one "{}}}
-\DoxyCodeLine{885     \textcolor{stringliteral}{"{}of 2 reasons.\(\backslash\)n"{}}}
-\DoxyCodeLine{886     \textcolor{stringliteral}{"{}  1) Make sure you have include a call rlbox\_load\_structs\_from\_library "{}}}
-\DoxyCodeLine{887     \textcolor{stringliteral}{"{}for this library with this class included.\(\backslash\)n"{}}}
-\DoxyCodeLine{888     \textcolor{stringliteral}{"{}  2) Make sure you run (re-\/run) the struct-\/dump tool to list "{}}}
-\DoxyCodeLine{889     \textcolor{stringliteral}{"{}all structs in use by your program.\(\backslash\)n"{}});}
-\DoxyCodeLine{890 }
+\DoxyCodeLine{851       "{}tainted<bool, T\_Sbx> a = true;\(\backslash\)n"{}                                       \(\backslash\)}
+\DoxyCodeLine{852       "{}auto r = a \&\& true \&\& sandbox.invoke\_sandbox\_function(getBool);\(\backslash\)n"{}      \(\backslash\)}
+\DoxyCodeLine{853       "{}\(\backslash\)n"{}                                                                     \(\backslash\)}
+\DoxyCodeLine{854       "{}However the following would be allowed\(\backslash\)n"{}                               \(\backslash\)}
+\DoxyCodeLine{855       "{}tainted<bool, T\_Sbx> a = true;\(\backslash\)n"{}                                       \(\backslash\)}
+\DoxyCodeLine{856       "{}auto b = true\(\backslash\)n"{}                                                        \(\backslash\)}
+\DoxyCodeLine{857       "{}auto c = sandbox.invoke\_sandbox\_function(getBool);\(\backslash\)n"{}                   \(\backslash\)}
+\DoxyCodeLine{858       "{}auto r = a \&\& b \&\& c;\(\backslash\)n"{}                                                \(\backslash\)}
+\DoxyCodeLine{859       "{}\(\backslash\)n"{}                                                                     \(\backslash\)}
+\DoxyCodeLine{860       "{}Note that these 2 programs are not identical. The first program may "{}   \(\backslash\)}
+\DoxyCodeLine{861       "{}or may not call getBool, while second program always calls getBool"{});   \(\backslash\)}
+\DoxyCodeLine{862     return tainted<bool, T\_Sbx>(false);                                        \(\backslash\)}
+\DoxyCodeLine{863   \}                                                                            \(\backslash\)}
+\DoxyCodeLine{864   RLBOX\_REQUIRE\_SEMI\_COLON}
+\DoxyCodeLine{865 }
+\DoxyCodeLine{866 BooleanBinaryOpWrappedRhs(\&\&);}
+\DoxyCodeLine{867 BooleanBinaryOpWrappedRhs(||);}
+\DoxyCodeLine{868 \textcolor{preprocessor}{\#undef BooleanBinaryOpWrappedRhs}}
+\DoxyCodeLine{869 }
+\DoxyCodeLine{870 \textcolor{keyword}{namespace }tainted\_detail \{}
+\DoxyCodeLine{871   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{872   \textcolor{keyword}{using} tainted\_repr\_t = detail::c\_to\_std\_array\_t<T>;}
+\DoxyCodeLine{873 }
+\DoxyCodeLine{874   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{875   \textcolor{keyword}{using} tainted\_vol\_repr\_t =}
+\DoxyCodeLine{876     detail::c\_to\_std\_array\_t<std::add\_volatile\_t<\textcolor{keyword}{typename} rlbox\_sandbox<}
+\DoxyCodeLine{877       T\_Sbx>::template convert\_to\_sandbox\_equivalent\_nonclass\_t<T>>>;}
+\DoxyCodeLine{878 \}}
+\DoxyCodeLine{879 }
+\DoxyCodeLine{884 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{885 \textcolor{keyword}{class }tainted : \textcolor{keyword}{public} tainted\_base\_impl<tainted, T, T\_Sbx>}
+\DoxyCodeLine{886 \{}
+\DoxyCodeLine{887   KEEP\_CLASSES\_FRIENDLY}
+\DoxyCodeLine{888   KEEP\_CAST\_FRIENDLY}
+\DoxyCodeLine{889 }
+\DoxyCodeLine{890   \textcolor{comment}{// Classes recieve their own specialization}}
 \DoxyCodeLine{891   \textcolor{keyword}{static\_assert}(}
-\DoxyCodeLine{892     detail::is\_basic\_type\_v<T> || std::is\_array\_v<T>,}
-\DoxyCodeLine{893     \textcolor{stringliteral}{"{}Tainted types only support fundamental, enum, pointer, array and struct "{}}}
-\DoxyCodeLine{894     \textcolor{stringliteral}{"{}types. Please file a bug if more support is needed."{}});}
-\DoxyCodeLine{895 }
-\DoxyCodeLine{896 \textcolor{keyword}{private}:}
-\DoxyCodeLine{897   \textcolor{keyword}{using} T\_ClassBase = tainted\_base\_impl<tainted, T, T\_Sbx>;}
-\DoxyCodeLine{898   \textcolor{keyword}{using} T\_AppType = tainted\_detail::tainted\_repr\_t<T, T\_Sbx>;}
-\DoxyCodeLine{899   \textcolor{keyword}{using} T\_SandboxedType = tainted\_detail::tainted\_vol\_repr\_t<T, T\_Sbx>;}
-\DoxyCodeLine{900   T\_AppType data;}
-\DoxyCodeLine{901 }
-\DoxyCodeLine{902   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_raw\_value\_ref() noexcept \{ \textcolor{keywordflow}{return} data; \}}
-\DoxyCodeLine{903   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_raw\_value\_ref() const noexcept \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{892     !std::is\_class\_v<T>,}
+\DoxyCodeLine{893     \textcolor{stringliteral}{"{}Missing definition for class T. This error occurs for one "{}}}
+\DoxyCodeLine{894     \textcolor{stringliteral}{"{}of 2 reasons.\(\backslash\)n"{}}}
+\DoxyCodeLine{895     \textcolor{stringliteral}{"{}  1) Make sure you have include a call rlbox\_load\_structs\_from\_library "{}}}
+\DoxyCodeLine{896     \textcolor{stringliteral}{"{}for this library with this class included.\(\backslash\)n"{}}}
+\DoxyCodeLine{897     \textcolor{stringliteral}{"{}  2) Make sure you run (re-\/run) the struct-\/dump tool to list "{}}}
+\DoxyCodeLine{898     \textcolor{stringliteral}{"{}all structs in use by your program.\(\backslash\)n"{}});}
+\DoxyCodeLine{899 }
+\DoxyCodeLine{900   \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{901     detail::is\_basic\_type\_v<T> || std::is\_array\_v<T>,}
+\DoxyCodeLine{902     \textcolor{stringliteral}{"{}Tainted types only support fundamental, enum, pointer, array and struct "{}}}
+\DoxyCodeLine{903     \textcolor{stringliteral}{"{}types. Please file a bug if more support is needed."{}});}
 \DoxyCodeLine{904 }
-\DoxyCodeLine{905   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value() const noexcept}
-\DoxyCodeLine{906   \{}
-\DoxyCodeLine{907     \textcolor{keywordflow}{return} data;}
-\DoxyCodeLine{908   \}}
-\DoxyCodeLine{909 }
-\DoxyCodeLine{910   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
-\DoxyCodeLine{911     rlbox\_sandbox<T\_Sbx>\& sandbox)\textcolor{keyword}{ const}}
-\DoxyCodeLine{912 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{913     std::remove\_cv\_t<T\_SandboxedType> ret;}
-\DoxyCodeLine{914 }
-\DoxyCodeLine{915     \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{916     convert\_type\_non\_class<T\_Sbx,}
-\DoxyCodeLine{917                            adjust\_type\_direction::TO\_SANDBOX,}
-\DoxyCodeLine{918                            adjust\_type\_context::SANDBOX>(}
-\DoxyCodeLine{919       ret, data, \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */}, \&sandbox);}
-\DoxyCodeLine{920     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{921   \};}
-\DoxyCodeLine{922 }
-\DoxyCodeLine{923   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value() noexcept}
-\DoxyCodeLine{924   \{}
-\DoxyCodeLine{925     rlbox\_detail\_forward\_to\_const(get\_raw\_value, std::remove\_cv\_t<T\_AppType>);}
-\DoxyCodeLine{926   \}}
-\DoxyCodeLine{927 }
-\DoxyCodeLine{928   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
-\DoxyCodeLine{929     rlbox\_sandbox<T\_Sbx>\& sandbox)}
-\DoxyCodeLine{930   \{}
-\DoxyCodeLine{931     rlbox\_detail\_forward\_to\_const\_a(}
-\DoxyCodeLine{932       get\_raw\_sandbox\_value, std::remove\_cv\_t<T\_SandboxedType>, sandbox);}
-\DoxyCodeLine{933   \};}
-\DoxyCodeLine{934 }
-\DoxyCodeLine{935   \textcolor{keyword}{inline} \textcolor{keyword}{const} \textcolor{keywordtype}{void}* find\_example\_pointer\_or\_null() const noexcept}
-\DoxyCodeLine{936   \{}
-\DoxyCodeLine{937     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_array\_v<T>) \{}
-\DoxyCodeLine{938       \textcolor{keyword}{auto}\& data\_ref = get\_raw\_value\_ref();}
-\DoxyCodeLine{939 }
-\DoxyCodeLine{940       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < std::extent\_v<T>; i++) \{}
-\DoxyCodeLine{941         \textcolor{keyword}{const} \textcolor{keywordtype}{void}* ret = data[i].find\_example\_pointer\_or\_null();}
-\DoxyCodeLine{942         \textcolor{keywordflow}{if} (ret != \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{943           \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{944         \}}
-\DoxyCodeLine{945       \}}
-\DoxyCodeLine{946     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_pointer\_v<T> \&\& !detail::is\_func\_ptr\_v<T>) \{}
-\DoxyCodeLine{947       \textcolor{keyword}{auto} data = get\_raw\_value();}
-\DoxyCodeLine{948       \textcolor{keywordflow}{return} data;}
-\DoxyCodeLine{949     \}}
-\DoxyCodeLine{950     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{951   \}}
-\DoxyCodeLine{952 }
-\DoxyCodeLine{953   \textcolor{comment}{// Initializing with a pointer is dangerous and permitted only internally}}
-\DoxyCodeLine{954   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2 = T, RLBOX\_ENABLE\_IF(std::is\_po\textcolor{keywordtype}{int}er\_v<T2>)>}
-\DoxyCodeLine{955   tainted(T2 val, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* internal\_tag */})}
-\DoxyCodeLine{956     : data(val)}
-\DoxyCodeLine{957   \{}
-\DoxyCodeLine{958     \textcolor{comment}{// Sanity check}}
-\DoxyCodeLine{959     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{905 \textcolor{keyword}{private}:}
+\DoxyCodeLine{906   \textcolor{keyword}{using} T\_ClassBase = tainted\_base\_impl<tainted, T, T\_Sbx>;}
+\DoxyCodeLine{907   \textcolor{keyword}{using} T\_AppType = tainted\_detail::tainted\_repr\_t<T, T\_Sbx>;}
+\DoxyCodeLine{908   \textcolor{keyword}{using} T\_SandboxedType = tainted\_detail::tainted\_vol\_repr\_t<T, T\_Sbx>;}
+\DoxyCodeLine{909   T\_AppType data;}
+\DoxyCodeLine{910 }
+\DoxyCodeLine{911   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_raw\_value\_ref() noexcept \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{912   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_raw\_value\_ref() const noexcept \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{913 }
+\DoxyCodeLine{914   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value() const noexcept}
+\DoxyCodeLine{915   \{}
+\DoxyCodeLine{916     \textcolor{keywordflow}{return} data;}
+\DoxyCodeLine{917   \}}
+\DoxyCodeLine{918 }
+\DoxyCodeLine{919   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
+\DoxyCodeLine{920     rlbox\_sandbox<T\_Sbx>\& sandbox)\textcolor{keyword}{ const}}
+\DoxyCodeLine{921 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{922     std::remove\_cv\_t<T\_SandboxedType> ret;}
+\DoxyCodeLine{923 }
+\DoxyCodeLine{924     \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{925     convert\_type\_non\_class<T\_Sbx,}
+\DoxyCodeLine{926                            adjust\_type\_direction::TO\_SANDBOX,}
+\DoxyCodeLine{927                            adjust\_type\_context::SANDBOX>(}
+\DoxyCodeLine{928       ret, data, \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */}, \&sandbox);}
+\DoxyCodeLine{929     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{930   \};}
+\DoxyCodeLine{931 }
+\DoxyCodeLine{932   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value() noexcept}
+\DoxyCodeLine{933   \{}
+\DoxyCodeLine{934     rlbox\_detail\_forward\_to\_const(get\_raw\_value, std::remove\_cv\_t<T\_AppType>);}
+\DoxyCodeLine{935   \}}
+\DoxyCodeLine{936 }
+\DoxyCodeLine{937   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
+\DoxyCodeLine{938     rlbox\_sandbox<T\_Sbx>\& sandbox)}
+\DoxyCodeLine{939   \{}
+\DoxyCodeLine{940     rlbox\_detail\_forward\_to\_const\_a(}
+\DoxyCodeLine{941       get\_raw\_sandbox\_value, std::remove\_cv\_t<T\_SandboxedType>, sandbox);}
+\DoxyCodeLine{942   \};}
+\DoxyCodeLine{943 }
+\DoxyCodeLine{944   \textcolor{keyword}{inline} \textcolor{keyword}{const} \textcolor{keywordtype}{void}* find\_example\_pointer\_or\_null() const noexcept}
+\DoxyCodeLine{945   \{}
+\DoxyCodeLine{946     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_array\_v<T>) \{}
+\DoxyCodeLine{947       \textcolor{keyword}{auto}\& data\_ref = get\_raw\_value\_ref();}
+\DoxyCodeLine{948 }
+\DoxyCodeLine{949       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < std::extent\_v<T>; i++) \{}
+\DoxyCodeLine{950         \textcolor{keyword}{const} \textcolor{keywordtype}{void}* ret = data[i].find\_example\_pointer\_or\_null();}
+\DoxyCodeLine{951         \textcolor{keywordflow}{if} (ret != \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{952           \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{953         \}}
+\DoxyCodeLine{954       \}}
+\DoxyCodeLine{955     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_pointer\_v<T> \&\& !detail::is\_func\_ptr\_v<T>) \{}
+\DoxyCodeLine{956       \textcolor{keyword}{auto} data = get\_raw\_value();}
+\DoxyCodeLine{957       \textcolor{keywordflow}{return} data;}
+\DoxyCodeLine{958     \}}
+\DoxyCodeLine{959     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
 \DoxyCodeLine{960   \}}
 \DoxyCodeLine{961 }
-\DoxyCodeLine{962   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
-\DoxyCodeLine{963   \textcolor{keyword}{static} \textcolor{keyword}{inline} tainted<T, T\_Sbx> internal\_factory(T\_Rhs\&\& rhs)}
-\DoxyCodeLine{964   \{}
-\DoxyCodeLine{965     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_pointer\_v<std::remove\_reference\_t<T\_Rhs>>) \{}
-\DoxyCodeLine{966       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* internal\_tag = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{967       \textcolor{keywordflow}{return} tainted(std::forward<T\_Rhs>(rhs), internal\_tag);}
-\DoxyCodeLine{968     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{969       \textcolor{keywordflow}{return} tainted(std::forward<T\_Rhs>(rhs));}
-\DoxyCodeLine{970     \}}
-\DoxyCodeLine{971   \}}
-\DoxyCodeLine{972 }
-\DoxyCodeLine{973 \textcolor{keyword}{public}:}
-\DoxyCodeLine{974   tainted() = \textcolor{keywordflow}{default};}
-\DoxyCodeLine{975   tainted(\textcolor{keyword}{const} tainted<T, T\_Sbx>\& p) = \textcolor{keywordflow}{default};}
-\DoxyCodeLine{976 }
-\DoxyCodeLine{977   tainted(\textcolor{keyword}{const} tainted\_volatile<T, T\_Sbx>\& p)}
-\DoxyCodeLine{978   \{}
-\DoxyCodeLine{979     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
-\DoxyCodeLine{980     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
-\DoxyCodeLine{981     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
-\DoxyCodeLine{982     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
-\DoxyCodeLine{983     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* p\_data\_ref = \&p.get\_sandbox\_value\_ref();}
-\DoxyCodeLine{984     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(p\_data\_ref);}
-\DoxyCodeLine{985     \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{986     convert\_type\_non\_class<T\_Sbx,}
-\DoxyCodeLine{987                            adjust\_type\_direction::TO\_APPLICATION,}
-\DoxyCodeLine{988                            adjust\_type\_context::EXAMPLE>(}
-\DoxyCodeLine{989       get\_raw\_value\_ref(),}
-\DoxyCodeLine{990       p.get\_sandbox\_value\_ref(),}
-\DoxyCodeLine{991       example\_unsandboxed\_ptr,}
-\DoxyCodeLine{992       \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
-\DoxyCodeLine{993   \}}
-\DoxyCodeLine{994 }
-\DoxyCodeLine{995   \textcolor{comment}{// Initializing with a pointer is dangerous and permitted only internally}}
-\DoxyCodeLine{996   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2 = T, RLBOX\_ENABLE\_IF(std::is\_po\textcolor{keywordtype}{int}er\_v<T2>)>}
-\DoxyCodeLine{997   tainted(T2 val)}
-\DoxyCodeLine{998     : data(val)}
-\DoxyCodeLine{999   \{}
-\DoxyCodeLine{1000     rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1001       std::is\_pointer\_v<T2>,}
-\DoxyCodeLine{1002       \textcolor{stringliteral}{"{}Assignment of pointers is not safe as it could\(\backslash\)n "{}}}
-\DoxyCodeLine{1003       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
-\DoxyCodeLine{1004       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
-\DoxyCodeLine{1005       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
-\DoxyCodeLine{1006       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
-\DoxyCodeLine{1007       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
-\DoxyCodeLine{1008       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
-\DoxyCodeLine{1009       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
-\DoxyCodeLine{1010       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
-\DoxyCodeLine{1011       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
-\DoxyCodeLine{1012       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
-\DoxyCodeLine{1013       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
-\DoxyCodeLine{1014       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
-\DoxyCodeLine{1015       \textcolor{stringliteral}{"{}the "{}}}
-\DoxyCodeLine{1016       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}}}
-\DoxyCodeLine{1017       \textcolor{stringliteral}{"{}4) For raw pointers, use assign\_raw\_pointer which performs required "{}}}
-\DoxyCodeLine{1018       \textcolor{stringliteral}{"{}safety checks\(\backslash\)n "{}});}
-\DoxyCodeLine{1019   \}}
-\DoxyCodeLine{1020 }
-\DoxyCodeLine{1021   tainted(}
-\DoxyCodeLine{1022     \textcolor{keyword}{const} sandbox\_callback<}
-\DoxyCodeLine{1023       detail::function\_ptr\_t<T> \textcolor{comment}{// Need to ensure we never generate code that}}
-\DoxyCodeLine{1024                                 \textcolor{comment}{// creates a sandbox\_callback of a non function}}
-\DoxyCodeLine{1025       ,}
-\DoxyCodeLine{1026       T\_Sbx>\&)}
-\DoxyCodeLine{1027   \{}
-\DoxyCodeLine{1028     rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1029       detail::true\_v<T>,}
-\DoxyCodeLine{1030       \textcolor{stringliteral}{"{}RLBox does not support assigning sandbox\_callback values to tainted "{}}}
-\DoxyCodeLine{1031       \textcolor{stringliteral}{"{}types (i.e. types that live in application memory).\(\backslash\)n"{}}}
-\DoxyCodeLine{1032       \textcolor{stringliteral}{"{}If you still want to do this, consider changing your code to store the "{}}}
-\DoxyCodeLine{1033       \textcolor{stringliteral}{"{}value in sandbox memory as follows. Convert\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1034       \textcolor{stringliteral}{"{}sandbox\_callback<T\_Func, Sbx> cb = ...;\(\backslash\)n"{}}}
-\DoxyCodeLine{1035       \textcolor{stringliteral}{"{}tainted<T\_Func, Sbx> foo = cb;\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1036       \textcolor{stringliteral}{"{}to\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1037       \textcolor{stringliteral}{"{}tainted<T\_Func*, Sbx> foo\_ptr = sandbox.malloc\_in\_sandbox<T\_Func*>();\(\backslash\)n"{}}}
-\DoxyCodeLine{1038       \textcolor{stringliteral}{"{}*foo\_ptr = cb;\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1039       \textcolor{stringliteral}{"{}This would keep the assignment in sandbox memory"{}});}
-\DoxyCodeLine{1040   \}}
-\DoxyCodeLine{1041 }
-\DoxyCodeLine{1042   tainted(\textcolor{keyword}{const} std::nullptr\_t\& arg)}
-\DoxyCodeLine{1043     : data(arg)}
-\DoxyCodeLine{1044   \{}
-\DoxyCodeLine{1045     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
-\DoxyCodeLine{1046   \}}
-\DoxyCodeLine{1047 }
-\DoxyCodeLine{1048   \textcolor{comment}{// We explicitly disable this constructor if it has one of the signatures}}
-\DoxyCodeLine{1049   \textcolor{comment}{// above, so that we give the above constructors a higher priority. We only}}
-\DoxyCodeLine{1050   \textcolor{comment}{// allow this for fundamental types as this is potentially unsafe for pointers}}
-\DoxyCodeLine{1051   \textcolor{comment}{// and structs}}
-\DoxyCodeLine{1052   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Arg,}
-\DoxyCodeLine{1053            RLBOX\_ENABLE\_IF(}
-\DoxyCodeLine{1054              !detail::rlbox\_is\_wrapper\_v<std::remove\_reference\_t<T\_Arg>> \&\&}
-\DoxyCodeLine{1055              detail::is\_fundamental\_or\_enum\_v<T> \&\&}
-\DoxyCodeLine{1056              detail::is\_fundamental\_or\_enum\_v<std::remove\_reference\_t<T\_Arg>>)>}
-\DoxyCodeLine{1057   tainted(T\_Arg\&\& arg)}
-\DoxyCodeLine{1058     : data(std::forward<T\_Arg>(arg))}
-\DoxyCodeLine{1059   \{\}}
-\DoxyCodeLine{1060 }
-\DoxyCodeLine{1061   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
-\DoxyCodeLine{1062   \textcolor{keywordtype}{void} assign\_raw\_pointer(rlbox\_sandbox<T\_Sbx>\& sandbox, T\_Rhs val)}
-\DoxyCodeLine{1063   \{}
-\DoxyCodeLine{1064     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T\_Rhs>, \textcolor{stringliteral}{"{}Must be a pointer"{}});}
-\DoxyCodeLine{1065     \textcolor{keyword}{static\_assert}(std::is\_assignable\_v<T\&, T\_Rhs>,}
-\DoxyCodeLine{1066                   \textcolor{stringliteral}{"{}Should assign pointers of compatible types."{}});}
-\DoxyCodeLine{1067     \textcolor{comment}{// Maybe a function pointer, so we need to cast}}
-\DoxyCodeLine{1068     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* cast\_val = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(val);}
-\DoxyCodeLine{1069     \textcolor{keywordtype}{bool} safe = sandbox.is\_pointer\_in\_sandbox\_memory(cast\_val);}
-\DoxyCodeLine{1070     detail::dynamic\_check(}
-\DoxyCodeLine{1071       safe,}
-\DoxyCodeLine{1072       \textcolor{stringliteral}{"{}Tried to assign a pointer that is not in the sandbox.\(\backslash\)n "{}}}
-\DoxyCodeLine{1073       \textcolor{stringliteral}{"{}This is not safe as it could\(\backslash\)n "{}}}
-\DoxyCodeLine{1074       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
-\DoxyCodeLine{1075       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
-\DoxyCodeLine{1076       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
-\DoxyCodeLine{1077       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
-\DoxyCodeLine{1078       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
-\DoxyCodeLine{1079       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
-\DoxyCodeLine{1080       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
-\DoxyCodeLine{1081       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
-\DoxyCodeLine{1082       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
-\DoxyCodeLine{1083       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
-\DoxyCodeLine{1084       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
-\DoxyCodeLine{1085       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
-\DoxyCodeLine{1086       \textcolor{stringliteral}{"{}the "{}}}
-\DoxyCodeLine{1087       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}});}
-\DoxyCodeLine{1088     data = val;}
-\DoxyCodeLine{1089   \}}
-\DoxyCodeLine{1090 }
-\DoxyCodeLine{1091   \textcolor{keyword}{inline} tainted\_opaque<T, T\_Sbx> to\_opaque()}
-\DoxyCodeLine{1092   \{}
-\DoxyCodeLine{1093     \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}tainted\_opaque<T, T\_Sbx>*\textcolor{keyword}{>}(\textcolor{keyword}{this});}
-\DoxyCodeLine{1094   \}}
-\DoxyCodeLine{1095 }
-\DoxyCodeLine{1096   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Dummy = \textcolor{keywordtype}{void}>}
-\DoxyCodeLine{1097   \textcolor{keyword}{operator} bool()\textcolor{keyword}{ const}}
-\DoxyCodeLine{1098 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{1099     if\_constexpr\_named(cond1, std::is\_pointer\_v<T>)}
-\DoxyCodeLine{1100     \{}
-\DoxyCodeLine{1101       \textcolor{comment}{// We return this without the tainted wrapper as the checking for null}}
-\DoxyCodeLine{1102       \textcolor{comment}{// doesn't really "{}induce"{} tainting in the application If the}}
-\DoxyCodeLine{1103       \textcolor{comment}{// application is checking this pointer for null, then it is robust to}}
-\DoxyCodeLine{1104       \textcolor{comment}{// this pointer being null or not null}}
-\DoxyCodeLine{1105       \textcolor{keywordflow}{return} get\_raw\_value() != \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{1106     \}}
-\DoxyCodeLine{1107     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{1108     \{}
-\DoxyCodeLine{1109       \textcolor{keyword}{auto} unknownCase = !(cond1);}
-\DoxyCodeLine{1110       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1111         unknownCase,}
-\DoxyCodeLine{1112         \textcolor{stringliteral}{"{}Implicit conversion to bool is only permitted for pointer types. For "{}}}
-\DoxyCodeLine{1113         \textcolor{stringliteral}{"{}other types, unwrap the tainted value with the copy\_and\_verify API "{}}}
-\DoxyCodeLine{1114         \textcolor{stringliteral}{"{}and then perform the required checks"{}});}
+\DoxyCodeLine{962   \textcolor{comment}{// Initializing with a pointer is dangerous and permitted only internally}}
+\DoxyCodeLine{963   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2 = T, RLBOX\_ENABLE\_IF(std::is\_po\textcolor{keywordtype}{int}er\_v<T2>)>}
+\DoxyCodeLine{964   tainted(T2 val, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* internal\_tag */})}
+\DoxyCodeLine{965     : data(val)}
+\DoxyCodeLine{966   \{}
+\DoxyCodeLine{967     \textcolor{comment}{// Sanity check}}
+\DoxyCodeLine{968     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{969   \}}
+\DoxyCodeLine{970 }
+\DoxyCodeLine{971   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
+\DoxyCodeLine{972   \textcolor{keyword}{static} \textcolor{keyword}{inline} tainted<T, T\_Sbx> internal\_factory(T\_Rhs\&\& rhs)}
+\DoxyCodeLine{973   \{}
+\DoxyCodeLine{974     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_pointer\_v<std::remove\_reference\_t<T\_Rhs>>) \{}
+\DoxyCodeLine{975       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* internal\_tag = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{976       \textcolor{keywordflow}{return} tainted(std::forward<T\_Rhs>(rhs), internal\_tag);}
+\DoxyCodeLine{977     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{978       \textcolor{keywordflow}{return} tainted(std::forward<T\_Rhs>(rhs));}
+\DoxyCodeLine{979     \}}
+\DoxyCodeLine{980   \}}
+\DoxyCodeLine{981 }
+\DoxyCodeLine{982 \textcolor{keyword}{public}:}
+\DoxyCodeLine{983   tainted() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{984   tainted(\textcolor{keyword}{const} tainted<T, T\_Sbx>\& p) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{985 }
+\DoxyCodeLine{986   tainted(\textcolor{keyword}{const} tainted\_volatile<T, T\_Sbx>\& p)}
+\DoxyCodeLine{987   \{}
+\DoxyCodeLine{988     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
+\DoxyCodeLine{989     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
+\DoxyCodeLine{990     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
+\DoxyCodeLine{991     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
+\DoxyCodeLine{992     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* p\_data\_ref = \&p.get\_sandbox\_value\_ref();}
+\DoxyCodeLine{993     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(p\_data\_ref);}
+\DoxyCodeLine{994     \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{995     convert\_type\_non\_class<T\_Sbx,}
+\DoxyCodeLine{996                            adjust\_type\_direction::TO\_APPLICATION,}
+\DoxyCodeLine{997                            adjust\_type\_context::EXAMPLE>(}
+\DoxyCodeLine{998       get\_raw\_value\_ref(),}
+\DoxyCodeLine{999       p.get\_sandbox\_value\_ref(),}
+\DoxyCodeLine{1000       example\_unsandboxed\_ptr,}
+\DoxyCodeLine{1001       \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
+\DoxyCodeLine{1002   \}}
+\DoxyCodeLine{1003 }
+\DoxyCodeLine{1004   \textcolor{comment}{// Initializing with a pointer is dangerous and permitted only internally}}
+\DoxyCodeLine{1005   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2 = T, RLBOX\_ENABLE\_IF(std::is\_po\textcolor{keywordtype}{int}er\_v<T2>)>}
+\DoxyCodeLine{1006   tainted(T2 val)}
+\DoxyCodeLine{1007     : data(val)}
+\DoxyCodeLine{1008   \{}
+\DoxyCodeLine{1009     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1010       std::is\_pointer\_v<T2>,}
+\DoxyCodeLine{1011       \textcolor{stringliteral}{"{}Assignment of pointers is not safe as it could\(\backslash\)n "{}}}
+\DoxyCodeLine{1012       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
+\DoxyCodeLine{1013       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
+\DoxyCodeLine{1014       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
+\DoxyCodeLine{1015       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
+\DoxyCodeLine{1016       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
+\DoxyCodeLine{1017       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
+\DoxyCodeLine{1018       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
+\DoxyCodeLine{1019       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
+\DoxyCodeLine{1020       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
+\DoxyCodeLine{1021       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
+\DoxyCodeLine{1022       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
+\DoxyCodeLine{1023       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
+\DoxyCodeLine{1024       \textcolor{stringliteral}{"{}the "{}}}
+\DoxyCodeLine{1025       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}}}
+\DoxyCodeLine{1026       \textcolor{stringliteral}{"{}4) For raw pointers, use assign\_raw\_pointer which performs required "{}}}
+\DoxyCodeLine{1027       \textcolor{stringliteral}{"{}safety checks\(\backslash\)n "{}});}
+\DoxyCodeLine{1028   \}}
+\DoxyCodeLine{1029 }
+\DoxyCodeLine{1030   tainted(}
+\DoxyCodeLine{1031     \textcolor{keyword}{const} sandbox\_callback<}
+\DoxyCodeLine{1032       detail::function\_ptr\_t<T> \textcolor{comment}{// Need to ensure we never generate code that}}
+\DoxyCodeLine{1033                                 \textcolor{comment}{// creates a sandbox\_callback of a non function}}
+\DoxyCodeLine{1034       ,}
+\DoxyCodeLine{1035       T\_Sbx>\&)}
+\DoxyCodeLine{1036   \{}
+\DoxyCodeLine{1037     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1038       detail::true\_v<T>,}
+\DoxyCodeLine{1039       \textcolor{stringliteral}{"{}RLBox does not support assigning sandbox\_callback values to tainted "{}}}
+\DoxyCodeLine{1040       \textcolor{stringliteral}{"{}types (i.e. types that live in application memory).\(\backslash\)n"{}}}
+\DoxyCodeLine{1041       \textcolor{stringliteral}{"{}If you still want to do this, consider changing your code to store the "{}}}
+\DoxyCodeLine{1042       \textcolor{stringliteral}{"{}value in sandbox memory as follows. Convert\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1043       \textcolor{stringliteral}{"{}sandbox\_callback<T\_Func, Sbx> cb = ...;\(\backslash\)n"{}}}
+\DoxyCodeLine{1044       \textcolor{stringliteral}{"{}tainted<T\_Func, Sbx> foo = cb;\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1045       \textcolor{stringliteral}{"{}to\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1046       \textcolor{stringliteral}{"{}tainted<T\_Func*, Sbx> foo\_ptr = sandbox.malloc\_in\_sandbox<T\_Func*>();\(\backslash\)n"{}}}
+\DoxyCodeLine{1047       \textcolor{stringliteral}{"{}*foo\_ptr = cb;\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1048       \textcolor{stringliteral}{"{}This would keep the assignment in sandbox memory"{}});}
+\DoxyCodeLine{1049   \}}
+\DoxyCodeLine{1050 }
+\DoxyCodeLine{1051   tainted(\textcolor{keyword}{const} std::nullptr\_t\& arg)}
+\DoxyCodeLine{1052     : data(arg)}
+\DoxyCodeLine{1053   \{}
+\DoxyCodeLine{1054     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{1055   \}}
+\DoxyCodeLine{1056 }
+\DoxyCodeLine{1057   \textcolor{comment}{// We explicitly disable this constructor if it has one of the signatures}}
+\DoxyCodeLine{1058   \textcolor{comment}{// above, so that we give the above constructors a higher priority. We only}}
+\DoxyCodeLine{1059   \textcolor{comment}{// allow this for fundamental types as this is potentially unsafe for pointers}}
+\DoxyCodeLine{1060   \textcolor{comment}{// and structs}}
+\DoxyCodeLine{1061   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Arg,}
+\DoxyCodeLine{1062            RLBOX\_ENABLE\_IF(}
+\DoxyCodeLine{1063              !detail::rlbox\_is\_wrapper\_v<std::remove\_reference\_t<T\_Arg>> \&\&}
+\DoxyCodeLine{1064              detail::is\_fundamental\_or\_enum\_v<T> \&\&}
+\DoxyCodeLine{1065              detail::is\_fundamental\_or\_enum\_v<std::remove\_reference\_t<T\_Arg>>)>}
+\DoxyCodeLine{1066   tainted(T\_Arg\&\& arg)}
+\DoxyCodeLine{1067     : data(std::forward<T\_Arg>(arg))}
+\DoxyCodeLine{1068   \{\}}
+\DoxyCodeLine{1069 }
+\DoxyCodeLine{1070   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
+\DoxyCodeLine{1071   \textcolor{keywordtype}{void} assign\_raw\_pointer(rlbox\_sandbox<T\_Sbx>\& sandbox, T\_Rhs val)}
+\DoxyCodeLine{1072   \{}
+\DoxyCodeLine{1073     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T\_Rhs>, \textcolor{stringliteral}{"{}Must be a pointer"{}});}
+\DoxyCodeLine{1074     \textcolor{keyword}{static\_assert}(std::is\_assignable\_v<T\&, T\_Rhs>,}
+\DoxyCodeLine{1075                   \textcolor{stringliteral}{"{}Should assign pointers of compatible types."{}});}
+\DoxyCodeLine{1076     \textcolor{comment}{// Maybe a function pointer, so we need to cast}}
+\DoxyCodeLine{1077     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* cast\_val = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(val);}
+\DoxyCodeLine{1078     \textcolor{keywordtype}{bool} safe = sandbox.is\_pointer\_in\_sandbox\_memory(cast\_val);}
+\DoxyCodeLine{1079     detail::dynamic\_check(}
+\DoxyCodeLine{1080       safe,}
+\DoxyCodeLine{1081       \textcolor{stringliteral}{"{}Tried to assign a pointer that is not in the sandbox.\(\backslash\)n "{}}}
+\DoxyCodeLine{1082       \textcolor{stringliteral}{"{}This is not safe as it could\(\backslash\)n "{}}}
+\DoxyCodeLine{1083       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
+\DoxyCodeLine{1084       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
+\DoxyCodeLine{1085       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
+\DoxyCodeLine{1086       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
+\DoxyCodeLine{1087       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
+\DoxyCodeLine{1088       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
+\DoxyCodeLine{1089       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
+\DoxyCodeLine{1090       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
+\DoxyCodeLine{1091       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
+\DoxyCodeLine{1092       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
+\DoxyCodeLine{1093       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
+\DoxyCodeLine{1094       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
+\DoxyCodeLine{1095       \textcolor{stringliteral}{"{}the "{}}}
+\DoxyCodeLine{1096       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}});}
+\DoxyCodeLine{1097     data = val;}
+\DoxyCodeLine{1098   \}}
+\DoxyCodeLine{1099 }
+\DoxyCodeLine{1100   \textcolor{keyword}{inline} tainted\_opaque<T, T\_Sbx> to\_opaque()}
+\DoxyCodeLine{1101   \{}
+\DoxyCodeLine{1102     \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}tainted\_opaque<T, T\_Sbx>*\textcolor{keyword}{>}(\textcolor{keyword}{this});}
+\DoxyCodeLine{1103   \}}
+\DoxyCodeLine{1104 }
+\DoxyCodeLine{1105   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Dummy = \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{1106   \textcolor{keyword}{operator} bool()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1107 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{1108     if\_constexpr\_named(cond1, std::is\_pointer\_v<T>)}
+\DoxyCodeLine{1109     \{}
+\DoxyCodeLine{1110       \textcolor{comment}{// We return this without the tainted wrapper as the checking for null}}
+\DoxyCodeLine{1111       \textcolor{comment}{// doesn't really "{}induce"{} tainting in the application If the}}
+\DoxyCodeLine{1112       \textcolor{comment}{// application is checking this pointer for null, then it is robust to}}
+\DoxyCodeLine{1113       \textcolor{comment}{// this pointer being null or not null}}
+\DoxyCodeLine{1114       \textcolor{keywordflow}{return} get\_raw\_value() != \textcolor{keyword}{nullptr};}
 \DoxyCodeLine{1115     \}}
-\DoxyCodeLine{1116   \}}
-\DoxyCodeLine{1117 \};}
-\DoxyCodeLine{1118 }
-\DoxyCodeLine{1119 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
-\DoxyCodeLine{1120 \textcolor{keyword}{inline} tainted<T, T\_Sbx> from\_opaque(tainted\_opaque<T, T\_Sbx> val)}
-\DoxyCodeLine{1121 \{}
-\DoxyCodeLine{1122   \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}tainted<T, T\_Sbx>*\textcolor{keyword}{>}(\&val);}
-\DoxyCodeLine{1123 \}}
-\DoxyCodeLine{1124 }
-\DoxyCodeLine{1129 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
-\DoxyCodeLine{1130 \textcolor{keyword}{class }\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}} : \textcolor{keyword}{public} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{tainted\_base\_impl}}<tainted\_volatile, T, T\_Sbx>}
-\DoxyCodeLine{1131 \{}
-\DoxyCodeLine{1132   KEEP\_CLASSES\_FRIENDLY}
-\DoxyCodeLine{1133   KEEP\_CAST\_FRIENDLY}
-\DoxyCodeLine{1134 }
-\DoxyCodeLine{1135   \textcolor{comment}{// Classes recieve their own specialization}}
-\DoxyCodeLine{1136   \textcolor{keyword}{static\_assert}(}
-\DoxyCodeLine{1137     !std::is\_class\_v<T>,}
-\DoxyCodeLine{1138     \textcolor{stringliteral}{"{}Missing definition for class T. This error occurs for one "{}}}
-\DoxyCodeLine{1139     \textcolor{stringliteral}{"{}of 2 reasons.\(\backslash\)n"{}}}
-\DoxyCodeLine{1140     \textcolor{stringliteral}{"{}  1) Make sure you have include a call rlbox\_load\_structs\_from\_library "{}}}
-\DoxyCodeLine{1141     \textcolor{stringliteral}{"{}for this library with this class included.\(\backslash\)n"{}}}
-\DoxyCodeLine{1142     \textcolor{stringliteral}{"{}  2) Make sure you run (re-\/run) the struct-\/dump tool to list "{}}}
-\DoxyCodeLine{1143     \textcolor{stringliteral}{"{}all structs in use by your program.\(\backslash\)n"{}});}
-\DoxyCodeLine{1144 }
+\DoxyCodeLine{1116     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{1117     \{}
+\DoxyCodeLine{1118       \textcolor{keyword}{auto} unknownCase = !(cond1);}
+\DoxyCodeLine{1119       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1120         unknownCase,}
+\DoxyCodeLine{1121         \textcolor{stringliteral}{"{}Implicit conversion to bool is only permitted for pointer types. For "{}}}
+\DoxyCodeLine{1122         \textcolor{stringliteral}{"{}other types, unwrap the tainted value with the copy\_and\_verify API "{}}}
+\DoxyCodeLine{1123         \textcolor{stringliteral}{"{}and then perform the required checks"{}});}
+\DoxyCodeLine{1124     \}}
+\DoxyCodeLine{1125   \}}
+\DoxyCodeLine{1126 \};}
+\DoxyCodeLine{1127 }
+\DoxyCodeLine{1128 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{1129 \textcolor{keyword}{inline} tainted<T, T\_Sbx> from\_opaque(tainted\_opaque<T, T\_Sbx> val)}
+\DoxyCodeLine{1130 \{}
+\DoxyCodeLine{1131   \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}tainted<T, T\_Sbx>*\textcolor{keyword}{>}(\&val);}
+\DoxyCodeLine{1132 \}}
+\DoxyCodeLine{1133 }
+\DoxyCodeLine{1138 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Sbx>}
+\DoxyCodeLine{1139 \textcolor{keyword}{class }\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}} : \textcolor{keyword}{public} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{tainted\_base\_impl}}<tainted\_volatile, T, T\_Sbx>}
+\DoxyCodeLine{1140 \{}
+\DoxyCodeLine{1141   KEEP\_CLASSES\_FRIENDLY}
+\DoxyCodeLine{1142   KEEP\_CAST\_FRIENDLY}
+\DoxyCodeLine{1143 }
+\DoxyCodeLine{1144   \textcolor{comment}{// Classes recieve their own specialization}}
 \DoxyCodeLine{1145   \textcolor{keyword}{static\_assert}(}
-\DoxyCodeLine{1146     detail::is\_basic\_type\_v<T> || std::is\_array\_v<T>,}
-\DoxyCodeLine{1147     \textcolor{stringliteral}{"{}Tainted types only support fundamental, enum, pointer, array and struct "{}}}
-\DoxyCodeLine{1148     \textcolor{stringliteral}{"{}types. Please file a bug if more support is needed."{}});}
-\DoxyCodeLine{1149 }
-\DoxyCodeLine{1150 \textcolor{keyword}{private}:}
-\DoxyCodeLine{1151   \textcolor{keyword}{using} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{T\_ClassBase}} = \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{tainted\_base\_impl<tainted\_volatile, T, T\_Sbx>}};}
-\DoxyCodeLine{1152   \textcolor{keyword}{using} T\_AppType = tainted\_detail::tainted\_repr\_t<T, T\_Sbx>;}
-\DoxyCodeLine{1153   \textcolor{keyword}{using} T\_SandboxedType = tainted\_detail::tainted\_vol\_repr\_t<T, T\_Sbx>;}
-\DoxyCodeLine{1154   T\_SandboxedType data;}
-\DoxyCodeLine{1155 }
-\DoxyCodeLine{1156   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_sandbox\_value\_ref() \textcolor{keyword}{noexcept} \{ \textcolor{keywordflow}{return} data; \}}
-\DoxyCodeLine{1157   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_sandbox\_value\_ref() \textcolor{keyword}{const} \textcolor{keyword}{noexcept} \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{1146     !std::is\_class\_v<T>,}
+\DoxyCodeLine{1147     \textcolor{stringliteral}{"{}Missing definition for class T. This error occurs for one "{}}}
+\DoxyCodeLine{1148     \textcolor{stringliteral}{"{}of 2 reasons.\(\backslash\)n"{}}}
+\DoxyCodeLine{1149     \textcolor{stringliteral}{"{}  1) Make sure you have include a call rlbox\_load\_structs\_from\_library "{}}}
+\DoxyCodeLine{1150     \textcolor{stringliteral}{"{}for this library with this class included.\(\backslash\)n"{}}}
+\DoxyCodeLine{1151     \textcolor{stringliteral}{"{}  2) Make sure you run (re-\/run) the struct-\/dump tool to list "{}}}
+\DoxyCodeLine{1152     \textcolor{stringliteral}{"{}all structs in use by your program.\(\backslash\)n"{}});}
+\DoxyCodeLine{1153 }
+\DoxyCodeLine{1154   \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{1155     detail::is\_basic\_type\_v<T> || std::is\_array\_v<T>,}
+\DoxyCodeLine{1156     \textcolor{stringliteral}{"{}Tainted types only support fundamental, enum, pointer, array and struct "{}}}
+\DoxyCodeLine{1157     \textcolor{stringliteral}{"{}types. Please file a bug if more support is needed."{}});}
 \DoxyCodeLine{1158 }
-\DoxyCodeLine{1159   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value()\textcolor{keyword}{ const}}
-\DoxyCodeLine{1160 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{1161     std::remove\_cv\_t<T\_AppType> ret;}
-\DoxyCodeLine{1162     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
-\DoxyCodeLine{1163     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
-\DoxyCodeLine{1164     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
-\DoxyCodeLine{1165     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
-\DoxyCodeLine{1166     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* data\_ref = \&data;}
-\DoxyCodeLine{1167     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(data\_ref);}
-\DoxyCodeLine{1168     \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{1169     convert\_type\_non\_class<T\_Sbx,}
-\DoxyCodeLine{1170                            adjust\_type\_direction::TO\_APPLICATION,}
-\DoxyCodeLine{1171                            adjust\_type\_context::EXAMPLE>(}
-\DoxyCodeLine{1172       ret, data, example\_unsandboxed\_ptr, \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
-\DoxyCodeLine{1173     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{1174   \}}
-\DoxyCodeLine{1175 }
-\DoxyCodeLine{1176   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value()}
-\DoxyCodeLine{1177     \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
-\DoxyCodeLine{1178   \{}
-\DoxyCodeLine{1179     \textcolor{keywordflow}{return} data;}
-\DoxyCodeLine{1180   \};}
-\DoxyCodeLine{1181 }
-\DoxyCodeLine{1182   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
-\DoxyCodeLine{1183     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox) \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
-\DoxyCodeLine{1184   \{}
-\DoxyCodeLine{1185     RLBOX\_UNUSED(sandbox);}
-\DoxyCodeLine{1186     \textcolor{keywordflow}{return} data;}
-\DoxyCodeLine{1187   \};}
-\DoxyCodeLine{1188 }
-\DoxyCodeLine{1189   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value()}
-\DoxyCodeLine{1190   \{}
-\DoxyCodeLine{1191     rlbox\_detail\_forward\_to\_const(get\_raw\_value, std::remove\_cv\_t<T\_AppType>);}
-\DoxyCodeLine{1192   \}}
-\DoxyCodeLine{1193 }
-\DoxyCodeLine{1194   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value() \textcolor{keyword}{noexcept}}
-\DoxyCodeLine{1195   \{}
-\DoxyCodeLine{1196     rlbox\_detail\_forward\_to\_const(get\_raw\_sandbox\_value,}
-\DoxyCodeLine{1197                                   std::remove\_cv\_t<T\_SandboxedType>);}
-\DoxyCodeLine{1198   \};}
-\DoxyCodeLine{1199 }
-\DoxyCodeLine{1200   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
-\DoxyCodeLine{1201     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox) \textcolor{keyword}{noexcept}}
-\DoxyCodeLine{1202   \{}
-\DoxyCodeLine{1203     RLBOX\_UNUSED(sandbox);}
-\DoxyCodeLine{1204     rlbox\_detail\_forward\_to\_const(get\_raw\_sandbox\_value,}
-\DoxyCodeLine{1205                                   std::remove\_cv\_t<T\_SandboxedType>);}
-\DoxyCodeLine{1206   \};}
-\DoxyCodeLine{1207 }
-\DoxyCodeLine{1208   \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}}() = \textcolor{keywordflow}{default};}
-\DoxyCodeLine{1209   \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}}(\textcolor{keyword}{const} \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& p) = \textcolor{keywordflow}{default};}
-\DoxyCodeLine{1210 }
-\DoxyCodeLine{1211 \textcolor{keyword}{public}:}
-\DoxyCodeLine{1212   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<const T*, T\_Sbx>}} operator\&() \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
-\DoxyCodeLine{1213   \{}
-\DoxyCodeLine{1214     \textcolor{keyword}{auto} ref =}
-\DoxyCodeLine{1215       detail::remove\_volatile\_from\_ptr\_cast(\&this-\/>get\_sandbox\_value\_ref());}
-\DoxyCodeLine{1216     \textcolor{keyword}{auto} ref\_cast = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }T*\textcolor{keyword}{>}(ref);}
-\DoxyCodeLine{1217     \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<const T*, T\_Sbx>::internal\_factory}}(ref\_cast);}
-\DoxyCodeLine{1218     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{1219   \}}
-\DoxyCodeLine{1220 }
-\DoxyCodeLine{1221   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} operator\&() \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1159 \textcolor{keyword}{private}:}
+\DoxyCodeLine{1160   \textcolor{keyword}{using} \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{T\_ClassBase}} = \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{tainted\_base\_impl<tainted\_volatile, T, T\_Sbx>}};}
+\DoxyCodeLine{1161   \textcolor{keyword}{using} T\_AppType = tainted\_detail::tainted\_repr\_t<T, T\_Sbx>;}
+\DoxyCodeLine{1162   \textcolor{keyword}{using} T\_SandboxedType = tainted\_detail::tainted\_vol\_repr\_t<T, T\_Sbx>;}
+\DoxyCodeLine{1163   T\_SandboxedType data;}
+\DoxyCodeLine{1164 }
+\DoxyCodeLine{1165   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_sandbox\_value\_ref() \textcolor{keyword}{noexcept} \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{1166   \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& get\_sandbox\_value\_ref() \textcolor{keyword}{const} \textcolor{keyword}{noexcept} \{ \textcolor{keywordflow}{return} data; \}}
+\DoxyCodeLine{1167 }
+\DoxyCodeLine{1168   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1169 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{1170     std::remove\_cv\_t<T\_AppType> ret;}
+\DoxyCodeLine{1171     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
+\DoxyCodeLine{1172     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
+\DoxyCodeLine{1173     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
+\DoxyCodeLine{1174     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
+\DoxyCodeLine{1175     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* data\_ref = \&data;}
+\DoxyCodeLine{1176     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(data\_ref);}
+\DoxyCodeLine{1177     \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{1178     convert\_type\_non\_class<T\_Sbx,}
+\DoxyCodeLine{1179                            adjust\_type\_direction::TO\_APPLICATION,}
+\DoxyCodeLine{1180                            adjust\_type\_context::EXAMPLE>(}
+\DoxyCodeLine{1181       ret, data, example\_unsandboxed\_ptr, \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
+\DoxyCodeLine{1182     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{1183   \}}
+\DoxyCodeLine{1184 }
+\DoxyCodeLine{1185   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value()}
+\DoxyCodeLine{1186     \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1187   \{}
+\DoxyCodeLine{1188     \textcolor{keywordflow}{return} data;}
+\DoxyCodeLine{1189   \};}
+\DoxyCodeLine{1190 }
+\DoxyCodeLine{1191   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
+\DoxyCodeLine{1192     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox) \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1193   \{}
+\DoxyCodeLine{1194     RLBOX\_UNUSED(sandbox);}
+\DoxyCodeLine{1195     \textcolor{keywordflow}{return} data;}
+\DoxyCodeLine{1196   \};}
+\DoxyCodeLine{1197 }
+\DoxyCodeLine{1198   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_AppType> get\_raw\_value()}
+\DoxyCodeLine{1199   \{}
+\DoxyCodeLine{1200     rlbox\_detail\_forward\_to\_const(get\_raw\_value, std::remove\_cv\_t<T\_AppType>);}
+\DoxyCodeLine{1201   \}}
+\DoxyCodeLine{1202 }
+\DoxyCodeLine{1203   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value() \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1204   \{}
+\DoxyCodeLine{1205     rlbox\_detail\_forward\_to\_const(get\_raw\_sandbox\_value,}
+\DoxyCodeLine{1206                                   std::remove\_cv\_t<T\_SandboxedType>);}
+\DoxyCodeLine{1207   \};}
+\DoxyCodeLine{1208 }
+\DoxyCodeLine{1209   \textcolor{keyword}{inline} std::remove\_cv\_t<T\_SandboxedType> get\_raw\_sandbox\_value(}
+\DoxyCodeLine{1210     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox) \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1211   \{}
+\DoxyCodeLine{1212     RLBOX\_UNUSED(sandbox);}
+\DoxyCodeLine{1213     rlbox\_detail\_forward\_to\_const(get\_raw\_sandbox\_value,}
+\DoxyCodeLine{1214                                   std::remove\_cv\_t<T\_SandboxedType>);}
+\DoxyCodeLine{1215   \};}
+\DoxyCodeLine{1216 }
+\DoxyCodeLine{1217   \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{1218   \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile}}(\textcolor{keyword}{const} \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& p) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{1219 }
+\DoxyCodeLine{1220 \textcolor{keyword}{public}:}
+\DoxyCodeLine{1221   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<const T*, T\_Sbx>}} operator\&() \textcolor{keyword}{const} \textcolor{keyword}{noexcept}}
 \DoxyCodeLine{1222   \{}
-\DoxyCodeLine{1223     \textcolor{keyword}{using} T\_Ret = \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}};}
-\DoxyCodeLine{1224     rlbox\_detail\_forward\_to\_const(\textcolor{keyword}{operator}\&, T\_Ret);}
-\DoxyCodeLine{1225   \}}
-\DoxyCodeLine{1226 }
-\DoxyCodeLine{1227   \textcolor{comment}{// Needed as the definition of unary \& above shadows the base's binary \&}}
-\DoxyCodeLine{1228   rlbox\_detail\_forward\_binop\_to\_base(\&, \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{T\_ClassBase}});}
+\DoxyCodeLine{1223     \textcolor{keyword}{auto} ref =}
+\DoxyCodeLine{1224       detail::remove\_volatile\_from\_ptr\_cast(\&this-\/>get\_sandbox\_value\_ref());}
+\DoxyCodeLine{1225     \textcolor{keyword}{auto} ref\_cast = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }T*\textcolor{keyword}{>}(ref);}
+\DoxyCodeLine{1226     \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<const T*, T\_Sbx>::internal\_factory}}(ref\_cast);}
+\DoxyCodeLine{1227     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{1228   \}}
 \DoxyCodeLine{1229 }
-\DoxyCodeLine{1230   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_RhsRef>}
-\DoxyCodeLine{1231   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& operator=(T\_RhsRef\&\& val)}
-\DoxyCodeLine{1232   \{}
-\DoxyCodeLine{1233     \textcolor{keyword}{using} T\_Rhs = std::remove\_reference\_t<T\_RhsRef>;}
-\DoxyCodeLine{1234     \textcolor{keyword}{using} T\_Rhs\_El = std::remove\_all\_extents\_t<T\_Rhs>;}
+\DoxyCodeLine{1230   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} operator\&() \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{1231   \{}
+\DoxyCodeLine{1232     \textcolor{keyword}{using} T\_Ret = \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}};}
+\DoxyCodeLine{1233     rlbox\_detail\_forward\_to\_const(\textcolor{keyword}{operator}\&, T\_Ret);}
+\DoxyCodeLine{1234   \}}
 \DoxyCodeLine{1235 }
-\DoxyCodeLine{1236     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
-\DoxyCodeLine{1237     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
-\DoxyCodeLine{1238     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
-\DoxyCodeLine{1239     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
-\DoxyCodeLine{1240     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* data\_ref = \&get\_sandbox\_value\_ref();}
-\DoxyCodeLine{1241     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(data\_ref);}
-\DoxyCodeLine{1242     \textcolor{comment}{// Some branches don't use this}}
-\DoxyCodeLine{1243     RLBOX\_UNUSED(example\_unsandboxed\_ptr);}
+\DoxyCodeLine{1236   \textcolor{comment}{// Needed as the definition of unary \& above shadows the base's binary \&}}
+\DoxyCodeLine{1237   rlbox\_detail\_forward\_binop\_to\_base(\&, \mbox{\hyperlink{classrlbox_1_1tainted__base__impl}{T\_ClassBase}});}
+\DoxyCodeLine{1238 }
+\DoxyCodeLine{1239   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_RhsRef>}
+\DoxyCodeLine{1240   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& operator=(T\_RhsRef\&\& val)}
+\DoxyCodeLine{1241   \{}
+\DoxyCodeLine{1242     \textcolor{keyword}{using} T\_Rhs = std::remove\_reference\_t<T\_RhsRef>;}
+\DoxyCodeLine{1243     \textcolor{keyword}{using} T\_Rhs\_El = std::remove\_all\_extents\_t<T\_Rhs>;}
 \DoxyCodeLine{1244 }
-\DoxyCodeLine{1245     if\_constexpr\_named(}
-\DoxyCodeLine{1246       cond1, std::is\_same\_v<std::remove\_const\_t<T\_Rhs>, std::nullptr\_t>)}
-\DoxyCodeLine{1247     \{}
-\DoxyCodeLine{1248       \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
-\DoxyCodeLine{1249                     \textcolor{stringliteral}{"{}Null pointer can only be assigned to pointers"{}});}
-\DoxyCodeLine{1250       \textcolor{comment}{// assign using an integer instead of nullptr, as the pointer field may be}}
-\DoxyCodeLine{1251       \textcolor{comment}{// represented as integer}}
-\DoxyCodeLine{1252       data = 0;}
-\DoxyCodeLine{1253     \}}
-\DoxyCodeLine{1254     \textcolor{keywordflow}{else} if\_constexpr\_named(cond2, detail::rlbox\_is\_tainted\_v<T\_Rhs>)}
-\DoxyCodeLine{1255     \{}
-\DoxyCodeLine{1256       \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{1257       convert\_type\_non\_class<T\_Sbx,}
-\DoxyCodeLine{1258                              adjust\_type\_direction::TO\_SANDBOX,}
-\DoxyCodeLine{1259                              adjust\_type\_context::EXAMPLE>(}
-\DoxyCodeLine{1260         get\_sandbox\_value\_ref(),}
-\DoxyCodeLine{1261         val.get\_raw\_value\_ref(),}
-\DoxyCodeLine{1262         example\_unsandboxed\_ptr,}
-\DoxyCodeLine{1263         \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
-\DoxyCodeLine{1264     \}}
-\DoxyCodeLine{1265     \textcolor{keywordflow}{else} if\_constexpr\_named(cond3, detail::rlbox\_is\_tainted\_volatile\_v<T\_Rhs>)}
-\DoxyCodeLine{1266     \{}
-\DoxyCodeLine{1267       \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{1268       convert\_type\_non\_class<T\_Sbx,}
-\DoxyCodeLine{1269                              adjust\_type\_direction::NO\_CHANGE,}
-\DoxyCodeLine{1270                              adjust\_type\_context::EXAMPLE>(}
-\DoxyCodeLine{1271         get\_sandbox\_value\_ref(),}
-\DoxyCodeLine{1272         val.get\_sandbox\_value\_ref(),}
-\DoxyCodeLine{1273         example\_unsandboxed\_ptr,}
-\DoxyCodeLine{1274         \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
-\DoxyCodeLine{1275     \}}
-\DoxyCodeLine{1276     \textcolor{keywordflow}{else} if\_constexpr\_named(cond4, detail::rlbox\_is\_sandbox\_callback\_v<T\_Rhs>)}
-\DoxyCodeLine{1277     \{}
-\DoxyCodeLine{1278       \textcolor{keyword}{using} T\_RhsFunc = detail::rlbox\_remove\_wrapper\_t<T\_Rhs>;}
-\DoxyCodeLine{1279 }
-\DoxyCodeLine{1280       \textcolor{comment}{// need to perform some typechecking to ensure we are assigning compatible}}
-\DoxyCodeLine{1281       \textcolor{comment}{// function pointer types only}}
-\DoxyCodeLine{1282       if\_constexpr\_named(subcond1, !std::is\_assignable\_v<T\&, T\_RhsFunc>)}
-\DoxyCodeLine{1283       \{}
-\DoxyCodeLine{1284         rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1285           subcond1,}
-\DoxyCodeLine{1286           \textcolor{stringliteral}{"{}Trying to assign function pointer to field of incompatible types"{}});}
-\DoxyCodeLine{1287       \}}
-\DoxyCodeLine{1288       \textcolor{keywordflow}{else}}
-\DoxyCodeLine{1289       \{}
-\DoxyCodeLine{1290         \textcolor{comment}{// Need to reinterpret\_cast as the representation of the signature of a}}
-\DoxyCodeLine{1291         \textcolor{comment}{// callback uses the machine model of the sandbox, while the field uses}}
-\DoxyCodeLine{1292         \textcolor{comment}{// that of the application. But we have already checked above that this}}
-\DoxyCodeLine{1293         \textcolor{comment}{// is safe.}}
-\DoxyCodeLine{1294         \textcolor{keyword}{auto} func = val.get\_raw\_sandbox\_value();}
-\DoxyCodeLine{1295         \textcolor{keyword}{using} T\_Cast = std::remove\_volatile\_t<T\_SandboxedType>;}
-\DoxyCodeLine{1296         get\_sandbox\_value\_ref() = (T\_Cast)func;}
-\DoxyCodeLine{1297       \}}
-\DoxyCodeLine{1298     \}}
-\DoxyCodeLine{1299     \textcolor{keywordflow}{else} if\_constexpr\_named(}
-\DoxyCodeLine{1300       cond5,}
-\DoxyCodeLine{1301       detail::is\_fundamental\_or\_enum\_v<T> ||}
-\DoxyCodeLine{1302         (std::is\_array\_v<T> \&\& !std::is\_pointer\_v<T\_Rhs\_El>))}
-\DoxyCodeLine{1303     \{}
-\DoxyCodeLine{1304       detail::convert\_type\_fundamental\_or\_array(get\_sandbox\_value\_ref(), val);}
-\DoxyCodeLine{1305     \}}
-\DoxyCodeLine{1306     \textcolor{keywordflow}{else} if\_constexpr\_named(}
-\DoxyCodeLine{1307       cond6, std::is\_pointer\_v<T\_Rhs> || std::is\_pointer\_v<T\_Rhs\_El>)}
-\DoxyCodeLine{1308     \{}
-\DoxyCodeLine{1309       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1310         cond6,}
-\DoxyCodeLine{1311         \textcolor{stringliteral}{"{}Assignment of pointers is not safe as it could\(\backslash\)n "{}}}
-\DoxyCodeLine{1312         \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
-\DoxyCodeLine{1313         \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
-\DoxyCodeLine{1314         \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
-\DoxyCodeLine{1315         \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
-\DoxyCodeLine{1316         \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
-\DoxyCodeLine{1317         \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
-\DoxyCodeLine{1318         \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
-\DoxyCodeLine{1319         \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
-\DoxyCodeLine{1320         \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
-\DoxyCodeLine{1321         \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
-\DoxyCodeLine{1322         \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
-\DoxyCodeLine{1323         \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
-\DoxyCodeLine{1324         \textcolor{stringliteral}{"{}the "{}}}
-\DoxyCodeLine{1325         \textcolor{stringliteral}{"{}address\(\backslash\)n "{}}}
-\DoxyCodeLine{1326         \textcolor{stringliteral}{"{}4) For raw pointers, use assign\_raw\_pointer which performs required "{}}}
-\DoxyCodeLine{1327         \textcolor{stringliteral}{"{}safety checks\(\backslash\)n "{}});}
-\DoxyCodeLine{1328     \}}
-\DoxyCodeLine{1329     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{1330     \{}
-\DoxyCodeLine{1331       \textcolor{keyword}{auto} unknownCase =}
-\DoxyCodeLine{1332         !(cond1 || cond2 || cond3 || cond4 || cond5 \textcolor{comment}{/* || cond6 */});}
-\DoxyCodeLine{1333       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1334         unknownCase, \textcolor{stringliteral}{"{}Assignment of the given type of value is not supported"{}});}
-\DoxyCodeLine{1335     \}}
-\DoxyCodeLine{1336 }
-\DoxyCodeLine{1337     \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
-\DoxyCodeLine{1338   \}}
-\DoxyCodeLine{1339 }
-\DoxyCodeLine{1340   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
-\DoxyCodeLine{1341   \textcolor{keywordtype}{void} assign\_raw\_pointer(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox, T\_Rhs val)}
-\DoxyCodeLine{1342   \{}
-\DoxyCodeLine{1343     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T\_Rhs>, \textcolor{stringliteral}{"{}Must be a pointer"{}});}
-\DoxyCodeLine{1344     \textcolor{keyword}{static\_assert}(std::is\_assignable\_v<T\&, T\_Rhs>,}
-\DoxyCodeLine{1345                   \textcolor{stringliteral}{"{}Should assign pointers of compatible types."{}});}
-\DoxyCodeLine{1346     \textcolor{comment}{// Maybe a function pointer, so we need to cast}}
-\DoxyCodeLine{1347     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* cast\_val = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(val);}
-\DoxyCodeLine{1348     \textcolor{keywordtype}{bool} safe = sandbox.\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(cast\_val);}
-\DoxyCodeLine{1349     detail::dynamic\_check(}
-\DoxyCodeLine{1350       safe,}
-\DoxyCodeLine{1351       \textcolor{stringliteral}{"{}Tried to assign a pointer that is not in the sandbox.\(\backslash\)n "{}}}
-\DoxyCodeLine{1352       \textcolor{stringliteral}{"{}This is not safe as it could\(\backslash\)n "{}}}
-\DoxyCodeLine{1353       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
-\DoxyCodeLine{1354       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
-\DoxyCodeLine{1355       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
-\DoxyCodeLine{1356       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
-\DoxyCodeLine{1357       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
-\DoxyCodeLine{1358       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
-\DoxyCodeLine{1359       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
-\DoxyCodeLine{1360       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
-\DoxyCodeLine{1361       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
-\DoxyCodeLine{1362       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
-\DoxyCodeLine{1363       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
-\DoxyCodeLine{1364       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
-\DoxyCodeLine{1365       \textcolor{stringliteral}{"{}the "{}}}
-\DoxyCodeLine{1366       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}});}
-\DoxyCodeLine{1367     get\_sandbox\_value\_ref() =}
-\DoxyCodeLine{1368       sandbox.template get\_sandboxed\_pointer<T\_Rhs>(cast\_val);}
-\DoxyCodeLine{1369   \}}
-\DoxyCodeLine{1370 }
-\DoxyCodeLine{1371   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Dummy = \textcolor{keywordtype}{void}>}
-\DoxyCodeLine{1372   \textcolor{keyword}{operator} bool()\textcolor{keyword}{ const}}
-\DoxyCodeLine{1373 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{1374     rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{1375       detail::true\_v<T\_Dummy>,}
-\DoxyCodeLine{1376       \textcolor{stringliteral}{"{}Cannot apply implicit conversion to bool on values that are located in "{}}}
-\DoxyCodeLine{1377       \textcolor{stringliteral}{"{}sandbox memory. This error occurs if you compare a dereferenced value "{}}}
-\DoxyCodeLine{1378       \textcolor{stringliteral}{"{}such as the code shown below\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1379       \textcolor{stringliteral}{"{}tainted<int**> a = ...;\(\backslash\)n"{}}}
-\DoxyCodeLine{1380       \textcolor{stringliteral}{"{}assert(*a);\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{1381       \textcolor{stringliteral}{"{}Instead you can write this code as \(\backslash\)n"{}}}
-\DoxyCodeLine{1382       \textcolor{stringliteral}{"{}tainted<int*> temp = *a;\(\backslash\)n"{}}}
-\DoxyCodeLine{1383       \textcolor{stringliteral}{"{}assert(temp);\(\backslash\)n"{}});}
-\DoxyCodeLine{1384     \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
-\DoxyCodeLine{1385   \}}
-\DoxyCodeLine{1386 \};}
-\DoxyCodeLine{1387 }
-\DoxyCodeLine{1388 \}}
+\DoxyCodeLine{1245     \textcolor{comment}{// Need to construct an example\_unsandboxed\_ptr for pointers or arrays of}}
+\DoxyCodeLine{1246     \textcolor{comment}{// pointers. Since tainted\_volatile is the type of data in sandbox memory,}}
+\DoxyCodeLine{1247     \textcolor{comment}{// the address of data (\&data) refers to a location in sandbox memory and}}
+\DoxyCodeLine{1248     \textcolor{comment}{// can thus be the example\_unsandboxed\_ptr}}
+\DoxyCodeLine{1249     \textcolor{keyword}{const} \textcolor{keyword}{volatile} \textcolor{keywordtype}{void}* data\_ref = \&get\_sandbox\_value\_ref();}
+\DoxyCodeLine{1250     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr = \textcolor{keyword}{const\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(data\_ref);}
+\DoxyCodeLine{1251     \textcolor{comment}{// Some branches don't use this}}
+\DoxyCodeLine{1252     RLBOX\_UNUSED(example\_unsandboxed\_ptr);}
+\DoxyCodeLine{1253 }
+\DoxyCodeLine{1254     if\_constexpr\_named(}
+\DoxyCodeLine{1255       cond1, std::is\_same\_v<std::remove\_const\_t<T\_Rhs>, std::nullptr\_t>)}
+\DoxyCodeLine{1256     \{}
+\DoxyCodeLine{1257       \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>,}
+\DoxyCodeLine{1258                     \textcolor{stringliteral}{"{}Null pointer can only be assigned to pointers"{}});}
+\DoxyCodeLine{1259       \textcolor{comment}{// assign using an integer instead of nullptr, as the pointer field may be}}
+\DoxyCodeLine{1260       \textcolor{comment}{// represented as integer}}
+\DoxyCodeLine{1261       data = 0;}
+\DoxyCodeLine{1262     \}}
+\DoxyCodeLine{1263     \textcolor{keywordflow}{else} if\_constexpr\_named(cond2, detail::rlbox\_is\_tainted\_v<T\_Rhs>)}
+\DoxyCodeLine{1264     \{}
+\DoxyCodeLine{1265       \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{1266       convert\_type\_non\_class<T\_Sbx,}
+\DoxyCodeLine{1267                              adjust\_type\_direction::TO\_SANDBOX,}
+\DoxyCodeLine{1268                              adjust\_type\_context::EXAMPLE>(}
+\DoxyCodeLine{1269         get\_sandbox\_value\_ref(),}
+\DoxyCodeLine{1270         val.get\_raw\_value\_ref(),}
+\DoxyCodeLine{1271         example\_unsandboxed\_ptr,}
+\DoxyCodeLine{1272         \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
+\DoxyCodeLine{1273     \}}
+\DoxyCodeLine{1274     \textcolor{keywordflow}{else} if\_constexpr\_named(cond3, detail::rlbox\_is\_tainted\_volatile\_v<T\_Rhs>)}
+\DoxyCodeLine{1275     \{}
+\DoxyCodeLine{1276       \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{1277       convert\_type\_non\_class<T\_Sbx,}
+\DoxyCodeLine{1278                              adjust\_type\_direction::NO\_CHANGE,}
+\DoxyCodeLine{1279                              adjust\_type\_context::EXAMPLE>(}
+\DoxyCodeLine{1280         get\_sandbox\_value\_ref(),}
+\DoxyCodeLine{1281         val.get\_sandbox\_value\_ref(),}
+\DoxyCodeLine{1282         example\_unsandboxed\_ptr,}
+\DoxyCodeLine{1283         \textcolor{keyword}{nullptr} \textcolor{comment}{/* sandbox\_ptr */});}
+\DoxyCodeLine{1284     \}}
+\DoxyCodeLine{1285     \textcolor{keywordflow}{else} if\_constexpr\_named(cond4, detail::rlbox\_is\_sandbox\_callback\_v<T\_Rhs>)}
+\DoxyCodeLine{1286     \{}
+\DoxyCodeLine{1287       \textcolor{keyword}{using} T\_RhsFunc = detail::rlbox\_remove\_wrapper\_t<T\_Rhs>;}
+\DoxyCodeLine{1288 }
+\DoxyCodeLine{1289       \textcolor{comment}{// need to perform some typechecking to ensure we are assigning compatible}}
+\DoxyCodeLine{1290       \textcolor{comment}{// function pointer types only}}
+\DoxyCodeLine{1291       if\_constexpr\_named(subcond1, !std::is\_assignable\_v<T\&, T\_RhsFunc>)}
+\DoxyCodeLine{1292       \{}
+\DoxyCodeLine{1293         rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1294           subcond1,}
+\DoxyCodeLine{1295           \textcolor{stringliteral}{"{}Trying to assign function pointer to field of incompatible types"{}});}
+\DoxyCodeLine{1296       \}}
+\DoxyCodeLine{1297       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{1298       \{}
+\DoxyCodeLine{1299         \textcolor{comment}{// Need to reinterpret\_cast as the representation of the signature of a}}
+\DoxyCodeLine{1300         \textcolor{comment}{// callback uses the machine model of the sandbox, while the field uses}}
+\DoxyCodeLine{1301         \textcolor{comment}{// that of the application. But we have already checked above that this}}
+\DoxyCodeLine{1302         \textcolor{comment}{// is safe.}}
+\DoxyCodeLine{1303         \textcolor{keyword}{auto} func = val.get\_raw\_sandbox\_value();}
+\DoxyCodeLine{1304         \textcolor{keyword}{using} T\_Cast = std::remove\_volatile\_t<T\_SandboxedType>;}
+\DoxyCodeLine{1305         get\_sandbox\_value\_ref() = (T\_Cast)func;}
+\DoxyCodeLine{1306       \}}
+\DoxyCodeLine{1307     \}}
+\DoxyCodeLine{1308     \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{1309       cond5,}
+\DoxyCodeLine{1310       detail::is\_fundamental\_or\_enum\_v<T> ||}
+\DoxyCodeLine{1311         (std::is\_array\_v<T> \&\& !std::is\_pointer\_v<T\_Rhs\_El>))}
+\DoxyCodeLine{1312     \{}
+\DoxyCodeLine{1313       detail::convert\_type\_fundamental\_or\_array(get\_sandbox\_value\_ref(), val);}
+\DoxyCodeLine{1314     \}}
+\DoxyCodeLine{1315     \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{1316       cond6, std::is\_pointer\_v<T\_Rhs> || std::is\_pointer\_v<T\_Rhs\_El>)}
+\DoxyCodeLine{1317     \{}
+\DoxyCodeLine{1318       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1319         cond6,}
+\DoxyCodeLine{1320         \textcolor{stringliteral}{"{}Assignment of pointers is not safe as it could\(\backslash\)n "{}}}
+\DoxyCodeLine{1321         \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
+\DoxyCodeLine{1322         \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
+\DoxyCodeLine{1323         \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
+\DoxyCodeLine{1324         \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
+\DoxyCodeLine{1325         \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
+\DoxyCodeLine{1326         \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
+\DoxyCodeLine{1327         \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
+\DoxyCodeLine{1328         \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
+\DoxyCodeLine{1329         \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
+\DoxyCodeLine{1330         \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
+\DoxyCodeLine{1331         \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
+\DoxyCodeLine{1332         \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
+\DoxyCodeLine{1333         \textcolor{stringliteral}{"{}the "{}}}
+\DoxyCodeLine{1334         \textcolor{stringliteral}{"{}address\(\backslash\)n "{}}}
+\DoxyCodeLine{1335         \textcolor{stringliteral}{"{}4) For raw pointers, use assign\_raw\_pointer which performs required "{}}}
+\DoxyCodeLine{1336         \textcolor{stringliteral}{"{}safety checks\(\backslash\)n "{}});}
+\DoxyCodeLine{1337     \}}
+\DoxyCodeLine{1338     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{1339     \{}
+\DoxyCodeLine{1340       \textcolor{keyword}{auto} unknownCase =}
+\DoxyCodeLine{1341         !(cond1 || cond2 || cond3 || cond4 || cond5 \textcolor{comment}{/* || cond6 */});}
+\DoxyCodeLine{1342       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1343         unknownCase, \textcolor{stringliteral}{"{}Assignment of the given type of value is not supported"{}});}
+\DoxyCodeLine{1344     \}}
+\DoxyCodeLine{1345 }
+\DoxyCodeLine{1346     \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{1347   \}}
+\DoxyCodeLine{1348 }
+\DoxyCodeLine{1349   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Rhs>}
+\DoxyCodeLine{1350   \textcolor{keywordtype}{void} assign\_raw\_pointer(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox, T\_Rhs val)}
+\DoxyCodeLine{1351   \{}
+\DoxyCodeLine{1352     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T\_Rhs>, \textcolor{stringliteral}{"{}Must be a pointer"{}});}
+\DoxyCodeLine{1353     \textcolor{keyword}{static\_assert}(std::is\_assignable\_v<T\&, T\_Rhs>,}
+\DoxyCodeLine{1354                   \textcolor{stringliteral}{"{}Should assign pointers of compatible types."{}});}
+\DoxyCodeLine{1355     \textcolor{comment}{// Maybe a function pointer, so we need to cast}}
+\DoxyCodeLine{1356     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* cast\_val = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const }\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(val);}
+\DoxyCodeLine{1357     \textcolor{keywordtype}{bool} safe = sandbox.\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(cast\_val);}
+\DoxyCodeLine{1358     detail::dynamic\_check(}
+\DoxyCodeLine{1359       safe,}
+\DoxyCodeLine{1360       \textcolor{stringliteral}{"{}Tried to assign a pointer that is not in the sandbox.\(\backslash\)n "{}}}
+\DoxyCodeLine{1361       \textcolor{stringliteral}{"{}This is not safe as it could\(\backslash\)n "{}}}
+\DoxyCodeLine{1362       \textcolor{stringliteral}{"{}1) Leak pointers from the appliction to the sandbox which may break "{}}}
+\DoxyCodeLine{1363       \textcolor{stringliteral}{"{}ASLR\(\backslash\)n "{}}}
+\DoxyCodeLine{1364       \textcolor{stringliteral}{"{}2) Pass inaccessible pointers to the sandbox leading to crash\(\backslash\)n "{}}}
+\DoxyCodeLine{1365       \textcolor{stringliteral}{"{}3) Break sandboxes that require pointers to be swizzled first\(\backslash\)n "{}}}
+\DoxyCodeLine{1366       \textcolor{stringliteral}{"{}\(\backslash\)n "{}}}
+\DoxyCodeLine{1367       \textcolor{stringliteral}{"{}Instead, if you want to pass in a pointer, do one of the following\(\backslash\)n "{}}}
+\DoxyCodeLine{1368       \textcolor{stringliteral}{"{}1) Allocate with malloc\_in\_sandbox, and pass in a tainted pointer\(\backslash\)n "{}}}
+\DoxyCodeLine{1369       \textcolor{stringliteral}{"{}2) For pointers that point to functions in the application, register "{}}}
+\DoxyCodeLine{1370       \textcolor{stringliteral}{"{}with sandbox.register\_callback(\(\backslash\)"{}foo\(\backslash\)"{}), and pass in the registered "{}}}
+\DoxyCodeLine{1371       \textcolor{stringliteral}{"{}value\(\backslash\)n "{}}}
+\DoxyCodeLine{1372       \textcolor{stringliteral}{"{}3) For pointers that point to functions in the sandbox, get the "{}}}
+\DoxyCodeLine{1373       \textcolor{stringliteral}{"{}address with get\_sandbox\_function\_address(sandbox, foo), and pass in "{}}}
+\DoxyCodeLine{1374       \textcolor{stringliteral}{"{}the "{}}}
+\DoxyCodeLine{1375       \textcolor{stringliteral}{"{}address\(\backslash\)n "{}});}
+\DoxyCodeLine{1376     get\_sandbox\_value\_ref() =}
+\DoxyCodeLine{1377       sandbox.template get\_sandboxed\_pointer<T\_Rhs>(cast\_val);}
+\DoxyCodeLine{1378   \}}
+\DoxyCodeLine{1379 }
+\DoxyCodeLine{1380   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Dummy = \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{1381   \textcolor{keyword}{operator} bool()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1382 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{1383     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{1384       detail::true\_v<T\_Dummy>,}
+\DoxyCodeLine{1385       \textcolor{stringliteral}{"{}Cannot apply implicit conversion to bool on values that are located in "{}}}
+\DoxyCodeLine{1386       \textcolor{stringliteral}{"{}sandbox memory. This error occurs if you compare a dereferenced value "{}}}
+\DoxyCodeLine{1387       \textcolor{stringliteral}{"{}such as the code shown below\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1388       \textcolor{stringliteral}{"{}tainted<int**> a = ...;\(\backslash\)n"{}}}
+\DoxyCodeLine{1389       \textcolor{stringliteral}{"{}assert(*a);\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{1390       \textcolor{stringliteral}{"{}Instead you can write this code as \(\backslash\)n"{}}}
+\DoxyCodeLine{1391       \textcolor{stringliteral}{"{}tainted<int*> temp = *a;\(\backslash\)n"{}}}
+\DoxyCodeLine{1392       \textcolor{stringliteral}{"{}assert(temp);\(\backslash\)n"{}});}
+\DoxyCodeLine{1393     \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{1394   \}}
+\DoxyCodeLine{1395 \};}
+\DoxyCodeLine{1396 }
+\DoxyCodeLine{1397 \}}
 
 \end{DoxyCode}

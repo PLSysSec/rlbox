@@ -869,7 +869,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="662" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="662" bodyend="717"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="663" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="663" bodyend="726"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1ad34419b3444d0bf37e25ecf7d37fbe0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -914,7 +914,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="731" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="731" bodyend="737"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="740" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="740" bodyend="746"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__base__impl_1a4f739a0994af23036cce2d06b10953ee" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -971,7 +971,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="754" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="754" bodyend="760"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="763" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="763" bodyend="769"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -1026,7 +1026,7 @@ For the Wasm-based sandbox, this function additionally validates the unwrapped v
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="28" bodyend="761"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" line="27" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox.hpp" bodystart="28" bodyend="770"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__base__impl_1ac13751ef39495b930584164f841c540d" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>
       <member refid="classrlbox_1_1tainted__base__impl_1a03f7e6cbb4ac6cc48b5f523c69863fee" prot="public" virt="non-virtual"><scope>rlbox::tainted_base_impl</scope><name>BinaryOp</name></member>

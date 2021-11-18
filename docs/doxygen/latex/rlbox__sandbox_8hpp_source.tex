@@ -198,766 +198,776 @@
 \DoxyCodeLine{200       \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T\_NoRef, T\_Sbx>}} ret = param;}
 \DoxyCodeLine{201       \textcolor{keywordflow}{return} ret.UNSAFE\_sandboxed(*\textcolor{keyword}{this});}
 \DoxyCodeLine{202     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{203       rlbox\_detail\_static\_fail\_because(detail::true\_v<T\_NoRef>,}
-\DoxyCodeLine{204         \textcolor{stringliteral}{"{}Only tainted types, callbacks or primitive values such as ints can be passed as parameters.\(\backslash\)n"{}}}
-\DoxyCodeLine{205         \textcolor{stringliteral}{"{}To make a parameter tainted, try moving the allocation into the sandbox.\(\backslash\)n"{}}}
-\DoxyCodeLine{206         \textcolor{stringliteral}{"{}If the parameter is a callback, try registering the callback via the register\_callback API."{}});}
-\DoxyCodeLine{207     \}}
-\DoxyCodeLine{208   \}}
-\DoxyCodeLine{209 }
-\DoxyCodeLine{210   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Arg>}
-\DoxyCodeLine{211   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} sandbox\_callback\_intercept\_convert\_param(}
-\DoxyCodeLine{212     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox,}
-\DoxyCodeLine{213     \textcolor{keyword}{const} T\_Arg\& arg)}
-\DoxyCodeLine{214   \{}
-\DoxyCodeLine{215     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ret;}
-\DoxyCodeLine{216     \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{217     convert\_type<T\_Sbx,}
-\DoxyCodeLine{218                  adjust\_type\_direction::TO\_APPLICATION,}
-\DoxyCodeLine{219                  adjust\_type\_context::SANDBOX>(}
-\DoxyCodeLine{220       ret.get\_raw\_value\_ref(),}
-\DoxyCodeLine{221       arg,}
-\DoxyCodeLine{222       \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
-\DoxyCodeLine{223       \&sandbox);}
-\DoxyCodeLine{224     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{225   \}}
-\DoxyCodeLine{226 }
-\DoxyCodeLine{227   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{228   \textcolor{keyword}{static} detail::convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx>}
-\DoxyCodeLine{229   sandbox\_callback\_interceptor(}
-\DoxyCodeLine{230     detail::convert\_to\_sandbox\_equivalent\_t<T\_Args, T\_Sbx>... args)}
-\DoxyCodeLine{231   \{}
-\DoxyCodeLine{232     std::pair<T\_Sbx*, void*> context =}
-\DoxyCodeLine{233       T\_Sbx::impl\_get\_executed\_callback\_sandbox\_and\_key();}
-\DoxyCodeLine{234     \textcolor{keyword}{auto}\& sandbox = *(\textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}*\textcolor{keyword}{>}(context.first));}
-\DoxyCodeLine{235     \textcolor{keyword}{auto} key = context.second;}
-\DoxyCodeLine{236 }
-\DoxyCodeLine{237     \textcolor{keyword}{using} T\_Func\_Ret =}
-\DoxyCodeLine{238       std::conditional\_t<std::is\_void\_v<T\_Ret>, void, \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T\_Ret, T\_Sbx>}}>;}
-\DoxyCodeLine{239     \textcolor{keyword}{using} T\_Func =}
-\DoxyCodeLine{240       T\_Func\_Ret (*)(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\&, \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T\_Args, T\_Sbx>}}...);}
-\DoxyCodeLine{241     \textcolor{keyword}{auto} target\_fn\_ptr = \textcolor{keyword}{reinterpret\_cast<}T\_Func\textcolor{keyword}{>}(key);}
-\DoxyCodeLine{242 }
-\DoxyCodeLine{243 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
-\DoxyCodeLine{244     high\_resolution\_clock::time\_point enter\_time = high\_resolution\_clock::now();}
-\DoxyCodeLine{245     \textcolor{keyword}{auto} on\_exit = rlbox::detail::make\_scope\_exit([\&] \{}
-\DoxyCodeLine{246       \textcolor{keyword}{auto} exit\_time = high\_resolution\_clock::now();}
-\DoxyCodeLine{247       int64\_t ns = duration\_cast<nanoseconds>(exit\_time -\/ enter\_time).count();}
-\DoxyCodeLine{248       sandbox.transition\_times.push\_back(}
-\DoxyCodeLine{249         rlbox\_transition\_timing\{ rlbox\_transition::CALLBACK,}
-\DoxyCodeLine{250                                  \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
-\DoxyCodeLine{251                                  key \textcolor{comment}{/* func\_ptr */},}
-\DoxyCodeLine{252                                  ns \});}
-\DoxyCodeLine{253     \});}
-\DoxyCodeLine{254 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{255 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_OUT}}
-\DoxyCodeLine{256     RLBOX\_TRANSITION\_ACTION\_OUT(rlbox\_transition::CALLBACK,}
-\DoxyCodeLine{257                                 \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
-\DoxyCodeLine{258                                 key \textcolor{comment}{/* func\_ptr */},}
-\DoxyCodeLine{259                                 sandbox.transition\_state);}
-\DoxyCodeLine{260 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{261 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_IN}}
-\DoxyCodeLine{262     \textcolor{keyword}{auto} on\_exit\_transition = rlbox::detail::make\_scope\_exit([\&] \{}
-\DoxyCodeLine{263       RLBOX\_TRANSITION\_ACTION\_IN(rlbox\_transition::CALLBACK,}
-\DoxyCodeLine{264                                  \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
-\DoxyCodeLine{265                                  key \textcolor{comment}{/* func\_ptr */},}
-\DoxyCodeLine{266                                  sandbox.transition\_state);}
-\DoxyCodeLine{267     \});}
-\DoxyCodeLine{268 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{269     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_void\_v<T\_Func\_Ret>) \{}
-\DoxyCodeLine{270       (*target\_fn\_ptr)(}
-\DoxyCodeLine{271         sandbox,}
-\DoxyCodeLine{272         sandbox.template sandbox\_callback\_intercept\_convert\_param<T\_Args>(}
-\DoxyCodeLine{273           sandbox, args)...);}
-\DoxyCodeLine{274       \textcolor{keywordflow}{return};}
-\DoxyCodeLine{275     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{276       \textcolor{keyword}{auto} tainted\_ret = (*target\_fn\_ptr)(}
-\DoxyCodeLine{277         sandbox,}
-\DoxyCodeLine{278         sandbox.template sandbox\_callback\_intercept\_convert\_param<T\_Args>(}
-\DoxyCodeLine{279           sandbox, args)...);}
-\DoxyCodeLine{280 }
-\DoxyCodeLine{281       \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{282       convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx> ret;}
-\DoxyCodeLine{283       convert\_type<T\_Sbx,}
-\DoxyCodeLine{284                    adjust\_type\_direction::TO\_SANDBOX,}
-\DoxyCodeLine{285                    adjust\_type\_context::SANDBOX>(}
-\DoxyCodeLine{286         ret,}
-\DoxyCodeLine{287         tainted\_ret.get\_raw\_value\_ref(),}
-\DoxyCodeLine{288         \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
-\DoxyCodeLine{289         \&sandbox);}
-\DoxyCodeLine{290       \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{291     \}}
-\DoxyCodeLine{292   \}}
-\DoxyCodeLine{293 }
-\DoxyCodeLine{298   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{299   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} unregister\_callback(\textcolor{keywordtype}{void}* key)}
-\DoxyCodeLine{300   \{}
-\DoxyCodeLine{301     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
-\DoxyCodeLine{302     \textcolor{comment}{// cleanup callbacks after sandbox destruction}}
-\DoxyCodeLine{303     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
-\DoxyCodeLine{304       \textcolor{keywordflow}{return};}
-\DoxyCodeLine{305     \}}
-\DoxyCodeLine{306 }
-\DoxyCodeLine{307     this-\/>\textcolor{keyword}{template} impl\_unregister\_callback<}
-\DoxyCodeLine{308       detail::convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx>,}
-\DoxyCodeLine{309       detail::convert\_to\_sandbox\_equivalent\_t<T\_Args, T\_Sbx>...>(key);}
+\DoxyCodeLine{203       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{204         detail::true\_v<T\_NoRef>,}
+\DoxyCodeLine{205         \textcolor{stringliteral}{"{}Only tainted types, callbacks or primitive values such as ints can be "{}}}
+\DoxyCodeLine{206         \textcolor{stringliteral}{"{}passed as parameters.\(\backslash\)n"{}}}
+\DoxyCodeLine{207         \textcolor{stringliteral}{"{}To make a parameter tainted, try moving the allocation into the "{}}}
+\DoxyCodeLine{208         \textcolor{stringliteral}{"{}sandbox.\(\backslash\)n"{}}}
+\DoxyCodeLine{209         \textcolor{stringliteral}{"{}If the parameter is a callback, try registering the callback via the "{}}}
+\DoxyCodeLine{210         \textcolor{stringliteral}{"{}register\_callback API."{}});}
+\DoxyCodeLine{211     \}}
+\DoxyCodeLine{212   \}}
+\DoxyCodeLine{213 }
+\DoxyCodeLine{214   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Arg>}
+\DoxyCodeLine{215   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} sandbox\_callback\_intercept\_convert\_param(}
+\DoxyCodeLine{216     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\& sandbox,}
+\DoxyCodeLine{217     \textcolor{keyword}{const} T\_Arg\& arg)}
+\DoxyCodeLine{218   \{}
+\DoxyCodeLine{219     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ret;}
+\DoxyCodeLine{220     \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{221     convert\_type<T\_Sbx,}
+\DoxyCodeLine{222                  adjust\_type\_direction::TO\_APPLICATION,}
+\DoxyCodeLine{223                  adjust\_type\_context::SANDBOX>(}
+\DoxyCodeLine{224       ret.get\_raw\_value\_ref(),}
+\DoxyCodeLine{225       arg,}
+\DoxyCodeLine{226       \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
+\DoxyCodeLine{227       \&sandbox);}
+\DoxyCodeLine{228     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{229   \}}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{232   \textcolor{keyword}{static} detail::convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx>}
+\DoxyCodeLine{233   sandbox\_callback\_interceptor(}
+\DoxyCodeLine{234     detail::convert\_to\_sandbox\_equivalent\_t<T\_Args, T\_Sbx>... args)}
+\DoxyCodeLine{235   \{}
+\DoxyCodeLine{236     std::pair<T\_Sbx*, void*> context =}
+\DoxyCodeLine{237       T\_Sbx::impl\_get\_executed\_callback\_sandbox\_and\_key();}
+\DoxyCodeLine{238     \textcolor{keyword}{auto}\& sandbox = *(\textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}*\textcolor{keyword}{>}(context.first));}
+\DoxyCodeLine{239     \textcolor{keyword}{auto} key = context.second;}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241     \textcolor{keyword}{using} T\_Func\_Ret =}
+\DoxyCodeLine{242       std::conditional\_t<std::is\_void\_v<T\_Ret>, void, \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T\_Ret, T\_Sbx>}}>;}
+\DoxyCodeLine{243     \textcolor{keyword}{using} T\_Func =}
+\DoxyCodeLine{244       T\_Func\_Ret (*)(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\&, \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T\_Args, T\_Sbx>}}...);}
+\DoxyCodeLine{245     \textcolor{keyword}{auto} target\_fn\_ptr = \textcolor{keyword}{reinterpret\_cast<}T\_Func\textcolor{keyword}{>}(key);}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
+\DoxyCodeLine{248     high\_resolution\_clock::time\_point enter\_time = high\_resolution\_clock::now();}
+\DoxyCodeLine{249     \textcolor{keyword}{auto} on\_exit = rlbox::detail::make\_scope\_exit([\&] \{}
+\DoxyCodeLine{250       \textcolor{keyword}{auto} exit\_time = high\_resolution\_clock::now();}
+\DoxyCodeLine{251       int64\_t ns = duration\_cast<nanoseconds>(exit\_time -\/ enter\_time).count();}
+\DoxyCodeLine{252       sandbox.transition\_times.push\_back(}
+\DoxyCodeLine{253         rlbox\_transition\_timing\{ rlbox\_transition::CALLBACK,}
+\DoxyCodeLine{254                                  \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
+\DoxyCodeLine{255                                  key \textcolor{comment}{/* func\_ptr */},}
+\DoxyCodeLine{256                                  ns \});}
+\DoxyCodeLine{257     \});}
+\DoxyCodeLine{258 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_OUT}}
+\DoxyCodeLine{260     RLBOX\_TRANSITION\_ACTION\_OUT(rlbox\_transition::CALLBACK,}
+\DoxyCodeLine{261                                 \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
+\DoxyCodeLine{262                                 key \textcolor{comment}{/* func\_ptr */},}
+\DoxyCodeLine{263                                 sandbox.transition\_state);}
+\DoxyCodeLine{264 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{265 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_IN}}
+\DoxyCodeLine{266     \textcolor{keyword}{auto} on\_exit\_transition = rlbox::detail::make\_scope\_exit([\&] \{}
+\DoxyCodeLine{267       RLBOX\_TRANSITION\_ACTION\_IN(rlbox\_transition::CALLBACK,}
+\DoxyCodeLine{268                                  \textcolor{keyword}{nullptr} \textcolor{comment}{/* func\_name */},}
+\DoxyCodeLine{269                                  key \textcolor{comment}{/* func\_ptr */},}
+\DoxyCodeLine{270                                  sandbox.transition\_state);}
+\DoxyCodeLine{271     \});}
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{273     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_void\_v<T\_Func\_Ret>) \{}
+\DoxyCodeLine{274       (*target\_fn\_ptr)(}
+\DoxyCodeLine{275         sandbox,}
+\DoxyCodeLine{276         sandbox.template sandbox\_callback\_intercept\_convert\_param<T\_Args>(}
+\DoxyCodeLine{277           sandbox, args)...);}
+\DoxyCodeLine{278       \textcolor{keywordflow}{return};}
+\DoxyCodeLine{279     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{280       \textcolor{keyword}{auto} tainted\_ret = (*target\_fn\_ptr)(}
+\DoxyCodeLine{281         sandbox,}
+\DoxyCodeLine{282         sandbox.template sandbox\_callback\_intercept\_convert\_param<T\_Args>(}
+\DoxyCodeLine{283           sandbox, args)...);}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285       \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{286       convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx> ret;}
+\DoxyCodeLine{287       convert\_type<T\_Sbx,}
+\DoxyCodeLine{288                    adjust\_type\_direction::TO\_SANDBOX,}
+\DoxyCodeLine{289                    adjust\_type\_context::SANDBOX>(}
+\DoxyCodeLine{290         ret,}
+\DoxyCodeLine{291         tainted\_ret.get\_raw\_value\_ref(),}
+\DoxyCodeLine{292         \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
+\DoxyCodeLine{293         \&sandbox);}
+\DoxyCodeLine{294       \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{295     \}}
+\DoxyCodeLine{296   \}}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{302   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{303   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} unregister\_callback(\textcolor{keywordtype}{void}* key)}
+\DoxyCodeLine{304   \{}
+\DoxyCodeLine{305     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
+\DoxyCodeLine{306     \textcolor{comment}{// cleanup callbacks after sandbox destruction}}
+\DoxyCodeLine{307     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
+\DoxyCodeLine{308       \textcolor{keywordflow}{return};}
+\DoxyCodeLine{309     \}}
 \DoxyCodeLine{310 }
-\DoxyCodeLine{311     std::lock\_guard<std::mutex> lock(callback\_lock);}
-\DoxyCodeLine{312     \textcolor{keyword}{auto} el\_ref = std::find(callback\_keys.begin(), callback\_keys.end(), key);}
-\DoxyCodeLine{313     detail::dynamic\_check(}
-\DoxyCodeLine{314       el\_ref != callback\_keys.end(),}
-\DoxyCodeLine{315       \textcolor{stringliteral}{"{}Unexpected state. Unregistering a callback that was never registered."{}});}
-\DoxyCodeLine{316     callback\_keys.erase(el\_ref);}
-\DoxyCodeLine{317   \}}
-\DoxyCodeLine{318 }
-\DoxyCodeLine{319   \textcolor{keyword}{static} T\_Sbx* find\_sandbox\_from\_example(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_sandbox\_ptr)}
-\DoxyCodeLine{320   \{}
-\DoxyCodeLine{321     detail::dynamic\_check(}
-\DoxyCodeLine{322       example\_sandbox\_ptr != \textcolor{keyword}{nullptr},}
-\DoxyCodeLine{323       \textcolor{stringliteral}{"{}Internal error: received a null example pointer. Please file a bug."{}});}
-\DoxyCodeLine{324 }
-\DoxyCodeLine{325     RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, sandbox\_list\_lock);}
-\DoxyCodeLine{326     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} sandbox\_v : sandbox\_list) \{}
-\DoxyCodeLine{327       \textcolor{keyword}{auto} sandbox = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}*\textcolor{keyword}{>}(sandbox\_v);}
-\DoxyCodeLine{328       \textcolor{keywordflow}{if} (sandbox-\/>\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(example\_sandbox\_ptr)) \{}
-\DoxyCodeLine{329         \textcolor{keywordflow}{return} sandbox;}
-\DoxyCodeLine{330       \}}
-\DoxyCodeLine{331     \}}
-\DoxyCodeLine{332 }
-\DoxyCodeLine{333     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{334   \}}
-\DoxyCodeLine{335 }
-\DoxyCodeLine{336   \textcolor{keyword}{template}<\textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{337   \textcolor{keyword}{static} \textcolor{keyword}{auto} impl\_create\_sandbox\_helper(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}* this\_ptr, T\_Args... args) \{}
-\DoxyCodeLine{338     \textcolor{keywordflow}{return} this\_ptr-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
-\DoxyCodeLine{339   \}}
-\DoxyCodeLine{340 }
-\DoxyCodeLine{341 \textcolor{keyword}{public}:}
-\DoxyCodeLine{347   \textcolor{keywordtype}{void}* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a61db4d3c217ee7acbc40e0bab23449e8}{sandbox\_storage}};}
-\DoxyCodeLine{348 }
-\DoxyCodeLine{349 \textcolor{comment}{  /***** Function to adjust for custom machine models *****/}}
-\DoxyCodeLine{350 }
-\DoxyCodeLine{351   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{352   \textcolor{keyword}{using} convert\_to\_sandbox\_equivalent\_nonclass\_t =}
-\DoxyCodeLine{353     detail::convert\_base\_types\_t<T,}
-\DoxyCodeLine{354                                  \textcolor{keyword}{typename} T\_Sbx::T\_ShortType,}
-\DoxyCodeLine{355                                  \textcolor{keyword}{typename} T\_Sbx::T\_IntType,}
-\DoxyCodeLine{356                                  \textcolor{keyword}{typename} T\_Sbx::T\_LongType,}
-\DoxyCodeLine{357                                  \textcolor{keyword}{typename} T\_Sbx::T\_LongLongType,}
-\DoxyCodeLine{358                                  \textcolor{keyword}{typename} T\_Sbx::T\_PointerType>;}
-\DoxyCodeLine{359 }
-\DoxyCodeLine{360   T\_Sbx* get\_sandbox\_impl() \{ \textcolor{keywordflow}{return} \textcolor{keyword}{this}; \}}
-\DoxyCodeLine{361 }
-\DoxyCodeLine{368   \textcolor{keyword}{template}<\textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{369   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a8d10eac11ee829943be5aa3bb8f43137}{create\_sandbox}}(T\_Args... args)}
-\DoxyCodeLine{370   \{}
-\DoxyCodeLine{371 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
-\DoxyCodeLine{372     \textcolor{comment}{// Warm up the timer. The first call is always slow (at least on the test}}
-\DoxyCodeLine{373     \textcolor{comment}{// platform)}}
-\DoxyCodeLine{374     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 10; i++) \{}
-\DoxyCodeLine{375       \textcolor{keyword}{auto} val = high\_resolution\_clock::now();}
-\DoxyCodeLine{376       RLBOX\_UNUSED(val);}
-\DoxyCodeLine{377     \}}
-\DoxyCodeLine{378 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{379     \textcolor{keyword}{auto} expected = Sandbox\_Status::NOT\_CREATED;}
-\DoxyCodeLine{380     \textcolor{keywordtype}{bool} success = sandbox\_created.compare\_exchange\_strong(}
-\DoxyCodeLine{381       expected, Sandbox\_Status::INITIALIZING \textcolor{comment}{/* desired */});}
-\DoxyCodeLine{382     detail::dynamic\_check(}
-\DoxyCodeLine{383       success,}
-\DoxyCodeLine{384       \textcolor{stringliteral}{"{}create\_sandbox called when sandbox already created/is being "{}}}
-\DoxyCodeLine{385       \textcolor{stringliteral}{"{}created concurrently"{}});}
-\DoxyCodeLine{386 }
-\DoxyCodeLine{387     \textcolor{keyword}{using} T\_Result = rlbox::detail::polyfill::invoke\_result\_t<\textcolor{keyword}{decltype}(impl\_create\_sandbox\_helper<T\_Args...>), \textcolor{keyword}{decltype}(\textcolor{keyword}{this}), T\_Args...>;}
-\DoxyCodeLine{388 }
-\DoxyCodeLine{389     \textcolor{keywordtype}{bool} created = \textcolor{keyword}{true};}
-\DoxyCodeLine{390     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same\_v<T\_Result, void>) \{}
-\DoxyCodeLine{391       this-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
-\DoxyCodeLine{392     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same\_v<T\_Result, bool>) \{}
-\DoxyCodeLine{393       created = this-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
-\DoxyCodeLine{394     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{395       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{396         (!std::is\_same\_v<T\_Result, void> \&\& !std::is\_same\_v<T\_Result, bool>),}
-\DoxyCodeLine{397         \textcolor{stringliteral}{"{}Expected impl\_create\_sandbox to return void or a boolean"{}}}
-\DoxyCodeLine{398       );}
-\DoxyCodeLine{399     \}}
-\DoxyCodeLine{400 }
-\DoxyCodeLine{401     \textcolor{keywordflow}{if} (created) \{}
-\DoxyCodeLine{402       sandbox\_created.store(Sandbox\_Status::CREATED);}
-\DoxyCodeLine{403       RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, sandbox\_list\_lock);}
-\DoxyCodeLine{404       sandbox\_list.push\_back(\textcolor{keyword}{this});}
-\DoxyCodeLine{405     \}}
-\DoxyCodeLine{406 }
-\DoxyCodeLine{407     \textcolor{keywordflow}{return} created;}
-\DoxyCodeLine{408   \}}
-\DoxyCodeLine{409 }
-\DoxyCodeLine{413   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}{destroy\_sandbox}}()}
-\DoxyCodeLine{414   \{}
-\DoxyCodeLine{415     \textcolor{keyword}{auto} expected = Sandbox\_Status::CREATED;}
-\DoxyCodeLine{416     \textcolor{keywordtype}{bool} success = sandbox\_created.compare\_exchange\_strong(}
-\DoxyCodeLine{417       expected, Sandbox\_Status::CLEANING\_UP \textcolor{comment}{/* desired */});}
-\DoxyCodeLine{418 }
-\DoxyCodeLine{419     detail::dynamic\_check(}
-\DoxyCodeLine{420       success,}
-\DoxyCodeLine{421       \textcolor{stringliteral}{"{}destroy\_sandbox called without sandbox creation/is being "{}}}
-\DoxyCodeLine{422       \textcolor{stringliteral}{"{}destroyed concurrently"{}});}
-\DoxyCodeLine{423 }
-\DoxyCodeLine{424     \{}
-\DoxyCodeLine{425       RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, sandbox\_list\_lock);}
-\DoxyCodeLine{426       \textcolor{keyword}{auto} el\_ref = std::find(sandbox\_list.begin(), sandbox\_list.end(), \textcolor{keyword}{this});}
-\DoxyCodeLine{427       detail::dynamic\_check(}
-\DoxyCodeLine{428         el\_ref != sandbox\_list.end(),}
-\DoxyCodeLine{429         \textcolor{stringliteral}{"{}Unexpected state. Destroying a sandbox that was never initialized."{}});}
-\DoxyCodeLine{430       sandbox\_list.erase(el\_ref);}
-\DoxyCodeLine{431     \}}
-\DoxyCodeLine{432 }
-\DoxyCodeLine{433     sandbox\_created.store(Sandbox\_Status::NOT\_CREATED);}
-\DoxyCodeLine{434     \textcolor{keywordflow}{return} this-\/>impl\_destroy\_sandbox();}
-\DoxyCodeLine{435   \}}
-\DoxyCodeLine{436 }
-\DoxyCodeLine{437   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{438   \textcolor{keyword}{inline} T get\_unsandboxed\_pointer(}
-\DoxyCodeLine{439     convert\_to\_sandbox\_equivalent\_nonclass\_t<T> p)\textcolor{keyword}{ const}}
-\DoxyCodeLine{440 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{441     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
-\DoxyCodeLine{442     \textcolor{keywordflow}{if} (p == 0) \{}
-\DoxyCodeLine{443       \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{444     \}}
-\DoxyCodeLine{445     \textcolor{keyword}{auto} ret = this-\/>\textcolor{keyword}{template} impl\_get\_unsandboxed\_pointer<T>(p);}
-\DoxyCodeLine{446     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\textcolor{keyword}{>}(ret);}
-\DoxyCodeLine{447   \}}
-\DoxyCodeLine{448 }
-\DoxyCodeLine{449   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{450   \textcolor{keyword}{inline} convert\_to\_sandbox\_equivalent\_nonclass\_t<T> get\_sandboxed\_pointer(}
-\DoxyCodeLine{451     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)\textcolor{keyword}{ const}}
-\DoxyCodeLine{452 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{453     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
-\DoxyCodeLine{454     \textcolor{keywordflow}{if} (p == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{455       \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{456     \}}
-\DoxyCodeLine{457     \textcolor{keywordflow}{return} this-\/>\textcolor{keyword}{template} impl\_get\_sandboxed\_pointer<T>(p);}
-\DoxyCodeLine{458   \}}
-\DoxyCodeLine{459 }
-\DoxyCodeLine{460   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{461   \textcolor{keyword}{static} \textcolor{keyword}{inline} T get\_unsandboxed\_pointer\_no\_ctx(}
-\DoxyCodeLine{462     convert\_to\_sandbox\_equivalent\_nonclass\_t<T> p,}
-\DoxyCodeLine{463     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr)}
-\DoxyCodeLine{464   \{}
-\DoxyCodeLine{465     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
-\DoxyCodeLine{466     \textcolor{keywordflow}{if} (p == 0) \{}
-\DoxyCodeLine{467       \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{468     \}}
-\DoxyCodeLine{469     \textcolor{keyword}{auto} ret = T\_Sbx::template impl\_get\_unsandboxed\_pointer\_no\_ctx<T>(}
-\DoxyCodeLine{470       p, example\_unsandboxed\_ptr, find\_sandbox\_from\_example);}
-\DoxyCodeLine{471     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\textcolor{keyword}{>}(ret);}
-\DoxyCodeLine{472   \}}
-\DoxyCodeLine{473 }
-\DoxyCodeLine{474   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{475   \textcolor{keyword}{static} \textcolor{keyword}{inline} convert\_to\_sandbox\_equivalent\_nonclass\_t<T>}
-\DoxyCodeLine{476   get\_sandboxed\_pointer\_no\_ctx(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p,}
-\DoxyCodeLine{477                                \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr)}
-\DoxyCodeLine{478   \{}
-\DoxyCodeLine{479     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
-\DoxyCodeLine{480     \textcolor{keywordflow}{if} (p == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{481       \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{482     \}}
-\DoxyCodeLine{483     \textcolor{keywordflow}{return} T\_Sbx::template impl\_get\_sandboxed\_pointer\_no\_ctx<T>(}
-\DoxyCodeLine{484       p, example\_unsandboxed\_ptr, find\_sandbox\_from\_example);}
-\DoxyCodeLine{485   \}}
-\DoxyCodeLine{486 }
-\DoxyCodeLine{497   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{498   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a8ba59f981ba2b463e8e3629b22cc3bee}{malloc\_in\_sandbox}}()}
-\DoxyCodeLine{499   \{}
-\DoxyCodeLine{500     \textcolor{keyword}{const} uint32\_t defaultCount = 1;}
-\DoxyCodeLine{501     \textcolor{keywordflow}{return} malloc\_in\_sandbox<T>(defaultCount);}
-\DoxyCodeLine{502   \}}
-\DoxyCodeLine{503 }
-\DoxyCodeLine{516   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{517   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a5f7bca36b7a7a8df4c9212ceff78d5be}{malloc\_in\_sandbox}}(uint32\_t count)}
-\DoxyCodeLine{518   \{}
-\DoxyCodeLine{519     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
-\DoxyCodeLine{520     \textcolor{comment}{// malloc after sandbox destruction}}
-\DoxyCodeLine{521     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
-\DoxyCodeLine{522       \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{523     \}}
-\DoxyCodeLine{524 }
-\DoxyCodeLine{525     detail::dynamic\_check(count != 0, \textcolor{stringliteral}{"{}Malloc tried to allocate 0 bytes"{}});}
-\DoxyCodeLine{526     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(T) >= std::numeric\_limits<uint32\_t>::max()) \{}
-\DoxyCodeLine{527       rlbox\_detail\_static\_fail\_because(\textcolor{keyword}{sizeof}(T) >=}
-\DoxyCodeLine{528                                          std::numeric\_limits<uint32\_t>::max(),}
-\DoxyCodeLine{529                                        \textcolor{stringliteral}{"{}Tried to allocate an object over 4GB."{}});}
-\DoxyCodeLine{530     \}}
-\DoxyCodeLine{531     \textcolor{keyword}{auto} total\_size = \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(\textcolor{keyword}{sizeof}(T)) * count;}
-\DoxyCodeLine{532     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(size\_t) == 4) \{}
-\DoxyCodeLine{533       \textcolor{comment}{// On a 32-\/bit platform, we need to make sure that total\_size is not >=4GB}}
-\DoxyCodeLine{534       detail::dynamic\_check(total\_size < std::numeric\_limits<uint32\_t>::max(),}
-\DoxyCodeLine{535                             \textcolor{stringliteral}{"{}Tried to allocate memory over 4GB"{}});}
-\DoxyCodeLine{536     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(size\_t) != 8) \{}
-\DoxyCodeLine{537       \textcolor{comment}{// Double check we are on a 64-\/bit platform}}
-\DoxyCodeLine{538       \textcolor{comment}{// Note for static checks we need to have some dependence on T, so adding}}
-\DoxyCodeLine{539       \textcolor{comment}{// a dummy}}
-\DoxyCodeLine{540       \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} dummy = \textcolor{keyword}{sizeof}(T) >= 0;}
-\DoxyCodeLine{541       rlbox\_detail\_static\_fail\_because(dummy \&\& \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{size\_t}) != 8,}
-\DoxyCodeLine{542                                        \textcolor{stringliteral}{"{}Expected 32 or 64 bit platform."{}});}
-\DoxyCodeLine{543     \}}
-\DoxyCodeLine{544     \textcolor{keyword}{auto} ptr\_in\_sandbox = this-\/>impl\_malloc\_in\_sandbox(total\_size);}
-\DoxyCodeLine{545     \textcolor{keyword}{auto} ptr = get\_unsandboxed\_pointer<T*>(ptr\_in\_sandbox);}
-\DoxyCodeLine{546     \textcolor{keywordflow}{if} (!ptr) \{}
-\DoxyCodeLine{547       \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}}(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{548     \}}
-\DoxyCodeLine{549     detail::dynamic\_check(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(ptr),}
-\DoxyCodeLine{550                           \textcolor{stringliteral}{"{}Malloc returned pointer outside the sandbox memory"{}});}
-\DoxyCodeLine{551     \textcolor{keyword}{auto} ptr\_end = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(ptr + (count -\/ 1));}
-\DoxyCodeLine{552     detail::dynamic\_check(}
-\DoxyCodeLine{553       \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\_in\_same\_sandbox}}(ptr, \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(ptr\_end)),}
-\DoxyCodeLine{554       \textcolor{stringliteral}{"{}Malloc returned a pointer whose range goes beyond sandbox memory"{}});}
-\DoxyCodeLine{555     \textcolor{keyword}{auto} cast\_ptr = \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(ptr);}
-\DoxyCodeLine{556     \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(cast\_ptr);}
-\DoxyCodeLine{557   \}}
-\DoxyCodeLine{558 }
-\DoxyCodeLine{564   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{565   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} ptr)}
-\DoxyCodeLine{566   \{}
-\DoxyCodeLine{567     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
-\DoxyCodeLine{568     \textcolor{comment}{// free after sandbox destruction}}
-\DoxyCodeLine{569     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
-\DoxyCodeLine{570       \textcolor{keywordflow}{return};}
-\DoxyCodeLine{571     \}}
-\DoxyCodeLine{572 }
-\DoxyCodeLine{573     this-\/>impl\_free\_in\_sandbox(ptr.get\_raw\_sandbox\_value(*\textcolor{keyword}{this}));}
-\DoxyCodeLine{574   \}}
-\DoxyCodeLine{575 }
-\DoxyCodeLine{581   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{582   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ad26f351fa58e8fa013e79afb996dc807}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& ptr\_ref)}
-\DoxyCodeLine{583   \{}
-\DoxyCodeLine{584     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ptr = ptr\_ref;}
-\DoxyCodeLine{585     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(ptr);}
-\DoxyCodeLine{586   \}}
-\DoxyCodeLine{587 }
-\DoxyCodeLine{593   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{594   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a75636dbe30d516a71f13841a4a64a854}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted__opaque}{tainted\_opaque<T, T\_Sbx>}} ptr\_opaque)}
-\DoxyCodeLine{595   \{}
-\DoxyCodeLine{596     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ptr = from\_opaque(ptr\_opaque);}
-\DoxyCodeLine{597     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(ptr);}
-\DoxyCodeLine{598   \}}
-\DoxyCodeLine{599 }
-\DoxyCodeLine{604   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\_in\_same\_sandbox}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p1, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p2)}
-\DoxyCodeLine{605   \{}
-\DoxyCodeLine{606     \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} num\_args =}
-\DoxyCodeLine{607       detail::func\_arg\_nums\_v<\textcolor{keyword}{decltype}(T\_Sbx::impl\_is\_in\_same\_sandbox)>;}
-\DoxyCodeLine{608     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (num\_args == 2) \{}
-\DoxyCodeLine{609       \textcolor{keywordflow}{return} T\_Sbx::impl\_is\_in\_same\_sandbox(p1, p2);}
-\DoxyCodeLine{610     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{611       \textcolor{keywordflow}{return} T\_Sbx::impl\_is\_in\_same\_sandbox(p1, p2, find\_sandbox\_from\_example);}
-\DoxyCodeLine{612     \}}
-\DoxyCodeLine{613   \}}
-\DoxyCodeLine{614 }
-\DoxyCodeLine{619   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)}
-\DoxyCodeLine{620   \{}
-\DoxyCodeLine{621     \textcolor{keywordflow}{return} this-\/>impl\_is\_pointer\_in\_sandbox\_memory(p);}
-\DoxyCodeLine{622   \}}
-\DoxyCodeLine{623 }
-\DoxyCodeLine{628   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_afc6c3f229b2807517c54cc120dfda941}{is\_pointer\_in\_app\_memory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)}
-\DoxyCodeLine{629   \{}
-\DoxyCodeLine{630     \textcolor{keywordflow}{return} this-\/>impl\_is\_pointer\_in\_app\_memory(p);}
-\DoxyCodeLine{631   \}}
-\DoxyCodeLine{632 }
-\DoxyCodeLine{633   \textcolor{keyword}{inline} \textcolor{keywordtype}{size\_t} get\_total\_memory() \{ \textcolor{keywordflow}{return} this-\/>impl\_get\_total\_memory(); \}}
-\DoxyCodeLine{634 }
-\DoxyCodeLine{635   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* get\_memory\_location()}
-\DoxyCodeLine{636   \{}
-\DoxyCodeLine{637     \textcolor{keywordflow}{return} this-\/>impl\_get\_memory\_location();}
-\DoxyCodeLine{638   \}}
-\DoxyCodeLine{639 }
-\DoxyCodeLine{640   \textcolor{keywordtype}{void}* get\_transition\_state() \{ \textcolor{keywordflow}{return} transition\_state; \}}
-\DoxyCodeLine{641 }
-\DoxyCodeLine{642   \textcolor{keywordtype}{void} set\_transition\_state(\textcolor{keywordtype}{void}* new\_state) \{ transition\_state = new\_state; \}}
-\DoxyCodeLine{643 }
-\DoxyCodeLine{653   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{654   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_aea91172b5bbf836eb7bb3855a215815d}{INTERNAL\_grant\_access}}(T* src,}
-\DoxyCodeLine{655                                                   \textcolor{keywordtype}{size\_t} num,}
-\DoxyCodeLine{656                                                   \textcolor{keywordtype}{bool}\& success)}
-\DoxyCodeLine{657   \{}
-\DoxyCodeLine{658     \textcolor{keyword}{auto} ret = this-\/>impl\_grant\_access(src, num, success);}
-\DoxyCodeLine{659     \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(ret);}
-\DoxyCodeLine{660   \}}
-\DoxyCodeLine{661 }
-\DoxyCodeLine{671   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{672   \textcolor{keyword}{inline} T* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_af9f02cae38115c7d4228ec2578b90190}{INTERNAL\_deny\_access}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} src,}
-\DoxyCodeLine{673                                  \textcolor{keywordtype}{size\_t} num,}
-\DoxyCodeLine{674                                  \textcolor{keywordtype}{bool}\& success)}
-\DoxyCodeLine{675   \{}
-\DoxyCodeLine{676     \textcolor{keyword}{auto} ret =}
-\DoxyCodeLine{677       this-\/>impl\_deny\_access(src.INTERNAL\_unverified\_safe(), num, success);}
-\DoxyCodeLine{678     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{679   \}}
-\DoxyCodeLine{680 }
-\DoxyCodeLine{681   \textcolor{keywordtype}{void}* lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
-\DoxyCodeLine{682   \{}
-\DoxyCodeLine{683     \{}
-\DoxyCodeLine{684       RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, func\_ptr\_cache\_lock);}
-\DoxyCodeLine{685 }
-\DoxyCodeLine{686       \textcolor{keyword}{auto} func\_ptr\_ref = func\_ptr\_map.find(func\_name);}
-\DoxyCodeLine{687       \textcolor{keywordflow}{if} (func\_ptr\_ref != func\_ptr\_map.end()) \{}
-\DoxyCodeLine{688         \textcolor{keywordflow}{return} func\_ptr\_ref-\/>second;}
-\DoxyCodeLine{689       \}}
-\DoxyCodeLine{690     \}}
-\DoxyCodeLine{691 }
-\DoxyCodeLine{692     \textcolor{keywordtype}{void}* func\_ptr = this-\/>impl\_lookup\_symbol(func\_name);}
-\DoxyCodeLine{693     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, func\_ptr\_cache\_lock);}
-\DoxyCodeLine{694     func\_ptr\_map[func\_name] = func\_ptr;}
-\DoxyCodeLine{695     \textcolor{keywordflow}{return} func\_ptr;}
-\DoxyCodeLine{696   \}}
-\DoxyCodeLine{697 }
-\DoxyCodeLine{698   \textcolor{keywordtype}{void}* internal\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
-\DoxyCodeLine{699   \{}
-\DoxyCodeLine{700     \{}
-\DoxyCodeLine{701       RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, func\_ptr\_cache\_lock);}
-\DoxyCodeLine{702 }
-\DoxyCodeLine{703       \textcolor{keyword}{auto} func\_ptr\_ref = func\_ptr\_map.find(func\_name);}
-\DoxyCodeLine{704       \textcolor{keywordflow}{if} (func\_ptr\_ref != func\_ptr\_map.end()) \{}
-\DoxyCodeLine{705         \textcolor{keywordflow}{return} func\_ptr\_ref-\/>second;}
-\DoxyCodeLine{706       \}}
-\DoxyCodeLine{707     \}}
-\DoxyCodeLine{708 }
-\DoxyCodeLine{709     \textcolor{keywordtype}{void}* func\_ptr = 0;}
-\DoxyCodeLine{710     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr}(rlbox::detail::has\_member\_using\_needs\_internal\_lookup\_symbol\_v<T\_Sbx>) \{}
-\DoxyCodeLine{711       func\_ptr = this-\/>impl\_internal\_lookup\_symbol(func\_name);}
-\DoxyCodeLine{712     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{713       func\_ptr = this-\/>impl\_lookup\_symbol(func\_name);}
-\DoxyCodeLine{714     \}}
-\DoxyCodeLine{715     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, func\_ptr\_cache\_lock);}
-\DoxyCodeLine{716     func\_ptr\_map[func\_name] = func\_ptr;}
-\DoxyCodeLine{717     \textcolor{keywordflow}{return} func\_ptr;}
-\DoxyCodeLine{718   \}}
-\DoxyCodeLine{719 }
-\DoxyCodeLine{720   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
-\DoxyCodeLine{721   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{722   \textcolor{keyword}{inline} \textcolor{keyword}{auto} INTERNAL\_invoke\_with\_func\_name(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name,}
-\DoxyCodeLine{723                                              T\_Args\&\&... params)}
-\DoxyCodeLine{724   \{}
-\DoxyCodeLine{725     \textcolor{keywordflow}{return} INTERNAL\_invoke\_with\_func\_ptr<T, T\_Args...>(}
-\DoxyCodeLine{726       func\_name, lookup\_symbol(func\_name), std::forward<T\_Args>(params)...);}
+\DoxyCodeLine{311     this-\/>\textcolor{keyword}{template} impl\_unregister\_callback<}
+\DoxyCodeLine{312       detail::convert\_to\_sandbox\_equivalent\_t<T\_Ret, T\_Sbx>,}
+\DoxyCodeLine{313       detail::convert\_to\_sandbox\_equivalent\_t<T\_Args, T\_Sbx>...>(key);}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315     std::lock\_guard<std::mutex> lock(callback\_lock);}
+\DoxyCodeLine{316     \textcolor{keyword}{auto} el\_ref = std::find(callback\_keys.begin(), callback\_keys.end(), key);}
+\DoxyCodeLine{317     detail::dynamic\_check(}
+\DoxyCodeLine{318       el\_ref != callback\_keys.end(),}
+\DoxyCodeLine{319       \textcolor{stringliteral}{"{}Unexpected state. Unregistering a callback that was never registered."{}});}
+\DoxyCodeLine{320     callback\_keys.erase(el\_ref);}
+\DoxyCodeLine{321   \}}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323   \textcolor{keyword}{static} T\_Sbx* find\_sandbox\_from\_example(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_sandbox\_ptr)}
+\DoxyCodeLine{324   \{}
+\DoxyCodeLine{325     detail::dynamic\_check(}
+\DoxyCodeLine{326       example\_sandbox\_ptr != \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{327       \textcolor{stringliteral}{"{}Internal error: received a null example pointer. Please file a bug."{}});}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329     RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, sandbox\_list\_lock);}
+\DoxyCodeLine{330     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} sandbox\_v : sandbox\_list) \{}
+\DoxyCodeLine{331       \textcolor{keyword}{auto} sandbox = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}*\textcolor{keyword}{>}(sandbox\_v);}
+\DoxyCodeLine{332       \textcolor{keywordflow}{if} (sandbox-\/>\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(example\_sandbox\_ptr)) \{}
+\DoxyCodeLine{333         \textcolor{keywordflow}{return} sandbox;}
+\DoxyCodeLine{334       \}}
+\DoxyCodeLine{335     \}}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{338   \}}
+\DoxyCodeLine{339 }
+\DoxyCodeLine{340   \textcolor{keyword}{template}<\textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{341   \textcolor{keyword}{static} \textcolor{keyword}{auto} impl\_create\_sandbox\_helper(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}* this\_ptr,}
+\DoxyCodeLine{342                                          T\_Args... args)}
+\DoxyCodeLine{343   \{}
+\DoxyCodeLine{344     \textcolor{keywordflow}{return} this\_ptr-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
+\DoxyCodeLine{345   \}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347 \textcolor{keyword}{public}:}
+\DoxyCodeLine{353   \textcolor{keywordtype}{void}* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a61db4d3c217ee7acbc40e0bab23449e8}{sandbox\_storage}};}
+\DoxyCodeLine{354 }
+\DoxyCodeLine{355 \textcolor{comment}{  /***** Function to adjust for custom machine models *****/}}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{358   \textcolor{keyword}{using} convert\_to\_sandbox\_equivalent\_nonclass\_t =}
+\DoxyCodeLine{359     detail::convert\_base\_types\_t<T,}
+\DoxyCodeLine{360                                  \textcolor{keyword}{typename} T\_Sbx::T\_ShortType,}
+\DoxyCodeLine{361                                  \textcolor{keyword}{typename} T\_Sbx::T\_IntType,}
+\DoxyCodeLine{362                                  \textcolor{keyword}{typename} T\_Sbx::T\_LongType,}
+\DoxyCodeLine{363                                  \textcolor{keyword}{typename} T\_Sbx::T\_LongLongType,}
+\DoxyCodeLine{364                                  \textcolor{keyword}{typename} T\_Sbx::T\_PointerType>;}
+\DoxyCodeLine{365 }
+\DoxyCodeLine{366   T\_Sbx* get\_sandbox\_impl() \{ \textcolor{keywordflow}{return} \textcolor{keyword}{this}; \}}
+\DoxyCodeLine{367 }
+\DoxyCodeLine{374   \textcolor{keyword}{template}<\textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{375   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a8d10eac11ee829943be5aa3bb8f43137}{create\_sandbox}}(T\_Args... args)}
+\DoxyCodeLine{376   \{}
+\DoxyCodeLine{377 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
+\DoxyCodeLine{378     \textcolor{comment}{// Warm up the timer. The first call is always slow (at least on the test}}
+\DoxyCodeLine{379     \textcolor{comment}{// platform)}}
+\DoxyCodeLine{380     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 10; i++) \{}
+\DoxyCodeLine{381       \textcolor{keyword}{auto} val = high\_resolution\_clock::now();}
+\DoxyCodeLine{382       RLBOX\_UNUSED(val);}
+\DoxyCodeLine{383     \}}
+\DoxyCodeLine{384 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{385     \textcolor{keyword}{auto} expected = Sandbox\_Status::NOT\_CREATED;}
+\DoxyCodeLine{386     \textcolor{keywordtype}{bool} success = sandbox\_created.compare\_exchange\_strong(}
+\DoxyCodeLine{387       expected, Sandbox\_Status::INITIALIZING \textcolor{comment}{/* desired */});}
+\DoxyCodeLine{388     detail::dynamic\_check(}
+\DoxyCodeLine{389       success,}
+\DoxyCodeLine{390       \textcolor{stringliteral}{"{}create\_sandbox called when sandbox already created/is being "{}}}
+\DoxyCodeLine{391       \textcolor{stringliteral}{"{}created concurrently"{}});}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393     \textcolor{keyword}{using} T\_Result = rlbox::detail::polyfill::invoke\_result\_t<}
+\DoxyCodeLine{394       \textcolor{keyword}{decltype}(impl\_create\_sandbox\_helper<T\_Args...>),}
+\DoxyCodeLine{395       \textcolor{keyword}{decltype}(\textcolor{keyword}{this}),}
+\DoxyCodeLine{396       T\_Args...>;}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398     \textcolor{keywordtype}{bool} created = \textcolor{keyword}{true};}
+\DoxyCodeLine{399     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same\_v<T\_Result, void>) \{}
+\DoxyCodeLine{400       this-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
+\DoxyCodeLine{401     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same\_v<T\_Result, bool>) \{}
+\DoxyCodeLine{402       created = this-\/>impl\_create\_sandbox(std::forward<T\_Args>(args)...);}
+\DoxyCodeLine{403     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{404       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{405         (!std::is\_same\_v<T\_Result, void> \&\& !std::is\_same\_v<T\_Result, bool>),}
+\DoxyCodeLine{406         \textcolor{stringliteral}{"{}Expected impl\_create\_sandbox to return void or a boolean"{}});}
+\DoxyCodeLine{407     \}}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409     \textcolor{keywordflow}{if} (created) \{}
+\DoxyCodeLine{410       sandbox\_created.store(Sandbox\_Status::CREATED);}
+\DoxyCodeLine{411       RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, sandbox\_list\_lock);}
+\DoxyCodeLine{412       sandbox\_list.push\_back(\textcolor{keyword}{this});}
+\DoxyCodeLine{413     \}}
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415     \textcolor{keywordflow}{return} created;}
+\DoxyCodeLine{416   \}}
+\DoxyCodeLine{417 }
+\DoxyCodeLine{421   \textcolor{keyword}{inline} \textcolor{keyword}{auto} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ac2be161ed2183fa8bc319232a8d74da6}{destroy\_sandbox}}()}
+\DoxyCodeLine{422   \{}
+\DoxyCodeLine{423     \textcolor{keyword}{auto} expected = Sandbox\_Status::CREATED;}
+\DoxyCodeLine{424     \textcolor{keywordtype}{bool} success = sandbox\_created.compare\_exchange\_strong(}
+\DoxyCodeLine{425       expected, Sandbox\_Status::CLEANING\_UP \textcolor{comment}{/* desired */});}
+\DoxyCodeLine{426 }
+\DoxyCodeLine{427     detail::dynamic\_check(}
+\DoxyCodeLine{428       success,}
+\DoxyCodeLine{429       \textcolor{stringliteral}{"{}destroy\_sandbox called without sandbox creation/is being "{}}}
+\DoxyCodeLine{430       \textcolor{stringliteral}{"{}destroyed concurrently"{}});}
+\DoxyCodeLine{431 }
+\DoxyCodeLine{432     \{}
+\DoxyCodeLine{433       RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, sandbox\_list\_lock);}
+\DoxyCodeLine{434       \textcolor{keyword}{auto} el\_ref = std::find(sandbox\_list.begin(), sandbox\_list.end(), \textcolor{keyword}{this});}
+\DoxyCodeLine{435       detail::dynamic\_check(}
+\DoxyCodeLine{436         el\_ref != sandbox\_list.end(),}
+\DoxyCodeLine{437         \textcolor{stringliteral}{"{}Unexpected state. Destroying a sandbox that was never initialized."{}});}
+\DoxyCodeLine{438       sandbox\_list.erase(el\_ref);}
+\DoxyCodeLine{439     \}}
+\DoxyCodeLine{440 }
+\DoxyCodeLine{441     sandbox\_created.store(Sandbox\_Status::NOT\_CREATED);}
+\DoxyCodeLine{442     \textcolor{keywordflow}{return} this-\/>impl\_destroy\_sandbox();}
+\DoxyCodeLine{443   \}}
+\DoxyCodeLine{444 }
+\DoxyCodeLine{445   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{446   \textcolor{keyword}{inline} T get\_unsandboxed\_pointer(}
+\DoxyCodeLine{447     convert\_to\_sandbox\_equivalent\_nonclass\_t<T> p)\textcolor{keyword}{ const}}
+\DoxyCodeLine{448 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{449     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{450     \textcolor{keywordflow}{if} (p == 0) \{}
+\DoxyCodeLine{451       \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{452     \}}
+\DoxyCodeLine{453     \textcolor{keyword}{auto} ret = this-\/>\textcolor{keyword}{template} impl\_get\_unsandboxed\_pointer<T>(p);}
+\DoxyCodeLine{454     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\textcolor{keyword}{>}(ret);}
+\DoxyCodeLine{455   \}}
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{458   \textcolor{keyword}{inline} convert\_to\_sandbox\_equivalent\_nonclass\_t<T> get\_sandboxed\_pointer(}
+\DoxyCodeLine{459     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)\textcolor{keyword}{ const}}
+\DoxyCodeLine{460 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{461     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{462     \textcolor{keywordflow}{if} (p == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{463       \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{464     \}}
+\DoxyCodeLine{465     \textcolor{keywordflow}{return} this-\/>\textcolor{keyword}{template} impl\_get\_sandboxed\_pointer<T>(p);}
+\DoxyCodeLine{466   \}}
+\DoxyCodeLine{467 }
+\DoxyCodeLine{468   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{469   \textcolor{keyword}{static} \textcolor{keyword}{inline} T get\_unsandboxed\_pointer\_no\_ctx(}
+\DoxyCodeLine{470     convert\_to\_sandbox\_equivalent\_nonclass\_t<T> p,}
+\DoxyCodeLine{471     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr)}
+\DoxyCodeLine{472   \{}
+\DoxyCodeLine{473     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{474     \textcolor{keywordflow}{if} (p == 0) \{}
+\DoxyCodeLine{475       \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{476     \}}
+\DoxyCodeLine{477     \textcolor{keyword}{auto} ret = T\_Sbx::template impl\_get\_unsandboxed\_pointer\_no\_ctx<T>(}
+\DoxyCodeLine{478       p, example\_unsandboxed\_ptr, find\_sandbox\_from\_example);}
+\DoxyCodeLine{479     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\textcolor{keyword}{>}(ret);}
+\DoxyCodeLine{480   \}}
+\DoxyCodeLine{481 }
+\DoxyCodeLine{482   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{483   \textcolor{keyword}{static} \textcolor{keyword}{inline} convert\_to\_sandbox\_equivalent\_nonclass\_t<T>}
+\DoxyCodeLine{484   get\_sandboxed\_pointer\_no\_ctx(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p,}
+\DoxyCodeLine{485                                \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr)}
+\DoxyCodeLine{486   \{}
+\DoxyCodeLine{487     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T>);}
+\DoxyCodeLine{488     \textcolor{keywordflow}{if} (p == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{489       \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{490     \}}
+\DoxyCodeLine{491     \textcolor{keywordflow}{return} T\_Sbx::template impl\_get\_sandboxed\_pointer\_no\_ctx<T>(}
+\DoxyCodeLine{492       p, example\_unsandboxed\_ptr, find\_sandbox\_from\_example);}
+\DoxyCodeLine{493   \}}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{505   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{506   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a8ba59f981ba2b463e8e3629b22cc3bee}{malloc\_in\_sandbox}}()}
+\DoxyCodeLine{507   \{}
+\DoxyCodeLine{508     \textcolor{keyword}{const} uint32\_t defaultCount = 1;}
+\DoxyCodeLine{509     \textcolor{keywordflow}{return} malloc\_in\_sandbox<T>(defaultCount);}
+\DoxyCodeLine{510   \}}
+\DoxyCodeLine{511 }
+\DoxyCodeLine{524   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{525   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a5f7bca36b7a7a8df4c9212ceff78d5be}{malloc\_in\_sandbox}}(uint32\_t count)}
+\DoxyCodeLine{526   \{}
+\DoxyCodeLine{527     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
+\DoxyCodeLine{528     \textcolor{comment}{// malloc after sandbox destruction}}
+\DoxyCodeLine{529     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
+\DoxyCodeLine{530       \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{531     \}}
+\DoxyCodeLine{532 }
+\DoxyCodeLine{533     detail::dynamic\_check(count != 0, \textcolor{stringliteral}{"{}Malloc tried to allocate 0 bytes"{}});}
+\DoxyCodeLine{534     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(T) >= std::numeric\_limits<uint32\_t>::max()) \{}
+\DoxyCodeLine{535       rlbox\_detail\_static\_fail\_because(\textcolor{keyword}{sizeof}(T) >=}
+\DoxyCodeLine{536                                          std::numeric\_limits<uint32\_t>::max(),}
+\DoxyCodeLine{537                                        \textcolor{stringliteral}{"{}Tried to allocate an object over 4GB."{}});}
+\DoxyCodeLine{538     \}}
+\DoxyCodeLine{539     \textcolor{keyword}{auto} total\_size = \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(\textcolor{keyword}{sizeof}(T)) * count;}
+\DoxyCodeLine{540     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(size\_t) == 4) \{}
+\DoxyCodeLine{541       \textcolor{comment}{// On a 32-\/bit platform, we need to make sure that total\_size is not >=4GB}}
+\DoxyCodeLine{542       detail::dynamic\_check(total\_size < std::numeric\_limits<uint32\_t>::max(),}
+\DoxyCodeLine{543                             \textcolor{stringliteral}{"{}Tried to allocate memory over 4GB"{}});}
+\DoxyCodeLine{544     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}(size\_t) != 8) \{}
+\DoxyCodeLine{545       \textcolor{comment}{// Double check we are on a 64-\/bit platform}}
+\DoxyCodeLine{546       \textcolor{comment}{// Note for static checks we need to have some dependence on T, so adding}}
+\DoxyCodeLine{547       \textcolor{comment}{// a dummy}}
+\DoxyCodeLine{548       \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} dummy = \textcolor{keyword}{sizeof}(T) >= 0;}
+\DoxyCodeLine{549       rlbox\_detail\_static\_fail\_because(dummy \&\& \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{size\_t}) != 8,}
+\DoxyCodeLine{550                                        \textcolor{stringliteral}{"{}Expected 32 or 64 bit platform."{}});}
+\DoxyCodeLine{551     \}}
+\DoxyCodeLine{552     \textcolor{keyword}{auto} ptr\_in\_sandbox = this-\/>impl\_malloc\_in\_sandbox(total\_size);}
+\DoxyCodeLine{553     \textcolor{keyword}{auto} ptr = get\_unsandboxed\_pointer<T*>(ptr\_in\_sandbox);}
+\DoxyCodeLine{554     \textcolor{keywordflow}{if} (!ptr) \{}
+\DoxyCodeLine{555       \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}}(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{556     \}}
+\DoxyCodeLine{557     detail::dynamic\_check(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(ptr),}
+\DoxyCodeLine{558                           \textcolor{stringliteral}{"{}Malloc returned pointer outside the sandbox memory"{}});}
+\DoxyCodeLine{559     \textcolor{keyword}{auto} ptr\_end = \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(ptr + (count -\/ 1));}
+\DoxyCodeLine{560     detail::dynamic\_check(}
+\DoxyCodeLine{561       \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\_in\_same\_sandbox}}(ptr, \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(ptr\_end)),}
+\DoxyCodeLine{562       \textcolor{stringliteral}{"{}Malloc returned a pointer whose range goes beyond sandbox memory"{}});}
+\DoxyCodeLine{563     \textcolor{keyword}{auto} cast\_ptr = \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(ptr);}
+\DoxyCodeLine{564     \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(cast\_ptr);}
+\DoxyCodeLine{565   \}}
+\DoxyCodeLine{566 }
+\DoxyCodeLine{572   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{573   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} ptr)}
+\DoxyCodeLine{574   \{}
+\DoxyCodeLine{575     \textcolor{comment}{// Silently swallowing the failure is better here as RAII types may try to}}
+\DoxyCodeLine{576     \textcolor{comment}{// free after sandbox destruction}}
+\DoxyCodeLine{577     \textcolor{keywordflow}{if} (sandbox\_created.load() != Sandbox\_Status::CREATED) \{}
+\DoxyCodeLine{578       \textcolor{keywordflow}{return};}
+\DoxyCodeLine{579     \}}
+\DoxyCodeLine{580 }
+\DoxyCodeLine{581     this-\/>impl\_free\_in\_sandbox(ptr.get\_raw\_sandbox\_value(*\textcolor{keyword}{this}));}
+\DoxyCodeLine{582   \}}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{589   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{590   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ad26f351fa58e8fa013e79afb996dc807}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted__volatile}{tainted\_volatile<T, T\_Sbx>}}\& ptr\_ref)}
+\DoxyCodeLine{591   \{}
+\DoxyCodeLine{592     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ptr = ptr\_ref;}
+\DoxyCodeLine{593     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(ptr);}
+\DoxyCodeLine{594   \}}
+\DoxyCodeLine{595 }
+\DoxyCodeLine{601   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{602   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a75636dbe30d516a71f13841a4a64a854}{free\_in\_sandbox}}(\mbox{\hyperlink{classrlbox_1_1tainted__opaque}{tainted\_opaque<T, T\_Sbx>}} ptr\_opaque)}
+\DoxyCodeLine{603   \{}
+\DoxyCodeLine{604     \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T, T\_Sbx>}} ptr = from\_opaque(ptr\_opaque);}
+\DoxyCodeLine{605     \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a775b1828f996dc8f14f24a296096e0e3}{free\_in\_sandbox}}(ptr);}
+\DoxyCodeLine{606   \}}
+\DoxyCodeLine{607 }
+\DoxyCodeLine{612   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a3257ffc0e7eb6022c05a049b8b36271f}{is\_in\_same\_sandbox}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p1, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p2)}
+\DoxyCodeLine{613   \{}
+\DoxyCodeLine{614     \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} num\_args =}
+\DoxyCodeLine{615       detail::func\_arg\_nums\_v<\textcolor{keyword}{decltype}(T\_Sbx::impl\_is\_in\_same\_sandbox)>;}
+\DoxyCodeLine{616     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (num\_args == 2) \{}
+\DoxyCodeLine{617       \textcolor{keywordflow}{return} T\_Sbx::impl\_is\_in\_same\_sandbox(p1, p2);}
+\DoxyCodeLine{618     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{619       \textcolor{keywordflow}{return} T\_Sbx::impl\_is\_in\_same\_sandbox(p1, p2, find\_sandbox\_from\_example);}
+\DoxyCodeLine{620     \}}
+\DoxyCodeLine{621   \}}
+\DoxyCodeLine{622 }
+\DoxyCodeLine{627   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)}
+\DoxyCodeLine{628   \{}
+\DoxyCodeLine{629     \textcolor{keywordflow}{return} this-\/>impl\_is\_pointer\_in\_sandbox\_memory(p);}
+\DoxyCodeLine{630   \}}
+\DoxyCodeLine{631 }
+\DoxyCodeLine{636   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_afc6c3f229b2807517c54cc120dfda941}{is\_pointer\_in\_app\_memory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)}
+\DoxyCodeLine{637   \{}
+\DoxyCodeLine{638     \textcolor{keywordflow}{return} this-\/>impl\_is\_pointer\_in\_app\_memory(p);}
+\DoxyCodeLine{639   \}}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{641   \textcolor{keyword}{inline} \textcolor{keywordtype}{size\_t} get\_total\_memory() \{ \textcolor{keywordflow}{return} this-\/>impl\_get\_total\_memory(); \}}
+\DoxyCodeLine{642 }
+\DoxyCodeLine{643   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* get\_memory\_location()}
+\DoxyCodeLine{644   \{}
+\DoxyCodeLine{645     \textcolor{keywordflow}{return} this-\/>impl\_get\_memory\_location();}
+\DoxyCodeLine{646   \}}
+\DoxyCodeLine{647 }
+\DoxyCodeLine{648   \textcolor{keywordtype}{void}* get\_transition\_state() \{ \textcolor{keywordflow}{return} transition\_state; \}}
+\DoxyCodeLine{649 }
+\DoxyCodeLine{650   \textcolor{keywordtype}{void} set\_transition\_state(\textcolor{keywordtype}{void}* new\_state) \{ transition\_state = new\_state; \}}
+\DoxyCodeLine{651 }
+\DoxyCodeLine{661   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{662   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_aea91172b5bbf836eb7bb3855a215815d}{INTERNAL\_grant\_access}}(T* src,}
+\DoxyCodeLine{663                                                   \textcolor{keywordtype}{size\_t} num,}
+\DoxyCodeLine{664                                                   \textcolor{keywordtype}{bool}\& success)}
+\DoxyCodeLine{665   \{}
+\DoxyCodeLine{666     \textcolor{keyword}{auto} ret = this-\/>impl\_grant\_access(src, num, success);}
+\DoxyCodeLine{667     \textcolor{keywordflow}{return} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>::internal\_factory}}(ret);}
+\DoxyCodeLine{668   \}}
+\DoxyCodeLine{669 }
+\DoxyCodeLine{679   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{680   \textcolor{keyword}{inline} T* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_af9f02cae38115c7d4228ec2578b90190}{INTERNAL\_deny\_access}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} src,}
+\DoxyCodeLine{681                                  \textcolor{keywordtype}{size\_t} num,}
+\DoxyCodeLine{682                                  \textcolor{keywordtype}{bool}\& success)}
+\DoxyCodeLine{683   \{}
+\DoxyCodeLine{684     \textcolor{keyword}{auto} ret =}
+\DoxyCodeLine{685       this-\/>impl\_deny\_access(src.INTERNAL\_unverified\_safe(), num, success);}
+\DoxyCodeLine{686     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{687   \}}
+\DoxyCodeLine{688 }
+\DoxyCodeLine{689   \textcolor{keywordtype}{void}* lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
+\DoxyCodeLine{690   \{}
+\DoxyCodeLine{691     \{}
+\DoxyCodeLine{692       RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, func\_ptr\_cache\_lock);}
+\DoxyCodeLine{693 }
+\DoxyCodeLine{694       \textcolor{keyword}{auto} func\_ptr\_ref = func\_ptr\_map.find(func\_name);}
+\DoxyCodeLine{695       \textcolor{keywordflow}{if} (func\_ptr\_ref != func\_ptr\_map.end()) \{}
+\DoxyCodeLine{696         \textcolor{keywordflow}{return} func\_ptr\_ref-\/>second;}
+\DoxyCodeLine{697       \}}
+\DoxyCodeLine{698     \}}
+\DoxyCodeLine{699 }
+\DoxyCodeLine{700     \textcolor{keywordtype}{void}* func\_ptr = this-\/>impl\_lookup\_symbol(func\_name);}
+\DoxyCodeLine{701     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, func\_ptr\_cache\_lock);}
+\DoxyCodeLine{702     func\_ptr\_map[func\_name] = func\_ptr;}
+\DoxyCodeLine{703     \textcolor{keywordflow}{return} func\_ptr;}
+\DoxyCodeLine{704   \}}
+\DoxyCodeLine{705 }
+\DoxyCodeLine{706   \textcolor{keywordtype}{void}* internal\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
+\DoxyCodeLine{707   \{}
+\DoxyCodeLine{708     \{}
+\DoxyCodeLine{709       RLBOX\_ACQUIRE\_SHARED\_GUARD(lock, func\_ptr\_cache\_lock);}
+\DoxyCodeLine{710 }
+\DoxyCodeLine{711       \textcolor{keyword}{auto} func\_ptr\_ref = func\_ptr\_map.find(func\_name);}
+\DoxyCodeLine{712       \textcolor{keywordflow}{if} (func\_ptr\_ref != func\_ptr\_map.end()) \{}
+\DoxyCodeLine{713         \textcolor{keywordflow}{return} func\_ptr\_ref-\/>second;}
+\DoxyCodeLine{714       \}}
+\DoxyCodeLine{715     \}}
+\DoxyCodeLine{716 }
+\DoxyCodeLine{717     \textcolor{keywordtype}{void}* func\_ptr = 0;}
+\DoxyCodeLine{718     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (rlbox::detail::}
+\DoxyCodeLine{719                     has\_member\_using\_needs\_internal\_lookup\_symbol\_v<T\_Sbx>) \{}
+\DoxyCodeLine{720       func\_ptr = this-\/>impl\_internal\_lookup\_symbol(func\_name);}
+\DoxyCodeLine{721     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{722       func\_ptr = this-\/>impl\_lookup\_symbol(func\_name);}
+\DoxyCodeLine{723     \}}
+\DoxyCodeLine{724     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, func\_ptr\_cache\_lock);}
+\DoxyCodeLine{725     func\_ptr\_map[func\_name] = func\_ptr;}
+\DoxyCodeLine{726     \textcolor{keywordflow}{return} func\_ptr;}
 \DoxyCodeLine{727   \}}
 \DoxyCodeLine{728 }
 \DoxyCodeLine{729   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
-\DoxyCodeLine{730   \textcolor{comment}{// Explicitly don't use inline on this, as this adds a lot of instructions}}
-\DoxyCodeLine{731   \textcolor{comment}{// prior to function call. What's more, by not inlining, different function}}
-\DoxyCodeLine{732   \textcolor{comment}{// calls with the same signature can share the same code segments for}}
-\DoxyCodeLine{733   \textcolor{comment}{// sandboxed function execution in the binary}}
-\DoxyCodeLine{734   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{735   \textcolor{keyword}{auto} INTERNAL\_invoke\_with\_func\_ptr(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name,}
-\DoxyCodeLine{736                                      \textcolor{keywordtype}{void}* func\_ptr,}
-\DoxyCodeLine{737                                      T\_Args\&\&... params)}
-\DoxyCodeLine{738   \{}
-\DoxyCodeLine{739     \textcolor{comment}{// unused in some paths}}
-\DoxyCodeLine{740     RLBOX\_UNUSED(func\_name);}
-\DoxyCodeLine{741 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
-\DoxyCodeLine{742     \textcolor{keyword}{auto} enter\_time = high\_resolution\_clock::now();}
-\DoxyCodeLine{743     \textcolor{keyword}{auto} on\_exit = rlbox::detail::make\_scope\_exit([\&] \{}
-\DoxyCodeLine{744       \textcolor{keyword}{auto} exit\_time = high\_resolution\_clock::now();}
-\DoxyCodeLine{745       int64\_t ns = duration\_cast<nanoseconds>(exit\_time -\/ enter\_time).count();}
-\DoxyCodeLine{746       transition\_times.push\_back(rlbox\_transition\_timing\{}
-\DoxyCodeLine{747         rlbox\_transition::INVOKE, func\_name, func\_ptr, ns \});}
-\DoxyCodeLine{748     \});}
-\DoxyCodeLine{749 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{750 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_IN}}
-\DoxyCodeLine{751     RLBOX\_TRANSITION\_ACTION\_IN(}
-\DoxyCodeLine{752       rlbox\_transition::INVOKE, func\_name, func\_ptr, transition\_state);}
-\DoxyCodeLine{753 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{754 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_OUT}}
-\DoxyCodeLine{755     \textcolor{keyword}{auto} on\_exit\_transition = rlbox::detail::make\_scope\_exit([\&] \{}
-\DoxyCodeLine{756       RLBOX\_TRANSITION\_ACTION\_OUT(}
-\DoxyCodeLine{757         rlbox\_transition::INVOKE, func\_name, func\_ptr, transition\_state);}
-\DoxyCodeLine{758     \});}
-\DoxyCodeLine{759 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{760     (check\_invoke\_param\_type\_is\_ok<T\_Args>(), ...);}
-\DoxyCodeLine{761 }
-\DoxyCodeLine{762     \textcolor{keyword}{static\_assert}(}
-\DoxyCodeLine{763       rlbox::detail::polyfill::is\_invocable\_v<}
-\DoxyCodeLine{764         T,}
-\DoxyCodeLine{765         detail::rlbox\_remove\_wrapper\_t<std::remove\_reference\_t<T\_Args>>...>,}
-\DoxyCodeLine{766       \textcolor{stringliteral}{"{}Mismatched arguments types for function"{}});}
-\DoxyCodeLine{767 }
-\DoxyCodeLine{768     \textcolor{keyword}{using} T\_Result = rlbox::detail::polyfill::invoke\_result\_t<}
-\DoxyCodeLine{769       T,}
-\DoxyCodeLine{770       detail::rlbox\_remove\_wrapper\_t<std::remove\_reference\_t<T\_Args>>...>;}
-\DoxyCodeLine{771 }
-\DoxyCodeLine{772     \textcolor{keyword}{using} T\_Converted =}
-\DoxyCodeLine{773       std::remove\_pointer\_t<convert\_fn\_ptr\_to\_sandbox\_equivalent\_t<T*>>;}
-\DoxyCodeLine{774 }
-\DoxyCodeLine{775     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_void\_v<T\_Result>) \{}
-\DoxyCodeLine{776       this-\/>\textcolor{keyword}{template} impl\_invoke\_with\_func\_ptr<T>(}
-\DoxyCodeLine{777         \textcolor{keyword}{reinterpret\_cast<}T\_Converted*\textcolor{keyword}{>}(func\_ptr),}
-\DoxyCodeLine{778         invoke\_process\_param(params)...);}
-\DoxyCodeLine{779       \textcolor{keywordflow}{return};}
-\DoxyCodeLine{780     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{781       \textcolor{keyword}{auto} raw\_result = this-\/>\textcolor{keyword}{template} impl\_invoke\_with\_func\_ptr<T>(}
-\DoxyCodeLine{782         \textcolor{keyword}{reinterpret\_cast<}T\_Converted*\textcolor{keyword}{>}(func\_ptr),}
-\DoxyCodeLine{783         invoke\_process\_param(params)...);}
-\DoxyCodeLine{784       tainted<T\_Result, T\_Sbx> wrapped\_result;}
-\DoxyCodeLine{785       \textcolor{keyword}{using namespace }detail;}
-\DoxyCodeLine{786       convert\_type<T\_Sbx,}
-\DoxyCodeLine{787                    adjust\_type\_direction::TO\_APPLICATION,}
-\DoxyCodeLine{788                    adjust\_type\_context::SANDBOX>(}
-\DoxyCodeLine{789         wrapped\_result.get\_raw\_value\_ref(),}
-\DoxyCodeLine{790         raw\_result,}
-\DoxyCodeLine{791         \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
-\DoxyCodeLine{792         \textcolor{keyword}{this} \textcolor{comment}{/* sandbox\_ptr */});}
-\DoxyCodeLine{793       \textcolor{keywordflow}{return} wrapped\_result;}
-\DoxyCodeLine{794     \}}
-\DoxyCodeLine{795   \}}
-\DoxyCodeLine{796 }
-\DoxyCodeLine{797   \textcolor{comment}{// Useful in the porting stage to temporarily allow non tainted pointers to go}}
-\DoxyCodeLine{798   \textcolor{comment}{// through. This will only ever work in the rlbox\_noop\_sandbox. Any sandbox}}
-\DoxyCodeLine{799   \textcolor{comment}{// that actually enforces isolation will crash here.}}
-\DoxyCodeLine{800   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2>}
-\DoxyCodeLine{801   tainted<T2, T\_Sbx> UNSAFE\_accept\_pointer(T2 ptr)}
-\DoxyCodeLine{802   \{}
-\DoxyCodeLine{803     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T2>,}
-\DoxyCodeLine{804                   \textcolor{stringliteral}{"{}UNSAFE\_accept\_pointer expects a pointer param"{}});}
-\DoxyCodeLine{805     tainted<T2, T\_Sbx> ret;}
-\DoxyCodeLine{806     ret.assign\_raw\_pointer(*\textcolor{keyword}{this}, ptr);}
-\DoxyCodeLine{807     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{808   \}}
-\DoxyCodeLine{809 }
-\DoxyCodeLine{810   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{811   \textcolor{keyword}{using} T\_Cb\_no\_wrap = detail::rlbox\_remove\_wrapper\_t<T\_Ret>(}
-\DoxyCodeLine{812     detail::rlbox\_remove\_wrapper\_t<T\_Args>...);}
-\DoxyCodeLine{813 }
-\DoxyCodeLine{814   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret>}
-\DoxyCodeLine{815   sandbox\_callback<T\_Cb\_no\_wrap<T\_Ret>*, T\_Sbx> register\_callback(T\_Ret (*)())}
-\DoxyCodeLine{816   \{}
-\DoxyCodeLine{817     rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{818       detail::true\_v<T\_Ret>,}
-\DoxyCodeLine{819       \textcolor{stringliteral}{"{}Modify the callback to change the first parameter to a sandbox. "{}}}
-\DoxyCodeLine{820       \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{821       \textcolor{stringliteral}{"{}int foo() \{...\}\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{822       \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{823       \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox) \{...\}\(\backslash\)n"{}});}
-\DoxyCodeLine{824 }
-\DoxyCodeLine{825     \textcolor{comment}{// this is never executed, but we need it for the function to type-\/check}}
-\DoxyCodeLine{826     std::abort();}
-\DoxyCodeLine{827   \}}
-\DoxyCodeLine{828 }
-\DoxyCodeLine{841   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_RL, \textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{842   \mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\_callback}}<T\_Cb\_no\_wrap<T\_Ret, T\_Args...>*, T\_Sbx> \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a86e4a01fbf229b2df531bc6f1b90f99a}{register\_callback}}(}
-\DoxyCodeLine{843     T\_Ret (*func\_ptr)(T\_RL, T\_Args...))}
-\DoxyCodeLine{844   \{}
-\DoxyCodeLine{845     \textcolor{comment}{// Some branches don't use the param}}
-\DoxyCodeLine{846     RLBOX\_UNUSED(func\_ptr);}
-\DoxyCodeLine{847 }
-\DoxyCodeLine{848     if\_constexpr\_named(cond1, !std::is\_same\_v<T\_RL, \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\&>)}
-\DoxyCodeLine{849     \{}
-\DoxyCodeLine{850       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{851         cond1,}
-\DoxyCodeLine{852         \textcolor{stringliteral}{"{}Modify the callback to change the first parameter to a sandbox. "{}}}
-\DoxyCodeLine{853         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{854         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{855         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{856         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
-\DoxyCodeLine{857         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
-\DoxyCodeLine{858     \}}
-\DoxyCodeLine{859     \textcolor{keywordflow}{else} if\_constexpr\_named(}
-\DoxyCodeLine{860       cond2, !(detail::rlbox\_is\_tainted\_or\_opaque\_v<T\_Args> \&\& ...))}
-\DoxyCodeLine{861     \{}
-\DoxyCodeLine{862       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{863         cond2,}
-\DoxyCodeLine{864         \textcolor{stringliteral}{"{}Change all arguments to the callback have to be tainted or "{}}}
-\DoxyCodeLine{865         \textcolor{stringliteral}{"{}tainted\_opaque. "{}}}
-\DoxyCodeLine{866         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{867         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{868         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{869         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
-\DoxyCodeLine{870         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
-\DoxyCodeLine{871     \}}
-\DoxyCodeLine{872     \textcolor{keywordflow}{else} if\_constexpr\_named(}
-\DoxyCodeLine{873       cond3, (std::is\_array\_v<detail::rlbox\_remove\_wrapper\_t<T\_Args>> || ...))}
-\DoxyCodeLine{874     \{}
-\DoxyCodeLine{875       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{876         cond3,}
-\DoxyCodeLine{877         \textcolor{stringliteral}{"{}Change all static array arguments to the callback to be pointers. "{}}}
-\DoxyCodeLine{878         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{879         \textcolor{stringliteral}{"{}int foo(int a[4]) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{880         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{881         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
-\DoxyCodeLine{882         \textcolor{stringliteral}{"{}tainted<int*, T\_Sbx> a) \{...\}\(\backslash\)n"{}});}
-\DoxyCodeLine{883     \}}
-\DoxyCodeLine{884     \textcolor{keywordflow}{else} if\_constexpr\_named(}
-\DoxyCodeLine{885       cond4,}
-\DoxyCodeLine{886       !(std::is\_void\_v<T\_Ret> || detail::rlbox\_is\_tainted\_or\_opaque\_v<T\_Ret>))}
-\DoxyCodeLine{887     \{}
-\DoxyCodeLine{888       rlbox\_detail\_static\_fail\_because(}
-\DoxyCodeLine{889         cond4,}
-\DoxyCodeLine{890         \textcolor{stringliteral}{"{}Change the callback return type to be tainted or tainted\_opaque if it "{}}}
-\DoxyCodeLine{891         \textcolor{stringliteral}{"{}is not void. "{}}}
-\DoxyCodeLine{892         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{893         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{894         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
-\DoxyCodeLine{895         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
-\DoxyCodeLine{896         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
-\DoxyCodeLine{897     \}}
-\DoxyCodeLine{898     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{899     \{}
-\DoxyCodeLine{900       detail::dynamic\_check(}
-\DoxyCodeLine{901         sandbox\_created.load() == Sandbox\_Status::CREATED,}
-\DoxyCodeLine{902         \textcolor{stringliteral}{"{}register\_callback called without sandbox creation"{}});}
-\DoxyCodeLine{903 }
-\DoxyCodeLine{904       \textcolor{comment}{// Need unique key for each callback we register -\/ just use the func addr}}
-\DoxyCodeLine{905       \textcolor{keywordtype}{void}* unique\_key = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(func\_ptr);}
-\DoxyCodeLine{906 }
-\DoxyCodeLine{907       \textcolor{comment}{// Make sure that the user hasn't previously registered this function...}}
-\DoxyCodeLine{908       \textcolor{comment}{// If they have, we would returning 2 owning types (sandbox\_callback) to}}
-\DoxyCodeLine{909       \textcolor{comment}{// the same callback which would be bad}}
-\DoxyCodeLine{910       \{}
-\DoxyCodeLine{911         std::lock\_guard<std::mutex> lock(callback\_lock);}
-\DoxyCodeLine{912         \textcolor{keywordtype}{bool} exists =}
-\DoxyCodeLine{913           std::find(callback\_keys.begin(), callback\_keys.end(), unique\_key) !=}
-\DoxyCodeLine{914           callback\_keys.end();}
-\DoxyCodeLine{915         detail::dynamic\_check(}
-\DoxyCodeLine{916           !exists, \textcolor{stringliteral}{"{}You have previously already registered this callback."{}});}
-\DoxyCodeLine{917         callback\_keys.push\_back(unique\_key);}
-\DoxyCodeLine{918       \}}
-\DoxyCodeLine{919 }
-\DoxyCodeLine{920       \textcolor{keyword}{auto} callback\_interceptor =}
-\DoxyCodeLine{921         sandbox\_callback\_interceptor<detail::rlbox\_remove\_wrapper\_t<T\_Ret>,}
-\DoxyCodeLine{922                                      detail::rlbox\_remove\_wrapper\_t<T\_Args>...>;}
-\DoxyCodeLine{923 }
-\DoxyCodeLine{924       \textcolor{keyword}{auto} callback\_trampoline = this-\/>\textcolor{keyword}{template} impl\_register\_callback<}
-\DoxyCodeLine{925         detail::convert\_to\_sandbox\_equivalent\_t<}
-\DoxyCodeLine{926           detail::rlbox\_remove\_wrapper\_t<T\_Ret>,}
-\DoxyCodeLine{927           T\_Sbx>,}
-\DoxyCodeLine{928         detail::convert\_to\_sandbox\_equivalent\_t<}
-\DoxyCodeLine{929           detail::rlbox\_remove\_wrapper\_t<T\_Args>,}
-\DoxyCodeLine{930           T\_Sbx>...>(unique\_key, \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(callback\_interceptor));}
-\DoxyCodeLine{931 }
-\DoxyCodeLine{932       \textcolor{keyword}{auto} tainted\_func\_ptr = \textcolor{keyword}{reinterpret\_cast<}}
-\DoxyCodeLine{933         detail::rlbox\_tainted\_opaque\_to\_tainted\_t<T\_Ret, T\_Sbx> (*)(}
-\DoxyCodeLine{934           T\_RL, detail::rlbox\_tainted\_opaque\_to\_tainted\_t<T\_Args, T\_Sbx>...)\textcolor{keyword}{>}(}
-\DoxyCodeLine{935         \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(func\_ptr));}
-\DoxyCodeLine{936 }
-\DoxyCodeLine{937       \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\_callback}}<T\_Cb\_no\_wrap<T\_Ret, T\_Args...>*, T\_Sbx>(}
-\DoxyCodeLine{938         \textcolor{keyword}{this},}
-\DoxyCodeLine{939         tainted\_func\_ptr,}
-\DoxyCodeLine{940         callback\_interceptor,}
-\DoxyCodeLine{941         callback\_trampoline,}
-\DoxyCodeLine{942         unique\_key);}
-\DoxyCodeLine{943       \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{944     \}}
-\DoxyCodeLine{945   \}}
-\DoxyCodeLine{946 }
-\DoxyCodeLine{947   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
-\DoxyCodeLine{948   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{949   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} INTERNAL\_get\_sandbox\_function\_name(}
-\DoxyCodeLine{950     \textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
-\DoxyCodeLine{951   \{}
-\DoxyCodeLine{952     \textcolor{keywordflow}{return} INTERNAL\_get\_sandbox\_function\_ptr<T>(internal\_lookup\_symbol(func\_name));}
-\DoxyCodeLine{953   \}}
-\DoxyCodeLine{954 }
-\DoxyCodeLine{955   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
-\DoxyCodeLine{956   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{957   \textcolor{keyword}{inline} tainted<T*, T\_Sbx> INTERNAL\_get\_sandbox\_function\_ptr(\textcolor{keywordtype}{void}* func\_ptr)}
-\DoxyCodeLine{958   \{}
-\DoxyCodeLine{959     \textcolor{keywordflow}{return} tainted<T*, T\_Sbx>::internal\_factory(\textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(func\_ptr));}
-\DoxyCodeLine{960   \}}
-\DoxyCodeLine{961 }
-\DoxyCodeLine{970   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{971   \mbox{\hyperlink{classrlbox_1_1app__pointer}{app\_pointer<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ac991e7a1ec63c27ceb8b954b1d9624ac}{get\_app\_pointer}}(T* ptr)}
-\DoxyCodeLine{972   \{}
-\DoxyCodeLine{973     \textcolor{keyword}{auto} max\_ptr = (\textcolor{keyword}{typename} T\_Sbx::T\_PointerType)(get\_total\_memory() -\/ 1);}
-\DoxyCodeLine{974     \textcolor{keyword}{auto} idx = app\_ptr\_map.get\_app\_pointer\_idx((\textcolor{keywordtype}{void}*)ptr, max\_ptr);}
-\DoxyCodeLine{975     \textcolor{keyword}{auto} idx\_as\_ptr = this-\/>\textcolor{keyword}{template} impl\_get\_unsandboxed\_pointer<T>(idx);}
-\DoxyCodeLine{976     \textcolor{comment}{// Right now we simply assume that any integer can be converted to a valid}}
-\DoxyCodeLine{977     \textcolor{comment}{// pointer in the sandbox This may not be true for some sandboxing mechanism}}
-\DoxyCodeLine{978     \textcolor{comment}{// plugins in the future In this case, we will have to come up with}}
-\DoxyCodeLine{979     \textcolor{comment}{// something more clever to construct indexes that look like valid pointers}}
-\DoxyCodeLine{980     \textcolor{comment}{// Add a check for now to make sure things work fine}}
-\DoxyCodeLine{981     detail::dynamic\_check(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(idx\_as\_ptr),}
-\DoxyCodeLine{982                           \textcolor{stringliteral}{"{}App pointers are not currently supported for this "{}}}
-\DoxyCodeLine{983                           \textcolor{stringliteral}{"{}rlbox sandbox plugin. Please file a bug."{}});}
-\DoxyCodeLine{984     \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1app__pointer}{app\_pointer<T*, T\_Sbx>}}(}
-\DoxyCodeLine{985       \&app\_ptr\_map, idx, \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(idx\_as\_ptr));}
-\DoxyCodeLine{986     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{987   \}}
-\DoxyCodeLine{988 }
-\DoxyCodeLine{997   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{998   T* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a19c3b6ce3ddb0736ccb6d5fbfeb4a82e}{lookup\_app\_ptr}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} tainted\_ptr)}
-\DoxyCodeLine{999   \{}
-\DoxyCodeLine{1000     \textcolor{keyword}{auto} idx = tainted\_ptr.get\_raw\_sandbox\_value(*\textcolor{keyword}{this});}
-\DoxyCodeLine{1001     \textcolor{keywordtype}{void}* ret = app\_ptr\_map.lookup\_index(idx);}
-\DoxyCodeLine{1002     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(ret);}
-\DoxyCodeLine{1003   \}}
-\DoxyCodeLine{1004 }
-\DoxyCodeLine{1005 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
-\DoxyCodeLine{1006   \textcolor{keyword}{inline} std::vector<rlbox\_transition\_timing>\&}
-\DoxyCodeLine{1007   process\_and\_get\_transition\_times()}
-\DoxyCodeLine{1008   \{}
-\DoxyCodeLine{1009     \textcolor{keywordflow}{return} transition\_times;}
-\DoxyCodeLine{1010   \}}
-\DoxyCodeLine{1011   \textcolor{keyword}{inline} int64\_t get\_total\_ns\_time\_in\_sandbox\_and\_transitions()}
-\DoxyCodeLine{1012   \{}
-\DoxyCodeLine{1013     int64\_t ret = 0;}
-\DoxyCodeLine{1014     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& transition\_time : transition\_times) \{}
-\DoxyCodeLine{1015       \textcolor{keywordflow}{if} (transition\_time.invoke == rlbox\_transition::INVOKE) \{}
-\DoxyCodeLine{1016         ret += transition\_time.time;}
-\DoxyCodeLine{1017       \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{1018         ret -\/= transition\_time.time;}
-\DoxyCodeLine{1019       \}}
-\DoxyCodeLine{1020     \}}
-\DoxyCodeLine{1021     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{1022   \}}
-\DoxyCodeLine{1023   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} clear\_transition\_times() \{ transition\_times.clear(); \}}
-\DoxyCodeLine{1024 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{1025 \};}
-\DoxyCodeLine{1026 }
-\DoxyCodeLine{1027 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
-\DoxyCodeLine{1028 \textcolor{preprocessor}{\#  pragma clang diagnostic push}}
-\DoxyCodeLine{1029 \textcolor{preprocessor}{\#  pragma clang diagnostic ignored "{}-\/Wgnu-\/zero-\/variadic-\/macro-\/arguments"{}}}
-\DoxyCodeLine{1030 \textcolor{preprocessor}{\#elif defined(\_\_GNUC\_\_) || defined(\_\_GNUG\_\_)}}
-\DoxyCodeLine{1031 \textcolor{comment}{// Can't turn off the variadic macro warning emitted from -\/pedantic so use a}}
-\DoxyCodeLine{1032 \textcolor{comment}{// hack to stop GCC emitting warnings for the reminder of this file}}
-\DoxyCodeLine{1033 \textcolor{preprocessor}{\#  pragma GCC system\_header}}
-\DoxyCodeLine{1034 \textcolor{preprocessor}{\#elif defined(\_MSC\_VER)}}
-\DoxyCodeLine{1035 \textcolor{comment}{// Doesn't seem to emit the warning}}
-\DoxyCodeLine{1036 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{1037 \textcolor{comment}{// Don't know the compiler... just let it go through}}
-\DoxyCodeLine{1038 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{1039 }
-\DoxyCodeLine{1048 \textcolor{preprocessor}{\#ifdef RLBOX\_USE\_STATIC\_CALLS}}
+\DoxyCodeLine{730   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{731   \textcolor{keyword}{inline} \textcolor{keyword}{auto} INTERNAL\_invoke\_with\_func\_name(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name,}
+\DoxyCodeLine{732                                              T\_Args\&\&... params)}
+\DoxyCodeLine{733   \{}
+\DoxyCodeLine{734     \textcolor{keywordflow}{return} INTERNAL\_invoke\_with\_func\_ptr<T, T\_Args...>(}
+\DoxyCodeLine{735       func\_name, lookup\_symbol(func\_name), std::forward<T\_Args>(params)...);}
+\DoxyCodeLine{736   \}}
+\DoxyCodeLine{737 }
+\DoxyCodeLine{738   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
+\DoxyCodeLine{739   \textcolor{comment}{// Explicitly don't use inline on this, as this adds a lot of instructions}}
+\DoxyCodeLine{740   \textcolor{comment}{// prior to function call. What's more, by not inlining, different function}}
+\DoxyCodeLine{741   \textcolor{comment}{// calls with the same signature can share the same code segments for}}
+\DoxyCodeLine{742   \textcolor{comment}{// sandboxed function execution in the binary}}
+\DoxyCodeLine{743   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{744   \textcolor{keyword}{auto} INTERNAL\_invoke\_with\_func\_ptr(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name,}
+\DoxyCodeLine{745                                      \textcolor{keywordtype}{void}* func\_ptr,}
+\DoxyCodeLine{746                                      T\_Args\&\&... params)}
+\DoxyCodeLine{747   \{}
+\DoxyCodeLine{748     \textcolor{comment}{// unused in some paths}}
+\DoxyCodeLine{749     RLBOX\_UNUSED(func\_name);}
+\DoxyCodeLine{750 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
+\DoxyCodeLine{751     \textcolor{keyword}{auto} enter\_time = high\_resolution\_clock::now();}
+\DoxyCodeLine{752     \textcolor{keyword}{auto} on\_exit = rlbox::detail::make\_scope\_exit([\&] \{}
+\DoxyCodeLine{753       \textcolor{keyword}{auto} exit\_time = high\_resolution\_clock::now();}
+\DoxyCodeLine{754       int64\_t ns = duration\_cast<nanoseconds>(exit\_time -\/ enter\_time).count();}
+\DoxyCodeLine{755       transition\_times.push\_back(rlbox\_transition\_timing\{}
+\DoxyCodeLine{756         rlbox\_transition::INVOKE, func\_name, func\_ptr, ns \});}
+\DoxyCodeLine{757     \});}
+\DoxyCodeLine{758 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{759 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_IN}}
+\DoxyCodeLine{760     RLBOX\_TRANSITION\_ACTION\_IN(}
+\DoxyCodeLine{761       rlbox\_transition::INVOKE, func\_name, func\_ptr, transition\_state);}
+\DoxyCodeLine{762 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{763 \textcolor{preprocessor}{\#ifdef RLBOX\_TRANSITION\_ACTION\_OUT}}
+\DoxyCodeLine{764     \textcolor{keyword}{auto} on\_exit\_transition = rlbox::detail::make\_scope\_exit([\&] \{}
+\DoxyCodeLine{765       RLBOX\_TRANSITION\_ACTION\_OUT(}
+\DoxyCodeLine{766         rlbox\_transition::INVOKE, func\_name, func\_ptr, transition\_state);}
+\DoxyCodeLine{767     \});}
+\DoxyCodeLine{768 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{769     (check\_invoke\_param\_type\_is\_ok<T\_Args>(), ...);}
+\DoxyCodeLine{770 }
+\DoxyCodeLine{771     \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{772       rlbox::detail::polyfill::is\_invocable\_v<}
+\DoxyCodeLine{773         T,}
+\DoxyCodeLine{774         detail::rlbox\_remove\_wrapper\_t<std::remove\_reference\_t<T\_Args>>...>,}
+\DoxyCodeLine{775       \textcolor{stringliteral}{"{}Mismatched arguments types for function"{}});}
+\DoxyCodeLine{776 }
+\DoxyCodeLine{777     \textcolor{keyword}{using} T\_Result = rlbox::detail::polyfill::invoke\_result\_t<}
+\DoxyCodeLine{778       T,}
+\DoxyCodeLine{779       detail::rlbox\_remove\_wrapper\_t<std::remove\_reference\_t<T\_Args>>...>;}
+\DoxyCodeLine{780 }
+\DoxyCodeLine{781     \textcolor{keyword}{using} T\_Converted =}
+\DoxyCodeLine{782       std::remove\_pointer\_t<convert\_fn\_ptr\_to\_sandbox\_equivalent\_t<T*>>;}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{784     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_void\_v<T\_Result>) \{}
+\DoxyCodeLine{785       this-\/>\textcolor{keyword}{template} impl\_invoke\_with\_func\_ptr<T>(}
+\DoxyCodeLine{786         \textcolor{keyword}{reinterpret\_cast<}T\_Converted*\textcolor{keyword}{>}(func\_ptr),}
+\DoxyCodeLine{787         invoke\_process\_param(params)...);}
+\DoxyCodeLine{788       \textcolor{keywordflow}{return};}
+\DoxyCodeLine{789     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{790       \textcolor{keyword}{auto} raw\_result = this-\/>\textcolor{keyword}{template} impl\_invoke\_with\_func\_ptr<T>(}
+\DoxyCodeLine{791         \textcolor{keyword}{reinterpret\_cast<}T\_Converted*\textcolor{keyword}{>}(func\_ptr),}
+\DoxyCodeLine{792         invoke\_process\_param(params)...);}
+\DoxyCodeLine{793       tainted<T\_Result, T\_Sbx> wrapped\_result;}
+\DoxyCodeLine{794       \textcolor{keyword}{using namespace }detail;}
+\DoxyCodeLine{795       convert\_type<T\_Sbx,}
+\DoxyCodeLine{796                    adjust\_type\_direction::TO\_APPLICATION,}
+\DoxyCodeLine{797                    adjust\_type\_context::SANDBOX>(}
+\DoxyCodeLine{798         wrapped\_result.get\_raw\_value\_ref(),}
+\DoxyCodeLine{799         raw\_result,}
+\DoxyCodeLine{800         \textcolor{keyword}{nullptr} \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
+\DoxyCodeLine{801         \textcolor{keyword}{this} \textcolor{comment}{/* sandbox\_ptr */});}
+\DoxyCodeLine{802       \textcolor{keywordflow}{return} wrapped\_result;}
+\DoxyCodeLine{803     \}}
+\DoxyCodeLine{804   \}}
+\DoxyCodeLine{805 }
+\DoxyCodeLine{806   \textcolor{comment}{// Useful in the porting stage to temporarily allow non tainted pointers to go}}
+\DoxyCodeLine{807   \textcolor{comment}{// through. This will only ever work in the rlbox\_noop\_sandbox. Any sandbox}}
+\DoxyCodeLine{808   \textcolor{comment}{// that actually enforces isolation will crash here.}}
+\DoxyCodeLine{809   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T2>}
+\DoxyCodeLine{810   tainted<T2, T\_Sbx> UNSAFE\_accept\_pointer(T2 ptr)}
+\DoxyCodeLine{811   \{}
+\DoxyCodeLine{812     \textcolor{keyword}{static\_assert}(std::is\_pointer\_v<T2>,}
+\DoxyCodeLine{813                   \textcolor{stringliteral}{"{}UNSAFE\_accept\_pointer expects a pointer param"{}});}
+\DoxyCodeLine{814     tainted<T2, T\_Sbx> ret;}
+\DoxyCodeLine{815     ret.assign\_raw\_pointer(*\textcolor{keyword}{this}, ptr);}
+\DoxyCodeLine{816     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{817   \}}
+\DoxyCodeLine{818 }
+\DoxyCodeLine{819   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{820   \textcolor{keyword}{using} T\_Cb\_no\_wrap = detail::rlbox\_remove\_wrapper\_t<T\_Ret>(}
+\DoxyCodeLine{821     detail::rlbox\_remove\_wrapper\_t<T\_Args>...);}
+\DoxyCodeLine{822 }
+\DoxyCodeLine{823   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret>}
+\DoxyCodeLine{824   sandbox\_callback<T\_Cb\_no\_wrap<T\_Ret>*, T\_Sbx> register\_callback(T\_Ret (*)())}
+\DoxyCodeLine{825   \{}
+\DoxyCodeLine{826     rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{827       detail::true\_v<T\_Ret>,}
+\DoxyCodeLine{828       \textcolor{stringliteral}{"{}Modify the callback to change the first parameter to a sandbox. "{}}}
+\DoxyCodeLine{829       \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{830       \textcolor{stringliteral}{"{}int foo() \{...\}\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{831       \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{832       \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox) \{...\}\(\backslash\)n"{}});}
+\DoxyCodeLine{833 }
+\DoxyCodeLine{834     \textcolor{comment}{// this is never executed, but we need it for the function to type-\/check}}
+\DoxyCodeLine{835     std::abort();}
+\DoxyCodeLine{836   \}}
+\DoxyCodeLine{837 }
+\DoxyCodeLine{850   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_RL, \textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{851   \mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\_callback}}<T\_Cb\_no\_wrap<T\_Ret, T\_Args...>*, T\_Sbx> \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a86e4a01fbf229b2df531bc6f1b90f99a}{register\_callback}}(}
+\DoxyCodeLine{852     T\_Ret (*func\_ptr)(T\_RL, T\_Args...))}
+\DoxyCodeLine{853   \{}
+\DoxyCodeLine{854     \textcolor{comment}{// Some branches don't use the param}}
+\DoxyCodeLine{855     RLBOX\_UNUSED(func\_ptr);}
+\DoxyCodeLine{856 }
+\DoxyCodeLine{857     if\_constexpr\_named(cond1, !std::is\_same\_v<T\_RL, \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox}{rlbox\_sandbox<T\_Sbx>}}\&>)}
+\DoxyCodeLine{858     \{}
+\DoxyCodeLine{859       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{860         cond1,}
+\DoxyCodeLine{861         \textcolor{stringliteral}{"{}Modify the callback to change the first parameter to a sandbox. "{}}}
+\DoxyCodeLine{862         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{863         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{864         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{865         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
+\DoxyCodeLine{866         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
+\DoxyCodeLine{867     \}}
+\DoxyCodeLine{868     \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{869       cond2, !(detail::rlbox\_is\_tainted\_or\_opaque\_v<T\_Args> \&\& ...))}
+\DoxyCodeLine{870     \{}
+\DoxyCodeLine{871       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{872         cond2,}
+\DoxyCodeLine{873         \textcolor{stringliteral}{"{}Change all arguments to the callback have to be tainted or "{}}}
+\DoxyCodeLine{874         \textcolor{stringliteral}{"{}tainted\_opaque. "{}}}
+\DoxyCodeLine{875         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{876         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{877         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{878         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
+\DoxyCodeLine{879         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
+\DoxyCodeLine{880     \}}
+\DoxyCodeLine{881     \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{882       cond3, (std::is\_array\_v<detail::rlbox\_remove\_wrapper\_t<T\_Args>> || ...))}
+\DoxyCodeLine{883     \{}
+\DoxyCodeLine{884       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{885         cond3,}
+\DoxyCodeLine{886         \textcolor{stringliteral}{"{}Change all static array arguments to the callback to be pointers. "{}}}
+\DoxyCodeLine{887         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{888         \textcolor{stringliteral}{"{}int foo(int a[4]) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{889         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{890         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
+\DoxyCodeLine{891         \textcolor{stringliteral}{"{}tainted<int*, T\_Sbx> a) \{...\}\(\backslash\)n"{}});}
+\DoxyCodeLine{892     \}}
+\DoxyCodeLine{893     \textcolor{keywordflow}{else} if\_constexpr\_named(}
+\DoxyCodeLine{894       cond4,}
+\DoxyCodeLine{895       !(std::is\_void\_v<T\_Ret> || detail::rlbox\_is\_tainted\_or\_opaque\_v<T\_Ret>))}
+\DoxyCodeLine{896     \{}
+\DoxyCodeLine{897       rlbox\_detail\_static\_fail\_because(}
+\DoxyCodeLine{898         cond4,}
+\DoxyCodeLine{899         \textcolor{stringliteral}{"{}Change the callback return type to be tainted or tainted\_opaque if it "{}}}
+\DoxyCodeLine{900         \textcolor{stringliteral}{"{}is not void. "{}}}
+\DoxyCodeLine{901         \textcolor{stringliteral}{"{}For instance if a callback has type\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{902         \textcolor{stringliteral}{"{}int foo(int a, int b) \{...\}\(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{903         \textcolor{stringliteral}{"{}Change this to \(\backslash\)n\(\backslash\)n"{}}}
+\DoxyCodeLine{904         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> foo(rlbox\_sandbox<T\_Sbx>\& sandbox, "{}}}
+\DoxyCodeLine{905         \textcolor{stringliteral}{"{}tainted<int, T\_Sbx> a, tainted<int, T\_Sbx> b) \{...\}\(\backslash\)n"{}});}
+\DoxyCodeLine{906     \}}
+\DoxyCodeLine{907     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{908     \{}
+\DoxyCodeLine{909       detail::dynamic\_check(}
+\DoxyCodeLine{910         sandbox\_created.load() == Sandbox\_Status::CREATED,}
+\DoxyCodeLine{911         \textcolor{stringliteral}{"{}register\_callback called without sandbox creation"{}});}
+\DoxyCodeLine{912 }
+\DoxyCodeLine{913       \textcolor{comment}{// Need unique key for each callback we register -\/ just use the func addr}}
+\DoxyCodeLine{914       \textcolor{keywordtype}{void}* unique\_key = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(func\_ptr);}
+\DoxyCodeLine{915 }
+\DoxyCodeLine{916       \textcolor{comment}{// Make sure that the user hasn't previously registered this function...}}
+\DoxyCodeLine{917       \textcolor{comment}{// If they have, we would returning 2 owning types (sandbox\_callback) to}}
+\DoxyCodeLine{918       \textcolor{comment}{// the same callback which would be bad}}
+\DoxyCodeLine{919       \{}
+\DoxyCodeLine{920         std::lock\_guard<std::mutex> lock(callback\_lock);}
+\DoxyCodeLine{921         \textcolor{keywordtype}{bool} exists =}
+\DoxyCodeLine{922           std::find(callback\_keys.begin(), callback\_keys.end(), unique\_key) !=}
+\DoxyCodeLine{923           callback\_keys.end();}
+\DoxyCodeLine{924         detail::dynamic\_check(}
+\DoxyCodeLine{925           !exists, \textcolor{stringliteral}{"{}You have previously already registered this callback."{}});}
+\DoxyCodeLine{926         callback\_keys.push\_back(unique\_key);}
+\DoxyCodeLine{927       \}}
+\DoxyCodeLine{928 }
+\DoxyCodeLine{929       \textcolor{keyword}{auto} callback\_interceptor =}
+\DoxyCodeLine{930         sandbox\_callback\_interceptor<detail::rlbox\_remove\_wrapper\_t<T\_Ret>,}
+\DoxyCodeLine{931                                      detail::rlbox\_remove\_wrapper\_t<T\_Args>...>;}
+\DoxyCodeLine{932 }
+\DoxyCodeLine{933       \textcolor{keyword}{auto} callback\_trampoline = this-\/>\textcolor{keyword}{template} impl\_register\_callback<}
+\DoxyCodeLine{934         detail::convert\_to\_sandbox\_equivalent\_t<}
+\DoxyCodeLine{935           detail::rlbox\_remove\_wrapper\_t<T\_Ret>,}
+\DoxyCodeLine{936           T\_Sbx>,}
+\DoxyCodeLine{937         detail::convert\_to\_sandbox\_equivalent\_t<}
+\DoxyCodeLine{938           detail::rlbox\_remove\_wrapper\_t<T\_Args>,}
+\DoxyCodeLine{939           T\_Sbx>...>(unique\_key, \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(callback\_interceptor));}
+\DoxyCodeLine{940 }
+\DoxyCodeLine{941       \textcolor{keyword}{auto} tainted\_func\_ptr = \textcolor{keyword}{reinterpret\_cast<}}
+\DoxyCodeLine{942         detail::rlbox\_tainted\_opaque\_to\_tainted\_t<T\_Ret, T\_Sbx> (*)(}
+\DoxyCodeLine{943           T\_RL, detail::rlbox\_tainted\_opaque\_to\_tainted\_t<T\_Args, T\_Sbx>...)\textcolor{keyword}{>}(}
+\DoxyCodeLine{944         \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(func\_ptr));}
+\DoxyCodeLine{945 }
+\DoxyCodeLine{946       \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1sandbox__callback}{sandbox\_callback}}<T\_Cb\_no\_wrap<T\_Ret, T\_Args...>*, T\_Sbx>(}
+\DoxyCodeLine{947         \textcolor{keyword}{this},}
+\DoxyCodeLine{948         tainted\_func\_ptr,}
+\DoxyCodeLine{949         callback\_interceptor,}
+\DoxyCodeLine{950         callback\_trampoline,}
+\DoxyCodeLine{951         unique\_key);}
+\DoxyCodeLine{952       \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{953     \}}
+\DoxyCodeLine{954   \}}
+\DoxyCodeLine{955 }
+\DoxyCodeLine{956   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
+\DoxyCodeLine{957   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{958   \textcolor{keyword}{inline} \mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} INTERNAL\_get\_sandbox\_function\_name(}
+\DoxyCodeLine{959     \textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
+\DoxyCodeLine{960   \{}
+\DoxyCodeLine{961     \textcolor{keywordflow}{return} INTERNAL\_get\_sandbox\_function\_ptr<T>(}
+\DoxyCodeLine{962       internal\_lookup\_symbol(func\_name));}
+\DoxyCodeLine{963   \}}
+\DoxyCodeLine{964 }
+\DoxyCodeLine{965   \textcolor{comment}{// this is an internal function invoked from macros, so it has be public}}
+\DoxyCodeLine{966   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{967   \textcolor{keyword}{inline} tainted<T*, T\_Sbx> INTERNAL\_get\_sandbox\_function\_ptr(\textcolor{keywordtype}{void}* func\_ptr)}
+\DoxyCodeLine{968   \{}
+\DoxyCodeLine{969     \textcolor{keywordflow}{return} tainted<T*, T\_Sbx>::internal\_factory(\textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(func\_ptr));}
+\DoxyCodeLine{970   \}}
+\DoxyCodeLine{971 }
+\DoxyCodeLine{980   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{981   \mbox{\hyperlink{classrlbox_1_1app__pointer}{app\_pointer<T*, T\_Sbx>}} \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_ac991e7a1ec63c27ceb8b954b1d9624ac}{get\_app\_pointer}}(T* ptr)}
+\DoxyCodeLine{982   \{}
+\DoxyCodeLine{983     \textcolor{keyword}{auto} max\_ptr = (\textcolor{keyword}{typename} T\_Sbx::T\_PointerType)(get\_total\_memory() -\/ 1);}
+\DoxyCodeLine{984     \textcolor{keyword}{auto} idx = app\_ptr\_map.get\_app\_pointer\_idx((\textcolor{keywordtype}{void}*)ptr, max\_ptr);}
+\DoxyCodeLine{985     \textcolor{keyword}{auto} idx\_as\_ptr = this-\/>\textcolor{keyword}{template} impl\_get\_unsandboxed\_pointer<T>(idx);}
+\DoxyCodeLine{986     \textcolor{comment}{// Right now we simply assume that any integer can be converted to a valid}}
+\DoxyCodeLine{987     \textcolor{comment}{// pointer in the sandbox This may not be true for some sandboxing mechanism}}
+\DoxyCodeLine{988     \textcolor{comment}{// plugins in the future In this case, we will have to come up with}}
+\DoxyCodeLine{989     \textcolor{comment}{// something more clever to construct indexes that look like valid pointers}}
+\DoxyCodeLine{990     \textcolor{comment}{// Add a check for now to make sure things work fine}}
+\DoxyCodeLine{991     detail::dynamic\_check(\mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a55e48f0300c16d36ea7ed5a7e4750f64}{is\_pointer\_in\_sandbox\_memory}}(idx\_as\_ptr),}
+\DoxyCodeLine{992                           \textcolor{stringliteral}{"{}App pointers are not currently supported for this "{}}}
+\DoxyCodeLine{993                           \textcolor{stringliteral}{"{}rlbox sandbox plugin. Please file a bug."{}});}
+\DoxyCodeLine{994     \textcolor{keyword}{auto} ret = \mbox{\hyperlink{classrlbox_1_1app__pointer}{app\_pointer<T*, T\_Sbx>}}(}
+\DoxyCodeLine{995       \&app\_ptr\_map, idx, \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(idx\_as\_ptr));}
+\DoxyCodeLine{996     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{997   \}}
+\DoxyCodeLine{998 }
+\DoxyCodeLine{1007   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{1008   T* \mbox{\hyperlink{classrlbox_1_1rlbox__sandbox_a19c3b6ce3ddb0736ccb6d5fbfeb4a82e}{lookup\_app\_ptr}}(\mbox{\hyperlink{classrlbox_1_1tainted}{tainted<T*, T\_Sbx>}} tainted\_ptr)}
+\DoxyCodeLine{1009   \{}
+\DoxyCodeLine{1010     \textcolor{keyword}{auto} idx = tainted\_ptr.get\_raw\_sandbox\_value(*\textcolor{keyword}{this});}
+\DoxyCodeLine{1011     \textcolor{keywordtype}{void}* ret = app\_ptr\_map.lookup\_index(idx);}
+\DoxyCodeLine{1012     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(ret);}
+\DoxyCodeLine{1013   \}}
+\DoxyCodeLine{1014 }
+\DoxyCodeLine{1015 \textcolor{preprocessor}{\#ifdef RLBOX\_MEASURE\_TRANSITION\_TIMES}}
+\DoxyCodeLine{1016   \textcolor{keyword}{inline} std::vector<rlbox\_transition\_timing>\&}
+\DoxyCodeLine{1017   process\_and\_get\_transition\_times()}
+\DoxyCodeLine{1018   \{}
+\DoxyCodeLine{1019     \textcolor{keywordflow}{return} transition\_times;}
+\DoxyCodeLine{1020   \}}
+\DoxyCodeLine{1021   \textcolor{keyword}{inline} int64\_t get\_total\_ns\_time\_in\_sandbox\_and\_transitions()}
+\DoxyCodeLine{1022   \{}
+\DoxyCodeLine{1023     int64\_t ret = 0;}
+\DoxyCodeLine{1024     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& transition\_time : transition\_times) \{}
+\DoxyCodeLine{1025       \textcolor{keywordflow}{if} (transition\_time.invoke == rlbox\_transition::INVOKE) \{}
+\DoxyCodeLine{1026         ret += transition\_time.time;}
+\DoxyCodeLine{1027       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{1028         ret -\/= transition\_time.time;}
+\DoxyCodeLine{1029       \}}
+\DoxyCodeLine{1030     \}}
+\DoxyCodeLine{1031     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{1032   \}}
+\DoxyCodeLine{1033   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} clear\_transition\_times() \{ transition\_times.clear(); \}}
+\DoxyCodeLine{1034 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{1035 \};}
+\DoxyCodeLine{1036 }
+\DoxyCodeLine{1037 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
+\DoxyCodeLine{1038 \textcolor{preprocessor}{\#  pragma clang diagnostic push}}
+\DoxyCodeLine{1039 \textcolor{preprocessor}{\#  pragma clang diagnostic ignored "{}-\/Wgnu-\/zero-\/variadic-\/macro-\/arguments"{}}}
+\DoxyCodeLine{1040 \textcolor{preprocessor}{\#elif defined(\_\_GNUC\_\_) || defined(\_\_GNUG\_\_)}}
+\DoxyCodeLine{1041 \textcolor{comment}{// Can't turn off the variadic macro warning emitted from -\/pedantic so use a}}
+\DoxyCodeLine{1042 \textcolor{comment}{// hack to stop GCC emitting warnings for the reminder of this file}}
+\DoxyCodeLine{1043 \textcolor{preprocessor}{\#  pragma GCC system\_header}}
+\DoxyCodeLine{1044 \textcolor{preprocessor}{\#elif defined(\_MSC\_VER)}}
+\DoxyCodeLine{1045 \textcolor{comment}{// Doesn't seem to emit the warning}}
+\DoxyCodeLine{1046 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{1047 \textcolor{comment}{// Don't know the compiler... just let it go through}}
+\DoxyCodeLine{1048 \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{1049 }
-\DoxyCodeLine{1050 \textcolor{preprocessor}{\#  define sandbox\_lookup\_symbol\_helper(prefix, func\_name) prefix(func\_name)}}
-\DoxyCodeLine{1051 }
-\DoxyCodeLine{1052 \textcolor{preprocessor}{\#  define invoke\_sandbox\_function(func\_name, ...)                              \(\backslash\)}}
-\DoxyCodeLine{1053 \textcolor{preprocessor}{    template INTERNAL\_invoke\_with\_func\_ptr<decltype(func\_name)>(               \(\backslash\)}}
-\DoxyCodeLine{1054 \textcolor{preprocessor}{      \#func\_name,                                                              \(\backslash\)}}
-\DoxyCodeLine{1055 \textcolor{preprocessor}{      sandbox\_lookup\_symbol\_helper(RLBOX\_USE\_STATIC\_CALLS(), func\_name),       \(\backslash\)}}
-\DoxyCodeLine{1056 \textcolor{preprocessor}{      \#\#\_\_VA\_ARGS\_\_)}}
-\DoxyCodeLine{1057 }
-\DoxyCodeLine{1058 \textcolor{preprocessor}{\#  define get\_sandbox\_function\_address(func\_name)                              \(\backslash\)}}
-\DoxyCodeLine{1059 \textcolor{preprocessor}{    template INTERNAL\_get\_sandbox\_function\_ptr<decltype(func\_name)>(           \(\backslash\)}}
-\DoxyCodeLine{1060 \textcolor{preprocessor}{      sandbox\_lookup\_symbol\_helper(RLBOX\_USE\_STATIC\_CALLS(), func\_name))}}
+\DoxyCodeLine{1058 \textcolor{preprocessor}{\#ifdef RLBOX\_USE\_STATIC\_CALLS}}
+\DoxyCodeLine{1059 }
+\DoxyCodeLine{1060 \textcolor{preprocessor}{\#  define sandbox\_lookup\_symbol\_helper(prefix, func\_name) prefix(func\_name)}}
 \DoxyCodeLine{1061 }
-\DoxyCodeLine{1062 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{1063 }
-\DoxyCodeLine{1064 \textcolor{preprocessor}{\#  define invoke\_sandbox\_function(func\_name, ...)                              \(\backslash\)}}
-\DoxyCodeLine{1065 \textcolor{preprocessor}{    template INTERNAL\_invoke\_with\_func\_name<decltype(func\_name)>(              \(\backslash\)}}
-\DoxyCodeLine{1066 \textcolor{preprocessor}{      \#func\_name, \#\#\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{1062 \textcolor{preprocessor}{\#  define invoke\_sandbox\_function(func\_name, ...)                              \(\backslash\)}}
+\DoxyCodeLine{1063 \textcolor{preprocessor}{    template INTERNAL\_invoke\_with\_func\_ptr<decltype(func\_name)>(               \(\backslash\)}}
+\DoxyCodeLine{1064 \textcolor{preprocessor}{      \#func\_name,                                                              \(\backslash\)}}
+\DoxyCodeLine{1065 \textcolor{preprocessor}{      sandbox\_lookup\_symbol\_helper(RLBOX\_USE\_STATIC\_CALLS(), func\_name),       \(\backslash\)}}
+\DoxyCodeLine{1066 \textcolor{preprocessor}{      \#\#\_\_VA\_ARGS\_\_)}}
 \DoxyCodeLine{1067 }
 \DoxyCodeLine{1068 \textcolor{preprocessor}{\#  define get\_sandbox\_function\_address(func\_name)                              \(\backslash\)}}
-\DoxyCodeLine{1069 \textcolor{preprocessor}{    template INTERNAL\_get\_sandbox\_function\_name<decltype(func\_name)>(\#func\_name)}}
-\DoxyCodeLine{1070 }
-\DoxyCodeLine{1071 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{1072 }
-\DoxyCodeLine{1073 \textcolor{preprocessor}{\#define sandbox\_invoke(sandbox, func\_name, ...)                                \(\backslash\)}}
-\DoxyCodeLine{1074 \textcolor{preprocessor}{  (sandbox).invoke\_sandbox\_function(func\_name, \#\#\_\_VA\_ARGS\_\_)}}
-\DoxyCodeLine{1075 }
-\DoxyCodeLine{1076 \textcolor{preprocessor}{\#define sandbox\_function\_address(sandbox, func\_name)                           \(\backslash\)}}
-\DoxyCodeLine{1077 \textcolor{preprocessor}{  (sandbox).get\_sandbox\_function\_address(func\_name)}}
-\DoxyCodeLine{1078 }
-\DoxyCodeLine{1079 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
-\DoxyCodeLine{1080 \textcolor{preprocessor}{\#  pragma clang diagnostic pop}}
-\DoxyCodeLine{1081 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{1082 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{1083 }
-\DoxyCodeLine{1084 \}}
+\DoxyCodeLine{1069 \textcolor{preprocessor}{    template INTERNAL\_get\_sandbox\_function\_ptr<decltype(func\_name)>(           \(\backslash\)}}
+\DoxyCodeLine{1070 \textcolor{preprocessor}{      sandbox\_lookup\_symbol\_helper(RLBOX\_USE\_STATIC\_CALLS(), func\_name))}}
+\DoxyCodeLine{1071 }
+\DoxyCodeLine{1072 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{1073 }
+\DoxyCodeLine{1074 \textcolor{preprocessor}{\#  define invoke\_sandbox\_function(func\_name, ...)                              \(\backslash\)}}
+\DoxyCodeLine{1075 \textcolor{preprocessor}{    template INTERNAL\_invoke\_with\_func\_name<decltype(func\_name)>(              \(\backslash\)}}
+\DoxyCodeLine{1076 \textcolor{preprocessor}{      \#func\_name, \#\#\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{1077 }
+\DoxyCodeLine{1078 \textcolor{preprocessor}{\#  define get\_sandbox\_function\_address(func\_name)                              \(\backslash\)}}
+\DoxyCodeLine{1079 \textcolor{preprocessor}{    template INTERNAL\_get\_sandbox\_function\_name<decltype(func\_name)>(\#func\_name)}}
+\DoxyCodeLine{1080 }
+\DoxyCodeLine{1081 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{1082 }
+\DoxyCodeLine{1083 \textcolor{preprocessor}{\#define sandbox\_invoke(sandbox, func\_name, ...)                                \(\backslash\)}}
+\DoxyCodeLine{1084 \textcolor{preprocessor}{  (sandbox).invoke\_sandbox\_function(func\_name, \#\#\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{1085 }
+\DoxyCodeLine{1086 \textcolor{preprocessor}{\#define sandbox\_function\_address(sandbox, func\_name)                           \(\backslash\)}}
+\DoxyCodeLine{1087 \textcolor{preprocessor}{  (sandbox).get\_sandbox\_function\_address(func\_name)}}
+\DoxyCodeLine{1088 }
+\DoxyCodeLine{1089 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
+\DoxyCodeLine{1090 \textcolor{preprocessor}{\#  pragma clang diagnostic pop}}
+\DoxyCodeLine{1091 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{1092 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{1093 }
+\DoxyCodeLine{1094 \}}
 
 \end{DoxyCode}

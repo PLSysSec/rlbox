@@ -34,7 +34,7 @@
         <label>std::false_type</label>
       </node>
     </collaborationgraph>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="169" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="173" bodyend="173"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="170" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" bodystart="174" bodyend="174"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>
