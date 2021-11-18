@@ -21,7 +21,7 @@ TEST_CASE("Test app pointers", "[app pointer]")
     sandbox.get_app_pointer(ptr);
   tainted<unsigned int*, TestSandbox> app_ptr_tainted = app_ptr.to_tainted();
 
-  REQUIRE(app_ptr.is_registered());
+  REQUIRE(!app_ptr.is_unregistered());
 
   // Force the conversion to volatile and back
   *sandbox_mem_loc = app_ptr_tainted;
@@ -34,7 +34,7 @@ TEST_CASE("Test app pointers", "[app pointer]")
 
 
   app_ptr.unregister();
-  REQUIRE(!app_ptr.is_registered());
+  REQUIRE(app_ptr.is_unregistered());
 
   sandbox.destroy_sandbox();
 }

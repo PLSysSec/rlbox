@@ -154,9 +154,12 @@ public:
   ~sandbox_callback() { unregister(); }
 
   /**
-   * @brief Check if callback is registered.
+   * @brief Check if callback is _not_ registered.
    */
-  inline bool is_registered() const noexcept { return get_raw_value() != nullptr; }
+  inline bool is_unregistered() const noexcept
+  {
+    return get_raw_value() == nullptr;
+  }
 
   /**
    * @brief Unwrap a callback without verification. This is an unsafe operation
@@ -263,9 +266,9 @@ public:
   }
 
   /**
-   * @brief Check if app pointer is registered.
+   * @brief Check if app pointer is _not_ registered.
    */
-  inline bool is_registered() const noexcept { return idx != 0; }
+  inline bool is_unregistered() const noexcept { return idx == 0; }
 
   /**
    * @brief Unwrap app_pointer without verification. This is an unsafe operation
@@ -325,7 +328,7 @@ public:
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
 
   // Add a template parameter to make sure the assert only fires when called
-  template<typename T=void>
+  template<typename T = void>
   inline bool copy_and_verify(...) const
   {
     rlbox_detail_static_fail_because(
@@ -383,7 +386,7 @@ public:
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
 
   // Add a template parameter to make sure the assert only fires when called
-  template<typename T=void>
+  template<typename T = void>
   inline int copy_and_verify(...) const
   {
     rlbox_detail_static_fail_because(
