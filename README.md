@@ -26,20 +26,37 @@ Support for cmake's `find_package` API is also included. See the example in `exa
 
    ```bash
    cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
+   ```
+
+   You can build with cmake:
+
+   ```bash
    cmake --build ./build --parallel --config Release
    ```
 
-2. To test (for Ubuntu, Mac or Windows):
+   or make:
 
    ```bash
-   cd build
-   cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
-
+   cd build && make -j
    ```
 
-Currently rlbox has been tested and should work with gcc-7 or later and clang-5, Visual Studio 2019 (possibly previous versions as well) or later.
-If you are using other compilers/compiler versions (like mingw), these may also be supported.
-Simply run the test suite and check that everything passes.
+2. To test:
+
+   With cmake:
+
+   ```bash
+   cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
+   ```
+
+   of make:
+
+   ```bash
+   cd build && make test
+   ```
+Currently rlbox has been tested and should work with gcc-7 or later and
+clang-5, Visual Studio 2019 (possibly previous versions as well) or later.  If
+you are using other compilers/compiler versions (like mingw), these may also be
+supported.  Simply run the test suite and check that everything passes.
 
 ## Using/Building docs
 
@@ -70,7 +87,8 @@ settings as shown below
 
    ```bash
    cmake -DCMAKE_BUILD_TYPE=Debug -DDEV=ON -S . -B ./build
-   cmake --build ./build --parallel --config Debug
+   cd build
+   make
    ```
 
 3. After making changes to the source, add any new required tests and run all

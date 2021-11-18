@@ -54,16 +54,6 @@ if(DEV)
     set(CMAKE_CXX_CLANG_TIDY clang-tidy)
   endif()
 
-  find_program(CLANG_FORMAT "clang-format")
-  if(CLANG_FORMAT)
-    # Config in .clang-format
-    add_custom_target(format-source
-                      COMMAND clang-format
-                              -i
-                              -style=file
-                              ${ALL_CXX_SOURCE_FILES})
-  endif()
-
   find_program(IWYU "iwyu")
   if("")#IWYU)# TODO: Still have to ensure this checks .hpp files, which it
          # doesn't right now. See bug below about "check_also"... which doesn't
@@ -81,6 +71,19 @@ if(DEV)
   endif()
 
 endif()
+
+# Clang format ###################
+
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+  # Config in .clang-format
+  add_custom_target(format-source
+                    COMMAND clang-format
+                            -i
+                            -style=file
+                            ${ALL_CXX_SOURCE_FILES})
+endif()
+
 
 # Dependencies ###################
 
