@@ -138,7 +138,7 @@
 <codeline lineno="29"><highlight class="normal"></highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/>T_PointerType<sp/>get_unused_index(T_PointerType<sp/>max_ptr_val)</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>max_val<sp/>=<sp/>(T_PointerTypeUnsigned)<sp/>max_ptr_val;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>max_val<sp/>=<sp/>(T_PointerTypeUnsigned)max_ptr_val;</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(T_PointerTypeUnsigned<sp/>i<sp/>=<sp/>counter;<sp/>i<sp/>&lt;=<sp/>max_val;<sp/>i++)<sp/>{</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(pointer_map.find(i)<sp/>==<sp/>pointer_map.end())<sp/>{</highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>counter<sp/>=<sp/>i<sp/>+<sp/>1;</highlight></codeline>

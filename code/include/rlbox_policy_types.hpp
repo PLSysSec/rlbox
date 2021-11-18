@@ -328,7 +328,7 @@ public:
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
 
   // Add a template parameter to make sure the assert only fires when called
-  template<typename T=void>
+  template<typename T = void>
   inline bool copy_and_verify(...) const
   {
     rlbox_detail_static_fail_because(
@@ -386,7 +386,7 @@ public:
   inline auto INTERNAL_unverified_safe() const { return UNSAFE_unverified(); }
 
   // Add a template parameter to make sure the assert only fires when called
-  template<typename T=void>
+  template<typename T = void>
   inline int copy_and_verify(...) const
   {
     rlbox_detail_static_fail_because(

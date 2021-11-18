@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="361" column="7" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="361" bodyend="-1"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="364" column="7" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="364" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -34,7 +34,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="364" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="364" bodyend="366"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="367" column="3" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="367" bodyend="369"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1aff51cd5556756d01d9623756bd079e3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -50,7 +50,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="367" column="3"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="370" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a11df0d638b28e49ed3df6f5a1fc51784" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__int__hint" kindref="compound">tainted_int_hint</ref> &amp;</type>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="368" column="27" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="368" bodyend="372"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="371" column="27" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="371" bodyend="375"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a9f716ceac11a70d7c3472b2c8f9fc5d5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classrlbox_1_1tainted__boolean__hint" kindref="compound">tainted_boolean_hint</ref></type>
@@ -80,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="373" column="31" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="373" bodyend="373"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="376" column="31" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="376" bodyend="376"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a1f7a28c11c9d09613fd347402fcb9b45" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -105,7 +105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="375" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="375" bodyend="379"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="378" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="378" bodyend="382"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1ac3b2d7236f3e457c76eddee351357832" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -118,7 +118,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="380" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="380" bodyend="380"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="383" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="383" bodyend="383"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a05e881c8eb389d1bf045507e36921ec9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -131,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="381" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="381" bodyend="381"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="384" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="384" bodyend="384"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a6046f83981c177ea16ff1631cb436714" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -144,7 +144,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="382" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="382" bodyend="382"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="385" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="385" bodyend="385"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a4b0d4f31f2656bc8eb5a8221f66c5172" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>auto</type>
@@ -157,7 +157,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="383" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="383" bodyend="383"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="386" column="15" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="386" bodyend="386"/>
       </memberdef>
       <memberdef kind="function" id="classrlbox_1_1tainted__int__hint_1a8c4726fc44ad2b96ff6e021e7146960e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -179,7 +179,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="387" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="387" bodyend="407"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="390" column="14" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="390" bodyend="410"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -187,7 +187,7 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="358" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="359" bodyend="408"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" line="361" column="1" bodyfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_policy_types.hpp" bodystart="362" bodyend="411"/>
     <listofallmembers>
       <member refid="classrlbox_1_1tainted__int__hint_1a8c4726fc44ad2b96ff6e021e7146960e" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>copy_and_verify</name></member>
       <member refid="classrlbox_1_1tainted__int__hint_1a6046f83981c177ea16ff1631cb436714" prot="public" virt="non-virtual"><scope>rlbox::tainted_int_hint</scope><name>INTERNAL_unverified_safe</name></member>

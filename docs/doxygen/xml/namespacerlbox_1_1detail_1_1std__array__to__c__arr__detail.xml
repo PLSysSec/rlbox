@@ -25,7 +25,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="115" column="5"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="116" column="5"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -48,13 +48,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="118" column="5" declfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" declline="118" declcolumn="5"/>
+        <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="119" column="5" declfile="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" declline="119" declcolumn="5"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="107" column="1"/>
+    <location file="/home/d/hack/rlbox_sandboxing_api/code/include/rlbox_type_traits.hpp" line="108" column="1"/>
   </compounddef>
 </doxygen>

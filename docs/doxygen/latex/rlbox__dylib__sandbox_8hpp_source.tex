@@ -101,212 +101,211 @@
 \DoxyCodeLine{102   \}}
 \DoxyCodeLine{103 }
 \DoxyCodeLine{104 \textcolor{keyword}{protected}:}
-\DoxyCodeLine{105 }
-\DoxyCodeLine{106 \textcolor{preprocessor}{  \#if defined(\_WIN32)}}
-\DoxyCodeLine{107   \textcolor{keyword}{using} path\_buf = \textcolor{keyword}{const} LPCWSTR;}
-\DoxyCodeLine{108 \textcolor{preprocessor}{  \#else}}
-\DoxyCodeLine{109   \textcolor{keyword}{using} path\_buf = \textcolor{keyword}{const} \textcolor{keywordtype}{char}*;}
-\DoxyCodeLine{110 \textcolor{preprocessor}{  \#endif}}
-\DoxyCodeLine{111 }
-\DoxyCodeLine{112   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_create\_sandbox(path\_buf path)}
-\DoxyCodeLine{113   \{}
-\DoxyCodeLine{114 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
-\DoxyCodeLine{115     sandbox = (\textcolor{keywordtype}{void}*)LoadLibraryW(path);}
-\DoxyCodeLine{116 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{117     sandbox = dlopen(path, RTLD\_LAZY | RTLD\_LOCAL);}
-\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{119 }
-\DoxyCodeLine{120     \textcolor{keywordflow}{if} (!sandbox) \{}
-\DoxyCodeLine{121       std::string error\_msg = \textcolor{stringliteral}{"{}Could not load dynamic library: "{}};}
-\DoxyCodeLine{122 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
-\DoxyCodeLine{123       DWORD errorMessageID = GetLastError();}
-\DoxyCodeLine{124       \textcolor{keywordflow}{if} (errorMessageID != 0) \{}
-\DoxyCodeLine{125         LPSTR messageBuffer = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{126         \textcolor{comment}{// The api creates the buffer that holds the message}}
-\DoxyCodeLine{127         \textcolor{keywordtype}{size\_t} size = FormatMessageA(FORMAT\_MESSAGE\_ALLOCATE\_BUFFER |}
-\DoxyCodeLine{128                                        FORMAT\_MESSAGE\_FROM\_SYSTEM |}
-\DoxyCodeLine{129                                        FORMAT\_MESSAGE\_IGNORE\_INSERTS,}
-\DoxyCodeLine{130                                      NULL,}
-\DoxyCodeLine{131                                      errorMessageID,}
-\DoxyCodeLine{132                                      MAKELANGID(LANG\_NEUTRAL, SUBLANG\_DEFAULT),}
-\DoxyCodeLine{133                                      (LPSTR)\&messageBuffer,}
-\DoxyCodeLine{134                                      0,}
-\DoxyCodeLine{135                                      NULL);}
-\DoxyCodeLine{136         \textcolor{comment}{// Copy the error message into a std::string.}}
-\DoxyCodeLine{137         std::string message(messageBuffer, size);}
-\DoxyCodeLine{138         error\_msg += message;}
-\DoxyCodeLine{139         LocalFree(messageBuffer);}
-\DoxyCodeLine{140       \}}
-\DoxyCodeLine{141 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{142       error\_msg += dlerror();}
-\DoxyCodeLine{143 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{144       detail::dynamic\_check(\textcolor{keyword}{false}, error\_msg.c\_str());}
-\DoxyCodeLine{145     \}}
-\DoxyCodeLine{146   \}}
-\DoxyCodeLine{147 }
-\DoxyCodeLine{148   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_destroy\_sandbox()}
-\DoxyCodeLine{149   \{}
-\DoxyCodeLine{150 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
-\DoxyCodeLine{151     FreeLibrary((HMODULE)sandbox);}
-\DoxyCodeLine{152 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{153     dlclose(sandbox);}
-\DoxyCodeLine{154 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{155     sandbox = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{156   \}}
-\DoxyCodeLine{157 }
-\DoxyCodeLine{158   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{159   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_unsandboxed\_pointer(T\_PointerType p)\textcolor{keyword}{ const}}
-\DoxyCodeLine{160 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{161     \textcolor{keywordflow}{return} p;}
-\DoxyCodeLine{162   \}}
-\DoxyCodeLine{163 }
-\DoxyCodeLine{164   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{165   \textcolor{keyword}{inline} T\_PointerType impl\_get\_sandboxed\_pointer(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)\textcolor{keyword}{ const}}
-\DoxyCodeLine{166 \textcolor{keyword}{  }\{}
-\DoxyCodeLine{167     \textcolor{keywordflow}{return} \textcolor{keyword}{const\_cast<}T\_PointerType\textcolor{keyword}{>}(p);}
-\DoxyCodeLine{168   \}}
-\DoxyCodeLine{169 }
-\DoxyCodeLine{170   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{171   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_unsandboxed\_pointer\_no\_ctx(}
-\DoxyCodeLine{172     T\_PointerType p,}
-\DoxyCodeLine{173     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
-\DoxyCodeLine{174     \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\_dylib\_sandbox}}* (* \textcolor{comment}{// Func ptr}}
-\DoxyCodeLine{175                           \textcolor{comment}{/* param: expensive\_sandbox\_finder */})(}
-\DoxyCodeLine{176       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr))}
-\DoxyCodeLine{177   \{}
-\DoxyCodeLine{178     \textcolor{keywordflow}{return} p;}
-\DoxyCodeLine{179   \}}
-\DoxyCodeLine{180 }
-\DoxyCodeLine{181   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{182   \textcolor{keyword}{static} \textcolor{keyword}{inline} T\_PointerType impl\_get\_sandboxed\_pointer\_no\_ctx(}
-\DoxyCodeLine{183     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p,}
-\DoxyCodeLine{184     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
-\DoxyCodeLine{185     \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\_dylib\_sandbox}}* (* \textcolor{comment}{// Func ptr}}
-\DoxyCodeLine{186                           \textcolor{comment}{/* param: expensive\_sandbox\_finder */})(}
-\DoxyCodeLine{187       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr))}
-\DoxyCodeLine{188   \{}
-\DoxyCodeLine{189     \textcolor{keywordflow}{return} \textcolor{keyword}{const\_cast<}T\_PointerType\textcolor{keyword}{>}(p);}
-\DoxyCodeLine{190   \}}
-\DoxyCodeLine{191 }
-\DoxyCodeLine{192   \textcolor{keyword}{inline} T\_PointerType impl\_malloc\_in\_sandbox(\textcolor{keywordtype}{size\_t} size)}
-\DoxyCodeLine{193   \{}
-\DoxyCodeLine{194     \textcolor{keywordtype}{void}* p = malloc(size);}
-\DoxyCodeLine{195     \textcolor{keywordflow}{return} p;}
-\DoxyCodeLine{196   \}}
-\DoxyCodeLine{197 }
-\DoxyCodeLine{198   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_free\_in\_sandbox(T\_PointerType p) \{ free(p); \}}
-\DoxyCodeLine{199 }
-\DoxyCodeLine{200   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_in\_same\_sandbox(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*, \textcolor{keyword}{const} \textcolor{keywordtype}{void}*)}
-\DoxyCodeLine{201   \{}
-\DoxyCodeLine{202     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{203   \}}
-\DoxyCodeLine{204 }
-\DoxyCodeLine{205   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_pointer\_in\_sandbox\_memory(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*) \{ \textcolor{keywordflow}{return} \textcolor{keyword}{true}; \}}
-\DoxyCodeLine{206   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_pointer\_in\_app\_memory(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*) \{ \textcolor{keywordflow}{return} \textcolor{keyword}{true}; \}}
-\DoxyCodeLine{207 }
-\DoxyCodeLine{208   \textcolor{keyword}{inline} \textcolor{keywordtype}{size\_t} impl\_get\_total\_memory()}
-\DoxyCodeLine{209   \{}
-\DoxyCodeLine{210     \textcolor{keywordflow}{return} std::numeric\_limits<size\_t>::max();}
-\DoxyCodeLine{211   \}}
-\DoxyCodeLine{212 }
-\DoxyCodeLine{213   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_memory\_location()}
-\DoxyCodeLine{214   \{}
-\DoxyCodeLine{215     \textcolor{comment}{// There isn't any sandbox memory for the dylib\_sandbox as we just redirect}}
-\DoxyCodeLine{216     \textcolor{comment}{// to the app. Also, this is mostly used for pointer swizzling or sandbox}}
-\DoxyCodeLine{217     \textcolor{comment}{// bounds checks which is also not present/not required. So we can just}}
-\DoxyCodeLine{218     \textcolor{comment}{// return null}}
-\DoxyCodeLine{219     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{220   \}}
-\DoxyCodeLine{221 }
-\DoxyCodeLine{222   \textcolor{keywordtype}{void}* impl\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
-\DoxyCodeLine{223   \{}
-\DoxyCodeLine{224 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
-\DoxyCodeLine{225     \textcolor{keywordtype}{void}* ret = GetProcAddress((HMODULE)sandbox, func\_name);}
-\DoxyCodeLine{226 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{227     \textcolor{keywordtype}{void}* ret = dlsym(sandbox, func\_name);}
-\DoxyCodeLine{228 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{229     detail::dynamic\_check(ret != \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"{}Symbol not found"{}});}
-\DoxyCodeLine{230     \textcolor{keywordflow}{return} ret;}
-\DoxyCodeLine{231   \}}
-\DoxyCodeLine{232 }
-\DoxyCodeLine{233   \textcolor{keywordtype}{void}* impl\_internal\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
-\DoxyCodeLine{234   \{}
-\DoxyCodeLine{235     \textcolor{keywordflow}{return} impl\_lookup\_symbol(func\_name);}
-\DoxyCodeLine{236   \}}
-\DoxyCodeLine{237 }
-\DoxyCodeLine{238   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Converted, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{239   \textcolor{keyword}{auto} impl\_invoke\_with\_func\_ptr(T\_Converted* func\_ptr, T\_Args\&\&... params)}
-\DoxyCodeLine{240   \{}
-\DoxyCodeLine{241 \textcolor{preprocessor}{\#ifdef RLBOX\_EMBEDDER\_PROVIDES\_TLS\_STATIC\_VARIABLES}}
-\DoxyCodeLine{242     \textcolor{keyword}{auto}\& thread\_data = *get\_rlbox\_dylib\_sandbox\_thread\_data();}
-\DoxyCodeLine{243 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{244     thread\_data.sandbox = \textcolor{keyword}{this};}
-\DoxyCodeLine{245     \textcolor{keywordflow}{return} (*func\_ptr)(params...);}
-\DoxyCodeLine{246   \}}
-\DoxyCodeLine{247 }
-\DoxyCodeLine{248   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{249   \textcolor{keyword}{inline} T\_PointerType impl\_register\_callback(\textcolor{keywordtype}{void}* key, \textcolor{keywordtype}{void}* callback)}
-\DoxyCodeLine{250   \{}
-\DoxyCodeLine{251     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, callback\_mutex);}
-\DoxyCodeLine{252 }
-\DoxyCodeLine{253     \textcolor{keywordtype}{void}* chosen\_trampoline = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{254 }
-\DoxyCodeLine{255     \textcolor{comment}{// need a compile time for loop as we we need I to be a compile time value}}
-\DoxyCodeLine{256     \textcolor{comment}{// this is because we are returning the I'th callback trampoline}}
-\DoxyCodeLine{257     detail::compile\_time\_for<MAX\_CALLBACKS>([\&](\textcolor{keyword}{auto} I) \{}
-\DoxyCodeLine{258       \textcolor{keywordflow}{if} (!chosen\_trampoline \&\& callback\_unique\_keys[I.value] == \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{259         callback\_unique\_keys[I.value] = key;}
-\DoxyCodeLine{260         callbacks[I.value] = callback;}
-\DoxyCodeLine{261         chosen\_trampoline = reinterpret\_cast<void*>(}
-\DoxyCodeLine{262           callback\_trampoline<I.value, T\_Ret, T\_Args...>);}
-\DoxyCodeLine{263       \}}
-\DoxyCodeLine{264     \});}
-\DoxyCodeLine{265 }
-\DoxyCodeLine{266     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\_PointerType\textcolor{keyword}{>}(chosen\_trampoline);}
-\DoxyCodeLine{267   \}}
-\DoxyCodeLine{268 }
-\DoxyCodeLine{269   \textcolor{keyword}{static} \textcolor{keyword}{inline} std::pair<rlbox\_dylib\_sandbox*, void*>}
-\DoxyCodeLine{270   impl\_get\_executed\_callback\_sandbox\_and\_key()}
-\DoxyCodeLine{271   \{}
-\DoxyCodeLine{272 \textcolor{preprocessor}{\#ifdef RLBOX\_EMBEDDER\_PROVIDES\_TLS\_STATIC\_VARIABLES}}
-\DoxyCodeLine{273     \textcolor{keyword}{auto}\& thread\_data = *get\_rlbox\_dylib\_sandbox\_thread\_data();}
-\DoxyCodeLine{274 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{275     \textcolor{keyword}{auto} sandbox = thread\_data.sandbox;}
-\DoxyCodeLine{276     \textcolor{keyword}{auto} callback\_num = thread\_data.last\_callback\_invoked;}
-\DoxyCodeLine{277     \textcolor{keywordtype}{void}* key = sandbox-\/>callback\_unique\_keys[callback\_num];}
-\DoxyCodeLine{278     \textcolor{keywordflow}{return} std::make\_pair(sandbox, key);}
-\DoxyCodeLine{279   \}}
-\DoxyCodeLine{280 }
-\DoxyCodeLine{281   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
-\DoxyCodeLine{282   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_unregister\_callback(\textcolor{keywordtype}{void}* key)}
-\DoxyCodeLine{283   \{}
-\DoxyCodeLine{284     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, callback\_mutex);}
-\DoxyCodeLine{285     \textcolor{keywordflow}{for} (uint32\_t i = 0; i < MAX\_CALLBACKS; i++) \{}
-\DoxyCodeLine{286       \textcolor{keywordflow}{if} (callback\_unique\_keys[i] == key) \{}
-\DoxyCodeLine{287         callback\_unique\_keys[i] = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{288         callbacks[i] = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{289         \textcolor{keywordflow}{break};}
-\DoxyCodeLine{290       \}}
-\DoxyCodeLine{291     \}}
-\DoxyCodeLine{292   \}}
-\DoxyCodeLine{293 }
-\DoxyCodeLine{294   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{295   \textcolor{keyword}{inline} T* impl\_grant\_access(T* src, \textcolor{keywordtype}{size\_t} num, \textcolor{keywordtype}{bool}\& success)}
-\DoxyCodeLine{296   \{}
-\DoxyCodeLine{297     RLBOX\_UNUSED(num);}
-\DoxyCodeLine{298     success = \textcolor{keyword}{true};}
-\DoxyCodeLine{299     \textcolor{keywordflow}{return} src;}
-\DoxyCodeLine{300   \}}
-\DoxyCodeLine{301 }
-\DoxyCodeLine{302   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{303   \textcolor{keyword}{inline} T* impl\_deny\_access(T* src, \textcolor{keywordtype}{size\_t} num, \textcolor{keywordtype}{bool}\& success)}
-\DoxyCodeLine{304   \{}
-\DoxyCodeLine{305     RLBOX\_UNUSED(num);}
-\DoxyCodeLine{306     success = \textcolor{keyword}{true};}
-\DoxyCodeLine{307     \textcolor{keywordflow}{return} src;}
-\DoxyCodeLine{308   \}}
-\DoxyCodeLine{309 \};}
-\DoxyCodeLine{310 }
-\DoxyCodeLine{311 \}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{106   \textcolor{keyword}{using} path\_buf = \textcolor{keyword}{const} LPCWSTR;}
+\DoxyCodeLine{107 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{108   \textcolor{keyword}{using} path\_buf = \textcolor{keyword}{const} \textcolor{keywordtype}{char}*;}
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_create\_sandbox(path\_buf path)}
+\DoxyCodeLine{112   \{}
+\DoxyCodeLine{113 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{114     sandbox = (\textcolor{keywordtype}{void}*)LoadLibraryW(path);}
+\DoxyCodeLine{115 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{116     sandbox = dlopen(path, RTLD\_LAZY | RTLD\_LOCAL);}
+\DoxyCodeLine{117 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119     \textcolor{keywordflow}{if} (!sandbox) \{}
+\DoxyCodeLine{120       std::string error\_msg = \textcolor{stringliteral}{"{}Could not load dynamic library: "{}};}
+\DoxyCodeLine{121 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{122       DWORD errorMessageID = GetLastError();}
+\DoxyCodeLine{123       \textcolor{keywordflow}{if} (errorMessageID != 0) \{}
+\DoxyCodeLine{124         LPSTR messageBuffer = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{125         \textcolor{comment}{// The api creates the buffer that holds the message}}
+\DoxyCodeLine{126         \textcolor{keywordtype}{size\_t} size = FormatMessageA(FORMAT\_MESSAGE\_ALLOCATE\_BUFFER |}
+\DoxyCodeLine{127                                        FORMAT\_MESSAGE\_FROM\_SYSTEM |}
+\DoxyCodeLine{128                                        FORMAT\_MESSAGE\_IGNORE\_INSERTS,}
+\DoxyCodeLine{129                                      NULL,}
+\DoxyCodeLine{130                                      errorMessageID,}
+\DoxyCodeLine{131                                      MAKELANGID(LANG\_NEUTRAL, SUBLANG\_DEFAULT),}
+\DoxyCodeLine{132                                      (LPSTR)\&messageBuffer,}
+\DoxyCodeLine{133                                      0,}
+\DoxyCodeLine{134                                      NULL);}
+\DoxyCodeLine{135         \textcolor{comment}{// Copy the error message into a std::string.}}
+\DoxyCodeLine{136         std::string message(messageBuffer, size);}
+\DoxyCodeLine{137         error\_msg += message;}
+\DoxyCodeLine{138         LocalFree(messageBuffer);}
+\DoxyCodeLine{139       \}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{141       error\_msg += dlerror();}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{143       detail::dynamic\_check(\textcolor{keyword}{false}, error\_msg.c\_str());}
+\DoxyCodeLine{144     \}}
+\DoxyCodeLine{145   \}}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_destroy\_sandbox()}
+\DoxyCodeLine{148   \{}
+\DoxyCodeLine{149 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{150     FreeLibrary((HMODULE)sandbox);}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{152     dlclose(sandbox);}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{154     sandbox = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{155   \}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{158   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_unsandboxed\_pointer(T\_PointerType p)\textcolor{keyword}{ const}}
+\DoxyCodeLine{159 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{160     \textcolor{keywordflow}{return} p;}
+\DoxyCodeLine{161   \}}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{164   \textcolor{keyword}{inline} T\_PointerType impl\_get\_sandboxed\_pointer(\textcolor{keyword}{const} \textcolor{keywordtype}{void}* p)\textcolor{keyword}{ const}}
+\DoxyCodeLine{165 \textcolor{keyword}{  }\{}
+\DoxyCodeLine{166     \textcolor{keywordflow}{return} \textcolor{keyword}{const\_cast<}T\_PointerType\textcolor{keyword}{>}(p);}
+\DoxyCodeLine{167   \}}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{170   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_unsandboxed\_pointer\_no\_ctx(}
+\DoxyCodeLine{171     T\_PointerType p,}
+\DoxyCodeLine{172     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
+\DoxyCodeLine{173     \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\_dylib\_sandbox}}* (* \textcolor{comment}{// Func ptr}}
+\DoxyCodeLine{174                           \textcolor{comment}{/* param: expensive\_sandbox\_finder */})(}
+\DoxyCodeLine{175       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr))}
+\DoxyCodeLine{176   \{}
+\DoxyCodeLine{177     \textcolor{keywordflow}{return} p;}
+\DoxyCodeLine{178   \}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{181   \textcolor{keyword}{static} \textcolor{keyword}{inline} T\_PointerType impl\_get\_sandboxed\_pointer\_no\_ctx(}
+\DoxyCodeLine{182     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* p,}
+\DoxyCodeLine{183     \textcolor{keyword}{const} \textcolor{keywordtype}{void}* \textcolor{comment}{/* example\_unsandboxed\_ptr */},}
+\DoxyCodeLine{184     \mbox{\hyperlink{classrlbox_1_1rlbox__dylib__sandbox}{rlbox\_dylib\_sandbox}}* (* \textcolor{comment}{// Func ptr}}
+\DoxyCodeLine{185                           \textcolor{comment}{/* param: expensive\_sandbox\_finder */})(}
+\DoxyCodeLine{186       \textcolor{keyword}{const} \textcolor{keywordtype}{void}* example\_unsandboxed\_ptr))}
+\DoxyCodeLine{187   \{}
+\DoxyCodeLine{188     \textcolor{keywordflow}{return} \textcolor{keyword}{const\_cast<}T\_PointerType\textcolor{keyword}{>}(p);}
+\DoxyCodeLine{189   \}}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191   \textcolor{keyword}{inline} T\_PointerType impl\_malloc\_in\_sandbox(\textcolor{keywordtype}{size\_t} size)}
+\DoxyCodeLine{192   \{}
+\DoxyCodeLine{193     \textcolor{keywordtype}{void}* p = malloc(size);}
+\DoxyCodeLine{194     \textcolor{keywordflow}{return} p;}
+\DoxyCodeLine{195   \}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_free\_in\_sandbox(T\_PointerType p) \{ free(p); \}}
+\DoxyCodeLine{198 }
+\DoxyCodeLine{199   \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_in\_same\_sandbox(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*, \textcolor{keyword}{const} \textcolor{keywordtype}{void}*)}
+\DoxyCodeLine{200   \{}
+\DoxyCodeLine{201     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{202   \}}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_pointer\_in\_sandbox\_memory(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*) \{ \textcolor{keywordflow}{return} \textcolor{keyword}{true}; \}}
+\DoxyCodeLine{205   \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} impl\_is\_pointer\_in\_app\_memory(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*) \{ \textcolor{keywordflow}{return} \textcolor{keyword}{true}; \}}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207   \textcolor{keyword}{inline} \textcolor{keywordtype}{size\_t} impl\_get\_total\_memory()}
+\DoxyCodeLine{208   \{}
+\DoxyCodeLine{209     \textcolor{keywordflow}{return} std::numeric\_limits<size\_t>::max();}
+\DoxyCodeLine{210   \}}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{212   \textcolor{keyword}{inline} \textcolor{keywordtype}{void}* impl\_get\_memory\_location()}
+\DoxyCodeLine{213   \{}
+\DoxyCodeLine{214     \textcolor{comment}{// There isn't any sandbox memory for the dylib\_sandbox as we just redirect}}
+\DoxyCodeLine{215     \textcolor{comment}{// to the app. Also, this is mostly used for pointer swizzling or sandbox}}
+\DoxyCodeLine{216     \textcolor{comment}{// bounds checks which is also not present/not required. So we can just}}
+\DoxyCodeLine{217     \textcolor{comment}{// return null}}
+\DoxyCodeLine{218     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{219   \}}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{221   \textcolor{keywordtype}{void}* impl\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
+\DoxyCodeLine{222   \{}
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{224     \textcolor{keywordtype}{void}* ret = GetProcAddress((HMODULE)sandbox, func\_name);}
+\DoxyCodeLine{225 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{226     \textcolor{keywordtype}{void}* ret = dlsym(sandbox, func\_name);}
+\DoxyCodeLine{227 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{228     detail::dynamic\_check(ret != \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"{}Symbol not found"{}});}
+\DoxyCodeLine{229     \textcolor{keywordflow}{return} ret;}
+\DoxyCodeLine{230   \}}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{232   \textcolor{keywordtype}{void}* impl\_internal\_lookup\_symbol(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* func\_name)}
+\DoxyCodeLine{233   \{}
+\DoxyCodeLine{234     \textcolor{keywordflow}{return} impl\_lookup\_symbol(func\_name);}
+\DoxyCodeLine{235   \}}
+\DoxyCodeLine{236 }
+\DoxyCodeLine{237   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} T\_Converted, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{238   \textcolor{keyword}{auto} impl\_invoke\_with\_func\_ptr(T\_Converted* func\_ptr, T\_Args\&\&... params)}
+\DoxyCodeLine{239   \{}
+\DoxyCodeLine{240 \textcolor{preprocessor}{\#ifdef RLBOX\_EMBEDDER\_PROVIDES\_TLS\_STATIC\_VARIABLES}}
+\DoxyCodeLine{241     \textcolor{keyword}{auto}\& thread\_data = *get\_rlbox\_dylib\_sandbox\_thread\_data();}
+\DoxyCodeLine{242 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{243     thread\_data.sandbox = \textcolor{keyword}{this};}
+\DoxyCodeLine{244     \textcolor{keywordflow}{return} (*func\_ptr)(params...);}
+\DoxyCodeLine{245   \}}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{248   \textcolor{keyword}{inline} T\_PointerType impl\_register\_callback(\textcolor{keywordtype}{void}* key, \textcolor{keywordtype}{void}* callback)}
+\DoxyCodeLine{249   \{}
+\DoxyCodeLine{250     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, callback\_mutex);}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252     \textcolor{keywordtype}{void}* chosen\_trampoline = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254     \textcolor{comment}{// need a compile time for loop as we we need I to be a compile time value}}
+\DoxyCodeLine{255     \textcolor{comment}{// this is because we are returning the I'th callback trampoline}}
+\DoxyCodeLine{256     detail::compile\_time\_for<MAX\_CALLBACKS>([\&](\textcolor{keyword}{auto} I) \{}
+\DoxyCodeLine{257       \textcolor{keywordflow}{if} (!chosen\_trampoline \&\& callback\_unique\_keys[I.value] == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{258         callback\_unique\_keys[I.value] = key;}
+\DoxyCodeLine{259         callbacks[I.value] = callback;}
+\DoxyCodeLine{260         chosen\_trampoline = reinterpret\_cast<void*>(}
+\DoxyCodeLine{261           callback\_trampoline<I.value, T\_Ret, T\_Args...>);}
+\DoxyCodeLine{262       \}}
+\DoxyCodeLine{263     \});}
+\DoxyCodeLine{264 }
+\DoxyCodeLine{265     \textcolor{keywordflow}{return} \textcolor{keyword}{reinterpret\_cast<}T\_PointerType\textcolor{keyword}{>}(chosen\_trampoline);}
+\DoxyCodeLine{266   \}}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{268   \textcolor{keyword}{static} \textcolor{keyword}{inline} std::pair<rlbox\_dylib\_sandbox*, void*>}
+\DoxyCodeLine{269   impl\_get\_executed\_callback\_sandbox\_and\_key()}
+\DoxyCodeLine{270   \{}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#ifdef RLBOX\_EMBEDDER\_PROVIDES\_TLS\_STATIC\_VARIABLES}}
+\DoxyCodeLine{272     \textcolor{keyword}{auto}\& thread\_data = *get\_rlbox\_dylib\_sandbox\_thread\_data();}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{274     \textcolor{keyword}{auto} sandbox = thread\_data.sandbox;}
+\DoxyCodeLine{275     \textcolor{keyword}{auto} callback\_num = thread\_data.last\_callback\_invoked;}
+\DoxyCodeLine{276     \textcolor{keywordtype}{void}* key = sandbox-\/>callback\_unique\_keys[callback\_num];}
+\DoxyCodeLine{277     \textcolor{keywordflow}{return} std::make\_pair(sandbox, key);}
+\DoxyCodeLine{278   \}}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T\_Ret, \textcolor{keyword}{typename}... T\_Args>}
+\DoxyCodeLine{281   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} impl\_unregister\_callback(\textcolor{keywordtype}{void}* key)}
+\DoxyCodeLine{282   \{}
+\DoxyCodeLine{283     RLBOX\_ACQUIRE\_UNIQUE\_GUARD(lock, callback\_mutex);}
+\DoxyCodeLine{284     \textcolor{keywordflow}{for} (uint32\_t i = 0; i < MAX\_CALLBACKS; i++) \{}
+\DoxyCodeLine{285       \textcolor{keywordflow}{if} (callback\_unique\_keys[i] == key) \{}
+\DoxyCodeLine{286         callback\_unique\_keys[i] = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{287         callbacks[i] = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{288         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{289       \}}
+\DoxyCodeLine{290     \}}
+\DoxyCodeLine{291   \}}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{294   \textcolor{keyword}{inline} T* impl\_grant\_access(T* src, \textcolor{keywordtype}{size\_t} num, \textcolor{keywordtype}{bool}\& success)}
+\DoxyCodeLine{295   \{}
+\DoxyCodeLine{296     RLBOX\_UNUSED(num);}
+\DoxyCodeLine{297     success = \textcolor{keyword}{true};}
+\DoxyCodeLine{298     \textcolor{keywordflow}{return} src;}
+\DoxyCodeLine{299   \}}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301   \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{302   \textcolor{keyword}{inline} T* impl\_deny\_access(T* src, \textcolor{keywordtype}{size\_t} num, \textcolor{keywordtype}{bool}\& success)}
+\DoxyCodeLine{303   \{}
+\DoxyCodeLine{304     RLBOX\_UNUSED(num);}
+\DoxyCodeLine{305     success = \textcolor{keyword}{true};}
+\DoxyCodeLine{306     \textcolor{keywordflow}{return} src;}
+\DoxyCodeLine{307   \}}
+\DoxyCodeLine{308 \};}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310 \}}
 
 \end{DoxyCode}

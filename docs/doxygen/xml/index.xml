@@ -44,7 +44,7 @@
     <member refid="classrlbox_1_1app__pointer_1abb7d911d68637690a990059b2f80aba4" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1app__pointer_1a91150874c356edccc9ba9e18256c3a77" kind="function"><name>unregister</name></member>
     <member refid="classrlbox_1_1app__pointer_1a626396f9c3be8c549bc35b11fe9d0158" kind="function"><name>to_tainted</name></member>
-    <member refid="classrlbox_1_1app__pointer_1ad1e6a6393232b3834dbd4b8eb2c729df" kind="function"><name>is_registered</name></member>
+    <member refid="classrlbox_1_1app__pointer_1a69b1e2004b643206b8141ab876aa9685" kind="function"><name>is_unregistered</name></member>
     <member refid="classrlbox_1_1app__pointer_1a71209edbd57c65cd36d0b5c2c03fde3f" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1app__pointer_1a1e5d8a1865acf9d29d53f0e8543e3fa2" kind="function"><name>UNSAFE_sandboxed</name></member>
     <member refid="classrlbox_1_1app__pointer_1af226dfc5118370a104707438292febdd" kind="function"><name>UNSAFE_unverified</name></member>
@@ -310,7 +310,7 @@
     <member refid="classrlbox_1_1sandbox__callback_1ab46713f171a6596f288c056205b0453d" kind="function"><name>operator=</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a533080e1c309f61779c132037c232c8d" kind="function"><name>unregister</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a12a483d0f7051a1f9d8226161a9e5f6f" kind="function"><name>~sandbox_callback</name></member>
-    <member refid="classrlbox_1_1sandbox__callback_1ad587e0c79682c3f92c90bfdf7c974322" kind="function"><name>is_registered</name></member>
+    <member refid="classrlbox_1_1sandbox__callback_1a20da9156ccfba21d84edc998be997571" kind="function"><name>is_unregistered</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a9d7a4e08413d3989ce8633ea459b1110" kind="function"><name>UNSAFE_unverified</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a0a71e99d85bd22cd642327017c863b26" kind="function"><name>UNSAFE_sandboxed</name></member>
     <member refid="classrlbox_1_1sandbox__callback_1a8a9a501dd7e47030fabf84491303354f" kind="function"><name>UNSAFE_unverified</name></member>
