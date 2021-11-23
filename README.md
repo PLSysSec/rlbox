@@ -45,7 +45,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    With cmake:
 
    ```bash
-   ctest -V
+   cd build && ctest -V
    ```
 
    or with make (on Linux/Mac):
@@ -57,7 +57,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    When running with ASAN and UBSAN:
 
    ```bash
-   cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
+   cd build && cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
    ```
 
 Currently rlbox has been tested and should work with gcc-7 or later and
