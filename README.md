@@ -45,14 +45,21 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    With cmake:
 
    ```bash
-   cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
+   ctest -V
    ```
 
-   of make (on Linux/Mac):
+   or with make (on Linux/Mac):
 
    ```bash
    cd build && make test
    ```
+
+   When running with ASAN and UBSAN:
+
+   ```bash
+   cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
+   ```
+
 Currently rlbox has been tested and should work with gcc-7 or later and
 clang-5, Visual Studio 2019 (possibly previous versions as well) or later.  If
 you are using other compilers/compiler versions (like mingw), these may also be
