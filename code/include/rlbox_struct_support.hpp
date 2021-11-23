@@ -30,6 +30,8 @@ template<typename T, typename T_Sbx>
 using convert_to_sandbox_equivalent_t =
   typename convert_to_sandbox_equivalent_helper<T, T_Sbx>::type;
 
+  // This is used by rlbox_load_structs_from_library to test the current namespace
+  struct markerStruct {};
 }
 
 #define helper_create_converted_field(fieldType, fieldName, isFrozen)          \
@@ -380,10 +382,6 @@ using convert_to_sandbox_equivalent_t =
 // clang-format off
 #define rlbox_load_structs_from_library(libId)                                 \
   namespace rlbox {                                                            \
-    namespace detail {                                                         \
-      struct markerStruct                                                      \
-      {};                                                                      \
-    }                                                                          \
     /* check that this macro is called in a global namespace */                \
     static_assert(                                                             \
       ::rlbox::detail::is_member_of_rlbox_detail<detail::markerStruct>,        \
