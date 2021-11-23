@@ -87,6 +87,7 @@ endif()
 
 # Dependencies ###################
 
+if(BUILD_TESTING)
 find_package(Catch2 QUIET)
 if(NOT Catch2_FOUND)
   include(FetchContent)
@@ -102,6 +103,7 @@ if(NOT Catch2_FOUND)
   add_subdirectory("${catch2_SOURCE_DIR}")
   list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
 endif()
+endif(BUILD_TESTING)
 
 file(GLOB_RECURSE
      RLBOX_SOURCE_FILES
@@ -204,6 +206,8 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         DESTINATION ${DATAROOT_CONFIG_DESTINATION})
 
 # Tests ###################
+
+if(BUILD_TESTING)
 
 include(CTest)
 include(Catch)
@@ -332,3 +336,4 @@ add_custom_target(
   COMMENT "Running tests"
 )
 
+endif(BUILD_TESTING)

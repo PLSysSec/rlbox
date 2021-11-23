@@ -48,7 +48,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
    ```
 
-   of make:
+   of make (on Linux/Mac):
 
    ```bash
    cd build && make test
@@ -57,6 +57,21 @@ Currently rlbox has been tested and should work with gcc-7 or later and
 clang-5, Visual Studio 2019 (possibly previous versions as well) or later.  If
 you are using other compilers/compiler versions (like mingw), these may also be
 supported.  Simply run the test suite and check that everything passes.
+
+## Install the library (Linux/Mac only)
+
+Configure the build with cmake in the same way that previous paragraph. Then simply run:
+
+   ```bash
+   cd build
+   make install
+   ```
+
+If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when invoking cmake the first time. This will also remove the Catch2 dependency.
+
+   ```bash
+   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+   ```
 
 ## Using/Building docs
 
