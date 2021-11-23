@@ -23,6 +23,7 @@ if(MSVC)
 endif()
 
 option(DEV "Use settings suitable for dev contributions to rlbox" OFF)
+option(BUILD_TESTING "Build rlbox tests by default" ON)
 
 file(GLOB_RECURSE
      ALL_CXX_SOURCE_FILES
