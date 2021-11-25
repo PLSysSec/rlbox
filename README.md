@@ -31,7 +31,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    You can build with cmake:
 
    ```bash
-   cmake --build ./build --parallel --config Release
+   cmake --build ./build --config Release --parallel
    ```
 
    or make:
