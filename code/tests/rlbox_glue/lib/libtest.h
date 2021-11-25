@@ -84,6 +84,7 @@ extern "C"
                                     unsigned long a7,
                                     unsigned long a8,
                                     unsigned long a9);
+  int isNonNullChar(unsigned char p);
 #ifdef __cplusplus
 }
 #endif
