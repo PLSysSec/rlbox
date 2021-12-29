@@ -239,25 +239,55 @@ TEST_CASE("test memcmp", "[stdlib]")
 }
 
 // NOLINTNEXTLINE
-TEST_CASE("test grant deny access", "[stdlib]")
+TEST_CASE("test grant deny access single", "[stdlib]")
 {
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  unsigned int* src =
-    static_cast<unsigned int*>(malloc(sizeof(unsigned int))); // NOLINT
-  const unsigned int test_val = 42;
+  char* src =
+    static_cast<char*>(malloc(sizeof(char))); // NOLINT
+  const char test_val = 42;
   *src = test_val;
 
   bool used_copy = false;
 
   auto transfered = rlbox::copy_memory_or_grant_access(
-    sandbox, src, sizeof(unsigned int), true, used_copy);
+    sandbox, src, 1, true, used_copy);
   REQUIRE((*transfered == test_val).unverified_safe_because("test"));
 
   auto transfered2 = rlbox::copy_memory_or_deny_access(
-    sandbox, transfered, sizeof(unsigned int), true, used_copy);
+    sandbox, transfered, 1, true, used_copy);
   REQUIRE(*transfered2 == test_val);
+
+  free(transfered2);
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("test grant deny access many", "[stdlib]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  uint16_t* src =
+    static_cast<uint16_t*>(malloc(2 * sizeof(uint16_t))); // NOLINT
+  const uint16_t test_val1 = 42;
+  const uint16_t test_val2 = 43;
+  src[0] = test_val1;
+  src[1] = test_val2;
+
+  bool used_copy = false;
+
+  auto transfered = rlbox::copy_memory_or_grant_access(
+    sandbox, src, 2, true, used_copy);
+  REQUIRE((transfered[0] == test_val1).unverified_safe_because("test"));
+  REQUIRE((transfered[1] == test_val2).unverified_safe_because("test"));
+
+  auto transfered2 = rlbox::copy_memory_or_deny_access(
+    sandbox, transfered, 2, true, used_copy);
+  REQUIRE(transfered2[0] == test_val1);
+  REQUIRE(transfered2[1] == test_val2);
 
   free(transfered2);
 
