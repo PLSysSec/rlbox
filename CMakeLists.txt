@@ -89,7 +89,7 @@ endif()
 # Dependencies ###################
 
 if(BUILD_TESTING)
-find_package(Catch2 QUIET)
+find_package(Catch2 2.13.7 QUIET)
 if(NOT Catch2_FOUND)
   include(FetchContent)
   FetchContent_Declare(catch2
