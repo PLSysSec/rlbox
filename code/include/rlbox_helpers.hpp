@@ -120,7 +120,6 @@ namespace detail {
     std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
   if constexpr (detail::rlbox_is_tainted_v<result_type> &&                     \
                 !std::is_reference_v<result_type>) {                           \
-    static_assert(detail::rlbox_is_tainted_v<result_type>);                    \
     return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
       const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
   } else if constexpr (detail::is_fundamental_or_enum_v<result_type> ||        \
