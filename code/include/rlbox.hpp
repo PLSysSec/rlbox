@@ -495,7 +495,7 @@ public:
   /**
    * @brief Copy tainted value from sandbox and verify it.
    *
-   * @param verifer Function used to verify the copied value.
+   * @param verifier Function used to verify the copied value.
    * @tparam T_Func the type of the verifier.
    * @return Whatever the verifier function returns.
    */
@@ -628,7 +628,7 @@ public:
   /**
    * @brief Copy a range of tainted values from sandbox and verify them.
    *
-   * @param verifer Function used to verify the copied value.
+   * @param verifier Function used to verify the copied value.
    * @param count Number of elements to copy.
    * @tparam T_Func the type of the verifier. If the tainted type is ``int*``
    * then ``T_Func = T_Ret(*)(unique_ptr<int[]>)``.
@@ -654,7 +654,7 @@ public:
   /**
    * @brief Copy a tainted string from sandbox and verify it.
    *
-   * @param verifer Function used to verify the copied value.
+   * @param verifier Function used to verify the copied value.
    * @tparam T_Func the type of the verifier either
    * ``T_Ret(*)(unique_ptr<char[]>)`` or ``T_Ret(*)(std::string)``
    * @return Whatever the verifier function returns.
