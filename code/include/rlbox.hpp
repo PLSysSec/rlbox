@@ -419,7 +419,7 @@ public:
   template<typename T_Rhs>
   inline T_OpSubscriptArrRet& operator[](T_Rhs&& rhs)
   {
-    rlbox_detail_forward_to_const(operator[], T_OpSubscriptArrRet&, rhs);
+    return const_cast<T_OpSubscriptArrRet&>(std::as_const(*this)[rhs]);
   }
 
 private:
@@ -451,7 +451,7 @@ public:
 
   inline T_OpDerefRet* operator->()
   {
-    rlbox_detail_forward_to_const(operator->, T_OpDerefRet*);
+    return const_cast<T_OpDerefRet*>(std::as_const(*this).operator->());
   }
 
   inline auto operator!()
@@ -1176,14 +1176,12 @@ public:
     auto ref =
       detail::remove_volatile_from_ptr_cast(&this->get_sandbox_value_ref());
     auto ref_cast = reinterpret_cast<const T*>(ref);
-    auto ret = tainted<const T*, T_Sbx>::internal_factory(ref_cast);
-    return ret;
+    return tainted<const T*, T_Sbx>::internal_factory(ref_cast);
   }
 
   inline tainted<T*, T_Sbx> operator&() noexcept
   {
-    using T_Ret = tainted<T*, T_Sbx>;
-    rlbox_detail_forward_to_const(operator&, T_Ret);
+    return sandbox_const_cast<T*>(&std::as_const(*this));
   }
 
   // Needed as the definition of unary & above shadows the base's binary &

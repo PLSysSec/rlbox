@@ -98,18 +98,6 @@ namespace detail {
   }                                                                            \
   RLBOX_REQUIRE_SEMI_COLON
 
-#define rlbox_detail_forward_to_const(func_name, result_type, ...)             \
-  using T_ConstClassPtr = std::add_pointer_t<                                  \
-    std::add_const_t<std::remove_pointer_t<decltype(this)>>>;                  \
-  if constexpr (detail::rlbox_is_tainted_v<result_type> &&                     \
-                !std::is_reference_v<result_type>) {                           \
-    return sandbox_const_cast<detail::rlbox_remove_wrapper_t<result_type>>(    \
-      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
-  } else {                                                                     \
-    return const_cast<result_type>(                                            \
-      const_cast<T_ConstClassPtr>(this)->func_name(__VA_ARGS__));              \
-  }
-
   template<typename T>
   inline auto remove_volatile_from_ptr_cast(T* ptr)
   {
