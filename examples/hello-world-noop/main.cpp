@@ -2,6 +2,7 @@
 #define RLBOX_USE_STATIC_CALLS() rlbox_noop_sandbox_lookup_symbol
 
 #include <stdio.h>
+#include <cassert>
 #include "mylib.h"
 #include "../../code/include/rlbox.hpp"
 #include "../../code/include/rlbox_noop_sandbox.hpp"
@@ -12,7 +13,8 @@ void hello_cb(rlbox_sandbox<rlbox_noop_sandbox>& _,
               tainted<const char*, rlbox_noop_sandbox> str) {
   auto checked_string =
     str.copy_and_verify_string([](std::unique_ptr<char[]> val) {
-        return std::strlen(val.get()) < 1024 ? std::move(val) : nullptr;
+        assert(val != nullptr && std::strlen(val.get()) < 1024);
+        return std::move(val);
     });
   printf("hello_cb: %s\n", checked_string.get());
 }
