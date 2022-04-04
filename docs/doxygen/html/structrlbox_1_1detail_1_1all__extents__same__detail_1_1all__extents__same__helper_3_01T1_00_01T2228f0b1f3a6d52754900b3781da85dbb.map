@@ -1,2 +1,0 @@
-<map id="rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt;==std::rank_v&lt; T2 &gt; &amp;&amp;!std::is_array_v&lt; T1 &gt; &amp;&amp;!std::is_array_v&lt; T2 &gt; &gt; &gt;" name="rlbox::detail::all_extents_same_detail::all_extents_same_helper&lt; T1, T2, std::enable_if_t&lt; std::rank_v&lt; T1 &gt;==std::rank_v&lt; T2 &gt; &amp;&amp;!std::is_array_v&lt; T1 &gt; &amp;&amp;!std::is_array_v&lt; T2 &gt; &gt; &gt;">
-</map>

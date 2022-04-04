@@ -1,4 +1,0 @@
-<map id="rlbox::tainted_volatile&lt; T, T_Sbx &gt;" name="rlbox::tainted_volatile&lt; T, T_Sbx &gt;">
-<area shape="rect" id="node1" title="Tainted volatile values are like tainted values but still point to sandbox memory...." alt="" coords="11,109,156,151"/>
-<area shape="rect" id="node2" href="$classrlbox_1_1tainted__base__impl.html" title=" " alt="" coords="5,5,161,61"/>
-</map>
