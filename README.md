@@ -1,10 +1,10 @@
-# RLBox API
+# RLBox
 
 [![Build Status](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
 
 [![Tests](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
-RLBox sandboxing API (in C++ 17). This code has been tested on 64-bit versions of Ubuntu, Mac OSX and Windows.
+RLBox sandboxing framework. This code has been tested on 64-bit versions of Linux, Mac OSX, and Windows.
 
 ## Reporting security bugs
 
@@ -12,7 +12,10 @@ If you find a security bug, please do not create a public issue. Instead, file a
 
 ## Using this library
 
-RLBox is a general purpose sandboxing API that can be used to interact with library sandboxed with different backends --- WebAssembly, Native Client, libraries running in a separate process etc. Support for each backend is provided by a separate plugin that must also be downloaded separately.
+RLBox is a general purpose sandboxing API that can be used to interact with
+library sandboxed with different backends --- WebAssembly, Native Client, OS
+processess, etc. Support for each backend is provided by a separate plugin that
+must also be downloaded separately.
 
 See the [online docs](https://docs.rlbox.dev) for more details.
 
@@ -60,7 +63,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    cd build && cmake -E env LSAN_OPTIONS=suppressions=../leak_suppressions.txt UBSAN_OPTIONS=suppressions=../ub_suppressions.txt ctest -V
    ```
 
-Currently rlbox has been tested and should work with gcc-7 or later and
+Currently RLBox has been tested and should work with gcc-7 or later and
 clang-5, Visual Studio 2019 (possibly previous versions as well) or later.  If
 you are using other compilers/compiler versions (like mingw), these may also be
 supported.  Simply run the test suite and check that everything passes.
@@ -80,12 +83,7 @@ If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when in
    cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
    ```
 
-## Using/Building docs
-
-You can view the pre-built docs checked in to the repo in the docs folder.
-Alternatively, you can build these yourself with the steps [here](https://github.com/PLSysSec/rlbox_sandboxing_api/blob/master/docs.md).
-
-## Contributing Code/Docs
+## Contributing Code
 
 1. To contribute code, it is recommended you install clang-tidy which the build
 uses if available. Install using:
@@ -116,11 +114,7 @@ settings as shown below
 3. After making changes to the source, add any new required tests and run all
 tests (as described earlier).
 
-4. Modify the docs as appropriate and rebuild docs as described earlier.
-Rebuilding is required if you have added new APIs.
-
-5. To make sure all code/docs are formatted with, we use clang-format.
-Install using:
+4. If you don't already have clang-format installed, install it:
 
    On Ubuntu:
 
@@ -140,4 +134,4 @@ Install using:
    cmake --build ./build --target format-source
    ```
 
-7. Submit the pull request.
+7. Submit the pull request!
