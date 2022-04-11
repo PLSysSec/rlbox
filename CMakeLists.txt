@@ -23,7 +23,6 @@ if(MSVC)
 endif()
 
 option(DEV "Use settings suitable for dev contributions to rlbox" OFF)
-option(BUILD_TESTING "Build rlbox tests by default" ON)
 
 file(GLOB_RECURSE
      ALL_CXX_SOURCE_FILES
@@ -88,23 +87,25 @@ endif()
 
 # Dependencies ###################
 
+include(CTest)
+
 if(BUILD_TESTING)
-find_package(Catch2 2.13.7 QUIET)
-if(NOT Catch2_FOUND)
-  include(FetchContent)
-  FetchContent_Declare(catch2
-                       GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-                       GIT_TAG v2.13.7)
+  find_package(Catch2 2.13.7 QUIET)
+  if(NOT Catch2_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(catch2
+                         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+                         GIT_TAG v2.13.7)
 
-  FetchContent_GetProperties(catch2)
-  if(NOT catch2_POPULATED)
-    FetchContent_Populate(catch2)
+    FetchContent_GetProperties(catch2)
+    if(NOT catch2_POPULATED)
+      FetchContent_Populate(catch2)
+    endif()
+
+    add_subdirectory("${catch2_SOURCE_DIR}")
+    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
   endif()
-
-  add_subdirectory("${catch2_SOURCE_DIR}")
-  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
 endif()
-endif(BUILD_TESTING)
 
 file(GLOB_RECURSE
      RLBOX_SOURCE_FILES
@@ -158,7 +159,6 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 
 if(BUILD_TESTING)
 
-include(CTest)
 include(Catch)
 
 # Test rlbox features
@@ -285,4 +285,4 @@ add_custom_target(
   COMMENT "Running tests"
 )
 
-endif(BUILD_TESTING)
+endif()
