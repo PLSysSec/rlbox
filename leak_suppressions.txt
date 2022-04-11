@@ -1,2 +1,0 @@
-# This is not a leak, but somehow the vector maintaining the transition times trips up the leak sanitizer
-leak:test_sandbox_transition_timings.cpp

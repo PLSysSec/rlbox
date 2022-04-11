@@ -1,4 +1,0 @@
-# RLBox allows automatic handling of differing machine models between the appplication and sandbox.
-# To do this, RLBox carefully changes the types of function pointers to the sandbox with ones suitable for the applicaton.
-# Unfortunately, this triggers the ubsan's check for calling functions with incorrect types. So disabling this.
-function:impl_invoke_with_func_ptr

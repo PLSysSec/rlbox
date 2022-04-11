@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(rlbox-sandboxing-api
-        VERSION 0.1
-        DESCRIPTION "RLBox safe sandboxing API in C++17"
-        HOMEPAGE_URL "https://github.com/PLSysSec/rlbox_sandboxing_api")
+        VERSION 0.9
+        DESCRIPTION "RLBox sandboxing API"
+        HOMEPAGE_URL "https://github.com/PLSysSec/rlbox")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -19,10 +19,11 @@ if(MSVC)
   add_compile_options(/wd4002)
   # ignore warnings about using unsafe strcpy vs strcpy_s define _CRT_SECURE_NO_WARNINGS.
   add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
+  # Make dll's export all symbols, similar to unix ELF .so filess
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-option(DEV "Use settings suitable for dev contributions to rlbox" OFF)
+option(DEV "Use settings suitable for dev contributions to rlbox (Off by default)" OFF)
 
 file(GLOB_RECURSE
      ALL_CXX_SOURCE_FILES
@@ -38,10 +39,8 @@ file(GLOB_RECURSE
 if(DEV)
   if(MSVC)
     add_compile_options(/W4) # warnings
-    add_compile_options(/WX) # warnings as errors
   else()
     add_compile_options(-Wall -Wextra -pedantic) # warnings
-    add_compile_options(-Werror) # warnings as errors
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
     add_compile_options(-fsanitize=undefined)
@@ -163,126 +162,5 @@ include(Catch)
 
 # Test rlbox features
 
-add_executable(test_rlbox
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_app_pointers.cpp
-               code/tests/rlbox/test_bool_operators.cpp
-               code/tests/rlbox/test_callback.cpp
-               code/tests/rlbox/test_comparison.cpp
-               code/tests/rlbox/test_conversion.cpp
-               code/tests/rlbox/test_operators.cpp
-               code/tests/rlbox/test_sandbox_function_assignment.cpp
-               code/tests/rlbox/test_sandbox_noop_sandbox.cpp
-               code/tests/rlbox/test_sandbox_noop_sandbox_invoke_fail.cpp
-               code/tests/rlbox/test_sandbox_ptr_conversion.cpp
-               code/tests/rlbox/test_sandbox_types.cpp
-               code/tests/rlbox/test_stdlib.cpp
-               code/tests/rlbox/test_tainted_assignment.cpp
-               code/tests/rlbox/test_tainted_opaque.cpp
-               code/tests/rlbox/test_tainted_sizes.cpp
-               code/tests/rlbox/test_tainted_structs.cpp
-               code/tests/rlbox/test_type_traits.cpp
-               code/tests/rlbox/test_verification.cpp
-               code/tests/rlbox/test_verify_arrays.cpp
-               code/tests/rlbox/test_wrapper_traits.cpp)
-
-target_include_directories(test_rlbox PRIVATE code/tests/rlbox)
-
-target_link_libraries(test_rlbox Catch2::Catch2 ${PROJECT_NAME})
-
-catch_discover_tests(test_rlbox)
-
-# Test rlbox overheads
-
-add_executable(test_rlbox_transition_timers
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_sandbox_transition_timings.cpp)
-
-target_include_directories(test_rlbox_transition_timers PRIVATE code/tests/rlbox)
-
-target_link_libraries(test_rlbox_transition_timers Catch2::Catch2 ${PROJECT_NAME})
-
-catch_discover_tests(test_rlbox_transition_timers)
-
-# Test rlbox transition customization
-
-add_executable(test_rlbox_transition_customization
-               code/tests/test_main.cpp
-               code/tests/rlbox/test_sandbox_transition_customization.cpp)
-
-target_include_directories(test_rlbox_transition_customization PRIVATE code/tests/rlbox)
-
-target_link_libraries(test_rlbox_transition_customization Catch2::Catch2 ${PROJECT_NAME})
-
-catch_discover_tests(test_rlbox_transition_customization)
-
-# Test rlbox glue
-
-add_library(rlbox_glue_lib_static STATIC code/tests/rlbox_glue/lib/libtest.c)
-target_include_directories(rlbox_glue_lib_static
-                           PUBLIC code/tests/rlbox_glue/lib)
-
-add_library(rlbox_glue_lib_shared SHARED code/tests/rlbox_glue/lib/libtest.c)
-target_include_directories(rlbox_glue_lib_shared
-                           PUBLIC code/tests/rlbox_glue/lib)
-
-add_executable(test_rlbox_glue
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue.cpp)
-target_include_directories(test_rlbox_glue PUBLIC code/tests/rlbox_glue)
-
-target_link_libraries(test_rlbox_glue
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      rlbox_glue_lib_static)
-
-catch_discover_tests(test_rlbox_glue)
-
-add_executable(test_rlbox_glue_configs
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_noop_sandbox_glue_configs.cpp)
-target_include_directories(test_rlbox_glue_configs PUBLIC code/tests/rlbox_glue)
-
-target_link_libraries(test_rlbox_glue_configs
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      rlbox_glue_lib_static)
-
-catch_discover_tests(test_rlbox_glue_configs)
-
-add_executable(test_rlbox_glue_dylib
-               code/tests/test_main.cpp
-               code/tests/rlbox_glue/test_dylib_sandbox_glue.cpp)
-target_include_directories(test_rlbox_glue_dylib PUBLIC code/tests/rlbox_glue
-                                                        code/tests/rlbox_glue/lib)
-target_compile_definitions(test_rlbox_glue_dylib PUBLIC GLUE_LIB_PATH="$<TARGET_FILE:rlbox_glue_lib_shared>")
-
-target_link_libraries(test_rlbox_glue_dylib
-                      Catch2::Catch2
-                      ${PROJECT_NAME}
-                      ${CMAKE_DL_LIBS})
-
-add_dependencies(test_rlbox_glue_dylib rlbox_glue_lib_shared)
-
-catch_discover_tests(test_rlbox_glue_dylib)
-
-# make check
-
-add_custom_target(
-  check
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMAND
-    ${CMAKE_COMMAND} -E env
-    LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
-    UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
-    ${CMAKE_CTEST_COMMAND} -V
-  DEPENDS test_rlbox
-          test_rlbox_transition_timers
-          test_rlbox_transition_customization
-          test_rlbox_glue
-          test_rlbox_glue_configs
-          test_rlbox_glue_dylib
-  COMMENT "Running tests"
-)
 
 endif()
