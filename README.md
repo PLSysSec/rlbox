@@ -97,7 +97,7 @@ the build uses if available. Install using:
    On Arch Linux:
 
    ```bash
-   sudo pacman -S clang-tidy iwyu
+   sudo pacman -S clang-tidy # iwyu not available for arch as of now
    ```
 
 1. It is recommended you use the dev mode for building during development. This
