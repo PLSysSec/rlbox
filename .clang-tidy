@@ -5,14 +5,17 @@ Checks: '*,-modernize-use-trailing-return-type,-llvmlibc-implementation-in-names
 HeaderFilterRegex: '.*rlbox[a-zA-Z0-9_]*\.hpp'
 WarningsAsErrors: 'readability-identifier-naming'
 CheckOptions:
-  - { key: readability-identifier-naming.NamespaceCase,        value: lower_case }
-  - { key: readability-identifier-naming.GlobalVariableCase,   value: CamelCase  }
-  - { key: readability-identifier-naming.GlobalVariablePrefix, value: g          }
-  - { key: readability-identifier-naming.ClassCase,            value: lower_case }
-  - { key: readability-identifier-naming.StructCase,           value: lower_case }
-  - { key: readability-identifier-naming.ClassMemberCase,      value: CamelCase  }
-  - { key: readability-identifier-naming.ClassMemberPrefix,    value: m          }
-  - { key: readability-identifier-naming.FunctionCase,         value: lower_case }
-  - { key: readability-identifier-naming.ParameterCase,        value: CamelCase  }
-  - { key: readability-identifier-naming.ParameterPrefix,      value: a          }
-  - { key: readability-identifier-naming.VariableCase,         value: lower_case }
+  - { key: readability-identifier-naming.NamespaceCase,                  value: lower_case }
+  - { key: readability-identifier-naming.GlobalVariableCase,             value: CamelCase  }
+  - { key: readability-identifier-naming.GlobalVariablePrefix,           value: g          }
+  - { key: readability-identifier-naming.ClassCase,                      value: lower_case }
+  - { key: readability-identifier-naming.StructCase,                     value: lower_case }
+  - { key: readability-identifier-naming.ClassMemberCase,                value: CamelCase  }
+  - { key: readability-identifier-naming.ClassMemberPrefix,              value: m          }
+  - { key: readability-identifier-naming.FunctionCase,                   value: lower_case }
+  - { key: readability-identifier-naming.ParameterCase,                  value: CamelCase  }
+  - { key: readability-identifier-naming.ParameterPrefix,                value: a          }
+  - { key: readability-identifier-naming.TemplateParameterCase,          value: CamelCase  }
+  - { key: readability-identifier-naming.TemplateParameterPrefix,        value: T          }
+  - { key: readability-identifier-naming.TemplateParameterIgnoredRegexp, value: T          }
+  - { key: readability-identifier-naming.VariableCase,                   value: lower_case }
