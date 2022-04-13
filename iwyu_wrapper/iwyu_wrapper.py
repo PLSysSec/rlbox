@@ -12,11 +12,16 @@ def get_iwyu_default_return():
     return p.returncode
 
 def split_args(args):
+    no_error = False
+    while "--no-error" in args:
+        args.remove("--no-error")
+        no_error = True
+
     files_index = [i for i, v in enumerate(args) if v == '--']
     if len(files_index) == 0:
-        return args, []
+        return no_error, args, []
     elif len(files_index) == 1:
-        return args[:files_index[0]], args[files_index[0]+1:]
+        return no_error, args[:files_index[0]], args[files_index[0]+1:]
     else:
         sys.stderr.write("Found more than one instance of --")
         exit(10)
@@ -26,7 +31,7 @@ def main():
 
     default_ret = get_iwyu_default_return()
 
-    iwyu_args, files = split_args(args)
+    no_error, iwyu_args, files = split_args(args)
 
     for file in files:
 
@@ -34,7 +39,8 @@ def main():
         p = subprocess.Popen(cmd)
         p.communicate()
 
-        if (p.returncode != default_ret):
-            exit(p.returncode)
+        if no_error == False:
+            if (p.returncode != default_ret):
+                exit(p.returncode)
 
 main()

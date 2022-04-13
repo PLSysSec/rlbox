@@ -75,9 +75,11 @@ if(DEV)
   if(IWYU)
     message("Found ${IWYU}")
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
-        iwyu
+        python ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
-        -Xiwyu --transitive_includes_only)
+        -Xiwyu --transitive_includes_only
+        -Xiwyu --no_fwd_decls
+        --no-error)
 
     # We need to manually check .hpp files
     # See https://github.com/include-what-you-use/include-what-you-use/issues/633
@@ -95,6 +97,8 @@ if(DEV)
       COMMAND python ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
         -Xiwyu --transitive_includes_only
+        -Xiwyu --no_fwd_decls
+        --no-error
         -std=c++17
         -I ${CMAKE_SOURCE_DIR}/include
         -- ${RLBOX_SOURCE_FILES}
@@ -107,7 +111,7 @@ if(DEV)
     # Config in .clang-format
     # Just check if there are changes, don't make any changes
     add_custom_target(check-format-source ALL
-      COMMAND clang-format -style=file --dry-run --Werror ${ALL_CXX_SOURCE_FILES})
+      COMMAND clang-format -style=file --dry-run --ferror-limit=5 --Werror ${ALL_CXX_SOURCE_FILES})
   endif()
 
   find_program(CPPCHECK "cppcheck")
@@ -117,7 +121,8 @@ if(DEV)
     add_custom_target(cppcheck ALL
       COMMAND cppcheck
         --enable=warning,performance,portability,information,missingInclude
-        --std=c++17 --error-exitcode=1 --quiet
+        --suppress=missingIncludeSystem
+        --std=c++17 -I ${CMAKE_SOURCE_DIR}/include --error-exitcode=1 --quiet
         ${RLBOX_SOURCE_FILES})
   endif()
 
