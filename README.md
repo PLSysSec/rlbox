@@ -85,19 +85,20 @@ If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when in
 
 ## Contributing Code
 
-1. To contribute code, it is recommended you install clang-tidy and iwyu which
-the build uses if available. Install using:
+1. To contribute code, it is recommended you install `clang-tidy`,
+`clang-format`, `cppcheck`, `iwyu` which the build uses if available. Install
+using:
 
    On Ubuntu:
 
    ```bash
-   sudo apt install clang-tidy iwyu
+   sudo apt install clang-tidy clang-format iwyu cppcheck
    ```
 
    On Arch Linux:
 
    ```bash
-   sudo pacman -S clang-tidy # iwyu not available for arch as of now
+   sudo pacman -S clang-tidy clang-format cppcheck # iwyu not available for arch
    ```
 
 2. It is recommended you use the dev mode for building during development. This
@@ -114,24 +115,11 @@ settings as shown below
 3. After making changes to the source, add any new required tests and run all
 tests (as described earlier).
 
-4. If you don't already have clang-format installed, install it:
-
-   On Ubuntu:
-
-   ```bash
-   sudo apt install clang-format
-   ```
-
-   On Arch Linux:
-
-   ```bash
-   sudo pacman -S clang-format
-   ```
-
-5. Format code with the format-source target:
+4. If you have clang-format installed, format code with the format-source
+target:
 
    ```bash
    cmake --build ./build --target format-source
    ```
 
-6. Submit the pull request!
+5. Submit the pull request!

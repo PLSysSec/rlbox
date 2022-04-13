@@ -44,6 +44,7 @@ file(GLOB_RECURSE
 
 find_program(CLANG_FORMAT "clang-format")
 if(CLANG_FORMAT)
+  message("Found ${CLANG_FORMAT}")
   # Config in .clang-format
   # When runs, this actually formats the files
   add_custom_target(format-source
@@ -65,12 +66,14 @@ if(DEV)
 
   find_program(CLANG_TIDY "clang-tidy")
   if(CLANG_TIDY)
+    message("Found ${CLANG_TIDY}")
     # Config in .clang-tidy
     set(CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy)
   endif()
 
   find_program(IWYU "iwyu")
   if(IWYU)
+    message("Found ${IWYU}")
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
         iwyu
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
@@ -105,6 +108,17 @@ if(DEV)
     # Just check if there are changes, don't make any changes
     add_custom_target(check-format-source ALL
       COMMAND clang-format -style=file --dry-run --Werror ${ALL_CXX_SOURCE_FILES})
+  endif()
+
+  find_program(CPPCHECK "cppcheck")
+  if(CPPCHECK)
+    message("Found ${CPPCHECK}")
+    # Just check the rlbox header files
+    add_custom_target(cppcheck ALL
+      COMMAND cppcheck
+        --enable=warning,performance,portability,information,missingInclude
+        --std=c++17 --error-exitcode=1 --quiet
+        ${RLBOX_SOURCE_FILES})
   endif()
 
 endif()
