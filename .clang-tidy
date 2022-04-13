@@ -1,2 +1,5 @@
-Checks: '*,-modernize-use-trailing-return-type'
-# HeaderFilterRegex: '*'
+# llvmlibc-implementation-in-namespace --- used by catch2, just turn off the check as its hard to exclude the catch header
+# llvm-header-guard --- we use pragma once in this project
+# hicpp-deprecated-headers, modernize-deprecated-headers --- we can safely use stdint.h etc
+Checks: '*,-modernize-use-trailing-return-type,-llvmlibc-implementation-in-namespace,-llvm-header-guard,-hicpp-deprecated-headers,-modernize-deprecated-headers'
+HeaderFilterRegex: '.*rlbox_.*'

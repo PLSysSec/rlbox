@@ -25,14 +25,20 @@ endif()
 
 option(DEV "Use settings suitable for dev contributions to rlbox (Off by default)" OFF)
 
+
+file(GLOB_RECURSE
+     RLBOX_SOURCE_FILES
+     include/*.hpp)
+
 file(GLOB_RECURSE
      ALL_CXX_SOURCE_FILES
-     code/*.[chi]pp
-     code/*.[chi]xx
-     code/*.cc
-     code/*.hh
-     code/*.ii
-     code/*.[CHI])
+     include/*.hpp
+     tests/*.hpp
+     tests/*.cpp)
+
+file(GLOB_RECURSE
+     RLBOX_UNIT_TESTS_FILES
+     tests/rlbox_unit_tests/*.cpp)
 
 # Dev Tools ###################
 
@@ -50,23 +56,38 @@ if(DEV)
   find_program(CLANG_TIDY "clang-tidy")
   if(CLANG_TIDY)
     # Config in .clang-tidy
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy)
   endif()
 
   find_program(IWYU "iwyu")
-  if("")#IWYU)# TODO: Still have to ensure this checks .hpp files, which it
-         # doesn't right now. See bug below about "check_also"... which doesn't
-         # seem to work https://github.com/include-what-you-use/include-what-
-         # you-use/issues/633
+  if(IWYU)
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
         iwyu
-        -Xiwyu
-        --transitive_includes_only
-        -Xiwyu
-        --check_also="*.hpp"
-        # -Xiwyu
-        # --verbose=4
-        -Xiwyu --mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp)
+        -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
+        -Xiwyu --transitive_includes_only)
+
+    # We need to manually check .hpp files
+    # See https://github.com/include-what-you-use/include-what-you-use/issues/633
+    #
+    # The suggested fix of --check_also does not work correctly
+    #
+    # iwyu doesn't show include file issues unless invoked on the hpp itself
+    # But, CMake only invokes it on source files.
+    #
+    # Calling iwyu directly is difficult since until very recently, it results
+    # in non-zero error codes on success. Call our wrapper that helps with this
+
+    add_custom_target(iwyu-check ALL
+      DEPENDS ${RLBOX_SOURCE_FILES}
+      COMMAND python ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
+        -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
+        -Xiwyu --transitive_includes_only
+        -std=c++17
+        -I ${CMAKE_SOURCE_DIR}/include
+        -- ${RLBOX_SOURCE_FILES}
+      COMMENT "Running iwyu on rlbox source"
+    )
+
   endif()
 
 endif()
@@ -106,15 +127,6 @@ if(BUILD_TESTING)
   endif()
 endif()
 
-file(GLOB_RECURSE
-     RLBOX_SOURCE_FILES
-     code/include/*.[chi]pp
-     code/include/*.[chi]xx
-     code/include/*.cc
-     code/include/*.hh
-     code/include/*.ii
-     code/include/*.[CHI])
-
 # Targets ###################
 
 include(GNUInstallDirs)
@@ -122,7 +134,7 @@ include(GNUInstallDirs)
 find_package(Threads REQUIRED)
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
-  $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/code/include>
+  $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} INTERFACE ${CMAKE_THREAD_LIBS_INIT})
@@ -158,9 +170,30 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 
 if(BUILD_TESTING)
 
-include(Catch)
+  include(Catch)
 
-# Test rlbox features
+  # Test rlbox features
 
+  add_executable(rlbox_unit_tests
+                 tests/test_main.cpp
+                 ${RLBOX_UNIT_TESTS_FILES})
+
+  target_link_libraries(rlbox_unit_tests Catch2::Catch2 ${PROJECT_NAME})
+
+  catch_discover_tests(rlbox_unit_tests)
+
+  # make check
+
+  add_custom_target(
+    check
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND
+      ${CMAKE_COMMAND} -E env
+      LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
+      UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
+      ${CMAKE_CTEST_COMMAND} -V
+    DEPENDS rlbox_unit_tests
+    COMMENT "Running tests"
+  )
 
 endif()

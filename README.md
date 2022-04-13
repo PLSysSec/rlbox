@@ -85,22 +85,22 @@ If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when in
 
 ## Contributing Code
 
-1. To contribute code, it is recommended you install clang-tidy which the build
-uses if available. Install using:
+1. To contribute code, it is recommended you install clang-tidy and iwyu which
+the build uses if available. Install using:
 
    On Ubuntu:
 
    ```bash
-   sudo apt install clang-tidy
+   sudo apt install clang-tidy iwyu
    ```
 
    On Arch Linux:
 
    ```bash
-   sudo pacman -S clang-tidy
+   sudo pacman -S clang-tidy iwyu
    ```
 
-2. It is recommended you use the dev mode for building during development. This
+1. It is recommended you use the dev mode for building during development. This
 treat warnings as errors, enables clang-tidy checks, runs address sanitizer etc.
 Also, you probably want to use the debug build. To do this, adjust your build
 settings as shown below
