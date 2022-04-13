@@ -100,7 +100,7 @@ the build uses if available. Install using:
    sudo pacman -S clang-tidy # iwyu not available for arch as of now
    ```
 
-1. It is recommended you use the dev mode for building during development. This
+2. It is recommended you use the dev mode for building during development. This
 treat warnings as errors, enables clang-tidy checks, runs address sanitizer etc.
 Also, you probably want to use the debug build. To do this, adjust your build
 settings as shown below
@@ -128,10 +128,10 @@ tests (as described earlier).
    sudo pacman -S clang-format
    ```
 
-6. Format code with the format-source target:
+5. Format code with the format-source target:
 
    ```bash
    cmake --build ./build --target format-source
    ```
 
-7. Submit the pull request!
+6. Submit the pull request!
