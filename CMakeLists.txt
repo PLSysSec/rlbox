@@ -40,6 +40,16 @@ file(GLOB_RECURSE
      RLBOX_UNIT_TESTS_FILES
      tests/rlbox_unit_tests/*.cpp)
 
+# Clang format ###################
+
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+  # Config in .clang-format
+  # When runs, this actually formats the files
+  add_custom_target(format-source
+    COMMAND clang-format -i -style=file ${ALL_CXX_SOURCE_FILES})
+endif()
+
 # Dev Tools ###################
 
 if(DEV)
@@ -90,20 +100,14 @@ if(DEV)
 
   endif()
 
+  if(CLANG_FORMAT)
+    # Config in .clang-format
+    # Just check if there are changes, don't make any changes
+    add_custom_target(check-format-source ALL
+      COMMAND clang-format -style=file --dry-run --Werror ${ALL_CXX_SOURCE_FILES})
+  endif()
+
 endif()
-
-# Clang format ###################
-
-find_program(CLANG_FORMAT "clang-format")
-if(CLANG_FORMAT)
-  # Config in .clang-format
-  add_custom_target(format-source
-                    COMMAND clang-format
-                            -i
-                            -style=file
-                            ${ALL_CXX_SOURCE_FILES})
-endif()
-
 
 # Dependencies ###################
 
