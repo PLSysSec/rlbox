@@ -1,4 +1,6 @@
-#include "test_include.hpp"
+#include "catch2/catch.hpp"
+
+#include "rlbox.hpp" // IWYU pragma: keep
 
 TEST_CASE("Test include rlbox header", "[rlbox include]")
 {
