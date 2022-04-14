@@ -12,10 +12,15 @@ namespace rlbox {
 template<typename TSbx>
 class rlbox_sandbox
 {
+
+private:
+  template<typename T>
+  using TDefaultTainted = tainted_relocatable<T, TSbx>;
+
 public:
   template<typename T>
   using tainted =
-    detail::get_member_tainted_or_default_t<TSbx, tainted_relocatable<T, TSbx>>;
+    detail::get_member_tainted_type_or_default_t<TSbx, TDefaultTainted, T>;
 };
 
 }

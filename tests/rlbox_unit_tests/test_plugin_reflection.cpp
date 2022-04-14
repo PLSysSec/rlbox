@@ -32,6 +32,10 @@ RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted,
 
 TEST_CASE("Test tainted reflection", "[rlbox plugin reflection]")
 {
+  // Check that by default, sandboxes assume that the plugin uses
+  // tainted_relocatable If the plugin overrides this choice, use the specified
+  // value instead
+
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_default_tainted::tainted<int>,
           tainted_relocatable<int, rlbox_default_tainted_testsandbox>>);
@@ -41,7 +45,7 @@ TEST_CASE("Test tainted reflection", "[rlbox plugin reflection]")
     tainted_fixed_aligned<int, rlbox_custom_tainted_testsandbox>>();
 
   // Disable this test for now as this is failing
-  // REQUIRE(std::is_same_v<
-  //         rlbox_sandbox_libtest_custom_tainted::tainted<int>,
-  //         tainted_fixed_aligned<int, rlbox_custom_tainted_testsandbox>>);
+  REQUIRE(std::is_same_v<
+          rlbox_sandbox_libtest_custom_tainted::tainted<int>,
+          tainted_fixed_aligned<int, rlbox_custom_tainted_testsandbox>>);
 }

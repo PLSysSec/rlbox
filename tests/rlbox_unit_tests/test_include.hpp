@@ -11,5 +11,5 @@
 template<typename... T>
 void rlbox_test_helper_print_type()
 {
-  std::cout << "Func: " << __PRETTY_FUNCTION__;
+  std::cout << "Func: " << __PRETTY_FUNCTION__ << std::endl;
 }

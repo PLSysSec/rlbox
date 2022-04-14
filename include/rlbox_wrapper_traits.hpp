@@ -1,33 +1,65 @@
 #pragma once
 
-// This header contains misc utilities to reflect on rlbox specific types
+/**
+ * @file rlbox_wrapper_traits.hpp
+ * @brief This header contains misc utilities to reflect on rlbox specific types
+ */
 
 #include <type_traits>
 
 namespace rlbox::detail {
 
-// Given a class T, get the member typedef T::tainted if it exists
-// else return T_Default
-
-// https://stackoverflow.com/questions/9644477/how-to-check-whether-a-class-has-specified-nested-class-definition-or-typedef-in
-namespace detail_get_member_tainted_or_default {
-  template<class T, class TDefault, class TEnable = void>
-  struct get_member_tainted_or_default
+namespace detail_get_member_tainted_type_or_default {
+  template<class TSbx,
+           template<typename>
+           class TDefaultTainted,
+           class TEnable = void>
+  struct get_member_tainted_type_or_default : std::false_type
   {
-    using type = TDefault;
+    template<typename T>
+    using type = TDefaultTainted<T>;
   };
 
-  template<class T>
-  struct get_member_tainted_or_default<T, std::void_t<typename T::tainted>>
+  template<class TSbx, template<typename> class TDefaultTainted>
+  struct get_member_tainted_type_or_default<
+    TSbx,
+    TDefaultTainted,
+    std::void_t<typename TSbx::template tainted<int>>> : std::true_type
   {
-    using type = typename T::tainted;
+    template<typename T>
+    using type = typename TSbx::template tainted<T>;
   };
 }
 
-template<class T, class TDefault>
-using get_member_tainted_or_default_t =
-  typename detail_get_member_tainted_or_default::
-    get_member_tainted_or_default<T, TDefault>::type;
+/**
+ * @brief Given class TSbx, get member "typename TSbx::tainted<T>" if it exists
+ * else return TDefaultTainted<T>
+ * This is based on
+ * https://stackoverflow.com/questions/9644477/how-to-check-whether-a-class-has-specified-nested-class-definition-or-typedef-in
+
+ * @code
+ * template<typename T>
+ * struct Default {};
+ *
+ * template<typename T>
+ * struct Custom {};
+ *
+ * class foo {
+ * public:
+ *   template<typename T>
+ *   using tainted = Custom<T>;
+ * };
+ *
+ * get_member_tainted_type_or_default_t<foo, Default, int> == Custom<int>
+ *
+ * @tparam TSbx Sandbox plugin type
+ * @tparam TDefaultTainted the default tainted implementation
+ * @tparam T the underlying data type that is tainted
+ */
+template<class TSbx, template<typename> class TDefaultTainted, class T>
+using get_member_tainted_type_or_default_t =
+  typename detail_get_member_tainted_type_or_default::
+    get_member_tainted_type_or_default<TSbx, TDefaultTainted>::template type<T>;
 
 ////////////////////////////////////////////////////////////////////////
 
