@@ -1,7 +1,5 @@
 # RLBox
 
-[![Build Status](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api.svg?branch=master)](https://travis-ci.com/PLSysSec/rlbox_sandboxing_api)
-
 [![Tests](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
 RLBox sandboxing framework. This code has been tested on 64-bit versions of Linux, Mac OSX, and Windows.
