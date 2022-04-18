@@ -19,7 +19,7 @@ See the [online docs](https://docs.rlbox.dev) for more details.
 
 The RLBox library is a header only library, so you can directly download this repo and use include the contents of `code/include/` in your application. On Linux/Mac machines, you can optionally install the headers as well with `make install`.
 
-Support for cmake's `find_package` API is also included. See the example in `examples/hello-world-cmake`.
+Support for cmake's `find_package` API is also included (see [this example](https://github.com/PLSysSec/rlbox-book/blob/main/src/chapters/examples/noop-hello-example/CMakeLists.txt)).
 
 ## Running the tests
 
