@@ -95,13 +95,13 @@ enum class rlbox_status_code
     rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;                        \
                                                                                \
   template<typename T>                                                         \
-  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;
+  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;               \
+                                                                               \
+  template<typename T>                                                         \
+  using tainted_volatile_##SBXNAME =                                           \
+    rlbox_sandbox_##SBXNAME::tainted_volatile<T>;
 
 // In the future the following will also be added
-// template<typename T>
-// using tainted_volatile_##SBXNAME =
-//   rlbox_sandbox_##SBXNAME::tainted_volatile;
-
 // template<typename T>
 // using rlbox_callback_##SBXNAME =
 //   rlbox::rlbox_callback<T, rlbox_sandbox_type_##SBXNAME>;
