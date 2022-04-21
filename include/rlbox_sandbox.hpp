@@ -40,7 +40,7 @@ public:
    */
   template<typename T>
   using tainted =
-    detail::get_member_tainted_type_or_default_t<TSbx, TDefaultTainted, T>;
+    detail::get_typemember_tainted_or_default_t<TSbx, TDefaultTainted, T>;
 };
 
 }
