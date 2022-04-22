@@ -68,11 +68,6 @@ TEST_CASE("Test tainted reflection", "[rlbox plugin reflection]")
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_custom_tainted_volatile::tainted<int>,
           tainted_relocatable<int, rlbox_custom_tainted_volatile_testsandbox>>);
-
-  rlbox_test_helper_print_type<
-    rlbox_sandbox_libtest_custom_tainted_volatile::tainted_volatile<int>,
-    tainted_fixed_aligned<int, rlbox_custom_tainted_volatile_testsandbox>>();
-
   REQUIRE(
     std::is_same_v<
       rlbox_sandbox_libtest_custom_tainted_volatile::tainted_volatile<int>,
