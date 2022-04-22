@@ -137,7 +137,8 @@ if(DOXYGEN_FOUND)
 
   # Technique from https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
   set(DOXYGEN_PROJECT_NAME "RLBox")
-  set(DOXYGEN_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  set(DOXYGEN_INPUT_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  set(DOXYGEN_INPUT_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/rlbox_unit_tests)
   set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doxygen)
   set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
   set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
@@ -148,7 +149,7 @@ if(DOXYGEN_FOUND)
 
   file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
   add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-                     DEPENDS ${RLBOX_SOURCE_FILES}
+                     DEPENDS ${RLBOX_SOURCE_FILES} ${DOXYFILE_OUT}
                      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
                      MAIN_DEPENDENCY ${DOXYFILE_OUT}
                      ${DOXYFILE_IN}

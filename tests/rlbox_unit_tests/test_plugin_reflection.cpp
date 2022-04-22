@@ -1,6 +1,12 @@
-// Check that the tainted type is correctly reflected in rlbox_sandbox when:
-// - the sandbox plugin leaves the tainted type as default
-// - the sandbox plugin overrides the tainted type
+
+/**
+ * @file test_plugin_reflection.cpp
+ * @brief Check that the tainted/tainted_volatile type is correctly overidden in
+ * plugins to rlbox_sandbox
+ * @details Two cases to test:
+ * - the sandbox plugin leaves the tainted/tainted_volatile type as default
+ * - the sandbox plugin overrides the tainted/tainted_volatile type
+ */
 
 #include "test_include.hpp"
 

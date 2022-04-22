@@ -1,5 +1,8 @@
-// Check if including the rlbox headers, using RLBOX_DEFINE_BASE_TYPES_FOR and
-// creating a sandbox variable don't cause issues
+/**
+ * @file test_empty.cpp
+ * @brief Check that including the rlbox headers, using
+ * RLBOX_DEFINE_BASE_TYPES_FOR, and creating a sbx var doesn't cause issues
+ */
 
 #include "catch2/catch.hpp"
 
