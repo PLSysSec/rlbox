@@ -99,6 +99,7 @@ if(DEV)
         -Xiwyu --transitive_includes_only
         -Xiwyu --no_fwd_decls
         --no-error
+        # Add arguments that CMake would normally add
         -std=c++17
         -I ${CMAKE_SOURCE_DIR}/include
         -- ${RLBOX_SOURCE_FILES}

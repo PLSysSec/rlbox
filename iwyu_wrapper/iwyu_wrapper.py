@@ -1,15 +1,35 @@
 #!/usr/bin/env python3
 
+from asyncio.subprocess import PIPE
 import subprocess
 import os
 import sys
 
+def format_output(str):
+    str = str.decode('UTF-8').strip()
+    if " has correct #includes/fwd-decls" in str or str == '':
+        return None
+    return str
+
+def execute_iwyu(cmd):
+    p = subprocess.Popen(["iwyu"] + cmd, stdout=PIPE, stderr=PIPE)
+    out, err = p.communicate()
+
+    out = format_output(out)
+    err = format_output(err)
+
+    if out:
+        print(out)
+    if err:
+        print(err, file=sys.stderr)
+
+    return p.returncode
+
 def get_iwyu_default_return():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     test_file = os.path.join(dir_path, "test_iwyu.cpp")
-    p = subprocess.Popen(["iwyu", test_file])
-    p.communicate()
-    return p.returncode
+    returncode = execute_iwyu([test_file])
+    return returncode
 
 def split_args(args):
     no_error = False
@@ -34,13 +54,10 @@ def main():
     no_error, iwyu_args, files = split_args(args)
 
     for file in files:
-
-        cmd = ["iwyu"] + iwyu_args + [file]
-        p = subprocess.Popen(cmd)
-        p.communicate()
+        returncode = execute_iwyu(iwyu_args + [file])
 
         if no_error == False:
-            if (p.returncode != default_ret):
-                exit(p.returncode)
+            if (returncode != default_ret):
+                exit(returncode)
 
 main()
