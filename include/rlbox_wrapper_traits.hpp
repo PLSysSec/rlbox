@@ -56,7 +56,8 @@ namespace rlbox::detail {
       template<typename T>                                                     \
       using type = typename TSbx::template membername<T>;                      \
     };                                                                         \
-  }
+  }                                                                            \
+  static_assert(true, "")
 
 detail_get_typemember_membername_or_default(tainted);
 detail_get_typemember_membername_or_default(tainted_volatile);

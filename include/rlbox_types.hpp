@@ -99,7 +99,9 @@ enum class rlbox_status_code
                                                                                \
   template<typename T>                                                         \
   using tainted_volatile_##SBXNAME =                                           \
-    rlbox_sandbox_##SBXNAME::tainted_volatile<T>;
+    rlbox_sandbox_##SBXNAME::tainted_volatile<T>;                              \
+                                                                               \
+  static_assert(true, "")
 
 // In the future the following will also be added
 // template<typename T>
@@ -117,4 +119,4 @@ enum class rlbox_status_code
 // using tainted_boolean_hint_##SBXNAME = rlbox::tainted_boolean_hint;
 // using tainted_integer_hint_##SBXNAME = rlbox::tainted_integer_hint;
 
-};
+}

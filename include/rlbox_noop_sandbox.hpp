@@ -5,6 +5,8 @@
  * @brief This header implements the rlbox_noop_sandbox class.
  */
 
+#include "rlbox_types.hpp"
+
 namespace rlbox {
 
 /**
@@ -16,5 +18,28 @@ namespace rlbox {
  * they were simple static function calls within the host application.
  */
 class rlbox_noop_sandbox
-{};
+{
+
+public:
+  /**
+   * @brief Implementation of the RLBox create_sandbox API. For the
+   * rlbox_noop_sandbox, this does nothing as all function calls or memory
+   * allocations are forwarded to the application.
+   *
+   * @return rlbox_status_code indicates whether this function succeeded
+   */
+  rlbox_status_code impl_create_sandbox() { return rlbox_status_code::SUCCESS; }
+
+  /**
+   * @brief Implementation of the RLBox destroy_sandbox API. For the
+   * rlbox_noop_sandbox, this does nothing.
+   *
+   * @return rlbox_status_code indicates whether this function succeeded
+   */
+  rlbox_status_code impl_destroy_sandbox()
+  {
+    return rlbox_status_code::SUCCESS;
+  }
+};
+
 }

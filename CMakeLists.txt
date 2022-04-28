@@ -94,7 +94,7 @@ if(DEV)
 
     add_custom_target(iwyu-check ALL
       DEPENDS ${RLBOX_SOURCE_FILES}
-      COMMAND python ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
+      COMMAND python3 ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
         -Xiwyu --transitive_includes_only
         -Xiwyu --no_fwd_decls
@@ -139,7 +139,8 @@ if(DOXYGEN_FOUND)
   # Technique from https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
   set(DOXYGEN_PROJECT_NAME "RLBox")
   set(DOXYGEN_INPUT_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-  set(DOXYGEN_INPUT_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/rlbox_unit_tests)
+  set(DOXYGEN_INPUT_UNIT_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/rlbox_unit_tests)
+  set(DOXYGEN_INPUT_PLUGIN_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/rlbox_plugin_tests)
   set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doxygen)
   set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
   set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
@@ -227,7 +228,7 @@ if(BUILD_TESTING)
 
   include(Catch)
 
-  # Test rlbox features
+  #### Test rlbox features
 
   add_executable(rlbox_unit_tests
                  tests/test_main.cpp
@@ -237,7 +238,17 @@ if(BUILD_TESTING)
 
   catch_discover_tests(rlbox_unit_tests)
 
-  # make check
+  #### Test rlbox_noop_sandbox features
+
+  add_executable(rlbox_noop_sandbox_plugin_tests
+                 tests/test_main.cpp
+                 tests/test_rlbox_noop_sandbox.cpp)
+
+  target_link_libraries(rlbox_noop_sandbox_plugin_tests Catch2::Catch2 ${PROJECT_NAME})
+
+  catch_discover_tests(rlbox_noop_sandbox_plugin_tests)
+
+  #### Add check command to run tests
 
   add_custom_target(
     check
@@ -247,7 +258,7 @@ if(BUILD_TESTING)
       LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/leak_suppressions.txt
       UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/ub_suppressions.txt
       ${CMAKE_CTEST_COMMAND} -V
-    DEPENDS rlbox_unit_tests
+    DEPENDS rlbox_unit_tests rlbox_noop_sandbox_plugin_tests
     COMMENT "Running tests"
   )
 

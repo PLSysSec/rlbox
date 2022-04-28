@@ -36,8 +36,6 @@ public:
 };
 }
 
-using namespace rlbox;
-
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_default_tainted,
                             rlbox_default_tainted_testsandbox);
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted,

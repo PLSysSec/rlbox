@@ -14,6 +14,8 @@
 
 #include <iostream>
 
+using namespace rlbox;
+
 /**
  * @brief Helper type that prints stringified version of the types given to it
  *
