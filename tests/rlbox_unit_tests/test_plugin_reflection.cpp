@@ -1,4 +1,3 @@
-
 /**
  * @file test_plugin_reflection.cpp
  * @brief Check that the tainted/tainted_volatile type is correctly overidden in
@@ -43,7 +42,7 @@ RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted,
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted_volatile,
                             rlbox_custom_tainted_volatile_testsandbox);
 
-TEST_CASE("Test tainted reflection", "[rlbox plugin reflection]")
+TEST_CASE("Test plugin tainted reflection", "[rlbox plugin reflection]")
 {
   // Check that by default, sandboxes assume that the plugin uses
   // tainted_relocatable and tainted_volatile_standard.
