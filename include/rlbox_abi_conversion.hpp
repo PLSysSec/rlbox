@@ -7,6 +7,7 @@
  * the source and target ABI. This file provides a trait allows conversions
  * of these types from the source to the target ABI.
  */
+
 #pragma once
 
 #include <stddef.h>
@@ -30,7 +31,7 @@
 
 namespace rlbox::detail {
 
-namespace convert_detail {
+namespace convert_base_types_detail {
 
   /**
    * @brief This trait is the internal helper to implement convert_base_types_t
@@ -41,7 +42,7 @@ namespace convert_detail {
    * the implementation for different types
    */
   template<typename T, abi_template_decls, typename TEnable = void>
-  struct convert_base_types_t_helper;
+  struct convert_base_types_helper;
 }
 
 /**
@@ -54,17 +55,17 @@ namespace convert_detail {
  * the implementation for different types
  */
 template<typename T, abi_template_decls>
-using convert_base_types_t = typename convert_detail::
-  convert_base_types_t_helper<T, abi_template_names>::type;
+using convert_base_types_t = typename convert_base_types_detail::
+  convert_base_types_helper<T, abi_template_names>::type;
 
-namespace convert_detail {
+namespace convert_base_types_detail {
 
   /**
    * @brief This specialization ensures types like `void`, `bool` etc. are not
    * changed by the ABI convertor
    */
   template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<
+  struct convert_base_types_helper<
     T,
     abi_template_names,
     std::enable_if_t<
@@ -84,7 +85,7 @@ namespace convert_detail {
    * @brief This specialization converts `wchar_t`
    */
   template<abi_template_decls>
-  struct convert_base_types_t_helper<wchar_t, abi_template_names>
+  struct convert_base_types_helper<wchar_t, abi_template_names>
   {
     using type = TWCharType;
   };
@@ -93,7 +94,7 @@ namespace convert_detail {
    * @brief This specialization converts `short`
    */
   template<abi_template_decls>
-  struct convert_base_types_t_helper<short, abi_template_names>
+  struct convert_base_types_helper<short, abi_template_names>
   {
     using type = TShortType;
   };
@@ -102,7 +103,7 @@ namespace convert_detail {
    * @brief This specialization converts `int`
    */
   template<abi_template_decls>
-  struct convert_base_types_t_helper<int, abi_template_names>
+  struct convert_base_types_helper<int, abi_template_names>
   {
     using type = TIntType;
   };
@@ -111,7 +112,7 @@ namespace convert_detail {
    * @brief This specialization converts `long`
    */
   template<abi_template_decls>
-  struct convert_base_types_t_helper<long, abi_template_names>
+  struct convert_base_types_helper<long, abi_template_names>
   {
     using type = TLongType;
   };
@@ -120,7 +121,7 @@ namespace convert_detail {
    * @brief This specialization converts `long long`
    */
   template<abi_template_decls>
-  struct convert_base_types_t_helper<long long, abi_template_names>
+  struct convert_base_types_helper<long long, abi_template_names>
   {
     using type = TLongLongType;
   };
@@ -129,10 +130,12 @@ namespace convert_detail {
    * @brief This specialization converts `unsigned T`
    */
   template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<
+  struct convert_base_types_helper<
     T,
     abi_template_names,
     std::enable_if_t<
+      // Don't check with `is_unsigned_t` as this will permit qualifier and
+      // cause instantiation confusion with other overloads
       std::is_same_v<T, unsigned char> || std::is_same_v<T, unsigned short> ||
       std::is_same_v<T, unsigned int> || std::is_same_v<T, unsigned long> ||
       std::is_same_v<T, unsigned long long>>>
@@ -142,78 +145,66 @@ namespace convert_detail {
   };
 
   /**
-   * @brief This specialization converts `T*`
+   * @brief This specialization converts `T&`, `T&&`, `const T`, `volatile T`
    */
   template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<T*, abi_template_names>
+  struct convert_base_types_helper<T,
+                                   abi_template_names,
+                                   std::enable_if_t<detail::is_cvref_t<T>>>
   {
-    // if TPointerType == pointer_type
-    //    TResultBaseType = add_cv_ref_to(get_cv_ref(T),
-    //    remove_ptr_t<TPointerType>) TResult = add_ptr_t<TResultBaseType>
-    // else
-    //    TResult = TPointerType
-    // using type = std::conditional_t<std::is_pointer_v<TPointerType>,
-    //                                 preserve_ptr_cv_ref_t<T*, TPointerType>,
-    //                                 TPointerType>;
-    using type = TPointerType;
-  };
-
-  /**
-   * @brief This specialization converts `T&`
-   */
-  template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<T&, abi_template_names>
-  {
-    using type =
-      std::add_lvalue_reference_t<convert_base_types_t<T, abi_template_names>>;
-  };
-
-  /**
-   * @brief This specialization converts `T&&`
-   */
-  template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<T&&, abi_template_names>
-  {
-    using type =
-      std::add_rvalue_reference_t<convert_base_types_t<T, abi_template_names>>;
-  };
-
-  /**
-   * @brief This specialization converts `const T`
-   */
-  template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<const T,
-                                     abi_template_names,
-                                     std::enable_if_t<!std::is_reference_v<T>>>
-  {
-    using type = std::add_const_t<convert_base_types_t<T, abi_template_names>>;
-  };
-
-  /**
-   * @brief This specialization converts `volatile T`
-   */
-  template<typename T, abi_template_decls>
-  struct convert_base_types_t_helper<
-    volatile T,
-    abi_template_names,
-    std::enable_if_t<!std::is_reference_v<T> && !std::is_const_v<T>>>
-  {
-    using type =
-      std::add_volatile_t<convert_base_types_t<T, abi_template_names>>;
+    using type = detail::copy_cvref_t<
+      T,
+      convert_base_types_t<detail::remove_cvref_t<T>, abi_template_names>>;
   };
 
   /**
    * @brief This specialization converts `T[N]`
    */
   template<typename T, abi_template_decls, size_t N>
-  struct convert_base_types_t_helper<
-    T[N],
-    abi_template_names,
-    std::enable_if_t<!std::is_reference_v<T> && !std::is_const_v<T> &&
-                     !std::is_volatile_v<T>>>
+  struct convert_base_types_helper<T[N],
+                                   abi_template_names,
+                                   std::enable_if_t<!detail::is_cvref_t<T[N]>>>
   {
     using array_element_type = convert_base_types_t<T, abi_template_names>;
     using type = array_element_type[N];
+  };
+
+  /**
+   * @brief This specialization converts `T*` and is behaves differently if the
+   * target type of conversion is a `void*` or other types
+   * @details This implements the following algorithm
+   * ```
+   * if std::is_pointer_v<TPointerType>
+   *   TResult = copy_cvref_t(T, remove_pointer_t<TPointerType>) *
+   * else
+   *   TResult = TPointerType
+   * ```
+   *
+   * This means that if we convert pointers to a type like void*, we want to
+   * preserve cvref qualifiers of the pointer **basetype** during this
+   * conversion.
+   *
+   * Eg: `const short *` is converted to `const void *`
+   *
+   * However, if we convert pointers to integer or struct types, then we lose
+   * these qualifers of the pointer **basetype**.
+   *
+   * Eg: `const short *` is converted to `int`
+   *
+   * The qualifiers of the pointer type itself are always preserved.
+   *
+   * Eg: `short * const` is converted to `const int`
+   */
+  template<typename T, abi_template_decls>
+  struct convert_base_types_helper<T*,
+                                   abi_template_names,
+                                   std::enable_if_t<!detail::is_cvref_t<T*>>>
+  {
+
+    using type = std::conditional_t<
+      std::is_pointer_v<TPointerType>,
+      detail::copy_cvref_t<T, std::remove_pointer_t<TPointerType>>*,
+      TPointerType>;
   };
 }
 
