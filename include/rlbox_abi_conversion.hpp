@@ -69,11 +69,12 @@ namespace convert_base_types_detail {
     T,
     abi_template_names,
     std::enable_if_t<
-      std::is_same_v<void, T> || std::is_same_v<bool, T> ||
-      std::is_same_v<char, T> || std::is_same_v<signed char, T> ||
-      std::is_same_v<char16_t, T> || std::is_same_v<char32_t, T> ||
-#if __cplusplus >= 202002L
+      std::is_same_v<void, T> || std::is_same_v<std::nullptr_t, T> ||
+      std::is_same_v<bool, T> || std::is_same_v<char, T> ||
+      std::is_same_v<signed char, T> || std::is_same_v<char16_t, T> ||
       std::is_same_v<char32_t, T> ||
+#if __cplusplus >= 202002L
+      std::is_same_v<char8_t, T> ||
 #endif
       std::is_floating_point_v<T> || std::is_enum_v<T>>>
   {
