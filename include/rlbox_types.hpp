@@ -9,6 +9,12 @@
  *
  */
 
+// IWYU pragma: begin_exports
+
+#include "rlbox_stdint_types.hpp"
+
+// IWYU pragma: end_exports
+
 namespace rlbox {
 
 template<typename TSbx>

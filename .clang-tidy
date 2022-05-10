@@ -2,28 +2,33 @@
 #
 # altera-*,llvm-libc --- don't apply in our context
 # bugprone-macro-parentheses --- high false positive rate. False positive in RLBOX_DEFINE_BASE_TYPES_FOR
+# bugprone-suspicious-include --- we sometimes include .cpp files for convenience in this project
 # cppcoreguidelines-macro-usage --- we need macros in rlbox to ensure we don't additional overheads for things like function calls and symbol resolution
+# cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays --- we use c arrays in rlbox headers so we can support this in the ffi
 # hicpp-deprecated-headers, modernize-deprecated-headers --- we can safely use stdint.h etc
 # modernize-use-trailing-return-type --- stylistic choice to avoid this
 # llvm-header-guard --- we use pragma once in this project
 # llvm-namespace-comment, google-readability-namespace-comments --- we don't really use deeply nested namespaces, so this is not necessary
+# google-runtime-int - need to use int long etc to handle ABI differences
 # google-build-using-namespace --- we want "using namespace rlbox" in the tests
-Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-cppcoreguidelines-macro-usage,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace'
+# readability-convert-member-functions-to-static --- hampers development of abstract APIs
+Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-modernize-avoid-c-arrays,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-readability-convert-member-functions-to-static'
 HeaderFilterRegex: '.*rlbox[a-zA-Z0-9_]*\.hpp'
 WarningsAsErrors: 'readability-identifier-naming'
 CheckOptions:
-  - { key: readability-identifier-naming.NamespaceCase,                  value: lower_case }
-  - { key: readability-identifier-naming.GlobalVariableCase,             value: CamelCase  }
-  - { key: readability-identifier-naming.GlobalVariablePrefix,           value: g          }
-  - { key: readability-identifier-naming.GlobalVariableIgnoredRegexp,    value: has.*      }
-  - { key: readability-identifier-naming.ClassCase,                      value: lower_case }
-  - { key: readability-identifier-naming.StructCase,                     value: lower_case }
-  - { key: readability-identifier-naming.ClassMemberCase,                value: CamelCase  }
-  - { key: readability-identifier-naming.ClassMemberPrefix,              value: m          }
-  - { key: readability-identifier-naming.FunctionCase,                   value: lower_case }
-  - { key: readability-identifier-naming.ParameterCase,                  value: CamelCase  }
-  - { key: readability-identifier-naming.ParameterPrefix,                value: a          }
-  - { key: readability-identifier-naming.TemplateParameterCase,          value: CamelCase  }
-  - { key: readability-identifier-naming.TemplateParameterPrefix,        value: T          }
-  - { key: readability-identifier-naming.TemplateParameterIgnoredRegexp, value: T          }
-  - { key: readability-identifier-naming.VariableCase,                   value: lower_case }
+  - { key: readability-function-cognitive-complexity.Threshold,          value: 100                     }
+  - { key: readability-identifier-naming.NamespaceCase,                  value: lower_case              }
+  - { key: readability-identifier-naming.GlobalVariableCase,             value: CamelCase               }
+  - { key: readability-identifier-naming.GlobalVariablePrefix,           value: g                       }
+  - { key: readability-identifier-naming.GlobalVariableIgnoredRegexp,    value: (has_.*)|(is_.*)|(.*_v) }
+  - { key: readability-identifier-naming.ClassCase,                      value: lower_case              }
+  - { key: readability-identifier-naming.StructCase,                     value: lower_case              }
+  - { key: readability-identifier-naming.ClassMemberCase,                value: CamelCase               }
+  - { key: readability-identifier-naming.ClassMemberPrefix,              value: m                       }
+  - { key: readability-identifier-naming.FunctionCase,                   value: lower_case              }
+  - { key: readability-identifier-naming.ParameterCase,                  value: CamelCase               }
+  - { key: readability-identifier-naming.ParameterPrefix,                value: a                       }
+  - { key: readability-identifier-naming.TemplateParameterCase,          value: CamelCase               }
+  - { key: readability-identifier-naming.TemplateParameterPrefix,        value: T                       }
+  - { key: readability-identifier-naming.TemplateParameterIgnoredRegexp, value: T                       }
+  - { key: readability-identifier-naming.VariableCase,                   value: lower_case              }

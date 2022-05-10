@@ -13,6 +13,7 @@
 #include <stddef.h>
 #include <type_traits>
 
+#include "rlbox_stdint_types.hpp"
 #include "rlbox_type_traits.hpp"
 
 /**
@@ -21,13 +22,15 @@
  */
 #define abi_template_decls                                                     \
   typename TWCharType, typename TShortType, typename TIntType,                 \
-    typename TLongType, typename TLongLongType, typename TPointerType
+    typename TLongType, typename TLongLongType, typename TSizeType,            \
+    typename TPointerType
 
 /**
  * @brief abi_template_names is the list of typenames in abi_template_decls
  */
 #define abi_template_names                                                     \
-  TWCharType, TShortType, TIntType, TLongType, TLongLongType, TPointerType
+  TWCharType, TShortType, TIntType, TLongType, TLongLongType, TSizeType,       \
+    TPointerType
 
 namespace rlbox::detail {
 
@@ -145,6 +148,87 @@ namespace convert_base_types_detail {
   };
 
   /**
+   * @brief This specialization converts `rlbox_uint8_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_uint8_t, abi_template_names>
+  {
+    using type = uint8_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_int8_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_int8_t, abi_template_names>
+  {
+    using type = int8_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_uint16_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_uint16_t, abi_template_names>
+  {
+    using type = uint16_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_int16_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_int16_t, abi_template_names>
+  {
+    using type = int16_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_uint32_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_uint32_t, abi_template_names>
+  {
+    using type = uint32_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_int32_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_int32_t, abi_template_names>
+  {
+    using type = int32_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_uint64_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_uint64_t, abi_template_names>
+  {
+    using type = uint64_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_int64_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_int64_t, abi_template_names>
+  {
+    using type = int64_t;
+  };
+
+  /**
+   * @brief This specialization converts `rlbox_size_t`
+   */
+  template<abi_template_decls>
+  struct convert_base_types_helper<rlbox_size_t, abi_template_names>
+  {
+    using type = TSizeType;
+  };
+
+  /**
    * @brief This specialization converts `T&`, `T&&`, `const T`, `volatile T`
    */
   template<typename T, abi_template_decls>
@@ -160,13 +244,13 @@ namespace convert_base_types_detail {
   /**
    * @brief This specialization converts `T[N]`
    */
-  template<typename T, abi_template_decls, size_t N>
-  struct convert_base_types_helper<T[N],
+  template<typename T, abi_template_decls, size_t TN>
+  struct convert_base_types_helper<T[TN],
                                    abi_template_names,
-                                   std::enable_if_t<!detail::is_cvref_t<T[N]>>>
+                                   std::enable_if_t<!detail::is_cvref_t<T[TN]>>>
   {
     using array_element_type = convert_base_types_t<T, abi_template_names>;
-    using type = array_element_type[N];
+    using type = array_element_type[TN];
   };
 
   /**

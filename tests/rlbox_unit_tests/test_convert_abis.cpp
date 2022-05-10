@@ -10,6 +10,8 @@
  *      - The pointer types are converted to `struct`
  */
 
+#include <stddef.h>
+#include <stdint.h>
 #include <type_traits>
 
 #include "rlbox_abi_conversion.hpp"
@@ -41,6 +43,7 @@ using test_short = int;
 using test_int = long;
 using test_long = long long;
 using test_longlong = short;
+using test_size_t = size_t;
 using test_pointer = void*;
 
 template<typename T, typename TPtr>
@@ -50,6 +53,7 @@ using test_convertor_except_ptr = detail::convert_base_types_t<T,
                                                                test_int,
                                                                test_long,
                                                                test_longlong,
+                                                               test_size_t,
                                                                TPtr>;
 
 template<typename T>
