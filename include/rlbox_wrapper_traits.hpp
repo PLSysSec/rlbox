@@ -10,6 +10,7 @@
 #include <type_traits>
 
 #include "rlbox_common_error_strings.hpp"
+#include "rlbox_type_traits.hpp"
 
 namespace rlbox::detail {
 
@@ -29,16 +30,17 @@ struct tainted_value_type
   using type = T;
 };
 
-template<typename T, typename TSbx, size_t N>
-struct tainted_value_type<T[N], TSbx>
+template<typename T, typename TSbx, size_t TN>
+struct tainted_value_type<T[TN], TSbx>
 {
-  using type = std::array<T, N>;
+  using type = std::array<T, TN>;
 };
 
 template<typename T, typename TSbx>
 struct tainted_value_type<T[], TSbx>
 {
   static_assert(
+    rlbox::detail::false_v<T>,
     "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
 };
 

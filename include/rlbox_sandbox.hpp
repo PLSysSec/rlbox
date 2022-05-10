@@ -78,11 +78,11 @@ public:
    * @return rlbox_status_code indicates whether this function succeeded
    */
   template<typename... TArgs>
-  rlbox_status_code create_sandbox(TArgs... args)
+  rlbox_status_code create_sandbox(TArgs... aArgs)
   {
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
-    return this->impl_create_sandbox(std::forward<TArgs>(args)...);
+    return this->impl_create_sandbox(std::forward<TArgs>(aArgs)...);
   }
 
   /**

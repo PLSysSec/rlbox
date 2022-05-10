@@ -9,6 +9,17 @@
 
 namespace rlbox::detail {
 
+/**
+ * @brief An expression that always evaluates to false. Useful for
+ * static_assert(false) that is evaluated inside a constexpr.
+ * @details See https://quuxplusone.github.io/blog/2018/04/02/false-v/ for more
+ * details
+ * @tparam T is a template parameter to ensure that the expression is evaluated
+ * lazily
+ */
+template<typename T>
+inline constexpr bool false_v = true;
+
 namespace copy_cvref_detail {
   /**
    * @brief This trait is the internal helper to implement copy_cvref_t
@@ -60,6 +71,6 @@ using remove_cvref_t = std::remove_cv_t<std::remove_reference_t<T>>;
  * @tparam T is the type for which is checked for cvref qualifiers
  */
 template<typename T>
-constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
+inline constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
 
 }

@@ -16,9 +16,9 @@
 TEST_CASE("Test tainted_fixed_aligned specialization",
           "[rlbox tainted specialization]")
 {
-  tainted_fixed_aligned<int, rlbox_noop_sandbox> a;
-  tainted_fixed_aligned<int*, rlbox_noop_sandbox> b;
-  tainted_fixed_aligned<int[3], rlbox_noop_sandbox> c;
+  tainted_fixed_aligned<int, rlbox_noop_sandbox> a{};
+  tainted_fixed_aligned<int*, rlbox_noop_sandbox> b{};
+  tainted_fixed_aligned<int[3], rlbox_noop_sandbox> c{};
 
   (void)a;
   (void)b;
