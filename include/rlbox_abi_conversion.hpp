@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 #include <type_traits>
 
 #include "rlbox_stdint_types.hpp"

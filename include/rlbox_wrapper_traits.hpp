@@ -10,7 +10,9 @@
 #include <type_traits>
 
 #include "rlbox_common_error_strings.hpp"
-#include "rlbox_type_traits.hpp"
+// IWYU incorrectly reports this as unnecessary as the use of rlbox_type_traits
+// is in a templated class
+#include "rlbox_type_traits.hpp" // IWYU pragma: keep
 
 namespace rlbox::detail {
 
