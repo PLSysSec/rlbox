@@ -12,7 +12,8 @@
 # google-runtime-int - need to use int long etc to handle ABI differences
 # google-build-using-namespace --- we want "using namespace rlbox" in the tests
 # readability-convert-member-functions-to-static --- hampers development of abstract APIs
-Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-modernize-avoid-c-arrays,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-readability-convert-member-functions-to-static'
+# readability-identifier-length --- unnecessary for test code
+Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-modernize-avoid-c-arrays,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-readability-convert-member-functions-to-static,-readability-identifier-length'
 HeaderFilterRegex: '.*rlbox[a-zA-Z0-9_]*\.hpp'
 WarningsAsErrors: 'readability-identifier-naming'
 CheckOptions:
