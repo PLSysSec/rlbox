@@ -75,7 +75,7 @@ if(DEV)
   if(IWYU)
     message("Found ${IWYU}")
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
-        python ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
+        python3 ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
         -Xiwyu --transitive_includes_only
         -Xiwyu --no_fwd_decls
