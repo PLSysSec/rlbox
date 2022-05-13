@@ -40,6 +40,42 @@ file(GLOB_RECURSE
      RLBOX_UNIT_TESTS_FILES
      tests/rlbox_unit_tests/*.cpp)
 
+# Dependencies ###################
+
+include(CTest)
+
+if(BUILD_TESTING)
+  find_package(Catch2 2.13.9 QUIET)
+  if(NOT Catch2_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(catch2
+                         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+                         GIT_TAG v2.13.9)
+
+    FetchContent_GetProperties(catch2)
+    if(NOT catch2_POPULATED)
+      FetchContent_Populate(catch2)
+    endif()
+
+    add_subdirectory("${catch2_SOURCE_DIR}")
+    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+  endif()
+endif()
+
+if(DEV)
+  find_program(IWYU "iwyu")
+  if(IWYU)
+    include(FetchContent)
+    FetchContent_Declare(iwyu_wrapper
+                         GIT_REPOSITORY https://github.com/shravanrn/iwyu_wrapper.git)
+
+    FetchContent_GetProperties(iwyu_wrapper)
+    if(NOT iwyu_wrapper_POPULATED)
+      FetchContent_Populate(iwyu_wrapper)
+    endif()
+  endif()
+endif()
+
 # Clang format ###################
 
 find_program(CLANG_FORMAT "clang-format")
@@ -75,7 +111,7 @@ if(DEV)
   if(IWYU)
     message("Found ${IWYU}")
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
-        python3 ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
+        python3 ${iwyu_wrapper_SOURCE_DIR}/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
         -Xiwyu --transitive_includes_only
         -Xiwyu --no_fwd_decls
@@ -94,7 +130,7 @@ if(DEV)
 
     add_custom_target(iwyu-check ALL
       DEPENDS ${RLBOX_SOURCE_FILES}
-      COMMAND python3 ${CMAKE_SOURCE_DIR}/iwyu_wrapper/iwyu_wrapper.py
+      COMMAND python3 ${iwyu_wrapper_SOURCE_DIR}/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
         -Xiwyu --transitive_includes_only
         -Xiwyu --no_fwd_decls
@@ -159,28 +195,6 @@ if(DOXYGEN_FOUND)
 
   add_custom_target(docs DEPENDS ${DOXYGEN_INDEX_FILE})
 
-endif()
-
-# Dependencies ###################
-
-include(CTest)
-
-if(BUILD_TESTING)
-  find_package(Catch2 2.13.7 QUIET)
-  if(NOT Catch2_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(catch2
-                         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-                         GIT_TAG v2.13.9)
-
-    FetchContent_GetProperties(catch2)
-    if(NOT catch2_POPULATED)
-      FetchContent_Populate(catch2)
-    endif()
-
-    add_subdirectory("${catch2_SOURCE_DIR}")
-    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
-  endif()
 endif()
 
 # Targets ###################
