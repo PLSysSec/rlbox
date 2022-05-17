@@ -47,8 +47,9 @@ struct copy_cvref {
 
 /**
  * @brief Copies the cvref qualifiers from `TSource` to `TDest`.
- * @code // For example
+ * @code
  * static_assert(std::is_same_t<copy_cvref_t<const int&, short>, const short&>);
+ * @endcode
  * @tparam TSource is the type from which we copy the cvref qualifiers
  * @tparam TDest is the type to which we copy the cvref qualifiers
  */

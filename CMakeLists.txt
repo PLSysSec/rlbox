@@ -155,9 +155,10 @@ if(DEV)
   if(CPPCHECK)
     message("Found ${CPPCHECK}")
     # Just check the rlbox header files
+    # Note we configure cppcheck to assume no custom abort handler
     add_custom_target(cppcheck ALL
       COMMAND cppcheck
-        --enable=warning,performance,portability,information,missingInclude
+        --enable=warning,performance,portability,information,missingInclude -URLBOX_CUSTOM_ABORT
         --suppress=missingIncludeSystem
         --std=c++17 -I ${CMAKE_SOURCE_DIR}/include --error-exitcode=1 --quiet
         ${RLBOX_SOURCE_FILES})

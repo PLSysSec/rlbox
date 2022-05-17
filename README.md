@@ -37,7 +37,7 @@ Support for cmake's `find_package` API is also included. See the example in `exa
    cmake --build ./build --config Release --parallel
    ```
 
-   or make:
+   or with make (on Linux/Mac):
 
    ```bash
    cd build && make -j
@@ -123,3 +123,37 @@ target:
    ```
 
 5. Submit the pull request!
+
+## Building the docs
+
+RLBox's provides two forms of documentation.
+
+- Tutorials on using RLBox and writing RLBox plugins
+- Code documentation using Doxygen
+
+The tutorials are developed and built in the [rlbox-book](https://github.com/PLSysSec/rlbox-book) repo.
+
+Instructions for building the code documentation is given below.
+
+1. To build the code documentation, you will need `doxygen` and `graphviz`. Install
+using:
+
+   On Ubuntu:
+
+   ```bash
+   sudo apt install doxygen graphviz
+   ```
+
+2. Build the docs using the docs target
+
+   ```bash
+   cmake --build ./build --target docs
+   ```
+
+   or with make (on Linux/Mac):
+
+   ```bash
+   cd build && make docs
+   ```
+
+3. Open the file `./doxygen/html/index.html` in a web browser.

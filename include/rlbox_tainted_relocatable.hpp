@@ -9,7 +9,7 @@
 // a templated class
 #include <type_traits>  // IWYU pragma: keep
 
-#include "rlbox_common_error_strings.hpp"
+#include "rlbox_error_handling.hpp"
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_tainted_fixed_aligned.hpp"
 

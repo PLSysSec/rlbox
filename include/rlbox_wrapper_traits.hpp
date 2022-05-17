@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include <type_traits>
 
-#include "rlbox_common_error_strings.hpp"
+#include "rlbox_error_handling.hpp"
 // IWYU incorrectly reports this as unnecessary as the use of rlbox_type_traits
 // is in a templated class
 #include "rlbox_type_traits.hpp"  // IWYU pragma: keep
@@ -68,7 +68,7 @@ using tainted_value_type_t = typename tainted_value_type<T, TSbx>::type;
  * };
  *
  * get_typemember_membername_or_default_t<foo, Default, int> == Custom<int>
- *
+ * @endcode
  * @tparam TSbx Sandbox plugin type
  * @tparam TDefaultTainted the default membername implementation
  * @tparam T the underlying data type that is membername

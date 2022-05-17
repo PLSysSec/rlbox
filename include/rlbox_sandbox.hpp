@@ -5,8 +5,13 @@
  * @brief This header implements the rlbox_sandbox class.
  */
 
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+#  include <atomic>
+#endif
+
 #include <utility>
 
+#include "rlbox_error_handling.hpp"
 #include "rlbox_tainted_relocatable.hpp"
 #include "rlbox_tainted_volatile_standard.hpp"
 #include "rlbox_types.hpp"
@@ -37,6 +42,29 @@ class rlbox_sandbox : protected TSbx {
    */
   template <typename T>
   using TDefaultTaintedVolatile = tainted_volatile_standard<T, TSbx>;
+
+  /**
+   * @brief This type tracks the state of sandbox creation and is for internal
+   * use only. This state is checked prior to any operations on the sandbox from
+   * the host program.
+   * @details We should ideally check this state to see if the sandbox is in the
+   * created state during sandbox operations such as invoking functions.
+   * However, it is expensive to check in APIs such as sandbox_invoke or in the
+   * callback_interceptor. In general, we leave it up to the user to ensure APIs
+   * such as sandbox_invoke are never called prior to sandbox construction or
+   * after destruction. We only perform checks suring create_sandbox,
+   * detroy_sandbox and register_callback where they will not add too much
+   * overhead. Even this limited checking can be diabled through the macro
+   * RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+   */
+  enum class create_status { NOT_CREATED, INITIALIZING, CREATED, CLEANING_UP };
+
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+  /**
+   * @brief This variable tracks the creation status of the sandbox instance
+   */
+  std::atomic<create_status> sandbox_created = create_status::NOT_CREATED;
+#endif
 
  public:
   /**
@@ -69,15 +97,35 @@ class rlbox_sandbox : protected TSbx {
    *
    * @tparam TArgs is the type of the sandbox creation parameters. The value
    * here is specific to the plugin implementation.
-   * @param params specifies any sandbox creation parameters. The value here is
+   * @param aArgs specifies any sandbox creation parameters. The value here is
    * specific to the plugin implementation.
    * @return rlbox_status_code indicates whether this function succeeded
    */
   template <typename... TArgs>
   rlbox_status_code create_sandbox(TArgs... aArgs) {
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+    auto expected = create_status::NOT_CREATED;
+    bool success = sandbox_created.compare_exchange_strong(
+        expected, create_status::INITIALIZING /* desired */);
+    detail::dynamic_check(
+        success,
+        "create_sandbox called when sandbox already created/is being "
+        "created concurrently");
+#endif
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
-    return this->impl_create_sandbox(std::forward<TArgs>(aArgs)...);
+    rlbox_status_code ret =
+        this->impl_create_sandbox(std::forward<TArgs>(aArgs)...);
+
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+    if (ret == rlbox_status_code::SUCCESS) {
+      sandbox_created.store(create_status::CREATED);
+    } else {
+      sandbox_created.store(create_status::NOT_CREATED);
+    }
+#endif
+
+    return ret;
   }
 
   /**

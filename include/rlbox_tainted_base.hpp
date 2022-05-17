@@ -11,7 +11,7 @@
 // a templated class
 #include <type_traits>  // IWYU pragma: keep
 
-#include "rlbox_common_error_strings.hpp"
+#include "rlbox_error_handling.hpp"
 
 namespace rlbox {
 
