@@ -17,8 +17,8 @@
 
 namespace rlbox {
 
-template<typename TSbx>
-class rlbox_sandbox; // IWYU pragma: keep
+template <typename TSbx>
+class rlbox_sandbox;  // IWYU pragma: keep
 
 /**
  * @brief A wrapper type used to mark any function pointers to application code
@@ -29,8 +29,8 @@ class rlbox_sandbox; // IWYU pragma: keep
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class rlbox_callback; // IWYU pragma: keep
+template <typename T, typename TSbx>
+class rlbox_callback;  // IWYU pragma: keep
 
 /**
  * @brief A wrapper type used to mark any function pointers to sandbox code that
@@ -40,8 +40,8 @@ class rlbox_callback; // IWYU pragma: keep
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class rlbox_sandboxed_function; // IWYU pragma: keep
+template <typename T, typename TSbx>
+class rlbox_sandboxed_function;  // IWYU pragma: keep
 
 /**
  * @brief A wrapper type used to mark any raw pointers to application data
@@ -54,8 +54,8 @@ class rlbox_sandboxed_function; // IWYU pragma: keep
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class rlbox_app_pointer; // IWYU pragma: keep
+template <typename T, typename TSbx>
+class rlbox_app_pointer;  // IWYU pragma: keep
 
 /**
  * @brief Tainted boolean that serves as a "hint" and not a definite answer
@@ -64,7 +64,7 @@ class rlbox_app_pointer; // IWYU pragma: keep
  * compromised sandbox can modify tainted_volatile data at any time meaning the
  * hint could potentially be incorrect.
  */
-class tainted_boolean_hint; // IWYU pragma: keep
+class tainted_boolean_hint;  // IWYU pragma: keep
 
 /**
  * @brief Tainted int that serves as a "hint" and not a definite answer
@@ -75,38 +75,37 @@ class tainted_boolean_hint; // IWYU pragma: keep
  * tainted_volatile data at any time meaning the hint could potentially be
  * incorrect.
  */
-class tainted_int_hint; // IWYU pragma: keep
+class tainted_int_hint;  // IWYU pragma: keep
 
-class rlbox_noop_sandbox; // IWYU pragma: keep
+class rlbox_noop_sandbox;  // IWYU pragma: keep
 
 /**
  * @brief A type representing the success/error code for various rlbox related
  * operations
  */
-enum class rlbox_status_code
-{
+enum class rlbox_status_code {
   SUCCESS,
   SANDBOX_CREATE_FAILURE,
   SANDBOX_DESTROY_FAILURE
 };
 
-#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)                          \
-  namespace rlbox {                                                            \
-    class SBXTYPE;                                                             \
-  }                                                                            \
-                                                                               \
-  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;                         \
-                                                                               \
-  using rlbox_sandbox_##SBXNAME =                                              \
-    rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;                        \
-                                                                               \
-  template<typename T>                                                         \
-  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;               \
-                                                                               \
-  template<typename T>                                                         \
-  using tainted_volatile_##SBXNAME =                                           \
-    rlbox_sandbox_##SBXNAME::tainted_volatile<T>;                              \
-                                                                               \
+#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)            \
+  namespace rlbox {                                              \
+  class SBXTYPE;                                                 \
+  }                                                              \
+                                                                 \
+  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;           \
+                                                                 \
+  using rlbox_sandbox_##SBXNAME =                                \
+      rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;        \
+                                                                 \
+  template <typename T>                                          \
+  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>; \
+                                                                 \
+  template <typename T>                                          \
+  using tainted_volatile_##SBXNAME =                             \
+      rlbox_sandbox_##SBXNAME::tainted_volatile<T>;              \
+                                                                 \
   static_assert(true, "")
 
 // In the future the following will also be added
@@ -125,4 +124,4 @@ enum class rlbox_status_code
 // using tainted_boolean_hint_##SBXNAME = rlbox::tainted_boolean_hint;
 // using tainted_integer_hint_##SBXNAME = rlbox::tainted_integer_hint;
 
-}
+}  // namespace rlbox

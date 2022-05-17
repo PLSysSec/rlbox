@@ -21,9 +21,8 @@ using namespace rlbox;
  *
  * @tparam T is the set of types to print
  */
-template<typename... T>
-void rlbox_test_helper_print_type()
-{
+template <typename... T>
+void rlbox_test_helper_print_type() {
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
   std::cout << "Func: " << __FUNCSIG__ << std::endl;
 #else

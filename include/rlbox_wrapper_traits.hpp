@@ -12,7 +12,7 @@
 #include "rlbox_common_error_strings.hpp"
 // IWYU incorrectly reports this as unnecessary as the use of rlbox_type_traits
 // is in a templated class
-#include "rlbox_type_traits.hpp" // IWYU pragma: keep
+#include "rlbox_type_traits.hpp"  // IWYU pragma: keep
 
 namespace rlbox::detail {
 
@@ -26,27 +26,24 @@ namespace rlbox::detail {
  * - Static array types (int[3]) are converted to std::array<int, 3>
  * - Other types are unchanged
  */
-template<typename T, typename TSbx>
-struct tainted_value_type
-{
+template <typename T, typename TSbx>
+struct tainted_value_type {
   using type = T;
 };
 
-template<typename T, typename TSbx, size_t TN>
-struct tainted_value_type<T[TN], TSbx>
-{
+template <typename T, typename TSbx, size_t TN>
+struct tainted_value_type<T[TN], TSbx> {
   using type = std::array<T, TN>;
 };
 
-template<typename T, typename TSbx>
-struct tainted_value_type<T[], TSbx>
-{
+template <typename T, typename TSbx>
+struct tainted_value_type<T[], TSbx> {
   static_assert(
-    rlbox::detail::false_v<T>,
-    "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
+      rlbox::detail::false_v<T>,
+      "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
 };
 
-template<typename T, typename TSbx>
+template <typename T, typename TSbx>
 using tainted_value_type_t = typename tainted_value_type<T, TSbx>::type;
 
 ////////////////////////////////////////////////////////////////////////
@@ -76,29 +73,24 @@ using tainted_value_type_t = typename tainted_value_type<T, TSbx>::type;
  * @tparam TDefaultTainted the default membername implementation
  * @tparam T the underlying data type that is membername
  */
-#define detail_get_typemember_membername_or_default(membername)                \
-  namespace detail_get_typemember_##membername##_or_default                    \
-  {                                                                            \
-    template<class TSbx,                                                       \
-             template<typename>                                                \
-             class TDefaultTainted,                                            \
-             class TEnable = void>                                             \
-    struct get_typemember_##membername##_or_default : std::false_type          \
-    {                                                                          \
-      template<typename T>                                                     \
-      using type = TDefaultTainted<T>;                                         \
-    };                                                                         \
-                                                                               \
-    template<class TSbx, template<typename> class TDefaultTainted>             \
-    struct get_typemember_##membername##_or_default<                           \
-      TSbx,                                                                    \
-      TDefaultTainted,                                                         \
-      std::void_t<typename TSbx::template membername<int>>> : std::true_type   \
-    {                                                                          \
-      template<typename T>                                                     \
-      using type = typename TSbx::template membername<T>;                      \
-    };                                                                         \
-  }                                                                            \
+#define detail_get_typemember_membername_or_default(membername)         \
+  namespace detail_get_typemember_##membername##_or_default {           \
+    template <class TSbx, template <typename> class TDefaultTainted,    \
+              class TEnable = void>                                     \
+    struct get_typemember_##membername##_or_default : std::false_type { \
+      template <typename T>                                             \
+      using type = TDefaultTainted<T>;                                  \
+    };                                                                  \
+                                                                        \
+    template <class TSbx, template <typename> class TDefaultTainted>    \
+    struct get_typemember_##membername##_or_default<                    \
+        TSbx, TDefaultTainted,                                          \
+        std::void_t<typename TSbx::template membername<int>>>           \
+        : std::true_type {                                              \
+      template <typename T>                                             \
+      using type = typename TSbx::template membername<T>;               \
+    };                                                                  \
+  }                                                                     \
   static_assert(true, "")
 
 detail_get_typemember_membername_or_default(tainted);
@@ -112,10 +104,11 @@ detail_get_typemember_membername_or_default(tainted_volatile);
  * @tparam TDefaultTainted the default tainted implementation
  * @tparam T the underlying data type that is tainted
  */
-template<class TSbx, template<typename> class TDefaultTainted, class T>
+template <class TSbx, template <typename> class TDefaultTainted, class T>
 using get_typemember_tainted_or_default_t =
-  typename detail_get_typemember_tainted_or_default::
-    get_typemember_tainted_or_default<TSbx, TDefaultTainted>::template type<T>;
+    typename detail_get_typemember_tainted_or_default::
+        get_typemember_tainted_or_default<TSbx,
+                                          TDefaultTainted>::template type<T>;
 
 /**
  * @brief Given class TSbx, get member "typename TSbx::tainted_volatile<T>" if
@@ -125,12 +118,12 @@ using get_typemember_tainted_or_default_t =
  * @tparam TDefaultTainted the default tainted_volatile implementation
  * @tparam T the underlying data type that is tainted_volatile
  */
-template<class TSbx, template<typename> class TDefaultTainted, class T>
+template <class TSbx, template <typename> class TDefaultTainted, class T>
 using get_typemember_tainted_volatile_or_default_t =
-  typename detail_get_typemember_tainted_volatile_or_default::
-    get_typemember_tainted_volatile_or_default<TSbx, TDefaultTainted>::
-      template type<T>;
+    typename detail_get_typemember_tainted_volatile_or_default::
+        get_typemember_tainted_volatile_or_default<
+            TSbx, TDefaultTainted>::template type<T>;
 
 ////////////////////////////////////////////////////////////////////////
 
-}
+}  // namespace rlbox::detail

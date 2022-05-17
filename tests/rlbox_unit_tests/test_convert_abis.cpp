@@ -22,12 +22,11 @@
 // Part 1. The `copy_cvref_t` trait which is used by `convert_base_types_t`
 ///////////////////////////////////////////////////////////////////////////
 
-TEST_CASE("Test cvref preservation", "[abi conversion]")
-{
+TEST_CASE("Test cvref preservation", "[abi conversion]") {
   REQUIRE(std::is_same_v<int, detail::copy_cvref_t<char, int>>);
   REQUIRE(std::is_same_v<const int, detail::copy_cvref_t<const char, int>>);
   REQUIRE(
-    std::is_same_v<volatile int, detail::copy_cvref_t<volatile char, int>>);
+      std::is_same_v<volatile int, detail::copy_cvref_t<volatile char, int>>);
   REQUIRE(std::is_same_v<int&, detail::copy_cvref_t<char&, int>>);
   REQUIRE(std::is_same_v<int&&, detail::copy_cvref_t<char&&, int>>);
   REQUIRE(std::is_same_v<const volatile int&,
@@ -46,24 +45,18 @@ using test_longlong = short;
 using test_size_t = size_t;
 using test_pointer = void*;
 
-template<typename T, typename TPtr>
-using test_convertor_except_ptr = detail::convert_base_types_t<T,
-                                                               test_wchar,
-                                                               test_short,
-                                                               test_int,
-                                                               test_long,
-                                                               test_longlong,
-                                                               test_size_t,
-                                                               TPtr>;
+template <typename T, typename TPtr>
+using test_convertor_except_ptr =
+    detail::convert_base_types_t<T, test_wchar, test_short, test_int, test_long,
+                                 test_longlong, test_size_t, TPtr>;
 
-template<typename T>
+template <typename T>
 using test_convertor = test_convertor_except_ptr<T, test_pointer>;
 
 // First test with standard primitive and array C++ types
 
 TEST_CASE("Test ABI conversion of primitive unchanged types",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<void, test_convertor<void>>);
   REQUIRE(std::is_same_v<bool, test_convertor<bool>>);
   REQUIRE(std::is_same_v<char, test_convertor<char>>);
@@ -81,14 +74,12 @@ TEST_CASE("Test ABI conversion of primitive unchanged types",
 }
 
 TEST_CASE("Test ABI conversion of primitive changed nosign types",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<test_wchar, test_convertor<wchar_t>>);
 }
 
 TEST_CASE("Test ABI conversion of primitive changed signed types",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<test_short, test_convertor<short>>);
   REQUIRE(std::is_same_v<test_int, test_convertor<int>>);
   REQUIRE(std::is_same_v<test_long, test_convertor<long>>);
@@ -96,8 +87,7 @@ TEST_CASE("Test ABI conversion of primitive changed signed types",
 }
 
 TEST_CASE("Test ABI conversion of primitive changed unsigned types",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<std::make_unsigned_t<test_short>,
                          test_convertor<unsigned short>>);
   REQUIRE(std::is_same_v<std::make_unsigned_t<test_int>,
@@ -108,15 +98,13 @@ TEST_CASE("Test ABI conversion of primitive changed unsigned types",
                          test_convertor<unsigned long long>>);
 }
 
-TEST_CASE("Test ABI conversion of array types", "[abi conversion]")
-{
+TEST_CASE("Test ABI conversion of array types", "[abi conversion]") {
   REQUIRE(std::is_same_v<test_short[3], test_convertor<short[3]>>);
 }
 
 // Next with qualifiers for each of the cases above
 
-TEST_CASE("Test ABI conversion with const qualifier", "[abi conversion]")
-{
+TEST_CASE("Test ABI conversion with const qualifier", "[abi conversion]") {
   REQUIRE(std::is_same_v<const char, test_convertor<const char>>);
   REQUIRE(std::is_same_v<const test_wchar, test_convertor<const wchar_t>>);
   REQUIRE(std::is_same_v<const test_short, test_convertor<const short>>);
@@ -125,21 +113,20 @@ TEST_CASE("Test ABI conversion with const qualifier", "[abi conversion]")
   REQUIRE(std::is_same_v<const test_short[3], test_convertor<const short[3]>>);
 }
 
-TEST_CASE("Test ABI conversion of with volatile qualifier", "[abi conversion]")
-{
+TEST_CASE("Test ABI conversion of with volatile qualifier",
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<volatile char, test_convertor<volatile char>>);
   REQUIRE(
-    std::is_same_v<volatile test_wchar, test_convertor<volatile wchar_t>>);
+      std::is_same_v<volatile test_wchar, test_convertor<volatile wchar_t>>);
   REQUIRE(std::is_same_v<volatile test_short, test_convertor<volatile short>>);
   REQUIRE(std::is_same_v<volatile std::make_unsigned_t<test_short>,
                          test_convertor<volatile unsigned short>>);
-  REQUIRE(
-    std::is_same_v<volatile test_short[3], test_convertor<volatile short[3]>>);
+  REQUIRE(std::is_same_v<volatile test_short[3],
+                         test_convertor<volatile short[3]>>);
 }
 
 TEST_CASE("Test ABI conversion of with lreference qualifier",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<char&, test_convertor<char&>>);
   REQUIRE(std::is_same_v<test_wchar&, test_convertor<wchar_t&>>);
   REQUIRE(std::is_same_v<test_short&, test_convertor<short&>>);
@@ -148,8 +135,7 @@ TEST_CASE("Test ABI conversion of with lreference qualifier",
 }
 
 TEST_CASE("Test ABI conversion of with rreference qualifier",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   REQUIRE(std::is_same_v<char&&, test_convertor<char&&>>);
   REQUIRE(std::is_same_v<test_wchar&&, test_convertor<wchar_t&&>>);
   REQUIRE(std::is_same_v<test_short&&, test_convertor<short&&>>);
@@ -157,10 +143,9 @@ TEST_CASE("Test ABI conversion of with rreference qualifier",
                          test_convertor<unsigned short&&>>);
 }
 
-TEST_CASE("Test ABI conversion with multiple qualifiers", "[abi conversion]")
-{
-  REQUIRE(
-    std::is_same_v<const volatile char&, test_convertor<const volatile char&>>);
+TEST_CASE("Test ABI conversion with multiple qualifiers", "[abi conversion]") {
+  REQUIRE(std::is_same_v<const volatile char&,
+                         test_convertor<const volatile char&>>);
   REQUIRE(std::is_same_v<const volatile test_wchar&,
                          test_convertor<const volatile wchar_t&>>);
   REQUIRE(std::is_same_v<const volatile test_short&&,
@@ -177,8 +162,7 @@ TEST_CASE("Test ABI conversion with multiple qualifiers", "[abi conversion]")
 ///////////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Test ABI conversion of pointers if destination ABI uses void*",
-          "[abi conversion]")
-{
+          "[abi conversion]") {
   static_assert(std::is_same_v<test_pointer, void*>);
 
   // Test ABI conversion of changed nosign types
@@ -191,7 +175,7 @@ TEST_CASE("Test ABI conversion of pointers if destination ABI uses void*",
   REQUIRE(std::is_same_v<const void*, test_convertor<const short*>>);
   REQUIRE(std::is_same_v<void* const, test_convertor<short* const>>);
   REQUIRE(
-    std::is_same_v<const void* const, test_convertor<const short* const>>);
+      std::is_same_v<const void* const, test_convertor<const short* const>>);
 
   // Test ABI conversion of volatile types
   REQUIRE(std::is_same_v<volatile void*, test_convertor<volatile short*>>);
@@ -220,9 +204,8 @@ TEST_CASE("Test ABI conversion of pointers if destination ABI uses void*",
 //          - The pointer types are converted to `struct`
 ///////////////////////////////////////////////////////////////////////////
 
-template<typename TPtr, template<typename TType> class TConv>
-static void test_ptr_convert_helper()
-{
+template <typename TPtr, template <typename TType> class TConv>
+static void test_ptr_convert_helper() {
   static_assert(!std::is_pointer_v<TPtr>);
 
   // Test ABI conversion of changed nosign types
@@ -257,22 +240,18 @@ static void test_ptr_convert_helper()
 
 using test_pointer_int = int;
 
-template<typename T>
+template <typename T>
 using test_convertor_int_ptr = test_convertor_except_ptr<T, test_pointer_int>;
 
-using test_pointer_struct = struct
-{
-  int a;
-};
+using test_pointer_struct = struct { int a; };
 
-template<typename T>
+template <typename T>
 using test_convertor_struct_ptr =
-  test_convertor_except_ptr<T, test_pointer_struct>;
+    test_convertor_except_ptr<T, test_pointer_struct>;
 
 TEST_CASE(
-  "Test ABI conversion of pointers if destination ABI uses a int/struct",
-  "[abi conversion]")
-{
+    "Test ABI conversion of pointers if destination ABI uses a int/struct",
+    "[abi conversion]") {
   test_ptr_convert_helper<test_pointer_int, test_convertor_int_ptr>();
   test_ptr_convert_helper<test_pointer_struct, test_convertor_struct_ptr>();
 }

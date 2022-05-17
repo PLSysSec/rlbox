@@ -9,7 +9,7 @@
 
 // IWYU incorrectly reports this as unnecessary as the use of type_traits is in
 // a templated class
-#include <type_traits> // IWYU pragma: keep
+#include <type_traits>  // IWYU pragma: keep
 
 #include "rlbox_common_error_strings.hpp"
 
@@ -29,9 +29,8 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class tainted_primitive_base
-{
+template <typename T, typename TSbx>
+class tainted_primitive_base {
   // Check that this is used only for primitive types
   // If initialized for a class type, give a helpful error message
   static_assert(!std::is_class_v<T>,
@@ -43,4 +42,4 @@ class tainted_primitive_base
                 "macro\n" RLBOX_REFER_DOCS_MESSAGE "\n");
 };
 
-}
+}  // namespace rlbox

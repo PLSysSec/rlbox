@@ -31,11 +31,10 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class tainted_fixed_aligned : public tainted_primitive_base<T, TSbx>
-{
-private:
+template <typename T, typename TSbx>
+class tainted_fixed_aligned : public tainted_primitive_base<T, TSbx> {
+ private:
   detail::tainted_value_type_t<T, TSbx> data;
 };
 
-}
+}  // namespace rlbox

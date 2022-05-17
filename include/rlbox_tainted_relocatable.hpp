@@ -7,7 +7,7 @@
 
 // IWYU incorrectly reports this as unnecessary as the use of type_traits is in
 // a templated class
-#include <type_traits> // IWYU pragma: keep
+#include <type_traits>  // IWYU pragma: keep
 
 #include "rlbox_common_error_strings.hpp"
 #include "rlbox_tainted_base.hpp"
@@ -27,13 +27,12 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class tainted_relocatable : public tainted_fixed_aligned<T, TSbx>
-{
+template <typename T, typename TSbx>
+class tainted_relocatable : public tainted_fixed_aligned<T, TSbx> {
   static_assert(
-    !std::is_pointer_v<T>,
-    "Unexpectedly received a pointer type in non-pointer "
-    "specialization of tainted_relocatable. " RLBOX_FILE_BUG_MESSAGE);
+      !std::is_pointer_v<T>,
+      "Unexpectedly received a pointer type in non-pointer "
+      "specialization of tainted_relocatable. " RLBOX_FILE_BUG_MESSAGE);
 };
 
 /**
@@ -50,8 +49,8 @@ class tainted_relocatable : public tainted_fixed_aligned<T, TSbx>
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class tainted_relocatable<T*, TSbx> : public tainted_primitive_base<T*, TSbx>
-{};
+template <typename T, typename TSbx>
+class tainted_relocatable<T*, TSbx> : public tainted_primitive_base<T*, TSbx> {
+};
 
-}
+}  // namespace rlbox

@@ -6,8 +6,7 @@
 
 #include "test_plugin_include.hpp"
 
-TEST_CASE(TestName ": Create and destroy sandbox", "[create destroy]")
-{
+TEST_CASE(TestName ": Create and destroy sandbox", "[create destroy]") {
   rlbox_sandbox<TestType> s;
   rlbox_status_code result = CreateSandbox(s);
   REQUIRE(result == rlbox_status_code::SUCCESS);
@@ -16,8 +15,8 @@ TEST_CASE(TestName ": Create and destroy sandbox", "[create destroy]")
   REQUIRE(result2 == rlbox_status_code::SUCCESS);
 }
 
-TEST_CASE(TestName ": Create and destroy multiple sandbox", "[create destroy]")
-{
+TEST_CASE(TestName ": Create and destroy multiple sandbox",
+          "[create destroy]") {
   const int sandbox_count = 2;
   rlbox_sandbox<TestType> s[sandbox_count];
 

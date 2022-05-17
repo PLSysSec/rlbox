@@ -17,10 +17,8 @@ namespace rlbox {
  * this tainted data. The noop sandbox simply dispatches function calls as if
  * they were simple static function calls within the host application.
  */
-class rlbox_noop_sandbox
-{
-
-public:
+class rlbox_noop_sandbox {
+ public:
   /**
    * @brief Implementation of the RLBox create_sandbox API. For the
    * rlbox_noop_sandbox, this does nothing as all function calls or memory
@@ -36,10 +34,9 @@ public:
    *
    * @return rlbox_status_code indicates whether this function succeeded
    */
-  rlbox_status_code impl_destroy_sandbox()
-  {
+  rlbox_status_code impl_destroy_sandbox() {
     return rlbox_status_code::SUCCESS;
   }
 };
 
-}
+}  // namespace rlbox

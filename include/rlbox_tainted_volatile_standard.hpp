@@ -30,7 +30,6 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template<typename T, typename TSbx>
-class tainted_volatile_standard : public tainted_primitive_base<T, TSbx>
-{};
-}
+template <typename T, typename TSbx>
+class tainted_volatile_standard : public tainted_primitive_base<T, TSbx> {};
+}  // namespace rlbox

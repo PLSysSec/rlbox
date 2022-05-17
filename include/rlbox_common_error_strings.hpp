@@ -6,8 +6,8 @@
  * generate helpful error messages.
  */
 
-#define RLBOX_REFER_DOCS_MESSAGE                                               \
+#define RLBOX_REFER_DOCS_MESSAGE \
   "For more details, see examples provided in https://docs.rlbox.dev"
 
-#define RLBOX_FILE_BUG_MESSAGE                                                 \
+#define RLBOX_FILE_BUG_MESSAGE \
   "Please file a bug at https://github.com/PLSysSec/rlbox"

@@ -22,25 +22,23 @@ namespace rlbox {
  * sandbox implementation. For the "null" sandbox, the value is
  * rlbox_noop_sandbox.
  */
-template<typename TSbx>
-class rlbox_sandbox : protected TSbx
-{
-
-private:
+template <typename TSbx>
+class rlbox_sandbox : protected TSbx {
+ private:
   /**
    * @brief The default implementation of tainted unless overridden by TSbx
    */
-  template<typename T>
+  template <typename T>
   using TDefaultTainted = tainted_relocatable<T, TSbx>;
 
   /**
    * @brief The default implementation of tainted_volatile unless overridden by
    * TSbx
    */
-  template<typename T>
+  template <typename T>
   using TDefaultTaintedVolatile = tainted_volatile_standard<T, TSbx>;
 
-public:
+ public:
   /**
    * @brief The tainted type used by the underlying TSbx specification. If
    * unspecified this is tainted_relocatable by default.
@@ -49,9 +47,9 @@ public:
    * @tparam TSbx is the type of the sandbox plugin that represents the
    * underlying sandbox implementation.
    */
-  template<typename T>
+  template <typename T>
   using tainted =
-    detail::get_typemember_tainted_or_default_t<TSbx, TDefaultTainted, T>;
+      detail::get_typemember_tainted_or_default_t<TSbx, TDefaultTainted, T>;
 
   /**
    * @brief The tainted_volatile type used by the underlying TSbx specification.
@@ -61,11 +59,9 @@ public:
    * @tparam TSbx is the type of the sandbox plugin that represents the
    * underlying sandbox implementation.
    */
-  template<typename T>
+  template <typename T>
   using tainted_volatile = detail::get_typemember_tainted_volatile_or_default_t<
-    TSbx,
-    TDefaultTaintedVolatile,
-    T>;
+      TSbx, TDefaultTaintedVolatile, T>;
 
   /**
    * @brief API invoked to initialize a new sandbox. This function should be run
@@ -77,9 +73,8 @@ public:
    * specific to the plugin implementation.
    * @return rlbox_status_code indicates whether this function succeeded
    */
-  template<typename... TArgs>
-  rlbox_status_code create_sandbox(TArgs... aArgs)
-  {
+  template <typename... TArgs>
+  rlbox_status_code create_sandbox(TArgs... aArgs) {
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
     return this->impl_create_sandbox(std::forward<TArgs>(aArgs)...);
@@ -93,12 +88,11 @@ public:
    *
    * @return rlbox_status_code indicates whether this function succeeded
    */
-  rlbox_status_code destroy_sandbox()
-  {
+  rlbox_status_code destroy_sandbox() {
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
     return this->impl_destroy_sandbox();
   }
 };
 
-}
+}  // namespace rlbox
