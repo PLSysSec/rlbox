@@ -89,6 +89,18 @@ enum class rlbox_status_code {
   SANDBOX_DESTROY_FAILURE
 };
 
+/**
+ * @brief This macro specialized types \ref rlbox_sandbox, the tainted types,
+ * etc. for a particular sandbox type
+ * @example
+ * @code
+ * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
+ * @endcode
+ *
+ * The above code creates the types `rlbox_sandbox_libtest` (which is an alias
+ * to `rlbox_sandbox<rlbox_noop_sandbox>`), rlbox_callback_libtest<T> (which is
+ * an alias to `rlbox_callback<T, rlbox_noop_sandbox>`)
+ */
 #define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)            \
   namespace rlbox {                                              \
   class SBXTYPE;                                                 \

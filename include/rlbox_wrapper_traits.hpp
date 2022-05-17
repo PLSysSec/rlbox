@@ -16,16 +16,6 @@
 
 namespace rlbox::detail {
 
-/**
- * @brief RLBox provides various tainted wrappers that are used to mark any data
- * returned by the sandbox. For example, the function call to sandboxed code
- * that returns an `T` would return a `tainted<T>`. To ensure T, can be easily
- * wrapped we need to convert T to simple value types that we can pass around
- * easily. This trait implements these conversions
- * @details There conversions currently performed are
- * - Static array types (int[3]) are converted to std::array<int, 3>
- * - Other types are unchanged
- */
 template <typename T, typename TSbx>
 struct tainted_value_type {
   using type = T;
@@ -43,6 +33,16 @@ struct tainted_value_type<T[], TSbx> {
       "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
 };
 
+/**
+ * @brief RLBox provides various tainted wrappers that are used to mark any data
+ * returned by the sandbox. For example, the function call to sandboxed code
+ * that returns an `T` would return a `tainted<T>`. To ensure T, can be easily
+ * wrapped we need to convert T to simple value types that we can pass around
+ * easily. This trait implements these conversions
+ * @details There conversions currently performed are
+ * - Static array types (int[3]) are converted to std::array<int, 3>
+ * - Other types are unchanged
+ */
 template <typename T, typename TSbx>
 using tainted_value_type_t = typename tainted_value_type<T, TSbx>::type;
 

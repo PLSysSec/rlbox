@@ -10,9 +10,16 @@
 #include <cstdlib>   // IWYU pragma: keep
 #include <iostream>  // IWYU pragma: keep
 
+/**
+ * @brief Used as part of error messages to refer to the tutorials
+ */
 #define RLBOX_REFER_DOCS_MESSAGE \
   "For more details, see examples provided in https://docs.rlbox.dev"
 
+/**
+ * @brief Used as part of error messages when rlbox gets to an unexpected state
+ * or to unimplemented code
+ */
 #define RLBOX_FILE_BUG_MESSAGE \
   "Please file a bug at https://github.com/PLSysSec/rlbox"
 
