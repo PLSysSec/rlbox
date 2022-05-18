@@ -4,7 +4,17 @@
 
 [![Tests](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
-RLBox sandboxing framework. This code has been tested on 64-bit versions of Linux, Mac OSX, and Windows.
+RLBox is a toolkit to securely sandbox third-party libraries. RLBox allows
+chosen libraries to be isolated either with standard sandboxing tools like
+WebAssembly, Native Client, etc. or by running them in a separate OS process.
+RLBox's API then ensures that all interactions with these isolated libraries are
+secure, by marking any untrusted data as `tainted`. Additionally RLBox
+automatically handles any ABI differences introduced by tools like WebAssembly,
+Native Client.
+
+This code has been tested on 64-bit versions of Linux, Mac OSX, and Windows.
+
+A more detailed RLBox tutorial is available [here](https://docs.rlbox.dev).
 
 ## Reporting security bugs
 
@@ -12,16 +22,12 @@ If you find a security bug, please do not create a public issue. Instead, file a
 
 ## Using this library
 
-RLBox is a general purpose sandboxing API that can be used to interact with
-library sandboxed with different backends --- WebAssembly, Native Client, OS
-processess, etc. Support for each backend is provided by a separate plugin that
-must also be downloaded separately.
-
-See the [online docs](https://docs.rlbox.dev) for more details.
-
 The RLBox library is a header only library, so you can directly download this repo and use include the contents of `code/include/` in your application. On Linux/Mac machines, you can optionally install the headers as well with `make install`.
 
 Support for cmake's `find_package` API is also included. See the example in `examples/hello-world-cmake`.
+
+The RLBox sandboxing API additionally needs a sandboxing plugin specific to the sandboxing technology used (WebAssembly, Native Client, OS
+processes, etc.). This plugin must be downloaded separately. See the [tutorial](https://docs.rlbox.dev) for more details.
 
 ## Running the tests
 

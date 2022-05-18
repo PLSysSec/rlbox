@@ -90,9 +90,9 @@ enum class rlbox_status_code {
 };
 
 /**
- * @brief This macro specialized types \ref rlbox_sandbox, the tainted types,
+ * @brief This macro specialized types \ref rlbox::rlbox_sandbox, the tainted types,
  * etc. for a particular sandbox type
- * @example
+ * @details For example
  * @code
  * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
  * @endcode
