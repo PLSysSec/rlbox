@@ -12,6 +12,7 @@
 
 #include "test_include.hpp"
 
+#include "rlbox_sandbox_plugin_base.hpp"
 #include "rlbox_tainted_fixed_aligned.hpp"
 #include "rlbox_tainted_relocatable.hpp"
 
@@ -19,15 +20,19 @@
 
 namespace rlbox {
 
-class rlbox_default_tainted_testsandbox {};
+class rlbox_default_tainted_testsandbox
+    : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {};
 
-class rlbox_custom_tainted_testsandbox {
+class rlbox_custom_tainted_testsandbox
+    : public rlbox_sandbox_plugin_base<rlbox_custom_tainted_testsandbox> {
  public:
   template <typename T>
   using tainted = tainted_fixed_aligned<T, rlbox_custom_tainted_testsandbox>;
 };
 
-class rlbox_custom_tainted_volatile_testsandbox {
+class rlbox_custom_tainted_volatile_testsandbox
+    : public rlbox_sandbox_plugin_base<
+          rlbox_custom_tainted_volatile_testsandbox> {
  public:
   template <typename T>
   using tainted_volatile =

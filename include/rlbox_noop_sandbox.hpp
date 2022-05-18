@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "rlbox_sandbox_plugin_base.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox {
@@ -20,7 +21,8 @@ namespace rlbox {
  * this tainted data. The noop sandbox simply dispatches function calls as if
  * they were simple static function calls within the host application.
  */
-class rlbox_noop_sandbox {
+class rlbox_noop_sandbox
+    : public rlbox_sandbox_plugin_base<rlbox_noop_sandbox> {
  public:
   /**
    * @brief Implementation of the RLBox create_sandbox API. For the

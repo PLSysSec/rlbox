@@ -34,19 +34,6 @@ template <typename TSbx>
 class rlbox_sandbox : protected TSbx {
  private:
   /**
-   * @brief The default implementation of tainted unless overridden by TSbx
-   */
-  template <typename T>
-  using TDefaultTainted = tainted_relocatable<T, TSbx>;
-
-  /**
-   * @brief The default implementation of tainted_volatile unless overridden by
-   * TSbx
-   */
-  template <typename T>
-  using TDefaultTaintedVolatile = tainted_volatile_standard<T, TSbx>;
-
-  /**
    * @brief This type tracks the state of sandbox creation and is for internal
    * use only. This state is checked prior to any operations on the sandbox from
    * the host program.
@@ -71,28 +58,22 @@ class rlbox_sandbox : protected TSbx {
 
  public:
   /**
-   * @brief The tainted type used by the underlying TSbx specification. If
-   * unspecified this is tainted_relocatable by default.
-   *
+   * @brief The tainted type used by the underlying TSbx specification.
    * @tparam T is the type of the data that is wrapped.
    * @tparam TSbx is the type of the sandbox plugin that represents the
    * underlying sandbox implementation.
    */
   template <typename T>
-  using tainted =
-      detail::get_typemember_tainted_or_default_t<TSbx, TDefaultTainted, T>;
+  using tainted = typename TSbx::template tainted<T>;
 
   /**
    * @brief The tainted_volatile type used by the underlying TSbx specification.
-   * If unspecified this is tainted_volatile_standard by default.
-   *
    * @tparam T is the type of the data that is wrapped.
    * @tparam TSbx is the type of the sandbox plugin that represents the
    * underlying sandbox implementation.
    */
   template <typename T>
-  using tainted_volatile = detail::get_typemember_tainted_volatile_or_default_t<
-      TSbx, TDefaultTaintedVolatile, T>;
+  using tainted_volatile = typename TSbx::template tainted_volatile<T>;
 
   /**
    * @brief API invoked to initialize a new sandbox. This function should be run
