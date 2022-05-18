@@ -1,9 +1,12 @@
-#pragma once
-
 /**
  * @file rlbox_tainted_volatile_standard.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header implements the tainted_volatile_standard class.
  */
+
+#pragma once
 
 #include "rlbox_tainted_base.hpp"
 

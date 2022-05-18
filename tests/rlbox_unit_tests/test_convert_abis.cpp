@@ -1,5 +1,8 @@
 /**
  * @file test_convert_abis.cpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Check that ABI conversion works as expected.
  * @details This file tests the following things:
  * 1. The `copy_cvref_t` trait which is used by `convert_base_types_t`

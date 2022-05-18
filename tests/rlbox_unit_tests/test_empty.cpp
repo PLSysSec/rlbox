@@ -1,5 +1,8 @@
 /**
  * @file test_empty.cpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Check that including the rlbox headers, using
  * RLBOX_DEFINE_BASE_TYPES_FOR, and creating a sbx var doesn't cause issues
  */

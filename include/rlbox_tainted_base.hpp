@@ -1,11 +1,14 @@
-#pragma once
-
 /**
  * @file rlbox_tainted_base.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Base classes for tainted types (wrappers that identify data returned
  * by sandboxed code). These classes contain common functions used by different
  * tainted and tainted_volatile implementations.
  */
+
+#pragma once
 
 // IWYU incorrectly reports this as unnecessary as the use of type_traits is in
 // a templated class

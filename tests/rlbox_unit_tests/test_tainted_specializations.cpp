@@ -1,5 +1,8 @@
 /**
  * @file test_tainted_specializations.cpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Tainted wrappers are specialized for primitive, pointer, and class
  * types. These wrappers check that the correct specialization is used with
  * static_assert. Check that the various tainted specializations don't generate

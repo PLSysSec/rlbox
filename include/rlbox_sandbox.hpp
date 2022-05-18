@@ -1,9 +1,12 @@
-#pragma once
-
 /**
  * @file rlbox_sandbox.hpp
+ * @copyright This project is released under the MIT License.
+ * You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header implements the rlbox_sandbox class.
  */
+
+#pragma once
 
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
 #  include <atomic>
@@ -20,7 +23,7 @@
 namespace rlbox {
 
 /**
- * @brief An rlbox sandbox type tha provides APIs to invoke functions in the
+ * @brief An rlbox sandbox type that provides APIs to invoke functions in the
  * sandboxed component, expose callbacks, retrieve information about the sandbox
  * memory etc.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying

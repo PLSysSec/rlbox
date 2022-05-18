@@ -1,9 +1,12 @@
-#pragma once
-
 /**
  * @file rlbox_tainted_relocatable.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header implements the tainted_relocatable class.
  */
+
+#pragma once
 
 // IWYU incorrectly reports this as unnecessary as the use of type_traits is in
 // a templated class

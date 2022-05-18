@@ -1,5 +1,8 @@
 /**
  * @file test_plugin_reflection.cpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Check that the tainted/tainted_volatile type is correctly overidden in
  * plugins to rlbox_sandbox
  * @details Two cases to test:

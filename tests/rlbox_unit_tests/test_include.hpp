@@ -1,10 +1,13 @@
-#pragma once
-
 /**
  * @file test_include.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Include file to be used by tests. Contains some common headers and
  * functions used by tests
  */
+
+#pragma once
 
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"

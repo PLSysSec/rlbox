@@ -1,13 +1,14 @@
-#pragma once
-
 /**
  * @file rlbox_types.hpp
- *
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header forward declares rlbox types like rlbox_sandbox, and also
  * provides the RLBOX_DEFINE_BASE_TYPES_FOR macro which allows declaring
  * tainted_foo for any library "foo"
- *
  */
+
+#pragma once
 
 // IWYU pragma: begin_exports
 
@@ -90,8 +91,8 @@ enum class rlbox_status_code {
 };
 
 /**
- * @brief This macro specialized types \ref rlbox::rlbox_sandbox, the tainted types,
- * etc. for a particular sandbox type
+ * @brief This macro specialized types @ref rlbox::rlbox_sandbox, the tainted
+ * types, etc. for a particular sandbox type
  * @details For example
  * @code
  * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);

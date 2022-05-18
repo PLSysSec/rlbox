@@ -1,9 +1,12 @@
-#pragma once
-
 /**
  * @file rlbox_wrapper_traits.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header contains misc utilities to reflect on rlbox specific types
  */
+
+#pragma once
 
 #include <array>
 #include <stddef.h>

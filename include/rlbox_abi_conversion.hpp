@@ -1,5 +1,8 @@
 /**
  * @file rlbox_abi_conversion.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief The file provides utilities to convert between different ABIs
  * @details In particular we can convert data structures, between 2 ABIs the
  * source ABI to a target ABI. Each ABI can specify custom sizes of short,

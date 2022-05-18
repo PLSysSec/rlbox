@@ -1,10 +1,13 @@
-#pragma once
-
 /**
  * @file rlbox_error_handling.hpp
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This file contains common error utilies and strings used in the rlbox
  * library to handle errors and generate helpful error messages.
  */
+
+#pragma once
 
 // Sometimes needed depending on configuration of error handling
 #include <cstdlib>   // IWYU pragma: keep

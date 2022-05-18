@@ -1,14 +1,16 @@
-#pragma once
-
 /**
  * @file rlbox_stdint_types.hpp
- *
+ * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * the MIT License. You can obtain a copy of the License at
+ * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header declares types that serve as markers for the aliased
  * integer types such as `int32_t` or `size_t` in scenarios where we need to
  * distinguish this from other integer types like `int` or `long`. This is used
  * when we have to convert data from one ABI to another for example LP64 to
  * ILP32
  */
+
+#pragma once
 
 namespace rlbox {
 
