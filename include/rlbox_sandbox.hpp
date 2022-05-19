@@ -47,7 +47,7 @@ class rlbox_sandbox : protected TSbx {
    * overhead. Even this limited checking can be diabled through the macro
    * RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
    */
-  enum class create_status { NOT_CREATED, INITIALIZING, CREATED, CLEANING_UP };
+  enum class create_status { NOT_CREATED, INITIALIZING, DESTRUCTING, CREATED };
 
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
   /**
@@ -121,9 +121,22 @@ class rlbox_sandbox : protected TSbx {
    * @return rlbox_status_code indicates whether this function succeeded
    */
   rlbox_status_code destroy_sandbox() {
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+    auto expected = create_status::CREATED;
+    bool success = sandbox_created.compare_exchange_strong(
+        expected, create_status::DESTRUCTING /* desired */);
+    detail::dynamic_check(
+        success,
+        "create_sandbox called when sandbox already destroyed/is being "
+        "destroyed concurrently");
+#endif
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
-    return this->impl_destroy_sandbox();
+    rlbox_status_code ret = this->impl_destroy_sandbox();
+#ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
+    sandbox_created.store(create_status::NOT_CREATED);
+#endif
+    return ret;
   }
 };
 
