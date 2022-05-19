@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <array>
 #include <type_traits>
 
 namespace rlbox::detail {
@@ -73,5 +74,30 @@ using remove_cvref_t = std::remove_cv_t<std::remove_reference_t<T>>;
  */
 template <typename T>
 inline constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief If T is a C array, this trait converts it to the std::array
+ * type for this, else T is returned.
+ * @tparam T is the type to convert
+ * @code
+ * static_assert(std::is_same_t<c_array_to_std_array_t<int[3]>, std::array<int,
+ * 3>>); static_assert(std::is_same_t<c_array_to_std_array_t<int>, int>);
+ * @endcode
+ */
+template <typename T>
+using c_array_to_std_array_t =
+    std::conditional_t<std::is_array_v<T>,
+                       std::array<std::remove_extent_t<T>, std::extent_v<T>>,
+                       T>;
+
+/**
+ * @brief Returns the value-type equivalent of the given type. Currently this is
+ * only needed to convert c style arrays to std::arrays
+ * @tparam T is the type to convert
+ */
+template <typename T>
+using value_type_t = c_array_to_std_array_t<T>;
 
 }  // namespace rlbox::detail
