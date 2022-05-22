@@ -11,14 +11,10 @@
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
 #  include <atomic>
 #endif
-
 #include <utility>
 
 #include "rlbox_error_handling.hpp"
-#include "rlbox_tainted_relocatable.hpp"
-#include "rlbox_tainted_volatile_standard.hpp"
 #include "rlbox_types.hpp"
-#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 

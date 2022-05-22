@@ -31,9 +31,9 @@ TEST_CASE("Test tainted_fixed_aligned specialization",
 
 TEST_CASE("Test tainted_relocatable specialization",
           "[rlbox tainted specialization]") {
-  tainted_relocatable<int, rlbox_noop_sandbox> a;
-  tainted_relocatable<int*, rlbox_noop_sandbox> b;
-  tainted_relocatable<int[3], rlbox_noop_sandbox> c;
+  tainted_relocatable<int, rlbox_noop_sandbox> a{};
+  tainted_relocatable<int*, rlbox_noop_sandbox> b{};
+  tainted_relocatable<int[3], rlbox_noop_sandbox> c{};
 
   (void)a;
   (void)b;

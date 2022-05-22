@@ -8,7 +8,12 @@
 
 #pragma once
 
+#include <stdlib.h>
+
+#include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_type_traits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 /**
@@ -33,6 +38,115 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
+template <typename T, typename TSbx, typename TEnable = void>
+class tainted_volatile_standard;
+
+/**
+ * @brief Specialization for fundamental types
+ * @tparam T is the type of the data being wrapped.
+ * @tparam TSbx is the type of the sandbox plugin that represents the underlying
+ * sandbox implementation.
+ */
 template <typename T, typename TSbx>
-class tainted_volatile_standard : public tainted_primitive_base<T, TSbx> {};
+class tainted_volatile_standard<
+    T, TSbx, RLBOX_SPECIALIZE(detail::is_fundamental_or_enum_v<T>)>
+    : public tainted_volatile_base<T, TSbx> {
+  KEEP_RLBOX_CLASSES_FRIENDLY;
+
+ private:
+  using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
+
+  detail::value_type_t<T> data;
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data. For internal use
+   * only.
+   * @return detail::value_type_t<T> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<T> raw_host_rep() const {
+    detail::value_type_t<T> converted;
+    convert_type_fundamental(data, converted);
+    return converted;
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data in the sandboxed
+   * ABI. For internal use only.
+   * @return detail::value_type_t<TSbxRep> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const {
+    return data;
+  }
+
+ public:
+  /**
+   * @brief Unsafely remove the tainting and get the raw data.
+   * @return detail::value_type_t<T> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified() const {
+    return raw_host_rep();
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data in the sandboxed
+   * ABI.
+   * @return detail::value_type_t<TSbxRep> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
+    return raw_sandboxed_rep();
+  }
+
+  ////////////////////////////////
+
+  inline tainted_volatile_standard() = default;
+
+  ////////////////////////////////
+
+  template <template <typename, typename...> typename TWrap, typename TOther,
+            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
+                              std::is_assignable_v<decltype(data)&, TOther>)>
+  inline tainted_volatile_standard(const TWrap<TOther, TSbx>& aOther) {
+    data = aOther.raw_sandboxed_rep();
+  }
+
+  inline tainted_volatile_standard(const T& aOther) { data = aOther; }
+};
+
+/**
+ * @brief Specialization for non-fundamental types
+ * @tparam T is the type of the data being wrapped.
+ * @tparam TSbx is the type of the sandbox plugin that represents the underlying
+ * sandbox implementation.
+ */
+template <typename T, typename TSbx>
+class tainted_volatile_standard<
+    T, TSbx, RLBOX_SPECIALIZE(!detail::is_fundamental_or_enum_v<T>)>
+    : public tainted_volatile_base<T, TSbx> {
+  KEEP_RLBOX_CLASSES_FRIENDLY;
+
+ private:
+  /**
+   * @brief Unsafely remove the tainting and get the raw data converted to the
+   * host ABI. For internal use only.
+   * @return detail::value_type_t<T> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<T> raw_host_rep() const { abort(); }
+  // [[nodiscard]]
+  //   inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const { abort();
+  //   }
+
+ public:
+  /**
+   * @brief Unsafely remove the tainting and get the raw data converted to the
+   * host ABI.
+   * @return detail::value_type_t<T> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified() const {
+    return raw_host_rep();
+  }
+  // [[nodiscard]]
+  //   inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
+  //     return raw_sandboxed_rep();
+  //   }
+};
 }  // namespace rlbox

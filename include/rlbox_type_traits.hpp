@@ -9,7 +9,10 @@
 #pragma once
 
 #include <array>
+#include <stddef.h>
 #include <type_traits>
+
+#include "rlbox_error_handling.hpp"
 
 namespace rlbox::detail {
 
@@ -77,9 +80,43 @@ inline constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace c_array_to_std_array_detail {
 /**
- * @brief If T is a C array, this trait converts it to the std::array
- * type for this, else T is returned.
+ * @brief This handles the case where T is not an array
+ * @tparam T is the type to convert
+ */
+template <typename T>
+struct c_array_to_std_array {
+  using type = T;
+};
+
+/**
+ * @brief This handles the case where T is an array of size N
+ * @tparam T is the type to convert
+ */
+template <typename T, size_t TN>
+struct c_array_to_std_array<T[TN]> {
+  using type = std::array<T, TN>;
+};
+
+/**
+ * @brief This handles the case for dynamic sized arrays (like `int[]') ewhich
+ * are not supported.
+ * @tparam T is the type to convert
+ */
+template <typename T>
+struct c_array_to_std_array<T[]> {
+  static_assert(
+      false_v<T>,
+      "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
+};
+
+}  // namespace c_array_to_std_array_detail
+
+/**
+ * @brief If T is a `int[N]', this trait converts it to the `std::array<N>'
+ * type for this, else T is returned. Dynamic sized arrays `int[]' are not
+ * supported
  * @tparam T is the type to convert
  * @code
  * static_assert(std::is_same_t<c_array_to_std_array_t<int[3]>, std::array<int,
@@ -88,9 +125,9 @@ inline constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
  */
 template <typename T>
 using c_array_to_std_array_t =
-    std::conditional_t<std::is_array_v<T>,
-                       std::array<std::remove_extent_t<T>, std::extent_v<T>>,
-                       T>;
+    typename c_array_to_std_array_detail::c_array_to_std_array<T>::type;
+
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief Returns the value-type equivalent of the given type. Currently this is

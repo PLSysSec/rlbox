@@ -32,3 +32,9 @@ void rlbox_test_helper_print_type() {
   std::cout << "Func: " << __PRETTY_FUNCTION__ << std::endl;
 #endif
 }
+
+/**
+ * @brief Sandbox we will use for rlbox testing
+ */
+class rlbox_test_sandbox
+    : public rlbox::rlbox_sandbox_plugin_base<rlbox_test_sandbox> {};

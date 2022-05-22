@@ -8,45 +8,41 @@
 
 #pragma once
 
-#include <array>
-#include <stddef.h>
-#include <type_traits>
-
-#include "rlbox_error_handling.hpp"
+#include "rlbox_abi_conversion.hpp"
+#include "rlbox_tainted_base.hpp"
 // IWYU incorrectly reports this as unnecessary as the use of rlbox_type_traits
 // is in a templated class
 #include "rlbox_type_traits.hpp"  // IWYU pragma: keep
 
 namespace rlbox::detail {
 
-template <typename T, typename TSbx>
-struct tainted_value_type {
-  using type = T;
-};
-
-template <typename T, typename TSbx, size_t TN>
-struct tainted_value_type<T[TN], TSbx> {
-  using type = std::array<T, TN>;
-};
-
-template <typename T, typename TSbx>
-struct tainted_value_type<T[], TSbx> {
-  static_assert(
-      rlbox::detail::false_v<T>,
-      "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
-};
-
 /**
- * @brief RLBox provides various tainted wrappers that are used to mark any data
- * returned by the sandbox. For example, the function call to sandboxed code
- * that returns an `T` would return a `tainted<T>`. To ensure T, can be easily
- * wrapped we need to convert T to simple value types that we can pass around
- * easily. This trait implements these conversions
- * @details There conversions currently performed are
- * - Static array types (int[3]) are converted to std::array<int, 3>
- * - Other types are unchanged
+ * @brief RLBox converts data between the host ABI and the sandbox ABI as they
+ * may be different. The sandbox ABI details is defined in the sandbox plugin.
+ * This trait takes these details and constructs a type of @ref
+ * rlbox::detail::convert_base_types_t which is capable of converting primtive
+ * types to the target sandbox ABI.
+ * @tparam T is the type to convert to the sandbox ABI
+ * @tparam TSbx is the sandbox plugin to whose ABI the type is being converted
  */
 template <typename T, typename TSbx>
-using tainted_value_type_t = typename tainted_value_type<T, TSbx>::type;
+using rlbox_base_types_convertor =
+    convert_base_types_t<T, typename TSbx::sbx_wchart, typename TSbx::sbx_short,
+                         typename TSbx::sbx_int, typename TSbx::sbx_long,
+                         typename TSbx::sbx_longlong, typename TSbx::sbx_sizet,
+                         typename TSbx::sbx_pointer>;
+
+/**
+ * @brief This trait identifies if a given generic types is a tainted wrapper.
+ * It does this by checking if the generic wrapper derives from @ref
+ * rlbox::tainted_base
+ * @tparam TWrap is the generic type to check
+ * @tparam T is the type of the data being wrapped over
+ * @tparam TSbx is the sandbox type
+ */
+template <template <typename, typename...> typename TWrap, typename T,
+          typename TSbx>
+constexpr bool is_tainted_wrapper =
+    std::is_base_of_v<tainted_base<T, TSbx>, TWrap<T, TSbx>>;
 
 }  // namespace rlbox::detail

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #include "rlbox_tainted_relocatable.hpp"
 #include "rlbox_tainted_volatile_standard.hpp"
 
@@ -45,6 +47,49 @@ class rlbox_sandbox_plugin_base {
    */
   template <typename T>
   using tainted_volatile = tainted_volatile_standard<T, TSbx>;
+
+  /**
+   * @brief How can the sandbox type `wchar_t` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_wchart = wchar_t;
+  /**
+   * @brief How can the sandbox type `short` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_short = short;
+  /**
+   * @brief How can the sandbox type `int` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_int = int;
+  /**
+   * @brief How can the sandbox type `long` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_long = long;
+  /**
+   * @brief How can the sandbox type `longlong` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_longlong = long long;
+  /**
+   * @brief How can the sandbox type `size_t` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_sizet = size_t;
+  /**
+   * @brief How can the sandbox type `pointer` be represented in the host
+   * environment. Defaults to same as the host type. This can be overridden by
+   * the sandbox plugin if the sandbox uses a custom ABI.
+   */
+  using sbx_pointer = void*;
 };
 
 }  // namespace rlbox
