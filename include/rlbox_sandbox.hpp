@@ -136,4 +136,57 @@ class rlbox_sandbox : protected TSbx {
   }
 };
 
+/**
+ * @brief API used to invoke sandbox functions while also specifying the
+ * function type. The parameters are expected to be rlbox wrapper types like
+ * `tainted' types or `rlbox::rlbox_callback` types.
+ *
+ * This macro is used internally in most cases.
+ *
+ * However, end users must invoke sandbox functions with this macro IFF the
+ * sandboxing technology both
+ *   - Changes the ABI of types like int, long etc.
+ *   - Does not expose the target type of compiled code
+ *
+ * This means
+ *   - Users of the rlbox_noop_sandbox (does not change ABI) will NOT need this
+ *   - Users of the rlbox_wasm2c_sandbox (changes the ABI, but exposes the
+ * target type of the function) will NOT need this
+ *   - Users of the rlbox_nacl_sandbox (changes the ABI, does not expose the
+ * target type of the function) will need this
+ *
+ * For e.g.,
+ * @code {.cpp}
+ * auto result = sandbox_invoke_with_func_type(sandbox, int(int, int), lib_add,
+ * 3, 4);
+ * @endcode
+ *
+ * This can also be used with rlbox integer types to currently account for the
+ * ABI changes
+ * @code {.cpp}
+ * auto result = sandbox_invoke_with_func_type(sandbox,
+ * rlbox_uint32_t(rlbox_uint32_t, rlbox_uint32_t), lib_add, 3, 4);
+ * @endcode
+ * @details This macro ultimately forwards the call to a method on @ref
+ * rlbox::rlbox_sandbox along with  a stringified version of the
+ * function name
+ */
+#define sandbox_invoke_with_func_type(sandbox, func_type, func_name, ...) \
+  sandbox.invoke_sandbox_function<func_type>(                             \
+      #func_name, rlbox_wasm2c_sandbox_symbol_res(func_name), _VA_ARGS_...)
+
+/**
+ * @brief API used to invoke sandbox functions. The parameters are expected to
+ * be rlbox wrapper types like `tainted' types or `rlbox::rlbox_callback` types.
+ *
+ * For e.g.,
+ * @code {.cpp}
+ * auto result = sandbox_invoke(sandbox, lib_add, 3, 4);
+ * @endcode
+ * @details This macro ultimately forwards the call to a method on @ref
+ * rlbox::rlbox_sandbox along with the function type.
+ */
+#define sandbox_invoke(sandbox, func_name, ...)                          \
+  sandbox_invoke_with_func_type(sandbox, decltype(func_name), func_name, \
+                                _VA_ARGS_...)
 }  // namespace rlbox
