@@ -22,7 +22,7 @@ namespace rlbox::detail {
  * @tparam TFrom is the source type
  * @tparam TTo is the target type
  * @param aFrom is the value to be converted
- * @param to is the out parameter which will return the converted value
+ * @param aTo is the out parameter which will return the converted value
  * @details This can be used to convert primitive values such as:
  * - converting between different sized unsigned integer types
  * - converting between different sized signed integer types
