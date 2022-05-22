@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "rlbox_helpers.hpp"
+
 // IWYU pragma: begin_exports
 
 #include "rlbox_stdint_types.hpp"
@@ -119,7 +121,7 @@ enum class rlbox_status_code {
   using tainted_volatile_##SBXNAME =                             \
       rlbox_sandbox_##SBXNAME::tainted_volatile<T>;              \
                                                                  \
-  static_assert(true, "")
+  RLBOX_REQUIRE_SEMI_COLON
 
 // In the future the following will also be added
 // template<typename T>

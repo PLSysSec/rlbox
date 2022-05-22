@@ -249,6 +249,10 @@ if(BUILD_TESTING)
                  tests/test_main.cpp
                  ${RLBOX_UNIT_TESTS_FILES})
 
+  target_compile_definitions(rlbox_unit_tests PUBLIC
+    RLBOX_USE_EXCEPTIONS_ON_ERROR
+    RLBOX_REPLACE_COMPILE_CHECKS_WITH_RUNTIME_ERRORS)
+
   target_link_libraries(rlbox_unit_tests Catch2::Catch2 ${PROJECT_NAME})
 
   catch_discover_tests(rlbox_unit_tests)
@@ -258,6 +262,10 @@ if(BUILD_TESTING)
   add_executable(rlbox_noop_sandbox_plugin_tests
                  tests/test_main.cpp
                  tests/test_rlbox_noop_sandbox.cpp)
+
+  target_compile_definitions(rlbox_unit_tests PUBLIC
+    RLBOX_USE_EXCEPTIONS_ON_ERROR
+    RLBOX_REPLACE_COMPILE_CHECKS_WITH_RUNTIME_ERRORS)
 
   target_link_libraries(rlbox_noop_sandbox_plugin_tests Catch2::Catch2 ${PROJECT_NAME})
 

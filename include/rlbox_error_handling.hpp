@@ -79,4 +79,10 @@ inline void dynamic_check(bool aCheckSucceeded, const char* aMsg) {
   }
 }
 
+#ifdef RLBOX_REPLACE_COMPILE_CHECKS_WITH_RUNTIME_ERRORS
+#  define rlbox_static_assert(...) dynamic_check(__VA_ARGS__)
+#else
+#  define rlbox_static_assert(...) static_assert(__VA_ARGS__)
+#endif
+
 }  // namespace rlbox::detail

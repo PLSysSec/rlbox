@@ -100,4 +100,14 @@ using c_array_to_std_array_t =
 template <typename T>
 using value_type_t = c_array_to_std_array_t<T>;
 
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief This is just `is_fundamental_v<T> || std::is_enum_v<T>`
+ * @tparam T is the type to check
+ */
+template <typename T>
+constexpr bool is_fundamental_or_enum_v =
+    std::is_fundamental_v<T> || std::is_enum_v<T>;
+
 }  // namespace rlbox::detail
