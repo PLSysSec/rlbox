@@ -16,7 +16,8 @@
 # google-build-using-namespace --- we want "using namespace rlbox" in the tests
 # readability-convert-member-functions-to-static --- hampers development of abstract APIs
 # readability-identifier-length --- unnecessary for test code
-Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-explicit-conversions,-google-explicit-constructor,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-modernize-avoid-c-arrays,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-readability-convert-member-functions-to-static,-readability-identifier-length'
+# readability-const-return-type --- too many cases where we have to remove consts in return. Easier just to ignore this.
+Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-explicit-conversions,-google-explicit-constructor,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-modernize-avoid-c-arrays,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-readability-convert-member-functions-to-static,-readability-identifier-length,-readability-const-return-type'
 HeaderFilterRegex: '.*rlbox[a-zA-Z0-9_]*\.hpp'
 WarningsAsErrors: 'readability-identifier-naming'
 CheckOptions:

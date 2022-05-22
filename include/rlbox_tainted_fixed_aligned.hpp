@@ -12,6 +12,7 @@
 
 #include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_type_conversion.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -73,8 +74,8 @@ class tainted_fixed_aligned<
    * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
    */
   [[nodiscard]] inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const {
-    detail::value_type_t<TSbxRep> converted;
-    convert_type_fundamental(data, converted);
+    auto converted =
+        detail::convert_type_fundamental<detail::value_type_t<TSbxRep>>(data);
     return converted;
   }
 
@@ -114,16 +115,15 @@ class tainted_fixed_aligned<
   template <template <typename, typename...> typename TWrap, typename TOther,
             RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
                               std::is_assignable_v<decltype(data)&, TOther>)>
-  inline tainted_fixed_aligned(const TWrap<TOther, TSbx>& aOther) {
-    data = aOther.raw_host_rep();
-  }
+  inline tainted_fixed_aligned(const TWrap<TOther, TSbx>& aOther)
+      : data(aOther.raw_host_rep()) {}
 
   /**
    * @brief Construct a new tainted fixed aligned object from a raw primitive
    * value
    * @param aOther is the raw primitive
    */
-  inline tainted_fixed_aligned(const T& aOther) { data = aOther; }
+  inline tainted_fixed_aligned(const T& aOther) : data(aOther) {}
 
   ////////////////////////////////
 

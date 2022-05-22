@@ -12,6 +12,7 @@
 
 #include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_type_conversion.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -56,7 +57,7 @@ class tainted_volatile_standard<
  private:
   using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
 
-  detail::value_type_t<T> data;
+  detail::value_type_t<TSbxRep> data;
 
   /**
    * @brief Unsafely remove the tainting and get the raw data. For internal use
@@ -64,8 +65,8 @@ class tainted_volatile_standard<
    * @return detail::value_type_t<T> is the raw data
    */
   [[nodiscard]] inline detail::value_type_t<T> raw_host_rep() const {
-    detail::value_type_t<T> converted;
-    convert_type_fundamental(data, converted);
+    auto converted =
+        detail::convert_type_fundamental<detail::value_type_t<T>>(data);
     return converted;
   }
 
@@ -77,6 +78,20 @@ class tainted_volatile_standard<
   [[nodiscard]] inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const {
     return data;
   }
+
+  ////////////////////////////////
+
+  inline tainted_volatile_standard() = default;
+
+  ////////////////////////////////
+
+  template <template <typename, typename...> typename TWrap, typename TOther,
+            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
+                              std::is_assignable_v<decltype(data)&, TOther>)>
+  inline tainted_volatile_standard(const TWrap<TOther, TSbx>& aOther)
+      : data(aOther.raw_sandboxed_rep()) {}
+
+  inline tainted_volatile_standard(const T& aOther) : data(aOther) {}
 
  public:
   /**
@@ -95,21 +110,6 @@ class tainted_volatile_standard<
   [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
     return raw_sandboxed_rep();
   }
-
-  ////////////////////////////////
-
-  inline tainted_volatile_standard() = default;
-
-  ////////////////////////////////
-
-  template <template <typename, typename...> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
-                              std::is_assignable_v<decltype(data)&, TOther>)>
-  inline tainted_volatile_standard(const TWrap<TOther, TSbx>& aOther) {
-    data = aOther.raw_sandboxed_rep();
-  }
-
-  inline tainted_volatile_standard(const T& aOther) { data = aOther; }
 };
 
 /**

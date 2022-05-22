@@ -33,27 +33,30 @@ namespace rlbox::detail {
  * - `convert<uint32_t, uint64_t>(val)` introduces dynamic bounds checks
  */
 template <typename TTo, typename TFrom>
-inline constexpr void convert_type_fundamental(const volatile TFrom& aFrom,
-                                               TTo& aTo) {
+inline constexpr std::remove_const_t<TTo> convert_type_fundamental(
+    const TFrom& aFrom) {
   using namespace std;
+
+  std::remove_const_t<TTo> ret;
 
   rlbox_static_assert(is_fundamental_or_enum_v<TTo>,
                       "Conversion target should be fundamental or enum type");
   rlbox_static_assert(is_fundamental_or_enum_v<TFrom>,
                       "Conversion source should be fundamental or enum type");
 
-  if constexpr (is_enum_v<remove_cvref_t<TTo>>) {
-    rlbox_static_assert(is_same_v<remove_cvref_t<TTo>, remove_cvref_t<TFrom>>,
+  if constexpr (is_same_v<remove_cvref_t<TTo>, remove_cvref_t<TFrom>>) {
+    ret = aFrom;
+  } else if constexpr (is_enum_v<remove_cvref_t<TTo>>) {
+    rlbox_static_assert(false_v<TTo>,
                         "ABI convertor: Trying to assign enums of different "
                         "types to each other");
-    aTo = aFrom;
   } else if constexpr (is_floating_point_v<remove_cvref_t<TTo>>) {
     rlbox_static_assert(is_floating_point_v<remove_cvref_t<TTo>> &&
                             is_floating_point_v<remove_cvref_t<TFrom>>,
                         "ABI convertor: Trying to convert across "
                         "floating/non-floating point types");
     // language already coerces different float types
-    aTo = aFrom;
+    ret = static_cast<TTo>(aFrom);
   } else if constexpr (is_integral_v<remove_cvref_t<TTo>>) {
     rlbox_static_assert(
         is_integral_v<remove_cvref_t<TTo>> &&
@@ -82,11 +85,13 @@ inline constexpr void convert_type_fundamental(const volatile TFrom& aFrom,
     } else {
       rlbox_static_assert(false_v<TTo>, "Unhandled case");
     }
-    aTo = static_cast<TTo>(aFrom);
+    ret = static_cast<TTo>(aFrom);
   } else {
     rlbox_static_assert(false_v<TTo>,
                         "Unexpected case for convert_type_fundamental");
   }
+
+  return ret;
 }
 
 }  // namespace rlbox::detail
