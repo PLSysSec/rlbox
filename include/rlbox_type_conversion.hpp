@@ -11,7 +11,6 @@
 #include <type_traits>
 
 #include "rlbox_error_handling.hpp"
-#include "rlbox_helpers.hpp"
 #include "rlbox_type_traits.hpp"
 
 namespace rlbox::detail {
@@ -22,7 +21,6 @@ namespace rlbox::detail {
  * @tparam TFrom is the source type
  * @tparam TTo is the target type
  * @param aFrom is the value to be converted
- * @param aTo is the out parameter which will return the converted value
  * @details This can be used to convert primitive values such as:
  * - converting between different sized unsigned integer types
  * - converting between different sized signed integer types
@@ -67,11 +65,9 @@ inline constexpr std::remove_const_t<TTo> convert_type_fundamental(
                         "ABI convertor: Trying to convert across "
                         "signed/unsigned integer types");
 
-    const char* err_msg =
-        "Over/Underflow when converting between integer types";
-
     // Some branches don't use the param
-    RLBOX_UNUSED(err_msg);
+    [[maybe_unused]] const char* err_msg =
+        "Over/Underflow when converting between integer types";
 
     if constexpr (sizeof(TTo) >= sizeof(TFrom)) {
       // Eg: int64_t aFrom int32_t, uint64_t aFrom uint32_t

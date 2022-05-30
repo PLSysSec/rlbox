@@ -25,7 +25,7 @@ namespace rlbox::detail {
  * lazily
  */
 template <typename T>
-inline constexpr bool false_v = true;
+inline constexpr bool false_v = false;
 
 namespace copy_cvref_detail {
 /**
@@ -146,5 +146,16 @@ using value_type_t = c_array_to_std_array_t<T>;
 template <typename T>
 constexpr bool is_fundamental_or_enum_v =
     std::is_fundamental_v<T> || std::is_enum_v<T>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief This is just `is_fundamental_v<T> || std::is_enum_v<T> ||
+ * std::is_pointer_v<T>`
+ * @tparam T is the type to check
+ */
+template <typename T>
+constexpr bool is_fundamental_or_enum_or_pointer_v =
+    std::is_fundamental_v<T> || std::is_enum_v<T> || std::is_pointer_v<T>;
 
 }  // namespace rlbox::detail

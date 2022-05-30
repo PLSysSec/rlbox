@@ -8,8 +8,6 @@
  */
 #pragma once
 
-#define RLBOX_UNUSED(...) (void)__VA_ARGS__
-
 #define RLBOX_REQUIRE_SEMI_COLON static_assert(true)
 
 #define RLBOX_SPECIALIZE(...) typename std::enable_if_t<__VA_ARGS__>
@@ -20,13 +18,30 @@
  * @brief For internal use only. Make sure RLBox's various tainted classes can
  * access the private memmbers of other tainted classes.
  */
-#define KEEP_RLBOX_CLASSES_FRIENDLY                   \
-  template <typename TU1, typename TU2, typename TU3> \
-  friend class tainted_fixed_aligned;                 \
-                                                      \
-  template <typename TU1, typename TU2, typename TU3> \
-  friend class tainted_relocatable;                   \
-                                                      \
-  template <typename TU1, typename TU2, typename TU3> \
-  friend class tainted_volatile_standard;             \
+#define KEEP_RLBOX_CLASSES_FRIENDLY        \
+  template <typename TU1>                  \
+  friend class rlbox_sandbox;              \
+                                           \
+  template <typename TU1, typename TU2>    \
+  friend class tainted_fixed_aligned;      \
+                                           \
+  template <typename TU1, typename TU2>    \
+  friend class tainted_relocatable_helper; \
+                                           \
+  template <typename TU1, typename TU2>    \
+  friend class tainted_volatile_standard;  \
   RLBOX_REQUIRE_SEMI_COLON
+
+/**
+ * @brief For internal use only. Within RLBox's code, there is some use of
+ * `UNSAFE_unverified` which are necessary and safe. We use the below name in
+ * those places to keep the code readable.
+ */
+#define raw_host_rep UNSAFE_unverified
+
+/**
+ * @brief For internal use only. Within RLBox's code, there is some use of
+ * `UNSAFE_sandboxed` which are necessary and safe. We use the below name in
+ * those places to keep the code readable.
+ */
+#define raw_sandbox_rep UNSAFE_sandboxed

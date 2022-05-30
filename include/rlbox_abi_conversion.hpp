@@ -45,7 +45,7 @@ namespace convert_base_types_detail {
  *
  * @tparam T is the type to be converted
  * @tparam abi_template_decls is the target ABI
- * @tparam TEnable is the dummy template paramter that allows us to specialize
+ * @tparam TEnable is the dummy template parameter that allows us to specialize
  * the implementation for different types
  */
 template <typename T, abi_template_decls, typename TEnable = void>
@@ -58,7 +58,7 @@ struct convert_base_types_helper;
  *
  * @tparam T is the type to be converted
  * @tparam abi_template_decls is the target ABI
- * @tparam TEnable is the dummy template paramter that allows us to specialize
+ * @tparam TEnable is the dummy template parameter that allows us to specialize
  * the implementation for different types
  */
 template <typename T, abi_template_decls>

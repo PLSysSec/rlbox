@@ -20,11 +20,17 @@
   "For more details, see examples provided in https://docs.rlbox.dev"
 
 /**
- * @brief Used as part of error messages when rlbox gets to an unexpected state
+ * @brief Used as part of error messages when RLBox gets to an unexpected state
  * or to unimplemented code
  */
 #define RLBOX_FILE_BUG_MESSAGE \
   "Please file a bug at https://github.com/PLSysSec/rlbox"
+
+/**
+ * @brief Used to indicate an RLBox feature which is incomplete.
+ */
+#define RLBOX_NOT_IMPLEMENTED_MESSAGE \
+  "This features of RLBox is not yet implemented. " RLBOX_FILE_BUG_MESSAGE
 
 namespace rlbox::detail {
 

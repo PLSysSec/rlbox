@@ -8,9 +8,11 @@
 
 #pragma once
 
-#include <stdlib.h>
+#include <stddef.h>
+#include <type_traits>
 
 #include "rlbox_helpers.hpp"
+#include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_type_conversion.hpp"
 #include "rlbox_type_traits.hpp"
@@ -39,73 +41,35 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx, typename TEnable = void>
-class tainted_fixed_aligned;
-
-/**
- * @brief Specialization for fundamental types
- * @tparam T is the type of the data being wrapped.
- * @tparam TSbx is the type of the sandbox plugin that represents the underlying
- * sandbox implementation.
- */
 template <typename T, typename TSbx>
-class tainted_fixed_aligned<
-    T, TSbx, RLBOX_SPECIALIZE(detail::is_fundamental_or_enum_v<T>)>
-    : public tainted_base<T, TSbx> {
+class tainted_fixed_aligned : public tainted_base<T, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  private:
   using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
 
-  detail::value_type_t<T> data;
+  // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
+  detail::value_type_t<T> data{0};
+
+  ////////////////////////////////
 
   /**
-   * @brief Unsafely remove the tainting and get the raw data. For internal use
-   * only.
-   * @return detail::value_type_t<T> is the raw data
+   * @brief Construct a tainted value with a pointer to sandbox memory. This
+   * function is for internal use only, as the pointer passed is not checked and
+   * is assumed to point to sandbox memory.
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
+   * @param aPtr is a pointer that is assumed to point to an object in sandbox
+   * memory.
    */
-  [[nodiscard]] inline detail::value_type_t<T> raw_host_rep() const {
-    return data;
-  }
-
-  /**
-   * @brief Unsafely remove the tainting and get the raw data converted to the
-   * sandboxed ABI. For internal use only.
-   * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
-   */
-  [[nodiscard]] inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const {
-    auto converted =
-        detail::convert_type_fundamental<detail::value_type_t<TSbxRep>>(data);
-    return converted;
-  }
+  template <typename TDummy = T, RLBOX_REQUIRE(std::is_pointer_v<TDummy>)>
+  tainted_fixed_aligned<T, TSbx>(T aPtr) : data(aPtr) {}
 
  public:
-  /**
-   * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::value_type_t<T> is the raw data
-   */
-  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified() const {
-    return raw_host_rep();
-  }
-
-  /**
-   * @brief Unsafely remove the tainting and get the raw data converted to the
-   * sandboxed ABI.
-   * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
-   */
-  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
-    return raw_sandboxed_rep();
-  }
-
-  ////////////////////////////////
-
   inline tainted_fixed_aligned() = default;
 
-  ////////////////////////////////
-
   /**
-   * @brief Construct a new tainted fixed aligned object from another tainted
-   * wrapper
+   * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TWrap is the other wrapper type
    * @tparam TOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
@@ -119,61 +83,152 @@ class tainted_fixed_aligned<
       : data(aOther.raw_host_rep()) {}
 
   /**
-   * @brief Construct a new tainted fixed aligned object from a raw primitive
-   * value
+   * @brief Construct a new tainted object from a raw primitive value
+   * @tparam TOther is the type of the rhs value being assigned
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE param ensures this is allowed for primitive types
+   * only.
    * @param aOther is the raw primitive
    */
-  inline tainted_fixed_aligned(const T& aOther) : data(aOther) {}
+  template <typename TOther, typename TDummy = T,
+            RLBOX_REQUIRE(detail::is_fundamental_or_enum_v<TDummy>)>
+  inline tainted_fixed_aligned(const TOther& aOther) : data(aOther) {}
+
+  /**
+   * @brief Construct a tainted value with a nullptr
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
+   * @param aNull is a nullptr
+   */
+  template <typename TDummy = T, RLBOX_REQUIRE(std::is_pointer_v<TDummy>)>
+  inline tainted_fixed_aligned<T, TSbx>(const std::nullptr_t& aNull)
+      : data(aNull) {}
 
   ////////////////////////////////
 
-  // template <template <typename, typename> TWrap, typename TOther,
-  //           RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap<TOther, TSbx>>)>
-  // inline tainted_fixed_aligned<T, TSbx>& operator=(
-  //     const tainted_any_base<T, TSbx>& aOther) {
-  //   data = aOther.raw_host_rep();
-  // }
-
-  // inline tainted_fixed_aligned<T, TSbx>& operator=(const T& aOther) {
-  //   data = aOther;
-  //   return *this;
-  // }
-};
-
-/**
- * @brief Specialization for non-fundamental types
- * @tparam T is the type of the data being wrapped.
- * @tparam TSbx is the type of the sandbox plugin that represents the underlying
- * sandbox implementation.
- */
-template <typename T, typename TSbx>
-class tainted_fixed_aligned<
-    T, TSbx, RLBOX_SPECIALIZE(!detail::is_fundamental_or_enum_v<T>)>
-    : public tainted_base<T, TSbx> {
-  KEEP_RLBOX_CLASSES_FRIENDLY;
-
- private:
-  /**
-   * @brief Unsafely remove the tainting and get the raw data. For internal use
-   * only.
-   * @return detail::value_type_t<T> is the raw data
-   */
-  [[nodiscard]] inline detail::value_type_t<T> raw_host_rep() const { abort(); }
-  // [[nodiscard]]
-  // inline detail::value_type_t<TSbxRep> raw_sandboxed_rep() const { abort(); }
-
- public:
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @return detail::value_type_t<T> is the raw data
    */
   [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified() const {
-    return raw_host_rep();
+    return data;
   }
-  // [[nodiscard]]
-  // inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
-  //   return raw_sandboxed_rep();
-  // }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data.
+   * @param aSandbox is the sandbox this tainted value belongs to
+   * @return detail::value_type_t<T> is the raw data
+   */
+  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+    return UNSAFE_unverified();
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data converted to the
+   * sandboxed ABI. This is not supported for pointer types.
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE param ensures this is allowed for primitive types
+   * only.
+   * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
+   */
+  template <typename TDummy = T,
+            RLBOX_REQUIRE(detail::is_fundamental_or_enum_v<TDummy>)>
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed() const {
+    auto converted =
+        detail::convert_type_fundamental<detail::value_type_t<TSbxRep>>(data);
+    return converted;
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data converted to the
+   * sandboxed ABI.
+   * @param aSandbox is the sandbox this tainted value belongs to
+   * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
+   */
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+    if constexpr (std::is_pointer_v<T>) {
+      return aSandbox.get_sandboxed_pointer(data);
+    } else {
+      return UNSAFE_sandboxed();
+    }
+  }
+
+  ////////////////////////////////
+
+  /**
+   * @brief Operator= for tainted values from another tainted wrapper
+   * @tparam TWrap is the other wrapper type
+   * @tparam TOther is the type of the rhs value being wrapped
+   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
+   * (2) meets the assignable criterion
+   * @param aOther is the rhs being assigned
+   * @return tainted_fixed_aligned<T, TSbx>& is the reference to this value
+   */
+  template <template <typename, typename> typename TWrap, typename TOther,
+            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
+                              std::is_assignable_v<decltype(data)&, TOther>)>
+  inline tainted_fixed_aligned<T, TSbx>& operator=(
+      const TWrap<T, TSbx>& aOther) {
+    data = aOther.raw_host_rep();
+  }
+
+  /**
+   * @brief Operator= for tainted values from a raw primitive value
+   * @tparam TOther is the type of the rhs value being assigned
+   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
+   * criterion. This is allowed for primitive types only.
+   * @param aOther is the raw primitive
+   * @return tainted_fixed_aligned<T, TSbx>& is the reference to this value
+   */
+  template <typename TOther,
+            RLBOX_REQUIRE(std::is_assignable_v<decltype(data)&, TOther>&&
+                              detail::is_fundamental_or_enum_v<T>)>
+  inline tainted_fixed_aligned<T, TSbx>& operator=(const TOther& aOther) {
+    data = aOther;
+    return *this;
+  }
+
+  /**
+   * @brief Operator= for tainted values with a nullptr
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
+   * @param aNull is a nullptr
+   */
+  template <typename TDummy = T, RLBOX_REQUIRE(std::is_pointer_v<TDummy>)>
+  inline tainted_fixed_aligned<T, TSbx>& operator=(
+      const std::nullptr_t& aNull) {
+    data = aNull;
+    return *this;
+  }
+
+  ////////////////////////////////
+
+ private:
+  template <typename TSub>
+  using tainted_volatile = typename TSbx::template tainted_volatile<TSub>;
+
+  using TOpDeref = tainted_volatile<std::remove_pointer_t<T>>;
+
+ public:
+  /**
+   * @brief Operator* which dereferences tainted and gives a tainted_volatile&
+   * @tparam TDummy is a dummy parameter to do our static type checks
+   * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
+   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  template <typename TDummy = T, RLBOX_REQUIRE(std::is_pointer_v<TDummy>)>
+  inline TOpDeref& operator*() {
+    // Deliberately use a C style cast as we we want to get rid of any CV
+    // qualifers here. CV qualifiers are moved inside the wrapper type and thus
+    // continue to be tracked.
+
+    // NOLINTNEXTLINE(google-readability-casting)
+    auto data_tainted_volatile = (TOpDeref*)data;
+    return *data_tainted_volatile;
+  }
 };
 
 }  // namespace rlbox
