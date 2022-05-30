@@ -54,7 +54,7 @@ struct convert_base_types_helper;
 
 /**
  * @brief This trait converts any non-struct/non-class types between two
- * different ABIs
+ * different ABIs. Classes are unmodified.
  *
  * @tparam T is the type to be converted
  * @tparam abi_template_decls is the target ABI
@@ -69,8 +69,8 @@ using convert_base_types_t =
 namespace convert_base_types_detail {
 
 /**
- * @brief This specialization ensures types like `void`, `bool` etc. are not
- * changed by the ABI convertor
+ * @brief This specialization ensures types like `void`, `bool`, classes etc.
+ * are not changed by the ABI convertor
  */
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<
@@ -83,7 +83,8 @@ struct convert_base_types_helper<
 #if __cplusplus >= 202002L
         std::is_same_v<char8_t, T> ||
 #endif
-        std::is_floating_point_v<T> || std::is_enum_v<T>>> {
+        std::is_floating_point_v<T> || std::is_enum_v<T> ||
+        std::is_class_v<T>>> {
   using type = T;
 };
 

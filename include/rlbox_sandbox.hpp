@@ -13,7 +13,6 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
-#include <type_traits>
 #include <utility>
 
 #include "rlbox_checked_arithmetic.hpp"
@@ -251,10 +250,8 @@ class rlbox_sandbox : protected TSbx {
   //     }
   //   }
 
- private:
   /**
-   * @brief Internal function to get the size of the object of type `T` in the
-   * sandbox representation
+   * @brief Get the size of the object of type `T` in the sandbox representation
    * @details This function uses the following rules
    * - If `T` is an fundamental, enum, or pointer type, we use the ABI as
    * specified in sandbox plugin `TSbx`.
@@ -264,54 +261,29 @@ class rlbox_sandbox : protected TSbx {
    *    - Else, we query the sandbox for the size of the given class. This
    * requires the user to include the class `T` as part of the call to
    * rlbox_define_library_structs
-   *
    * @tparam T is the type for which we are getting the sandbox representation
    * size
    * @return size_t is the size of type T in the sandbox representation
    */
   template <typename T>
-  size_t get_object_size() {
-    if constexpr (std::is_array_v<T>) {
-      using TBase = std::remove_all_extents_t<T>;
-      size_t size = get_object_size<TBase>();
-
-      constexpr size_t element_count = sizeof(T) / sizeof(TBase);
-      static_assert(element_count != 0, "Unexpected element count");
-
-      auto ret = rlbox::detail::checked_multiply<size_t>(
-          size, element_count, "RLBox malloc size overflow");
-      return ret;
-    } else if constexpr (detail::is_fundamental_or_enum_or_pointer_v<T>) {
-      constexpr size_t size = sizeof(base_types_convertor_tsbx<T>);
-      static_assert(size != 0, "Unexpected size of type");
-      return size;
-    } else if constexpr (std::is_class_v<T>) {
+  size_t get_object_size_for_malloc() {
+    // RLBox has to compute the size of the allocation in the sandbox's ABI.
+    // When allocating structs/classes, and the sandbox ABI is not larger than
+    // the host ABI (see @ref rlbox::detail::rlbox_base_types_not_larger_v),
+    // then RLBox just uses the host ABI size for the allocation of the class as
+    // it will always be greater than equal to the size required by the actual
+    // allocation. This ensures that users of the API don't have to call
+    // `rlbox_lib_load_classes` for each class allocated.
 #ifndef RLBOX_DONT_OVERESTIMATE_CLASS_SIZES
-      // RLBox has to compute the size of the allocation in the sandbox's ABI.
-      // When allocating structs/classes, and the sandbox ABI is not larger
-      // than the host ABI (see @ref
-      // rlbox::detail::rlbox_base_types_not_larger_v), then RLBox just uses
-      // the host ABI size for the allocation of the class as it will always be
-      // greater than equal to the size required by the actual allocation. This
-      // ensures that users of the API don't have to call
-      // `rlbox_lib_load_classes` for each class allocated.
-      if constexpr (detail::rlbox_base_types_not_larger_v<TSbx>) {
-        return sizeof(T);
-      } else
+    using TSbxRep = base_types_convertor_tsbx<T>;
+    return sizeof(TSbxRep);
+#else
+    static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+    // Use a dummy non zero return
+    return 1;
 #endif
-      {
-        static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
-        // Use a dummy non zero return
-        return 1;
-      }
-    } else {
-      static_assert(detail::false_v<T>, "Unknown case for allocation");
-      // Use a dummy non zero return
-      return 1;
-    }
   }
 
- public:
   /**
    * @brief Allocate a new pointer that is accessible to both the application
    * and sandbox. The pointer is allocated in sandbox memory.
@@ -349,7 +321,7 @@ class rlbox_sandbox : protected TSbx {
     detail::dynamic_check(count_unwrapped != 0,
                           "Allocation of 0 bytes requested");
 
-    size_t object_size = get_object_size<T>();
+    size_t object_size = get_object_size_for_malloc<T>();
     auto total_size = rlbox::detail::checked_multiply<size_t>(
         object_size, count_unwrapped,
         "Allocation size computaion has overflowed");
