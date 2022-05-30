@@ -25,7 +25,8 @@
  * defining a class in `rlbox_lib_load_classes`. The optimization checks to see
  * if the class size in the host ABI will always be greater than the class size
  * in the sandbox ABI. If this is the case, then RLBox just uses the host ABI
- * class size. See @ref rlbox::rlbox_sandbox::get_object_size for more details.
+ * class size. See @ref rlbox::rlbox_sandbox::get_object_size_for_malloc for
+ * more details.
  */
 
 #pragma once
