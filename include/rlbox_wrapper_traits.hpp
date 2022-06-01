@@ -69,8 +69,8 @@ constexpr bool rlbox_base_types_not_larger_v =
  */
 template <template <typename, typename...> typename TWrap, typename T,
           typename TSbx>
-constexpr bool is_tainted_wrapper_v =
-    std::is_base_of_v<tainted_base<T, TSbx>, TWrap<T, TSbx>>;
+constexpr bool is_tainted_any_wrapper_v =
+    std::is_base_of_v<tainted_any_base<T, TSbx>, TWrap<T, TSbx>>;
 
 /**
  * @brief This trait identifies if a given type is an RLBox stdint type (See
@@ -81,6 +81,43 @@ constexpr bool is_tainted_wrapper_v =
 template <typename T>
 constexpr bool is_rlbox_stdint_type_v =
     std::is_base_of_v<rlbox_stdint_base_t, T>;
+
+namespace rlbox_stdint_to_stdint_t_detail {
+template <typename T, typename TDummy = void>
+struct helper;
+
+template <typename T>
+struct helper<T, std::enable_if_t<!is_rlbox_stdint_type_v<T>>> {
+  using type = T;
+};
+
+template <typename T>
+struct helper<T, std::enable_if_t<is_rlbox_stdint_type_v<T>>> {
+  using type = typename T::equivalent_type;
+};
+
+};  // namespace rlbox_stdint_to_stdint_t_detail
+
+/**
+ * @brief This trait converts an RLBox stdint type (See @ref
+ * rlbox_stdint_types.hpp) to a stdint. It leaves all other types unmodified.
+ * @tparam T is the type to convert
+ */
+template <typename T>
+using rlbox_stdint_to_stdint_t =
+    typename rlbox_stdint_to_stdint_t_detail::helper<T>::type;
+
+/**
+ * @brief This trait represents the storage type used by tainted classes. This
+ * trait currently
+ * - Converts RLBox stdint types (See @ref rlbox_stdint_types.hpp) to stdint
+ * types
+ * - Calls value_t to handle storage of types like arrays (int[3] ->
+ * std::array<int, 3>)
+ * @tparam T is the type we are converting to the tainted storage representation
+ */
+template <typename T>
+using tainted_rep_t = value_type_t<rlbox_stdint_to_stdint_t<T>>;
 
 /**
  * @brief Macro that generates a trait to check if member functions named

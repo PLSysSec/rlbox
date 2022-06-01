@@ -7,6 +7,8 @@
  * correctly convert.
  */
 
+#include <type_traits>
+
 #include "test_include.hpp"
 
 #include "rlbox_tainted_fixed_aligned.hpp"
@@ -89,73 +91,34 @@ TEST_CASE("tainted assignment operates correctly", "[tainted_assignment]") {
   test_tainted_helper<tainted_relocatable>();
 }
 
-// // NOLINTNEXTLINE
-// TEST_CASE("tainted_volatile assignment operates correctly",
-//           "[tainted_assignment]")
-// {
-//   rlbox::rlbox_sandbox<rlbox_diffabi_sandbox> sandbox;
-//   sandbox.create_sandbox();
+TEST_CASE("tainted tainted_volatile conversion operates correctly",
+          "[tainted_assignment]") {
+  rlbox_sandbox_test sandbox;
+  sandbox.create_sandbox();
 
-//   // On 64 bit platforms, "unsigned long" is 64 bits in the app
-//   // but unsigned long is 32-bits in our test sandbox env
-//   // NOLINTNEXTLINE(google-runtime-int)
-//   auto pc = sandbox.malloc_in_sandbox<unsigned long>();
+  tainted_test<int*> ptr = sandbox.malloc_in_sandbox<int>();
+  REQUIRE(std::is_base_of_v<tainted_base<int*, rlbox_sandbox_type_test>,
+                            decltype(ptr)>);
+  REQUIRE(ptr.UNSAFE_unverified() != nullptr);
 
-//   // Only run this test for platforms where unsigned long is 64 bits
-//   // NOLINTNEXTLINE(google-runtime-int)
-//   if constexpr (sizeof(unsigned long) == sizeof(uint64_t)) {
-//     uint64_t max32Val = std::numeric_limits<uint32_t>::max();
-//     *pc = max32Val;
+  auto& val = *ptr;
+  REQUIRE(std::is_same_v<decltype(val), tainted_volatile_test<int>&>);
 
-//     REQUIRE((*pc).UNSAFE_unverified() == max32Val);
-//     REQUIRE(pc->UNSAFE_unverified() == max32Val);
+  REQUIRE(std::is_same_v<decltype(tainted_test<int>(val)), tainted_test<int>>);
 
-//     uint64_t max64Val = std::numeric_limits<uint64_t>::max();
-//     REQUIRE_THROWS(*pc = max64Val);
-//   }
+  auto val2 = tainted_test<int*>(&val);
+  REQUIRE(std::is_same_v<decltype(val2), tainted_test<int*>>);
+  REQUIRE(
+      std::is_same_v<decltype(tainted_test<int*>(&*ptr)), tainted_test<int*>>);
 
-//   sandbox.destroy_sandbox();
-// }
+  tainted_test<int**> ptr2 = sandbox.malloc_in_sandbox<int*>();
+  auto& deref = *ptr2;
+  REQUIRE(std::is_same_v<decltype(deref), tainted_volatile_test<int*>&>);
+  REQUIRE(std::is_same_v<decltype(*deref), tainted_volatile_test<int>&>);
 
-// // NOLINTNEXTLINE
-// TEST_CASE("tainted tainted_volatile conversion operates correctly",
-//           "[tainted_assignment]")
-// {
-//   rlbox::rlbox_sandbox<rlbox_diffabi_sandbox> sandbox;
-//   sandbox.create_sandbox();
+  REQUIRE(std::is_same_v<decltype(**ptr2), tainted_volatile_test<int>&>);
 
-//   auto ptr = sandbox.malloc_in_sandbox<uint32_t>();
-//   REQUIRE(std::is_same_v<decltype(ptr), tainted<uint32_t*,
-//   rlbox_diffabi_sandbox>>); REQUIRE(ptr.UNSAFE_unverified() != nullptr);
+  sandbox.free_in_sandbox(ptr);
 
-//   auto& val = *ptr;
-//   REQUIRE(
-//     std::is_same_v<decltype(val), tainted_volatile<uint32_t,
-//     rlbox_diffabi_sandbox>&>);
-//   REQUIRE(
-//     std::is_same_v<decltype(tainted(val)), tainted<uint32_t,
-//     rlbox_diffabi_sandbox>>);
-
-//   REQUIRE(
-//     std::is_same_v<decltype(tainted(&val)), tainted<uint32_t*,
-//     rlbox_diffabi_sandbox>>);
-//   REQUIRE(
-//     std::is_same_v<decltype(tainted(&*ptr)), tainted<uint32_t*,
-//     rlbox_diffabi_sandbox>>);
-
-//   tainted<uint32_t**, rlbox_diffabi_sandbox> ptr2 =
-//     sandbox.malloc_in_sandbox<uint32_t*>();
-//   auto& deref = *ptr2;
-//   REQUIRE(
-//     std::is_same_v<decltype(deref), tainted_volatile<uint32_t*,
-//     rlbox_diffabi_sandbox>&>);
-//   REQUIRE(
-//     std::is_same_v<decltype(*deref), tainted_volatile<uint32_t,
-//     rlbox_diffabi_sandbox>&>);
-
-//   REQUIRE(
-//     std::is_same_v<decltype(**ptr2), tainted_volatile<uint32_t,
-//     rlbox_diffabi_sandbox>&>);
-
-//   sandbox.destroy_sandbox();
-// }
+  sandbox.destroy_sandbox();
+}

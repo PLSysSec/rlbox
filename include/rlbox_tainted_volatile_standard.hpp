@@ -62,9 +62,10 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
    * (2) meets the assignable criterion
    * @param aOther is the rhs being assigned
    */
-  template <template <typename, typename...> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
-                              std::is_assignable_v<decltype(data)&, TOther>)>
+  template <
+      template <typename, typename...> typename TWrap, typename TOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
+                        std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_volatile_standard(const TWrap<TOther, TSbx>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
 
@@ -129,9 +130,10 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
    * @param aOther is the rhs being assigned
    * @return tainted_volatile_standard<T, TSbx>& is the reference to this value
    */
-  template <template <typename, typename> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
-                              std::is_assignable_v<decltype(data)&, TOther>)>
+  template <
+      template <typename, typename> typename TWrap, typename TOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
+                        std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_volatile_standard<T, TSbx>& operator=(
       const TWrap<T, TSbx>& aOther) {
     data = aOther.raw_sandbox_rep();

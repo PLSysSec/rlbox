@@ -17,6 +17,7 @@
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_type_conversion.hpp"
 #include "rlbox_type_traits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 /**
@@ -49,7 +50,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
   using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
 
   // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
-  detail::value_type_t<T> data{0};
+  detail::tainted_rep_t<T> data{0};
 
   ////////////////////////////////
 
@@ -76,23 +77,23 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * (2) meets the assignable criterion
    * @param aOther is the rhs being assigned
    */
-  template <template <typename, typename...> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
-                              std::is_assignable_v<decltype(data)&, TOther>)>
+  template <
+      template <typename, typename...> typename TWrap, typename TOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
+                        std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_fixed_aligned(const TWrap<TOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
 
   /**
    * @brief Construct a new tainted object from a raw primitive value
-   * @tparam TOther is the type of the rhs value being assigned
    * @tparam TDummy is a dummy parameter to do our static type checks
    * @tparam RLBOX_REQUIRE param ensures this is allowed for primitive types
    * only.
    * @param aOther is the raw primitive
    */
-  template <typename TOther, typename TDummy = T,
+  template <typename TDummy = T,
             RLBOX_REQUIRE(detail::is_fundamental_or_enum_v<TDummy>)>
-  inline tainted_fixed_aligned(const TOther& aOther) : data(aOther) {}
+  inline tainted_fixed_aligned(const T& aOther) : data(aOther) {}
 
   /**
    * @brief Construct a tainted value with a nullptr
@@ -166,9 +167,10 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * @param aOther is the rhs being assigned
    * @return tainted_fixed_aligned<T, TSbx>& is the reference to this value
    */
-  template <template <typename, typename> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
-                              std::is_assignable_v<decltype(data)&, TOther>)>
+  template <
+      template <typename, typename> typename TWrap, typename TOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
+                        std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_fixed_aligned<T, TSbx>& operator=(
       const TWrap<T, TSbx>& aOther) {
     data = aOther.raw_host_rep();
