@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <utility>
 
+#include "rlbox_abi_conversion.hpp"
 #include "rlbox_checked_arithmetic.hpp"
 #include "rlbox_error_handling.hpp"
 #include "rlbox_helpers.hpp"

@@ -11,12 +11,12 @@
 #include <stddef.h>
 #include <type_traits>
 
+#include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_type_conversion.hpp"
 #include "rlbox_type_traits.hpp"
-#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 /**
@@ -77,7 +77,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * @param aOther is the rhs being assigned
    */
   template <template <typename, typename...> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
+            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
                               std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_fixed_aligned(const TWrap<TOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
@@ -167,7 +167,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * @return tainted_fixed_aligned<T, TSbx>& is the reference to this value
    */
   template <template <typename, typename> typename TWrap, typename TOther,
-            RLBOX_REQUIRE(detail::is_tainted_wrapper<TWrap, TOther, TSbx>&&
+            RLBOX_REQUIRE(detail::is_tainted_wrapper_v<TWrap, TOther, TSbx>&&
                               std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_fixed_aligned<T, TSbx>& operator=(
       const TWrap<T, TSbx>& aOther) {

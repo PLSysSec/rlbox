@@ -101,7 +101,7 @@ class rlbox_largerabi_sandbox
   using sbx_short = int32_t;
 
   template <typename T>
-  using tainted = tainted_fixed_aligned<T, rlbox_test_sandbox>;
+  using tainted = tainted_fixed_aligned<T, rlbox_largerabi_sandbox>;
 
   inline rlbox_status_code impl_create_sandbox() {
     return rlbox_status_code::SUCCESS;

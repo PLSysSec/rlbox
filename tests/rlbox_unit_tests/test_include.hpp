@@ -105,8 +105,8 @@ namespace rlbox {
 /**
  * @brief Sandbox we will use for rlbox testing
  */
-class rlbox_test_sandbox
-    : public rlbox_sandbox_plugin_base<rlbox_test_sandbox> {
+class rlbox_noop_arena_sandbox
+    : public rlbox_sandbox_plugin_base<rlbox_noop_arena_sandbox> {
  private:
   const size_t sandbox_mem_size = size_t(4) * 1024;
   aligned_alloc_t sandbox_memory_alloc{nullptr, 0, nullptr, 0};
@@ -121,7 +121,7 @@ class rlbox_test_sandbox
   using sbx_pointer = uint32_t;
 
   template <typename T>
-  using tainted = tainted_fixed_aligned<T, rlbox_test_sandbox>;
+  using tainted = tainted_fixed_aligned<T, rlbox_noop_arena_sandbox>;
 
   inline rlbox_status_code impl_create_sandbox() {
     sandbox_memory_alloc = rlbox_aligned_malloc(sandbox_mem_size);
@@ -170,4 +170,4 @@ class rlbox_test_sandbox
 };
 }  // namespace rlbox
 
-RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_test_sandbox);
+RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_noop_arena_sandbox);

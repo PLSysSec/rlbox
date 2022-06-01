@@ -14,11 +14,13 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdint.h>
 #include <type_traits>
 
 #include "rlbox_stdint_types.hpp"
 #include "rlbox_type_traits.hpp"
+// IWYU doesn't seem to recognize the call to is_rlbox_stdint_type_v so
+// force IWYU to keep the next include
+#include "rlbox_wrapper_traits.hpp"  // IWYU pragma: keep
 
 /**
  * @brief abi_template_decls is the list of types that can be converted by this
@@ -66,6 +68,22 @@ using convert_base_types_t =
     typename convert_base_types_detail::convert_base_types_helper<
         T, abi_template_names>::type;
 
+/**
+ * @brief RLBox converts data between the host ABI and the sandbox ABI as they
+ * may be different. The sandbox ABI details is defined in the sandbox plugin.
+ * This trait takes these details and constructs a type of @ref
+ * rlbox::detail::convert_base_types_t which is capable of converting primtive
+ * types to the target sandbox ABI.
+ * @tparam T is the type to convert to the sandbox ABI
+ * @tparam TSbx is the sandbox plugin to whose ABI the type is being converted
+ */
+template <typename T, typename TSbx>
+using rlbox_base_types_convertor =
+    convert_base_types_t<T, typename TSbx::sbx_wchart, typename TSbx::sbx_short,
+                         typename TSbx::sbx_int, typename TSbx::sbx_long,
+                         typename TSbx::sbx_longlong, typename TSbx::sbx_sizet,
+                         typename TSbx::sbx_pointer>;
+
 namespace convert_base_types_detail {
 
 /**
@@ -84,7 +102,7 @@ struct convert_base_types_helper<
         std::is_same_v<char8_t, T> ||
 #endif
         std::is_floating_point_v<T> || std::is_enum_v<T> ||
-        std::is_class_v<T>>> {
+        (std::is_class_v<T> && !rlbox::detail::is_rlbox_stdint_type_v<T>)>> {
   using type = T;
 };
 
@@ -144,68 +162,11 @@ struct convert_base_types_helper<
       convert_base_types_t<std::make_signed_t<T>, abi_template_names>>;
 };
 
-/**
- * @brief This specialization converts `rlbox_uint8_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_uint8_t, abi_template_names> {
-  using type = uint8_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_int8_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_int8_t, abi_template_names> {
-  using type = int8_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_uint16_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_uint16_t, abi_template_names> {
-  using type = uint16_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_int16_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_int16_t, abi_template_names> {
-  using type = int16_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_uint32_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_uint32_t, abi_template_names> {
-  using type = uint32_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_int32_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_int32_t, abi_template_names> {
-  using type = int32_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_uint64_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_uint64_t, abi_template_names> {
-  using type = uint64_t;
-};
-
-/**
- * @brief This specialization converts `rlbox_int64_t`
- */
-template <abi_template_decls>
-struct convert_base_types_helper<rlbox_int64_t, abi_template_names> {
-  using type = int64_t;
+template <typename T, abi_template_decls>
+struct convert_base_types_helper<
+    T, abi_template_names,
+    std::enable_if_t<rlbox::detail::is_rlbox_stdint_type_v<T>>> {
+  using type = typename T::equivalent_type_t;
 };
 
 /**
