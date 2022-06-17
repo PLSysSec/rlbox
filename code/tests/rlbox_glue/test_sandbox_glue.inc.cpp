@@ -205,9 +205,16 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned int intval8 = 41;
     const unsigned int intval9 = 44;
 
+    // test with calling the long version of the function
     auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
                                                 intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9);
     REQUIRE(ret2.UNSAFE_unverified() ==
+            (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9));
+
+    // test with calling the int version of the function
+    auto ret3 = sandbox.invoke_sandbox_function(stackParametersTestInt,
+                                                intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9);
+    REQUIRE(ret3.UNSAFE_unverified() ==
             (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9));
   }
 
