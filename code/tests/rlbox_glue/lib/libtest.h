@@ -84,6 +84,15 @@ extern "C"
                                     unsigned long a7,
                                     unsigned long a8,
                                     unsigned long a9);
+  unsigned int stackParametersTestInt(unsigned int a1,
+                                      unsigned int a2,
+                                      unsigned int a3,
+                                      unsigned int a4,
+                                      unsigned int a5,
+                                      unsigned int a6,
+                                      unsigned int a7,
+                                      unsigned int a8,
+                                      unsigned int a9);
   int isNonNullChar(unsigned char p);
 #ifdef __cplusplus
 }

@@ -190,18 +190,25 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned long val8 = 41;
     const unsigned long val9 = 44;
 
-    auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
-                                                val1,
-                                                val2,
-                                                val3,
-                                                val4,
-                                                val5,
-                                                val6,
-                                                val7,
-                                                val8,
-                                                val9);
-    REQUIRE(ret2.UNSAFE_unverified() ==
+    auto ret = sandbox.invoke_sandbox_function(stackParametersTest,
+                                                val1, val2, val3, val4, val5, val6, val7, val8, val9);
+    REQUIRE(ret.UNSAFE_unverified() ==
             (val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8 + val9));
+
+    const unsigned int intval1 = 20;
+    const unsigned int intval2 = 23;
+    const unsigned int intval3 = 26;
+    const unsigned int intval4 = 29;
+    const unsigned int intval5 = 32;
+    const unsigned int intval6 = 35;
+    const unsigned int intval7 = 38;
+    const unsigned int intval8 = 41;
+    const unsigned int intval9 = 44;
+
+    auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
+                                                intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9);
+    REQUIRE(ret2.UNSAFE_unverified() ==
+            (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9));
   }
 
   SECTION("test verification function") // NOLINT
