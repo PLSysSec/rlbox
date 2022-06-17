@@ -216,6 +216,21 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
                                                 intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9);
     REQUIRE(ret3.UNSAFE_unverified() ==
             (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9));
+
+    const unsigned int llval1 = 20;
+    const unsigned int llval2 = 23;
+    const unsigned int llval3 = 26;
+    const unsigned int llval4 = 29;
+    const unsigned int llval5 = 32;
+    const unsigned int llval6 = 35;
+    const unsigned int llval7 = 38;
+    const unsigned int llval8 = 41;
+    const unsigned int llval9 = 44;
+
+    auto ret4 = sandbox.invoke_sandbox_function(stackParametersTestLongLong,
+                                                llval1, llval2, llval3, llval4, llval5, llval6, llval7, llval8, llval9);
+    REQUIRE(ret4.UNSAFE_unverified() ==
+            (llval1 + llval2 + llval3 + llval4 + llval5 + llval6 + llval7 + llval8 + llval9));
   }
 
   SECTION("test verification function") // NOLINT
