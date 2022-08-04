@@ -204,6 +204,8 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned int intval7 = 38;
     const unsigned int intval8 = 41;
     const unsigned int intval9 = 44;
+    const unsigned int intval10 = 47;
+    const unsigned int intval11 = 49;
 
     // test with calling the long version of the function
     auto ret2 = sandbox.invoke_sandbox_function(stackParametersTest,
@@ -213,9 +215,9 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
     // test with calling the int version of the function
     auto ret3 = sandbox.invoke_sandbox_function(stackParametersTestInt,
-                                                intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9);
+                                                intval1, intval2, intval3, intval4, intval5, intval6, intval7, intval8, intval9, intval10, intval11);
     REQUIRE(ret3.UNSAFE_unverified() ==
-            (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9));
+            (intval1 + intval2 + intval3 + intval4 + intval5 + intval6 + intval7 + intval8 + intval9 + intval10 + intval11));
 
     const unsigned int llval1 = 20;
     const unsigned int llval2 = 23;
@@ -226,11 +228,12 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned int llval7 = 38;
     const unsigned int llval8 = 41;
     const unsigned int llval9 = 44;
+    const unsigned int llval10 = 47;
 
     auto ret4 = sandbox.invoke_sandbox_function(stackParametersTestLongLong,
-                                                llval1, llval2, llval3, llval4, llval5, llval6, llval7, llval8, llval9);
+                                                llval1, llval2, llval3, llval4, llval5, llval6, llval7, llval8, llval9, llval10);
     REQUIRE(ret4.UNSAFE_unverified() ==
-            (llval1 + llval2 + llval3 + llval4 + llval5 + llval6 + llval7 + llval8 + llval9));
+            (llval1 + llval2 + llval3 + llval4 + llval5 + llval6 + llval7 + llval8 + llval9 + llval10));
   }
 
   SECTION("test verification function") // NOLINT
