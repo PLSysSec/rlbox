@@ -327,7 +327,9 @@ class rlbox_sandbox : protected TSbx {
         using TSbxRep = base_types_convertor_tsbx<T>;
         return sizeof(TSbxRep);
       } else {
-        static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+        // Use rlbox_static_assert here instead of static_assert as there is a
+        // testcase for this code
+        rlbox_static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
         // Use a dummy non zero return
         return 1;
       }

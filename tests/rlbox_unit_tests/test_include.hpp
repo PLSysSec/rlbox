@@ -168,6 +168,17 @@ class rlbox_noop_arena_sandbox
     return reinterpret_cast<T>(ret);
   }
 };
+
+/**
+ * @brief Sandbox that has a larger abi than the host, that we will use for
+ * rlbox testing
+ */
+class rlbox_noop_arena_largerabi_sandbox : public rlbox_noop_arena_sandbox {
+ public:
+  using sbx_short = int32_t;
+};
+
 }  // namespace rlbox
 
 RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_noop_arena_sandbox);
+RLBOX_DEFINE_BASE_TYPES_FOR(test_largerabi, rlbox_noop_arena_largerabi_sandbox);

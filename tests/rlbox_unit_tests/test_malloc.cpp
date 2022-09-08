@@ -138,17 +138,12 @@ class rlbox_largerabi_sandbox
 };
 }  // namespace rlbox
 
-RLBOX_DEFINE_BASE_TYPES_FOR(testlarger, rlbox_largerabi_sandbox);
+TEST_CASE("test class allocation for larger ABI fails without definition",
+          "[allocation]") {
+  rlbox_sandbox_test_largerabi sandbox;
+  sandbox.create_sandbox();
 
-// Below test is commented out for now until we add support for larger ABIs and
-// `rlbox_lib_load_classes`
+  REQUIRE_THROWS(sandbox.malloc_in_sandbox<test_struct>());
 
-// TEST_CASE("test class allocation for larger ABI fails without definition",
-//           "[allocation]") {
-//   rlbox_sandbox_testlarger sandbox;
-//   sandbox.create_sandbox();
-
-//   REQUIRE_THROWS(sandbox.malloc_in_sandbox<test_struct>());
-
-//   sandbox.destroy_sandbox();
-// }
+  sandbox.destroy_sandbox();
+}
