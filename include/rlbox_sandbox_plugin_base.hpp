@@ -10,6 +10,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <type_traits>
 
 #include "rlbox_tainted_relocatable.hpp"
 #include "rlbox_tainted_volatile_standard.hpp"
@@ -90,6 +91,15 @@ class rlbox_sandbox_plugin_base {
    * the sandbox plugin if the sandbox uses a custom ABI.
    */
   using sbx_pointer = void*;
+  /**
+   * @brief Indicates if the sandbox type `pointer` is represented differently
+   * from that of the host. In contrast to the `sbx_pointer` alias, which
+   * indicates the size of the pointer, `sbx_pointer_is_different_rep` indicates
+   * if the pointer representation is different even if the size is the same.
+   * @details Note that if `sbx_pointer` is of different size, than `void*` the
+   * qsbx_pointer_is_different_rep` must be `true`
+   */
+  using sbx_pointer_is_different_rep = std::false_type;
 };
 
 }  // namespace rlbox

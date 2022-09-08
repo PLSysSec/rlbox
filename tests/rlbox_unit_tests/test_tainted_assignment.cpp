@@ -106,7 +106,7 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 
   REQUIRE(std::is_same_v<decltype(tainted_test<int>(val)), tainted_test<int>>);
 
-  auto val2 = tainted_test<int*>(&val);
+  [[maybe_unused]] auto val2 = tainted_test<int*>(&val);
   REQUIRE(std::is_same_v<decltype(val2), tainted_test<int*>>);
   REQUIRE(
       std::is_same_v<decltype(tainted_test<int*>(&*ptr)), tainted_test<int*>>);

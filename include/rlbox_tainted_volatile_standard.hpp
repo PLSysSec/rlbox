@@ -137,6 +137,7 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
   inline tainted_volatile_standard<T, TSbx>& operator=(
       const TWrap<T, TSbx>& aOther) {
     data = aOther.raw_sandbox_rep();
+    return *this;
   }
 
   /**
@@ -204,7 +205,7 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
 
     // NOLINTNEXTLINE(google-readability-casting)
     auto* data_ptr = (std::add_pointer_t<T>)&data;
-    TOpAddrOf ret(data_ptr);
+    auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);
     return ret;
   }
 };

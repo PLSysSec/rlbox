@@ -251,6 +251,38 @@ class rlbox_sandbox : protected TSbx {
   //     }
   //   }
 
+ private:
+  /**
+   * @brief Construct a tainted pointer, after checking that the given pointer
+   * refers to an object inside the sandbox memory.
+   *
+   * @tparam T is the type of the pointer you want to create.
+   * @tparam RLBOX_REQUIRE checks to see if `T` is a pointer
+   * @param aPtr is the raw pointer that should refer to an object in the
+   * sandbox memory
+   * @param aSize is the size of the object/objects that is being referred to
+   * @return tainted<T> is the given pointer as a tainted value
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
+  tainted<T> get_tainted_from_raw_ptr(T aPtr, size_t aSize) {
+    auto ptr_start = reinterpret_cast<uintptr_t>(aPtr);
+    auto ptr_end = detail::checked_add<uintptr_t>(
+        ptr_start, (aSize - 1), "Pointer end computation has overflowed");
+
+    bool start_in_bounds = this->impl_is_pointer_in_sandbox_memory(
+        reinterpret_cast<void*>(ptr_start));
+    bool end_in_bounds = this->impl_is_pointer_in_sandbox_memory(
+        reinterpret_cast<void*>(ptr_end));
+
+    detail::dynamic_check(start_in_bounds && end_in_bounds,
+                          "Trying to convert a raw pointer which is outside "
+                          "the sandbox to a tainted pointer");
+
+    auto ret = tainted<T>::from_unchecked_raw_pointer(aPtr);
+    return ret;
+  }
+
+ public:
   /**
    * @brief Get the size of the object of type `T` in the sandbox representation
    * @details This function uses the following rules
@@ -325,28 +357,14 @@ class rlbox_sandbox : protected TSbx {
     size_t object_size = get_object_size_for_malloc<T>();
     auto total_size = rlbox::detail::checked_multiply<size_t>(
         object_size, count_unwrapped,
-        "Allocation size computaion has overflowed");
+        "Allocation size computation has overflowed");
 
     if constexpr (detail::has_member_impl_malloc_in_sandbox_v<TSbx>) {
       base_types_convertor_tsbx<T*> ptr_in_sandbox =
           this->template impl_malloc_in_sandbox<T>(total_size);
       T* ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
 
-      auto ptr_start = reinterpret_cast<uintptr_t>(ptr);
-      auto ptr_end = detail::checked_add<uintptr_t>(
-          ptr_start, (total_size - 1),
-          "Pointer end computation has overflowed");
-
-      bool start_in_bounds = this->impl_is_pointer_in_sandbox_memory(
-          reinterpret_cast<void*>(ptr_start));
-      bool end_in_bounds = this->impl_is_pointer_in_sandbox_memory(
-          reinterpret_cast<void*>(ptr_end));
-
-      detail::dynamic_check(
-          start_in_bounds && end_in_bounds,
-          "Malloc returned pointer outside the sandbox memory");
-
-      tainted<T*> ret(ptr);
+      tainted<T*> ret = get_tainted_from_raw_ptr(ptr, total_size);
       return ret;
     } else {
       // Use sandbox_invoke call malloc in the sandbox code

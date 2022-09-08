@@ -64,7 +64,11 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * memory.
    */
   template <typename TDummy = T, RLBOX_REQUIRE(std::is_pointer_v<TDummy>)>
-  tainted_fixed_aligned<T, TSbx>(T aPtr) : data(aPtr) {}
+  static tainted_fixed_aligned<T, TSbx> from_unchecked_raw_pointer(T aPtr) {
+    tainted_fixed_aligned ret;
+    ret.data = aPtr;
+    return ret;
+  }
 
  public:
   inline tainted_fixed_aligned() = default;
@@ -174,6 +178,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
   inline tainted_fixed_aligned<T, TSbx>& operator=(
       const TWrap<T, TSbx>& aOther) {
     data = aOther.raw_host_rep();
+    return *this;
   }
 
   /**
