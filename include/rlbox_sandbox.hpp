@@ -343,11 +343,8 @@ class rlbox_sandbox : protected TSbx {
   template <typename T>
   inline tainted<T*> malloc_in_sandbox(tainted<size_t> aCount) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
-    // Silently swallowing the failure is better here as RAII types may try to
-    // malloc after sandbox destruction
-    if (sandbox_created.load() != create_status::CREATED) {
-      return tainted<T*>(nullptr);
-    }
+    detail::dynamic_check(sandbox_created.load() == create_status::CREATED,
+                          "Sandbox not created");
 #endif
     size_t count_unwrapped = aCount.raw_host_rep();
 
@@ -383,11 +380,8 @@ class rlbox_sandbox : protected TSbx {
   template <typename T>
   inline void free_in_sandbox(tainted<T*> aPtr) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
-    // Silently swallowing the failure is better here as RAII types may try to
-    // free after sandbox destruction
-    if (sandbox_created.load() != create_status::CREATED) {
-      return;
-    }
+    detail::dynamic_check(sandbox_created.load() == create_status::CREATED,
+                          "Sandbox not created");
 #endif
 
     this->template impl_free_in_sandbox<T>(aPtr.raw_sandbox_rep(*this));
