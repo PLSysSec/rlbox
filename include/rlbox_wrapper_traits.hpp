@@ -93,7 +93,7 @@ struct helper<T, std::enable_if_t<!is_rlbox_stdint_type_v<T>>> {
 
 template <typename T>
 struct helper<T, std::enable_if_t<is_rlbox_stdint_type_v<T>>> {
-  using type = typename T::equivalent_type;
+  using type = typename T::equivalent_type_t;
 };
 
 };  // namespace rlbox_stdint_to_stdint_t_detail

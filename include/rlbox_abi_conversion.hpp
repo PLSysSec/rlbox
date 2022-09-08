@@ -102,7 +102,7 @@ struct convert_base_types_helper<
         std::is_same_v<char8_t, T> ||
 #endif
         std::is_floating_point_v<T> || std::is_enum_v<T> ||
-        (std::is_class_v<T> && !rlbox::detail::is_rlbox_stdint_type_v<T>)>> {
+        (std::is_class_v<T> && !is_rlbox_stdint_type_v<T>)>> {
   using type = T;
 };
 
@@ -163,10 +163,9 @@ struct convert_base_types_helper<
 };
 
 template <typename T, abi_template_decls>
-struct convert_base_types_helper<
-    T, abi_template_names,
-    std::enable_if_t<rlbox::detail::is_rlbox_stdint_type_v<T>>> {
-  using type = typename T::equivalent_type_t;
+struct convert_base_types_helper<T, abi_template_names,
+                                 std::enable_if_t<is_rlbox_stdint_type_v<T>>> {
+  using type = detail::rlbox_stdint_to_stdint_t<T>;
 };
 
 /**

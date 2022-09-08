@@ -300,21 +300,38 @@ class rlbox_sandbox : protected TSbx {
    */
   template <typename T>
   size_t get_object_size_for_malloc() {
-    // RLBox has to compute the size of the allocation in the sandbox's ABI.
-    // When allocating structs/classes, and the sandbox ABI is not larger than
-    // the host ABI (see @ref rlbox::detail::rlbox_base_types_not_larger_v),
-    // then RLBox just uses the host ABI size for the allocation of the class as
-    // it will always be greater than equal to the size required by the actual
-    // allocation. This ensures that users of the API don't have to call
-    // `rlbox_lib_load_classes` for each class allocated.
+    if constexpr (!std::is_class_v<T>) {
+      using TSbxRep = base_types_convertor_tsbx<T>;
+      return sizeof(TSbxRep);
+    } else if constexpr (detail::is_rlbox_stdint_type_v<T>) {
+      using TSbxRep = detail::rlbox_stdint_to_stdint_t<T>;
+      return sizeof(TSbxRep);
+    } else {
+      // RLBox has to compute the size of the allocation in the sandbox's ABI.
+      // When allocating structs/classes, and the sandbox ABI is not larger than
+      // the host ABI (see @ref rlbox::detail::rlbox_base_types_not_larger_v),
+      // then RLBox just uses the host ABI size for the allocation of the class
+      // as it will always be greater than equal to the size required by the
+      // actual allocation. This ensures that users of the API don't have to
+      // call `rlbox_lib_load_classes` for each class allocated.
 #ifndef RLBOX_DONT_OVERESTIMATE_CLASS_SIZES
-    using TSbxRep = base_types_convertor_tsbx<T>;
-    return sizeof(TSbxRep);
+      constexpr bool can_overestimate_check1 = true;
 #else
-    static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
-    // Use a dummy non zero return
-    return 1;
+      constexpr bool can_overestimate_check1 = false;
 #endif
+
+      constexpr bool can_overestimate_check2 =
+          detail::rlbox_base_types_not_larger_v<TSbx>;
+
+      if constexpr (can_overestimate_check1 && can_overestimate_check2) {
+        using TSbxRep = base_types_convertor_tsbx<T>;
+        return sizeof(TSbxRep);
+      } else {
+        static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+        // Use a dummy non zero return
+        return 1;
+      }
+    }
   }
 
   /**
