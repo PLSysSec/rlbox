@@ -225,6 +225,8 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
                                                bool free_source_on_copy,
                                                bool& copied)
 {
+  copied = false;
+
   // This function is meant for byte buffers only - so char and char16
   static_assert(sizeof(T) <= 2);
 
@@ -239,7 +241,6 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
     bool success;
     auto ret = sandbox.INTERNAL_grant_access(src, num, success);
     if (success) {
-      copied = false;
       return ret;
     }
   }
@@ -250,6 +251,9 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
   using T_nocv = std::remove_cv_t<T>;
   tainted<T_nocv*, T_Sbx> copy =
     sandbox.template malloc_in_sandbox<T_nocv>(static_cast<uint32_t>(num));
+  if (!copy) {
+    return nullptr;
+  }
 
   rlbox::memcpy(sandbox, copy, src, source_size);
   if (free_source_on_copy) {
@@ -270,7 +274,7 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
  * @param src Raw pointer to the buffer
  * @param num Number of T-sized elements in the buffer
  * @param free_source_on_copy If the source buffer was copied, this variable
- * controls whether copy_memory_or_grant_access should call delete on the src.
+ * controls whether copy_memory_or_deny_access should call delete on the src.
  * This calls delete[] if num > 1.
  * @param copied out parameter indicating if the source was copied or transfered
  */
@@ -284,6 +288,8 @@ T* copy_memory_or_deny_access(rlbox_sandbox<T_Sbx>& sandbox,
                               bool free_source_on_copy,
                               bool& copied)
 {
+  copied = false;
+
   // This function is meant for byte buffers only - so char and char16
   static_assert(sizeof(T) <= 2);
 
@@ -299,12 +305,14 @@ T* copy_memory_or_deny_access(rlbox_sandbox<T_Sbx>& sandbox,
     bool success;
     auto ret = sandbox.INTERNAL_deny_access(src, num, success);
     if (success) {
-      copied = false;
       return ret;
     }
   }
 
   auto copy = static_cast<T*>(malloc(source_size));
+  if (!copy) {
+    return nullptr;
+  }
 
   tainted<T*, T_Sbx> src_tainted = src;
   char* src_raw = src_tainted.copy_and_verify_buffer_address(
