@@ -69,6 +69,15 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
   inline tainted_volatile_standard(const TWrap<TOther, TSbx>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
 
+  /**
+   * @brief Construct a new tainted object from a raw primitive value
+   * @tparam TOther is the type of the rhs value being wrapped
+   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable criterion
+   * @param aOther is the rhs being assigned
+   */
+  template <typename TOther, RLBOX_REQUIRE(std::is_assignable_v<decltype(data)&, TOther>)>
+  inline tainted_volatile_standard(const TOther& aOther) : data(detail::convert_type_fundamental<detail::value_type_t<T>>(aOther)) {}
+
  public:
   /**
    * @brief Unsafely remove the tainting and get the raw data.
@@ -152,13 +161,8 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
   template <typename TOther, typename TDummy = T,
             RLBOX_REQUIRE(detail::is_fundamental_or_enum_v<TDummy>)>
   inline tainted_volatile_standard<T, TSbx>& operator=(const TOther& aOther) {
-    // We need to first converting from host representation to sandbox
-    // representation. Since the ABI is not consistent, converting an integer
-    // for example may need a bounds check. This will occur automatically if we
-    // convert this value to tainted value and convert that to tainted_volatile.
-    using tainted_tother_t = typename TSbx::template tainted<TOther>;
-    tainted_tother_t tainted_other(aOther);
-    *this = tainted_other;
+    // We need to convert from host representation to sandbox representation
+    data = detail::convert_type_fundamental<detail::value_type_t<T>>(aOther);
     return *this;
   }
 
