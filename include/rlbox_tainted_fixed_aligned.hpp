@@ -234,6 +234,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
 
     // NOLINTNEXTLINE(google-readability-casting)
     auto data_tainted_volatile = (TOpDeref*)data;
+    // NOLINTNEXTLINE(clang-analyzer-core.uninitialized.UndefReturn)
     return *data_tainted_volatile;
   }
 };

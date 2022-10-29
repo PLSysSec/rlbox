@@ -104,7 +104,7 @@ if(DEV)
   if(CLANG_TIDY)
     message("Found ${CLANG_TIDY}")
     # Config in .clang-tidy
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
   endif()
 
   find_program(IWYU "iwyu")

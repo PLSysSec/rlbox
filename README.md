@@ -91,9 +91,9 @@ If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when in
 
 ## Contributing Code
 
-1. To contribute code, it is recommended you install `clang-tidy`,
-`clang-format`, `cppcheck`, `iwyu` which the build uses if available. Install
-using:
+1. To contribute code, it is recommended you install `clang-tidy` (version 12 or
+later), `clang-format`, `cppcheck`, `iwyu` (version 0.16 or later) which the
+build uses if available. Install using:
 
    On Ubuntu:
 
