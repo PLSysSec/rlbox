@@ -158,3 +158,20 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   sandbox.destroy_sandbox();
 }
+
+TEST_CASE("tainted pointers assignment operates correctly",
+          "[tainted assignment]") {
+  tainted_fixed_aligned<int*, rlbox_noop_arena_smallerabi_sandbox>
+      ptr_taint_fixed = nullptr;
+  ptr_taint_fixed = nullptr;
+
+  rlbox_sandbox_test_smallerabi sandbox;
+  sandbox.create_sandbox();
+  tainted_test_smallerabi<int**> pp_int_taint_vol =
+      sandbox.malloc_in_sandbox<int*>();
+
+  *pp_int_taint_vol = nullptr;
+
+  sandbox.free_in_sandbox(pp_int_taint_vol);
+  sandbox.destroy_sandbox();
+}
