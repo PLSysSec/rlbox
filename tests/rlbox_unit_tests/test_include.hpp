@@ -103,10 +103,10 @@ inline void rlbox_aligned_free(aligned_alloc_t alloc) {
 
 namespace rlbox {
 /**
- * @brief Sandbox we will use for rlbox testing
+ * @brief Common sandbox functionality that we will reuse in other sandboxes
  */
-class rlbox_noop_arena_sandbox
-    : public rlbox_sandbox_plugin_base<rlbox_noop_arena_sandbox> {
+template <typename TSbx>
+class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
  private:
   const size_t sandbox_mem_size = size_t(4) * 1024;
   aligned_alloc_t sandbox_memory_alloc{nullptr, 0, nullptr, 0};
@@ -121,7 +121,7 @@ class rlbox_noop_arena_sandbox
   using sbx_pointer = uint32_t;
 
   template <typename T>
-  using tainted = tainted_fixed_aligned<T, rlbox_noop_arena_sandbox>;
+  using tainted = tainted_fixed_aligned<T, TSbx>;
 
   inline rlbox_status_code impl_create_sandbox() {
     sandbox_memory_alloc = rlbox_aligned_malloc(sandbox_mem_size);
@@ -170,15 +170,35 @@ class rlbox_noop_arena_sandbox
 };
 
 /**
+ * @brief Sandbox we will use for rlbox testing
+ */
+class rlbox_noop_arena_sandbox
+    : public rlbox_noop_arena_sandbox_base<rlbox_noop_arena_sandbox> {};
+
+/**
  * @brief Sandbox that has a larger abi than the host, that we will use for
  * rlbox testing
  */
-class rlbox_noop_arena_largerabi_sandbox : public rlbox_noop_arena_sandbox {
+class rlbox_noop_arena_largerabi_sandbox
+    : public rlbox_noop_arena_sandbox_base<rlbox_noop_arena_largerabi_sandbox> {
  public:
   using sbx_short = int32_t;
+};
+
+/**
+ * @brief Sandbox that has a smaller abi than the host, that we will use for
+ * rlbox testing
+ */
+class rlbox_noop_arena_smallerabi_sandbox
+    : public rlbox_noop_arena_sandbox_base<
+          rlbox_noop_arena_smallerabi_sandbox> {
+ public:
+  using sbx_short = int8_t;
 };
 
 }  // namespace rlbox
 
 RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_noop_arena_sandbox);
 RLBOX_DEFINE_BASE_TYPES_FOR(test_largerabi, rlbox_noop_arena_largerabi_sandbox);
+RLBOX_DEFINE_BASE_TYPES_FOR(test_smallerabi,
+                            rlbox_noop_arena_smallerabi_sandbox);

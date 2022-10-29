@@ -124,8 +124,8 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::value_type_t<T> is the raw data
    */
-  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
 
@@ -151,8 +151,8 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     if constexpr (std::is_pointer_v<T>) {
       return aSandbox.get_sandboxed_pointer(data);
     } else {
@@ -176,7 +176,7 @@ class tainted_fixed_aligned : public tainted_base<T, TSbx> {
       RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
                         std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_fixed_aligned<T, TSbx>& operator=(
-      const TWrap<T, TSbx>& aOther) {
+      const TWrap<TOther, TSbx>& aOther) {
     data = aOther.raw_host_rep();
     return *this;
   }

@@ -72,11 +72,15 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
   /**
    * @brief Construct a new tainted object from a raw primitive value
    * @tparam TOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable criterion
+   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
+   * criterion
    * @param aOther is the rhs being assigned
    */
-  template <typename TOther, RLBOX_REQUIRE(std::is_assignable_v<decltype(data)&, TOther>)>
-  inline tainted_volatile_standard(const TOther& aOther) : data(detail::convert_type_fundamental<detail::value_type_t<T>>(aOther)) {}
+  template <typename TOther,
+            RLBOX_REQUIRE(std::is_assignable_v<decltype(data)&, TOther>)>
+  inline tainted_volatile_standard(const TOther& aOther)
+      : data(detail::convert_type_fundamental<detail::value_type_t<TSbxRep>>(
+            aOther)) {}
 
  public:
   /**
@@ -99,8 +103,8 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::value_type_t<T> is the raw data
    */
-  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::value_type_t<T> UNSAFE_unverified([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     if constexpr (std::is_pointer_v<T>) {
       return aSandbox.get_unsandboxed_pointer(data);
     } else {
@@ -123,8 +127,8 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::value_type_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::value_type_t<TSbxRep> UNSAFE_sandboxed([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_sandboxed();
   }
 
@@ -144,7 +148,7 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
       RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap, TOther, TSbx>&&
                         std::is_assignable_v<decltype(data)&, TOther>)>
   inline tainted_volatile_standard<T, TSbx>& operator=(
-      const TWrap<T, TSbx>& aOther) {
+      const TWrap<TOther, TSbx>& aOther) {
     data = aOther.raw_sandbox_rep();
     return *this;
   }
@@ -152,17 +156,18 @@ class tainted_volatile_standard : public tainted_volatile_base<T, TSbx> {
   /**
    * @brief Operator= for tainted values from a raw primitive value.
    * @tparam TOther is the type of the rhs value being assigned
-   * @tparam TDummy is a dummy parameter to do our static type checks
    * @tparam RLBOX_REQUIRE param ensures this is allowed for primitive types
    * only.
    * @param aOther is the raw primitive
    * @return tainted_volatile_standard<T, TSbx>& is the reference to this value
    */
-  template <typename TOther, typename TDummy = T,
-            RLBOX_REQUIRE(detail::is_fundamental_or_enum_v<TDummy>)>
+  template <typename TOther,
+            RLBOX_REQUIRE(std::is_assignable_v<decltype(data)&, TOther>&&
+                              detail::is_fundamental_or_enum_v<T>)>
   inline tainted_volatile_standard<T, TSbx>& operator=(const TOther& aOther) {
     // We need to convert from host representation to sandbox representation
-    data = detail::convert_type_fundamental<detail::value_type_t<T>>(aOther);
+    data =
+        detail::convert_type_fundamental<detail::value_type_t<TSbxRep>>(aOther);
     return *this;
   }
 
