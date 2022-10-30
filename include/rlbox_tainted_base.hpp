@@ -4,8 +4,7 @@
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Base classes for tainted types (wrappers that identify data returned
- * by sandboxed code). These classes contain common functions used by different
- * tainted and tainted_volatile implementations.
+ * by sandboxed code).
  */
 
 #pragma once

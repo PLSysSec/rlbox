@@ -7,6 +7,7 @@
 # cppcoreguidelines-pro-bounds-pointer-arithmetic --- we need to support pointer arithmetic in wrapper types
 # cppcoreguidelines-pro-type-reinterpret-cast --- we will be using reinterpret_cast to handle the ABI differences
 # cppcoreguidelines-owning-memory --- we need mallocs for implementing malloc_in_sandbox in tests
+# cppcoreguidelines-non-private-member-variables-in-classes,misc-non-private-member-variables-in-classes --- need protected members
 # cppcoreguidelines-no-malloc,hicpp-no-malloc --- we need mallocs for implementing malloc_in_sandbox in tests
 # cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers --- test cases use magic numbers. Not worth checking for.
 # cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays --- we use c arrays in rlbox headers so we can support this in the ffi
@@ -25,7 +26,7 @@
 # readability-convert-member-functions-to-static --- hampers development of abstract APIs
 # readability-identifier-length --- unnecessary for test code
 # readability-const-return-type --- too many cases where we have to remove consts in return. Easier just to ignore this.
-Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast,-cppcoreguidelines-owning-memory,-cppcoreguidelines-no-malloc,-hicpp-no-malloc,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-explicit-conversions,-google-explicit-constructor,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-modernize-avoid-c-arrays,-cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-google-runtime-operator,-performance-no-int-to-ptr,-readability-convert-member-functions-to-static,-readability-identifier-length,-readability-const-return-type'
+Checks: '*,-altera-*,-llvmlibc-*,-bugprone-macro-parentheses,-bugprone-suspicious-include,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast,-cppcoreguidelines-owning-memory,-cppcoreguidelines-non-private-member-variables-in-classes,-misc-non-private-member-variables-in-classes,-cppcoreguidelines-no-malloc,-hicpp-no-malloc,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-cppcoreguidelines-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-explicit-conversions,-google-explicit-constructor,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-modernize-avoid-c-arrays,-cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-hicpp-deprecated-headers,-modernize-use-trailing-return-type,-llvm-header-guard,-llvm-namespace-comment,-google-readability-namespace-comments,-modernize-deprecated-headers,-google-build-using-namespace,-google-runtime-int,-google-runtime-operator,-performance-no-int-to-ptr,-readability-convert-member-functions-to-static,-readability-identifier-length,-readability-const-return-type'
 HeaderFilterRegex: '.*rlbox[a-zA-Z0-9_]*\.hpp'
 WarningsAsErrors: 'readability-identifier-naming'
 CheckOptions:

@@ -12,9 +12,6 @@
 #include <stddef.h>
 #include <type_traits>
 
-#include "rlbox_tainted_relocatable.hpp"
-#include "rlbox_tainted_volatile_standard.hpp"
-
 namespace rlbox {
 
 /**
@@ -27,28 +24,6 @@ namespace rlbox {
 template <typename TSbx>
 class rlbox_sandbox_plugin_base {
  public:
-  /**
-   * @brief The tainted type used by the underlying TSbx specification. This is
-   * tainted_relocatable by default.
-   *
-   * @tparam T is the type of the data that is wrapped.
-   * @tparam TSbx is the type of the sandbox plugin that represents the
-   * underlying sandbox implementation.
-   */
-  template <typename T>
-  using tainted = tainted_relocatable<T, TSbx>;
-
-  /**
-   * @brief The tainted_volatile type used by the underlying TSbx specification.
-   * This is tainted_volatile_standard by default.
-   *
-   * @tparam T is the type of the data that is wrapped.
-   * @tparam TSbx is the type of the sandbox plugin that represents the
-   * underlying sandbox implementation.
-   */
-  template <typename T>
-  using tainted_volatile = tainted_volatile_standard<T, TSbx>;
-
   /**
    * @brief How can the sandbox type `wchar_t` be represented in the host
    * environment. Defaults to same as the host type. This can be overridden by

@@ -103,6 +103,10 @@ class rlbox_largerabi_sandbox
   template <typename T>
   using tainted = tainted_fixed_aligned<T, rlbox_largerabi_sandbox>;
 
+  template <typename T>
+  using tainted_volatile =
+      tainted_volatile_standard<T, rlbox_largerabi_sandbox>;
+
   inline rlbox_status_code impl_create_sandbox() {
     return rlbox_status_code::SUCCESS;
   }

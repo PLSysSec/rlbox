@@ -164,6 +164,8 @@ TEST_CASE("tainted pointers assignment operates correctly",
   tainted_fixed_aligned<int*, rlbox_noop_arena_smallerabi_sandbox>
       ptr_taint_fixed = nullptr;
   ptr_taint_fixed = nullptr;
+  // tainted_relocatable<int*, rlbox_noop_arena_smallerabi_sandbox>
+  // ptr_taint_reloc = nullptr; ptr_taint_reloc = nullptr;
 
   rlbox_sandbox_test_smallerabi sandbox;
   sandbox.create_sandbox();

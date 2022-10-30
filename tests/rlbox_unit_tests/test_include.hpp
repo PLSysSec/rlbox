@@ -123,6 +123,9 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   template <typename T>
   using tainted = tainted_fixed_aligned<T, TSbx>;
 
+  template <typename T>
+  using tainted_volatile = tainted_volatile_standard<T, TSbx>;
+
   inline rlbox_status_code impl_create_sandbox() {
     sandbox_memory_alloc = rlbox_aligned_malloc(sandbox_mem_size);
     sandbox_memory = sandbox_memory_alloc.mem;

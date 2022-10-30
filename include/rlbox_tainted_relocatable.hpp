@@ -16,13 +16,14 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
-#include "rlbox_tainted_fixed_aligned.hpp"
+#include "rlbox_tainted_common.hpp"
 #include "rlbox_type_traits.hpp"
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 
 /**
- * @brief Specialization for non-fundamental types
+ * @brief Specialization for pointer types
  * @tparam T is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
@@ -65,9 +66,12 @@ class tainted_relocatable_helper : public tainted_base<T, TSbx> {
  * sandbox implementation.
  */
 template <typename T, typename TSbx>
-using tainted_relocatable =
-    std::conditional_t<detail::is_fundamental_or_enum_v<T>,
-                       tainted_fixed_aligned<T, TSbx>,
-                       tainted_relocatable_helper<T, TSbx>>;
+using tainted_relocatable = std::conditional_t<
+    detail::is_fundamental_or_enum_v<T>,
+    tainted_fundamental_or_enum<
+        true /* TUseAppRep */, T,
+        detail::tainted_rep_t<detail::rlbox_base_types_convertor<T, TSbx>>,
+        TSbx>,
+    tainted_relocatable_helper<T, TSbx>>;
 
 }  // namespace rlbox

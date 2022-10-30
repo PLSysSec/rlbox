@@ -15,6 +15,13 @@
 class sandbox_same_pointer_rep
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_same_pointer_rep> {
  public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, sandbox_same_pointer_rep>;
+
+  template <typename T>
+  using tainted_volatile =
+      tainted_volatile_standard<T, sandbox_same_pointer_rep>;
+
   using sbx_pointer = void*;
 
   template <typename T>
@@ -49,6 +56,13 @@ TEST_CASE("Test pointer conversions with same abi", "[pointer conversion]") {
 class sandbox_different_pointer_rep
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_different_pointer_rep> {
  public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, sandbox_different_pointer_rep>;
+
+  template <typename T>
+  using tainted_volatile =
+      tainted_volatile_standard<T, sandbox_different_pointer_rep>;
+
   using sbx_pointer = void*;
 
   template <typename T>

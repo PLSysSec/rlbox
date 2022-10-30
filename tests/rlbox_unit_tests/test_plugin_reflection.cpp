@@ -21,19 +21,35 @@
 namespace rlbox {
 
 class rlbox_default_tainted_testsandbox
-    : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {};
+    : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {
+ public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, rlbox_default_tainted_testsandbox>;
+
+  template <typename T>
+  using tainted_volatile =
+      tainted_volatile_standard<T, rlbox_default_tainted_testsandbox>;
+};
 
 class rlbox_custom_tainted_testsandbox
     : public rlbox_sandbox_plugin_base<rlbox_custom_tainted_testsandbox> {
  public:
   template <typename T>
   using tainted = tainted_fixed_aligned<T, rlbox_custom_tainted_testsandbox>;
+
+  template <typename T>
+  using tainted_volatile =
+      tainted_volatile_standard<T, rlbox_custom_tainted_testsandbox>;
 };
 
 class rlbox_custom_tainted_volatile_testsandbox
     : public rlbox_sandbox_plugin_base<
           rlbox_custom_tainted_volatile_testsandbox> {
  public:
+  template <typename T>
+  using tainted =
+      tainted_relocatable<T, rlbox_custom_tainted_volatile_testsandbox>;
+
   template <typename T>
   using tainted_volatile =
       rlbox::tainted_fixed_aligned<T,

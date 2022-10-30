@@ -11,6 +11,12 @@
 class sandbox_same_abi
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_same_abi> {
  public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, sandbox_same_abi>;
+
+  template <typename T>
+  using tainted_volatile = tainted_volatile_standard<T, sandbox_same_abi>;
+
   template <typename TFunc>
   using impl_promote_integer_types_t = TFunc;
 };
@@ -18,6 +24,12 @@ class sandbox_same_abi
 class sandbox_different_int
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_different_int> {
  public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, sandbox_different_int>;
+
+  template <typename T>
+  using tainted_volatile = tainted_volatile_standard<T, sandbox_different_int>;
+
   using sbx_int = uint16_t;
 
   template <typename TFunc>
@@ -26,6 +38,12 @@ class sandbox_different_int
 
 class sandbox_intptr : public rlbox::rlbox_sandbox_plugin_base<sandbox_intptr> {
  public:
+  template <typename T>
+  using tainted = tainted_relocatable<T, sandbox_intptr>;
+
+  template <typename T>
+  using tainted_volatile = tainted_volatile_standard<T, sandbox_intptr>;
+
   using sbx_pointer = uintptr_t;
 
   template <typename TFunc>
