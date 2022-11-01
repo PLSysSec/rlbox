@@ -17,7 +17,6 @@
 #include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_tainted_fundamental_or_enum.hpp"
-#include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {

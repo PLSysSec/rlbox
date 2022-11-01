@@ -19,8 +19,12 @@
  *
  * This document contains the inline code documentation of RLBox.
  *
- * The @ref rlbox::rlbox_sandbox class snf the @ref rlbox_types.hpp file are
+ * The @ref rlbox::rlbox_sandbox class and the @ref rlbox_types.hpp file are
  * useful starting points for this document.
+ *
+ * To contribute try fixing one of the open bugs in the [RLBox Github
+ * repo](https://github.com/PLSysSec/rlbox) or one of the todos listed in the
+ * Related Pages.
  */
 
 // IWYU pragma: begin_exports

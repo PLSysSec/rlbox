@@ -31,7 +31,7 @@ class tainted_interface {};
  */
 template <bool TUseAppRep, typename T, typename TSbx>
 class tainted_any_base : public tainted_interface<TSbx> {
-  // TODO: add UNSAFE_sandboxed and UNSAFE_unverified
+  /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
 };
 
 }  // namespace rlbox

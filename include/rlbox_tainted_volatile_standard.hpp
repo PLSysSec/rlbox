@@ -16,7 +16,6 @@
 #include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
 #include "rlbox_tainted_fundamental_or_enum.hpp"
-#include "rlbox_type_conversion.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
@@ -173,8 +172,8 @@ class tainted_volatile_standard_pointer
    * data, i.e., memory which is a tainted_volatile type
    */
   inline TOpDeref& operator*() {
-    // TODO: eliminate cast and replace with tainted_volatile constructor taking
-    // a reference
+    /// \todo eliminate cast and replace with tainted_volatile constructor
+    /// taking a reference
 
     // Deliberately use a C style cast as we we want to get rid of any CV
     // qualifers here. CV qualifiers are moved inside the wrapper type and thus
