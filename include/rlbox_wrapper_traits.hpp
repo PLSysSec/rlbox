@@ -62,15 +62,14 @@ constexpr bool rlbox_base_types_not_larger_v =
 /**
  * @brief This trait identifies if a given generic types is a tainted wrapper.
  * It does this by checking if the generic wrapper derives from @ref
- * rlbox::tainted_base
+ * rlbox::tainted_interface
  * @tparam TWrap is the generic type to check
  * @tparam T is the type of the data being wrapped over
  * @tparam TSbx is the sandbox type
  */
-template <template <typename, typename...> typename TWrap, typename T,
-          typename TSbx>
+template <typename TWrap, typename TSbx>
 constexpr bool is_tainted_any_wrapper_v =
-    std::is_base_of_v<tainted_any_base<T, TSbx>, TWrap<T, TSbx>>;
+    std::is_base_of_v<tainted_interface<TSbx>, TWrap>;
 
 /**
  * @brief This trait identifies if a given type is an RLBox stdint type (See

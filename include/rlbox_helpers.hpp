@@ -16,20 +16,23 @@
 
 /**
  * @brief For internal use only. Make sure RLBox's various tainted classes can
- * access the private memmbers of other tainted classes.
+ * access the private members of other tainted classes.
  */
-#define KEEP_RLBOX_CLASSES_FRIENDLY        \
-  template <typename TU1>                  \
-  friend class rlbox_sandbox;              \
-                                           \
-  template <typename TU1, typename TU2>    \
-  friend class tainted_fixed_aligned;      \
-                                           \
-  template <typename TU1, typename TU2>    \
-  friend class tainted_relocatable_helper; \
-                                           \
-  template <typename TU1, typename TU2>    \
-  friend class tainted_volatile_standard;  \
+#define KEEP_RLBOX_CLASSES_FRIENDLY               \
+  template <typename TU1>                         \
+  friend class rlbox_sandbox;                     \
+                                                  \
+  template <bool TU1, typename TU2, typename TU3> \
+  friend class tainted_fundamental_or_enum;       \
+                                                  \
+  template <bool TU1, typename TU2, typename TU3> \
+  friend class tainted_fixed_aligned_pointer;     \
+                                                  \
+  template <bool TU1, typename TU2, typename TU3> \
+  friend class tainted_relocatable_pointer;       \
+                                                  \
+  template <bool TU1, typename TU2, typename TU3> \
+  friend class tainted_volatile_standard_pointer; \
   RLBOX_REQUIRE_SEMI_COLON
 
 /**

@@ -1,17 +1,20 @@
 /**
- * @file rlbox_tainted_common.hpp
+ * @file rlbox_tainted_fundamental_or_enum.hpp
  * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
- * @brief These classes contain common functions used by different
- * tainted and tainted_volatile implementations.
+ * @brief This header implements the tainted_fundamental_or_enum class that adds
+ * tainted/tainted_volatile support for fundamental (int, float, etc.) types and
+ * enum types.
  */
 
 #pragma once
 
 #include <type_traits>
 
+#include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_tainted_base.hpp"
 #include "rlbox_type_conversion.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
@@ -22,17 +25,26 @@ namespace rlbox {
  * @brief Implementation of tainted/tainted volatile wrappers for fundamental
  * (int, float, etc.) types and enum types
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
- * representation or the sandbox representation
+ * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam TAppRep is the app representation of data
  * @tparam TSbxRep is the sandbox representation of data
  * @tparam TSbx is the type of sandbox
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbxRep, typename TSbx>
-class tainted_fundamental_or_enum {
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
+class tainted_fundamental_or_enum
+    : public tainted_any_base<TUseAppRep, TAppRep, TSbx> {
+  KEEP_RLBOX_CLASSES_FRIENDLY;
+
  protected:
   static_assert(
       detail::is_fundamental_or_enum_v<TAppRep>,
       "tainted_fundamental_or_enum only supports fundamental_or_enum");
+
+  /**
+   * @brief The sandbox representation of data for this wrapper
+   */
+  using TSbxRep =
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TAppRep, TSbx>>;
 
   /**
    * @brief The internal representation of data for this wrapper
@@ -63,18 +75,17 @@ class tainted_fundamental_or_enum {
    * not tainted_volatile
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the TAppRep of the rhs value
-   * @tparam TSbxRepOther is the TSbxRep of the rhs value
    * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
    * see if this meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
   template <bool TAllowPublicConst = TUseAppRep, bool TUseAppRepOther,
-            typename TAppRepOther, typename TSbxRepOther,
+            typename TAppRepOther,
             RLBOX_REQUIRE(TAllowPublicConst&& std::is_constructible_v<
                           detail::tainted_rep_t<TAppRep>, TAppRepOther>)>
   inline tainted_fundamental_or_enum(
-      const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther,
-                                        TSbxRepOther, TSbx>& aOther)
+      const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
+          aOther)
       : data([&] {
           if constexpr (TUseAppRep) {
             return aOther.raw_host_rep();
@@ -87,7 +98,7 @@ class tainted_fundamental_or_enum {
    * @brief Construct a new tainted object from a raw primitive value
    * @tparam TAllowPublicConst ensures constructors are usable for tainted but
    * not tainted_volatile
-   * @tparam TOther is the type of the rhs value being wrapped
+   * @tparam TOther is the type of the rhs value
    * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
    * this is allowed for primitive types only and if this meets the
    * constructible criterion
@@ -169,19 +180,18 @@ class tainted_fundamental_or_enum {
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the TAppRep of the rhs value
-   * @tparam TSbxRepOther is the TSbxRep of the rhs value
    * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
    * criterion
    * @param aOther is the rhs being assigned
-   * @return tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbxRep, TSbx>& is
+   * @return tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& is
    * the reference to this value
    */
-  template <bool TUseAppRepOther, typename TAppRepOther, typename TSbxRepOther,
+  template <bool TUseAppRepOther, typename TAppRepOther,
             RLBOX_REQUIRE(std::is_assignable_v<detail::tainted_rep_t<TAppRep>&,
                                                TAppRepOther>)>
-  inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbxRep, TSbx>&
-  operator=(const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther,
-                                              TSbxRepOther, TSbx>& aOther) {
+  inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
+      const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
+          aOther) {
     if constexpr (TUseAppRep) {
       data = aOther.raw_host_rep();
     } else {
@@ -191,19 +201,19 @@ class tainted_fundamental_or_enum {
   }
 
   /**
-   * @brief
-   * @tparam TOther Operator= for tainted values from a raw primitive value
+   * @brief Operator= for tainted values from a raw primitive value
+   * @tparam TOther is the type of the rhs value
    * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
    * criterion
    * @param aOther is the raw primitive
-   * @return tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbxRep, TSbx>& is
+   * @return tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& is
    * the reference to this value
    */
   template <typename TOther,
             RLBOX_REQUIRE(
                 std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TOther>)>
-  inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbxRep, TSbx>&
-  operator=(const TOther& aOther) {
+  inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
+      const TOther& aOther) {
     if constexpr (TUseAppRep) {
       data = aOther;
     } else {
@@ -213,6 +223,37 @@ class tainted_fundamental_or_enum {
       data = converted;
     }
     return *this;
+  }
+
+ protected:
+  template <typename T>
+  using tainted = typename TSbx::template tainted<T>;
+
+  /**
+   * @brief Result type of operator&
+   */
+  using TOpAddrOf = std::conditional_t<
+      TUseAppRep, tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>*,
+      tainted<std::add_pointer_t<TAppRep>>>;
+
+ public:
+  /**
+   * @brief Operator& which gets the address of tainted_volatile to get tainted
+   * @return TOpAddrOf is the pointer to the sandbox memory that holds this data
+   */
+  inline TOpAddrOf operator&() {
+    if constexpr (TUseAppRep) {
+      return this;
+    } else {
+      // Deliberately use a C style cast as we we want to get rid of any CV
+      // qualifers here. CV qualifiers are moved inside the wrapper type and
+      // thus continue to be tracked.
+
+      // NOLINTNEXTLINE(google-readability-casting)
+      auto* data_ptr = (std::add_pointer_t<TAppRep>)&data;
+      auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);
+      return ret;
+    }
   }
 };
 

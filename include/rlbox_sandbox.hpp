@@ -393,11 +393,17 @@ class rlbox_sandbox : protected TSbx {
 
   /**
    * @brief Free the memory referenced by the tainted pointer.
+   * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+   * representation (tainted) or the sandbox representation (tainted_volatile)
    * @tparam T is the type of the pointer you want to free.
    * @param aPtr is the pointer to sandbox memory to free.
    */
-  template <typename T>
-  inline void free_in_sandbox(tainted<T*> aPtr) {
+  template <template <bool, typename, typename> typename TWrap, bool TUseAppRep,
+            typename T,
+            RLBOX_REQUIRE(
+                detail::is_tainted_any_wrapper_v<TWrap<TUseAppRep, T, TSbx>,
+                                                 TSbx>&& std::is_pointer_v<T>)>
+  inline void free_in_sandbox(TWrap<TUseAppRep, T, TSbx> aPtr) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     detail::dynamic_check(sandbox_created.load() == create_status::CREATED,
                           "Sandbox not created");

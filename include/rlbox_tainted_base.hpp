@@ -14,29 +14,24 @@ namespace rlbox {
 /**
  * @brief Base class of all wrapper types. This is used to identify tainted
  * wrappers.
- * @tparam T is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
-class tainted_any_base {};
+template <typename TSbx>
+class tainted_interface {};
 
 /**
- * @brief Base class of tainted types.
+ * @brief Base class of all wrapper types with common template arguments. This
+ * is used to identify tainted wrappers.
+ * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+ * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam T is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
-class tainted_base : public tainted_any_base<T, TSbx> {};
-
-/**
- * @brief Base class of tainted volatile types.
- * @tparam T is the type of the data being wrapped.
- * @tparam TSbx is the type of the sandbox plugin that represents the underlying
- * sandbox implementation.
- */
-template <typename T, typename TSbx>
-class tainted_volatile_base : public tainted_any_base<T, TSbx> {};
+template <bool TUseAppRep, typename T, typename TSbx>
+class tainted_any_base : public tainted_interface<TSbx> {
+  // TODO: add UNSAFE_sandboxed and UNSAFE_unverified
+};
 
 }  // namespace rlbox
