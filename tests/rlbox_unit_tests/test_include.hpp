@@ -145,6 +145,13 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
     detail::dynamic_check(bump_index < sandbox_mem_size,
                           "Ran out of sandbox memory");
 
+    auto roundTo8 = [](size_t numToRound) -> size_t {
+      size_t multiple = 8;
+      return ((numToRound + multiple - 1) / multiple) * multiple;
+    };
+
+    bump_index = roundTo8(bump_index);
+
     return ret;
   }
 
