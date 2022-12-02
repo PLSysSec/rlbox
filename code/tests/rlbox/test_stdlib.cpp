@@ -184,6 +184,15 @@ TEST_CASE("test memcpy", "[stdlib]")
   sandbox.destroy_sandbox();
 }
 
+static int normalize(int a) {
+  if (a > 0) {
+    return 1;
+  } else if (a < 0) {
+    return -1;
+  }
+  return 0;
+}
+
 // NOLINTNEXTLINE
 TEST_CASE("test memcmp", "[stdlib]")
 {
@@ -223,6 +232,13 @@ TEST_CASE("test memcmp", "[stdlib]")
   // NOLINTNEXTLINE
   auto tb2tb1 = rlbox::memcmp(sandbox, buffer2_t, buffer1_t, strlen(buffer1))
                   .unverified_safe_because("test");
+
+  b1b1 = normalize(b1b1);
+  b1b2 = normalize(b1b2);
+  b2b1 = normalize(b2b1);
+  tb1b1 = normalize(tb1b1);
+  tb1b2 = normalize(tb1b2);
+  tb2b1 = normalize(tb2b1);
 
   REQUIRE(b1b1 == tb1b1);
   REQUIRE(b1b2 == tb1b2);
