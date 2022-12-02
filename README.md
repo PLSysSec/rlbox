@@ -15,7 +15,7 @@ library sandboxed with different backends --- WebAssembly, Native Client, OS
 processess, etc. Support for each backend is provided by a separate plugin that
 must also be downloaded separately.
 
-See the [online docs](https://docs.rlbox.dev) for more details.
+See the [online docs](https://rlbox.dev) for more details.
 
 The RLBox library is a header only library, so you can directly download this repo and use include the contents of `code/include/` in your application. On Linux/Mac machines, you can optionally install the headers as well with `make install`.
 
