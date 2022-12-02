@@ -239,6 +239,9 @@ TEST_CASE("test memcmp", "[stdlib]")
   tb1b1 = normalize(tb1b1);
   tb1b2 = normalize(tb1b2);
   tb2b1 = normalize(tb2b1);
+  tb1tb1 = normalize(tb1tb1);
+  tb1tb2 = normalize(tb1tb2);
+  tb2tb1 = normalize(tb2tb1);
 
   REQUIRE(b1b1 == tb1b1);
   REQUIRE(b1b2 == tb1b2);
