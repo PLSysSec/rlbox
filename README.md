@@ -68,6 +68,9 @@ supported.  Simply run the test suite and check that everything passes.
 
 ## Install the library (Linux/Mac only)
 
+The recommended use of RLBox is to make a copy of this library in your source tree.
+However, if you want to install the library, you can do so by following the below steps.
+
 Configure the build with cmake in the same way that previous paragraph. Then simply run:
 
    ```bash
