@@ -66,6 +66,12 @@ clang-5, Visual Studio 2019 (possibly previous versions as well) or later.  If
 you are using other compilers/compiler versions (like mingw), these may also be
 supported.  Simply run the test suite and check that everything passes.
 
+If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when invoking cmake the first time. This will also remove the Catch2 dependency.
+
+   ```bash
+   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+   ```
+
 ## Install the library (Linux/Mac only)
 
 The recommended use of RLBox is to make a copy of this library in your source tree.
@@ -76,12 +82,6 @@ Configure the build with cmake in the same way that previous paragraph. Then sim
    ```bash
    cd build
    make install
-   ```
-
-If you want to disable building tests, you can add `-DBUILD_TESTING=OFF` when invoking cmake the first time. This will also remove the Catch2 dependency.
-
-   ```bash
-   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
    ```
 
 ## Contributing Code
