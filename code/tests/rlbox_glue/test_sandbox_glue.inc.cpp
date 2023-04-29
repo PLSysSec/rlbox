@@ -191,7 +191,15 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     const unsigned long val9 = 44;
 
     auto ret = sandbox.invoke_sandbox_function(stackParametersTest,
-                                                val1, val2, val3, val4, val5, val6, val7, val8, val9);
+                                               val1,
+                                               val2,
+                                               val3,
+                                               val4,
+                                               val5,
+                                               val6,
+                                               val7,
+                                               val8,
+                                               val9);
     REQUIRE(ret.UNSAFE_unverified() ==
             (val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8 + val9));
 
@@ -713,15 +721,14 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
   SECTION("test grant deny access") // NOLINT
   {
-    char* src =
-      static_cast<char*>(malloc(sizeof(char))); // NOLINT
+    char* src = static_cast<char*>(malloc(sizeof(char))); // NOLINT
     const char test_val = 42;
     *src = test_val;
 
     bool used_copy;
 
-    auto transfered = rlbox::copy_memory_or_grant_access(
-      sandbox, src, 1, true, used_copy);
+    auto transfered =
+      rlbox::copy_memory_or_grant_access(sandbox, src, 1, true, used_copy);
     REQUIRE((*transfered == test_val).unverified_safe_because("test"));
 
     auto transfered2 = rlbox::copy_memory_or_deny_access(
