@@ -184,7 +184,8 @@ TEST_CASE("test memcpy", "[stdlib]")
   sandbox.destroy_sandbox();
 }
 
-static int normalize(int a) {
+static int normalize(int a)
+{
   if (a > 0) {
     return 1;
   } else if (a < 0) {
@@ -263,19 +264,18 @@ TEST_CASE("test grant deny access single", "[stdlib]")
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  char* src =
-    static_cast<char*>(malloc(sizeof(char))); // NOLINT
+  char* src = static_cast<char*>(malloc(sizeof(char))); // NOLINT
   const char test_val = 42;
   *src = test_val;
 
   bool used_copy = false;
 
-  auto transfered = rlbox::copy_memory_or_grant_access(
-    sandbox, src, 1, true, used_copy);
+  auto transfered =
+    rlbox::copy_memory_or_grant_access(sandbox, src, 1, true, used_copy);
   REQUIRE((*transfered == test_val).unverified_safe_because("test"));
 
-  auto transfered2 = rlbox::copy_memory_or_deny_access(
-    sandbox, transfered, 1, true, used_copy);
+  auto transfered2 =
+    rlbox::copy_memory_or_deny_access(sandbox, transfered, 1, true, used_copy);
   REQUIRE(*transfered2 == test_val);
 
   free(transfered2);
@@ -289,22 +289,21 @@ TEST_CASE("test grant deny access many", "[stdlib]")
   rlbox::rlbox_sandbox<TestSandbox> sandbox;
   sandbox.create_sandbox();
 
-  uint16_t* src =
-    static_cast<uint16_t*>(malloc(2 * sizeof(uint16_t))); // NOLINT
-  const uint16_t test_val1 = 42;
-  const uint16_t test_val2 = 43;
+  float* src = static_cast<float*>(malloc(2 * sizeof(float))); // NOLINT
+  const float test_val1 = 42;
+  const float test_val2 = 43;
   src[0] = test_val1;
   src[1] = test_val2;
 
   bool used_copy = false;
 
-  auto transfered = rlbox::copy_memory_or_grant_access(
-    sandbox, src, 2, true, used_copy);
+  auto transfered =
+    rlbox::copy_memory_or_grant_access(sandbox, src, 2, true, used_copy);
   REQUIRE((transfered[0] == test_val1).unverified_safe_because("test"));
   REQUIRE((transfered[1] == test_val2).unverified_safe_because("test"));
 
-  auto transfered2 = rlbox::copy_memory_or_deny_access(
-    sandbox, transfered, 2, true, used_copy);
+  auto transfered2 =
+    rlbox::copy_memory_or_deny_access(sandbox, transfered, 2, true, used_copy);
   REQUIRE(transfered2[0] == test_val1);
   REQUIRE(transfered2[1] == test_val2);
 
