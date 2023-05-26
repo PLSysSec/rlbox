@@ -120,8 +120,8 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<T> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
 
@@ -131,8 +131,8 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_sandboxed_pointer(data);
   }
 
