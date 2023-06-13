@@ -68,11 +68,11 @@ class rlbox_sandbox_plugin_base {
   using sbx_pointer = void*;
   /**
    * @brief Indicates if the sandbox type `pointer` is represented differently
-   * from that of the host. In contrast to the `sbx_pointer` alias, which
+   * from that of the host. In contrast to the `sbx_pointer` type name, which
    * indicates the size of the pointer, `sbx_pointer_is_different_rep` indicates
    * if the pointer representation is different even if the size is the same.
-   * @details Note that if `sbx_pointer` is of different size, than `void*` the
-   * qsbx_pointer_is_different_rep` must be `true`
+   * @details Note that if `sbx_pointer` is a different size from `void*`, the
+   * `sbx_pointer_is_different_rep` field must be `true`
    */
   using sbx_pointer_is_different_rep = std::false_type;
 };

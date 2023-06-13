@@ -74,6 +74,13 @@ TEST_CASE("test allocation operates correctly", "[allocation]") {
             2 * padded_field_size);
   }
   {
+    tainted_test<rlbox::rlbox_uint32_t*> a =
+        sandbox.malloc_in_sandbox<rlbox::rlbox_uint32_t>();
+    sandbox.free_in_sandbox(a);
+    REQUIRE(sandbox.get_object_size_for_malloc<rlbox::rlbox_uint32_t>() ==
+            sizeof(uint32_t));
+  }
+  {
     tainted_test<rlbox::rlbox_uint64_t*> a =
         sandbox.malloc_in_sandbox<rlbox::rlbox_uint64_t>();
     sandbox.free_in_sandbox(a);
@@ -90,57 +97,6 @@ TEST_CASE("test allocation operates correctly", "[allocation]") {
 
   sandbox.destroy_sandbox();
 }
-
-namespace rlbox {
-/**
- * @brief Sandbox we will use for testing class allocations with a larger ABIs
- */
-class rlbox_largerabi_sandbox
-    : public rlbox_sandbox_plugin_base<rlbox_largerabi_sandbox> {
- public:
-  using sbx_short = int32_t;
-
-  template <typename T>
-  using tainted = tainted_fixed_aligned<T, rlbox_largerabi_sandbox>;
-
-  template <typename T>
-  using tainted_volatile =
-      tainted_volatile_standard<T, rlbox_largerabi_sandbox>;
-
-  inline rlbox_status_code impl_create_sandbox() {
-    return rlbox_status_code::SUCCESS;
-  }
-
-  inline rlbox_status_code impl_destroy_sandbox() {
-    return rlbox_status_code::SUCCESS;
-  }
-
-  template <typename T>
-  inline sbx_pointer impl_malloc_in_sandbox(size_t aCount) {
-    return malloc(aCount);
-  }
-
-  template <typename T>
-  inline void impl_free_in_sandbox([[maybe_unused]] sbx_pointer aPtr) {
-    free(aPtr);
-  }
-
-  inline bool impl_is_pointer_in_sandbox_memory(const void* /* aPtr */) const {
-    return true;
-  }
-
-  template <typename T>
-  [[nodiscard]] inline sbx_pointer impl_get_sandboxed_pointer(T aPtr) const {
-    // NOLINTNEXTLINE(google-readability-casting)
-    return (sbx_pointer)(aPtr);
-  }
-
-  template <typename T>
-  [[nodiscard]] inline T impl_get_unsandboxed_pointer(sbx_pointer aPtr) const {
-    return reinterpret_cast<T>(aPtr);
-  }
-};
-}  // namespace rlbox
 
 TEST_CASE("test class allocation for larger ABI fails without definition",
           "[allocation]") {

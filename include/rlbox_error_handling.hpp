@@ -17,7 +17,7 @@
  * @brief Used as part of error messages to refer to the tutorials
  */
 #define RLBOX_REFER_DOCS_MESSAGE \
-  "For more details, see examples provided in https://docs.rlbox.dev"
+  "For more details, see examples provided in https://rlbox.dev"
 
 /**
  * @brief Used as part of error messages when RLBox gets to an unexpected state

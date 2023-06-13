@@ -31,11 +31,11 @@ namespace rlbox::detail {
  * - `convert<uint32_t, uint64_t>(val)` introduces dynamic bounds checks
  */
 template <typename TTo, typename TFrom>
-inline constexpr std::remove_const_t<TTo> convert_type_fundamental(
+inline constexpr std::remove_cv_t<TTo> convert_type_fundamental(
     const TFrom& aFrom) {
   using namespace std;
 
-  std::remove_const_t<TTo> ret;
+  std::remove_cv_t<TTo> ret;
 
   rlbox_static_assert(is_fundamental_or_enum_v<TTo>,
                       "Conversion target should be fundamental or enum type");

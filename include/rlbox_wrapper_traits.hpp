@@ -86,12 +86,12 @@ template <typename T, typename TDummy = void>
 struct helper;
 
 template <typename T>
-struct helper<T, std::enable_if_t<!is_rlbox_stdint_type_v<T>>> {
+struct helper<T, RLBOX_SPECIALIZE(!is_rlbox_stdint_type_v<T>)> {
   using type = T;
 };
 
 template <typename T>
-struct helper<T, std::enable_if_t<is_rlbox_stdint_type_v<T>>> {
+struct helper<T, RLBOX_SPECIALIZE(is_rlbox_stdint_type_v<T>)> {
   using type = typename T::equivalent_type_t;
 };
 

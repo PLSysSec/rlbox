@@ -26,12 +26,14 @@
  *
  * - `RLBOX_DONT_OVERESTIMATE_CLASS_SIZES` - Define to disable the RLBox
  *   approximations that allow calling @ref
- *   rlbox::rlbox_sandbox::malloc_in_sandbox() to allocate spaced for a class
- *   without defining the class layout in `rlbox_lib_load_classes`. This config
- *   is not defined, RLBox checks to see if the class size in the host ABI will
- *   always be greater than the class size in the sandbox ABI. If this is the
- *   case, then RLBox just uses the host ABI class size. See @ref
- *   rlbox::rlbox_sandbox::get_object_size_for_malloc for more details.
+ *   rlbox::rlbox_sandbox::malloc_in_sandbox() to allocate space for a class
+ *   without defining the class layout in `rlbox_lib_load_classes`. When this
+ *   config is not defined, RLBox checks to see if the class size in the host
+ *   ABI will always be greater than the class size in the sandbox ABI. If this
+ *   is the case, then RLBox just uses the host ABI class size. When this config
+ *   is defined, RLBox requires defining the class layout in
+ * `rlbox_lib_load_classes`. See @ref
+ * rlbox::rlbox_sandbox::get_object_size_for_malloc for more details.
  */
 
 #pragma once

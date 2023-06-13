@@ -300,11 +300,8 @@ class rlbox_sandbox : protected TSbx {
    */
   template <typename T>
   size_t get_object_size_for_malloc() {
-    if constexpr (!std::is_class_v<T>) {
+    if constexpr (!std::is_class_v<T> || detail::is_rlbox_stdint_type_v<T>) {
       using TSbxRep = base_types_convertor_tsbx<T>;
-      return sizeof(TSbxRep);
-    } else if constexpr (detail::is_rlbox_stdint_type_v<T>) {
-      using TSbxRep = detail::rlbox_stdint_to_stdint_t<T>;
       return sizeof(TSbxRep);
     } else {
       // RLBox has to compute the size of the allocation in the sandbox's ABI.
@@ -376,14 +373,14 @@ class rlbox_sandbox : protected TSbx {
         "Allocation size computation has overflowed");
 
     if constexpr (detail::has_member_impl_malloc_in_sandbox_v<TSbx>) {
-      base_types_convertor_tsbx<T*> ptr_in_sandbox =
+      base_types_convertor_tsbx<T*> ptr_sbx_rep =
           this->template impl_malloc_in_sandbox<T>(total_size);
-      T* ptr = get_unsandboxed_pointer<T*>(ptr_in_sandbox);
+      T* ptr = get_unsandboxed_pointer<T*>(ptr_sbx_rep);
 
       tainted<T*> ret = get_tainted_from_raw_ptr(ptr, total_size);
       return ret;
     } else {
-      // Use sandbox_invoke call malloc in the sandbox code
+      /// \todo Use sandbox_invoke call malloc in the sandbox code
       static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
       // Use dummy return
       tainted<T*> ret(nullptr);
