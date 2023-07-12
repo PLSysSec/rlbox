@@ -137,6 +137,11 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
     return rlbox_status_code::SUCCESS;
   }
 
+  template <typename TFunc, typename... TArgs>
+  inline auto impl_invoke_with_func_ptr(TFunc* aFuncPtr, TArgs&&... aArgs) {
+    return (*aFuncPtr)(aArgs...);
+  }
+
   template <typename T>
   inline sbx_pointer impl_malloc_in_sandbox(size_t aCount) {
     sbx_pointer ret = bump_index;

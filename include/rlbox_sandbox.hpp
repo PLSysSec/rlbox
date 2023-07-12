@@ -217,39 +217,36 @@ class rlbox_sandbox : protected TSbx {
   //     p, example_unsandboxed_ptr, find_sandbox_from_example);
   // }
 
-  //  private:
-  //   template <typename TArg>
-  //   auto invoke_process_param(TArg&& aArg) {
-  //     return std::forward<TArg>(aArg);
-  //   }
+ private:
+  template <typename TArg>
+  inline auto invoke_process_param(TArg&& aArg) {
+    return std::forward<TArg>(aArg);
+  }
 
-  //   template <typename TFunc, typename... TArgs>
-  //   auto inline invoke_sandbox_function_helper(const char* aFuncName,
-  //                                              void* aFuncPtr, TArgs&&...
-  //                                              aArgs) {
-  //     return this->template impl_invoke_with_func_ptr<TFunc>(
-  //         reinterpret_cast<TFunc*>(aFuncPtr),
-  //         invoke_process_param(aArgs)...);
-  //   }
+  template <typename TFunc, typename... TArgs>
+  inline auto invoke_sandbox_function_helper(const char* aFuncName,
+                                             void* aFuncPtr, TArgs&&... aArgs) {
+    (void)aFuncName;
+    return this->template impl_invoke_with_func_ptr<TFunc>(
+        reinterpret_cast<TFunc*>(aFuncPtr), invoke_process_param(aArgs)...);
+  }
 
-  //  public:
-  //   template <typename TFunc, typename... TArgs>
-  //   auto inline invoke_sandbox_function(const char* aFuncName, void*
-  //   aFuncPtr,
-  //                                       TArgs&&... aArgs) {
-  //     constexpr bool abi_unchanged =
-  //     detail::rlbox_base_types_unchanged_v<TSbx>;
+ public:
+  template <typename TFunc, typename... TArgs>
+  inline auto invoke_sandbox_function(const char* aFuncName, void* aFuncPtr,
+                                      TArgs&&... aArgs) {
+    constexpr bool abi_unchanged = detail::rlbox_base_types_unchanged_v<TSbx>;
 
-  //     if constexpr (abi_unchanged) {
-  //       using TPromoted =
-  //           typename TSbx::template impl_promote_integer_types_t<TFunc>;
-  //       return this->invoke_sandbox_function_helper<TPromoted>(
-  //           aFuncName, aFuncPtr, std::forward<TArgs...>(aArgs...));
-  //     } else {
-  //       return this->invoke_sandbox_function_helper<TFunc>(
-  //           aFuncName, aFuncPtr, std::forward<TArgs>(aArgs)...);
-  //     }
-  //   }
+    if constexpr (abi_unchanged) {
+      using TPromoted =
+          typename TSbx::template impl_promote_integer_types_t<TFunc>;
+      return this->invoke_sandbox_function_helper<TPromoted>(
+          aFuncName, aFuncPtr, std::forward<TArgs...>(aArgs...));
+    } else {
+      return this->invoke_sandbox_function_helper<TFunc>(
+          aFuncName, aFuncPtr, std::forward<TArgs>(aArgs)...);
+    }
+  }
 
  private:
   /**
