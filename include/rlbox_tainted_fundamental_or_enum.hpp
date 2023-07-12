@@ -49,29 +49,30 @@ class tainted_fundamental_or_enum
   /**
    * @brief The internal representation of data for this wrapper
    */
-  using TIntRep = std::conditional_t<TUseAppRep, TAppRep, TSbxRep>;
+  using TIntRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
+                                     detail::tainted_rep_t<TSbxRep>&>;
 
-  detail::tainted_rep_t<TIntRep> data{0};
+  TIntRep data;
 
   ////////////////////////////////
 
  public:
   /**
    * @brief Construct a new tainted fundamental or enum object
-   * @tparam TAllowPublicConst ensures constructors are usable for tainted but
+   * @tparam TAllowConstruction ensures constructors are usable for tainted but
    * not tainted_volatile
    * @tparam RLBOX_REQUIRE enforces the public/private check
    */
-  template <bool TAllowPublicConst = TUseAppRep,
-            RLBOX_REQUIRE(TAllowPublicConst)>
+  template <bool TAllowConstruction = TUseAppRep,
+            RLBOX_REQUIRE(TAllowConstruction)>
   // NOLINTNEXTLINE(hicpp-use-equals-default,modernize-use-equals-default)
-  inline tainted_fundamental_or_enum() {
-    // Can't use the default constructor as we need to check TAllowPublicConst
+  inline tainted_fundamental_or_enum() : data(0) {
+    // Can't use the default constructor as we need to check TAllowConstruction
   }
 
   /**
    * @brief Construct a new tainted object from another tainted wrapped object
-   * @tparam TAllowPublicConst ensures constructors are usable for tainted but
+   * @tparam TAllowConstruction ensures constructors are usable for tainted but
    * not tainted_volatile
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the TAppRep of the rhs value
@@ -79,9 +80,9 @@ class tainted_fundamental_or_enum
    * see if this meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <bool TAllowPublicConst = TUseAppRep, bool TUseAppRepOther,
+  template <bool TAllowConstruction = TUseAppRep, bool TUseAppRepOther,
             typename TAppRepOther,
-            RLBOX_REQUIRE(TAllowPublicConst&& std::is_constructible_v<
+            RLBOX_REQUIRE(TAllowConstruction&& std::is_constructible_v<
                           detail::tainted_rep_t<TAppRep>, TAppRepOther>)>
   inline tainted_fundamental_or_enum(
       const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
@@ -96,7 +97,7 @@ class tainted_fundamental_or_enum
 
   /**
    * @brief Construct a new tainted object from a raw primitive value
-   * @tparam TAllowPublicConst ensures constructors are usable for tainted but
+   * @tparam TAllowConstruction ensures constructors are usable for tainted but
    * not tainted_volatile
    * @tparam TOther is the type of the rhs value
    * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
@@ -104,8 +105,8 @@ class tainted_fundamental_or_enum
    * constructible criterion
    * @param aOther is the raw primitive
    */
-  template <bool TAllowPublicConst = TUseAppRep, typename TOther,
-            RLBOX_REQUIRE(TAllowPublicConst&& std::is_constructible_v<
+  template <bool TAllowConstruction = TUseAppRep, typename TOther,
+            RLBOX_REQUIRE(TAllowConstruction&& std::is_constructible_v<
                           detail::tainted_rep_t<TAppRep>, TOther>)>
   inline tainted_fundamental_or_enum(const TOther& aOther)
       : data([&] {
@@ -116,6 +117,21 @@ class tainted_fundamental_or_enum
                 detail::tainted_rep_t<TSbxRep>>(aOther);
           }
         }()) {}
+
+  /**
+   * @brief Construct a new tainted volatile object from a raw primitive value
+   * @tparam TAllowConstruction ensures constructors are usable for tainted but
+   * not tainted_volatile
+   * @tparam TOther is the type of the rhs value
+   * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
+   * this is allowed for primitive types only and if this meets the
+   * constructible criterion
+   * @param aOther is the raw primitive
+   */
+  template <bool TAllowConstruction = !TUseAppRep,
+            RLBOX_REQUIRE(TAllowConstruction&& std::is_constructible_v<
+                          detail::tainted_rep_t<TAppRep>, TIntRep>)>
+  inline tainted_fundamental_or_enum(const TIntRep& aOther) : data(aOther) {}
 
   ////////////////////////////////
 
@@ -221,6 +237,17 @@ class tainted_fundamental_or_enum
           detail::convert_type_fundamental<detail::tainted_rep_t<TSbxRep>>(
               aOther);
       data = converted;
+    }
+    return *this;
+  }
+
+  // template <bool TUseAppRepOther>
+  inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
+      const tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& aOther) {
+    if constexpr (TUseAppRep) {
+      data = aOther.raw_host_rep();
+    } else {
+      data = aOther.raw_sandbox_rep();
     }
     return *this;
   }

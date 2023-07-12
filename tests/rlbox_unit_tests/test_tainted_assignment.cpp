@@ -99,8 +99,8 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   // Check basic assignments and initialization
   {
-    tainted_volatile_test_smallerabi<int>& a = *ptr_int_1;
-    tainted_volatile_test_smallerabi<int>& b = *ptr_int_2;
+    tainted_volatile_test_smallerabi<int> a = *ptr_int_1;
+    tainted_volatile_test_smallerabi<int> b = *ptr_int_2;
     a = random_val_1;
     b = random_val_2;
     REQUIRE(a.UNSAFE_unverified() == random_val_1);
@@ -109,8 +109,8 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   // Check assignment from same wrapper type
   {
-    tainted_volatile_test_smallerabi<int>& a = *ptr_int_1;
-    tainted_volatile_test_smallerabi<int>& b = *ptr_int_2;
+    tainted_volatile_test_smallerabi<int> a = *ptr_int_1;
+    tainted_volatile_test_smallerabi<int> b = *ptr_int_2;
 
     a = random_val_1;
     b = a;
@@ -119,9 +119,9 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   // Check assignments from compatible types
   {
-    tainted_volatile_test_smallerabi<long>& a = *ptr_long_1;
-    tainted_volatile_test_smallerabi<int>& b = *ptr_int_2;
-    tainted_volatile_test_smallerabi<long>& c = *ptr_long_2;
+    tainted_volatile_test_smallerabi<long> a = *ptr_long_1;
+    tainted_volatile_test_smallerabi<int> b = *ptr_int_2;
+    tainted_volatile_test_smallerabi<long> c = *ptr_long_2;
 
     a = random_val_1;
     b = a;
@@ -133,7 +133,7 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   // Check assignment overflow due to truncated sandbox type
   {
-    tainted_volatile_test_smallerabi<short>& a = *ptr_short_1;
+    tainted_volatile_test_smallerabi<short> a = *ptr_short_1;
 
     const short overflow_val_1 = 400; /* sandbox short limit is uint8_t */
     // Converting to the sandbox repr should cause an error due to overflow
@@ -142,7 +142,7 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
   // Check floating point values
   {
-    tainted_volatile_test_smallerabi<float>& a = *ptr_float_1;
+    tainted_volatile_test_smallerabi<float> a = *ptr_float_1;
 
     const float float_val_1 = 2.4;
     a = float_val_1;
