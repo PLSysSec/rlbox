@@ -35,67 +35,92 @@ namespace rlbox {
  *
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
  * representation (tainted) or the sandbox representation (tainted_volatile)
- * @tparam T is the type of the data being wrapped.
+ * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename T, typename TSbx>
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
 class tainted_volatile_standard_pointer
-    : public tainted_any_base<false, T, TSbx> {
+    : public tainted_any_base<false, TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
   static_assert(!TUseAppRep, "Expected TUseAppRep to be false");
-  static_assert(std::is_pointer_v<T>, "Expected T to be a pointer");
+  static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  private:
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
+  using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
   // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
   detail::tainted_rep_t<TSbxRep> data{0};
 
-  ////////////////////////////////
+ public:
   /**
-   * @brief Construct a tainted volatile pointer set to null
+   * @brief Construct a tainted_volatile_standard_pointer set to null
    */
   inline tainted_volatile_standard_pointer() = default;
-
   /**
-   * @brief Construct a new tainted object from another tainted wrapper
-   * @tparam TWrap is the other wrapper type
-   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
-   * @tparam TOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
-   * (2) meets the constructible criterion
-   * @param aOther is the rhs being assigned
+   * @brief Copy constructor: Construct a new tainted_volatile_standard_pointer
+   * object
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TOther,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TOther, TSbx>, TSbx>&&
-                    std::is_constructible_v<detail::tainted_rep_t<T>, TOther>)>
   inline tainted_volatile_standard_pointer(
-      const TWrap<TUseAppRepOther, TOther, TSbx>& aOther)
-      : data(aOther.raw_sandbox_rep()) {}
+      const tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&) =
+      default;
+  /**
+   * @brief Move constructor: Construct a new tainted_volatile_standard_pointer
+   * object
+   */
+  inline tainted_volatile_standard_pointer(
+      tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
+      default;
 
   /**
-   * @brief Construct a tainted value with a nullptr
+   * @brief Construct a tainted_volatile_standard_pointer with a nullptr
    * @param aNull is a nullptr
    */
   inline tainted_volatile_standard_pointer([
       [maybe_unused]] const std::nullptr_t& aNull)
       : data(0) {}
 
- public:
+  /**
+   * @brief Construct a new tainted object from another tainted wrapper
+   * @tparam TWrap is the other wrapper type
+   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
+   * (2) meets the constructible criterion
+   * @param aOther is the rhs being assigned
+   */
+  template <
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
+      RLBOX_REQUIRE(!std::is_same_v<tainted_volatile_standard_pointer<
+                                        TUseAppRep, TAppRep, TSbx>,
+                                    tainted_volatile_standard_pointer<
+                                        TUseAppRepOther, TAppRepOther, TSbx>> &&
+                    detail::is_tainted_any_wrapper_v<
+                        TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+                    std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                            TAppRepOther>)>
+  inline tainted_volatile_standard_pointer(
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
+      : data(aOther.raw_sandbox_rep()) {}
+
+  /**
+   * @brief Destroy the tainted_volatile_standard_pointer object
+   */
+  inline ~tainted_volatile_standard_pointer() = default;
+
+  ////////////////////////////////
+
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<T> is the raw data
+   * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified([
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified([
       [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_unsandboxed_pointer(data);
   }
@@ -123,24 +148,50 @@ class tainted_volatile_standard_pointer
   ////////////////////////////////
 
   /**
+   * @brief Copy assignment operator
+   * @param aOther is the rhs argument
+   * @return tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+   * returns this object
+   */
+  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+  operator=(const tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+                aOther) = default;
+
+  /**
+   * @brief Move assignment operator
+   * @param aOther is the rhs argument
+   * @return tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+   * returns this object
+   */
+  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+  operator=(
+      tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
+      default;
+
+  /**
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the other wrapper type
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
-   * @tparam TOther is the type of the rhs value being wrapped
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
    * (2) meets the assignable criterion
    * @param aOther is the rhs being assigned
-   * @return tainted_volatile_standard_pointer<T, TSbx>& is the reference to
-   * this value
+   * @return tainted_volatile_standard_pointer<TAppRep, TSbx>& is the reference
+   * to this value
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TOther,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TOther, TSbx>, TSbx>&&
-                    std::is_assignable_v<detail::tainted_rep_t<T>&, TOther>)>
-  inline tainted_volatile_standard_pointer<TUseAppRep, T, TSbx>& operator=(
-      const TWrap<TUseAppRepOther, TOther, TSbx>& aOther) {
+  template <
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
+      RLBOX_REQUIRE(
+          !std::is_same_v<
+              tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>,
+              tainted_volatile_standard_pointer<TUseAppRepOther, TAppRepOther,
+                                                TSbx>> &&
+          detail::is_tainted_any_wrapper_v<
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+          std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
+  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {
     data = aOther->raw_sandbox_rep();
     return *this;
   }
@@ -149,8 +200,8 @@ class tainted_volatile_standard_pointer
    * @brief Operator= for tainted values with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_volatile_standard_pointer<TUseAppRep, T, TSbx>& operator=([
-      [maybe_unused]] const std::nullptr_t& aNull) {
+  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+  operator=([[maybe_unused]] const std::nullptr_t& aNull) {
     data = 0;
     return *this;
   }
@@ -161,7 +212,7 @@ class tainted_volatile_standard_pointer
   template <typename TSub>
   using tainted_volatile = typename TSbx::template tainted_volatile<TSub>;
 
-  using TOpDeref = tainted_volatile<std::remove_pointer_t<T>>;
+  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>>;
 
  public:
   /**
@@ -188,7 +239,7 @@ class tainted_volatile_standard_pointer
   template <typename TSub>
   using tainted = typename TSbx::template tainted<TSub>;
 
-  using TOpAddrOf = tainted<std::add_pointer_t<T>>;
+  using TOpAddrOf = tainted<std::add_pointer_t<TAppRep>>;
 
  public:
   /**
@@ -201,7 +252,7 @@ class tainted_volatile_standard_pointer
     // continue to be tracked.
 
     // NOLINTNEXTLINE(google-readability-casting)
-    auto* data_ptr = (std::add_pointer_t<T>)&data;
+    auto* data_ptr = (std::add_pointer_t<TAppRep>)&data;
     auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);
     return ret;
   }

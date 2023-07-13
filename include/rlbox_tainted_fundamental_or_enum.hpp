@@ -58,16 +58,16 @@ class tainted_fundamental_or_enum
 
  public:
   /**
-   * @brief Construct a new tainted fundamental or enum object
+   * @brief Construct a new tainted_fundamental_or_enum object
    */
   inline tainted_fundamental_or_enum() = default;
   /**
-   * @brief Copy constructor: Construct a new tainted fundamental or enum object
+   * @brief Copy constructor: Construct a new tainted_fundamental_or_enum object
    */
   inline tainted_fundamental_or_enum(
       const tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>&) = default;
   /**
-   * @brief Move constructor: Construct a new tainted fundamental or enum object
+   * @brief Move constructor: Construct a new tainted_fundamental_or_enum object
    */
   inline tainted_fundamental_or_enum(
       tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>&&) noexcept =
@@ -123,7 +123,7 @@ class tainted_fundamental_or_enum
         }()) {}
 
   /**
-   * @brief Destroy the tainted fundamental or enum object
+   * @brief Destroy the tainted_fundamental_or_enum object
    */
   inline ~tainted_fundamental_or_enum() = default;
 
