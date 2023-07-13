@@ -13,6 +13,7 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
+#include <type_traits>
 #include <utility>
 
 #include "rlbox_abi_conversion.hpp"
@@ -220,7 +221,7 @@ class rlbox_sandbox : protected TSbx {
  private:
   template <typename T>
   inline constexpr void check_invoke_param_type_is_ok() {
-    // TODO
+    // TODO(shr):
   }
 
   template <typename TArg>
@@ -431,7 +432,7 @@ class rlbox_sandbox : protected TSbx {
  * - using symbol lookup if `RLBOX_USE_STATIC_CALLS` is not defined
  */
 #  define rlbox_lookup_symbol(sandbox, func_name) \
-    rlbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS(), func_name)
+    rlbox_lookup_symbol_helper(RLBOX_USE_STATIC_CALLS, func_name)
 
 #else
 /**

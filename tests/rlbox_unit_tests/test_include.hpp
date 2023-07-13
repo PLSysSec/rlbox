@@ -9,7 +9,7 @@
 
 #pragma once
 
-#define RLBOX_USE_STATIC_CALLS(name) (void*)&name
+#define RLBOX_USE_STATIC_CALLS(name) reinterpret_cast<void*>(&name)
 
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
