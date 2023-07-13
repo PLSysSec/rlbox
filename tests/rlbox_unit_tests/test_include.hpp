@@ -9,6 +9,8 @@
 
 #pragma once
 
+#define RLBOX_USE_STATIC_CALLS(name) (void*)&name
+
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
 
@@ -135,6 +137,11 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   inline rlbox_status_code impl_destroy_sandbox() {
     rlbox_aligned_free(sandbox_memory_alloc);
     return rlbox_status_code::SUCCESS;
+  }
+
+  template <typename TFunc, typename... TArgs>
+  inline auto impl_invoke_with_func_ptr(TFunc* aFuncPtr, TArgs&&... aArgs) {
+    return (*aFuncPtr)(aArgs...);
   }
 
   template <typename T>

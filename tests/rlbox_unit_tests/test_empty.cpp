@@ -16,7 +16,6 @@
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
 
 TEST_CASE("Test include rlbox header", "[rlbox include]") {
-  rlbox_sandbox_libtest s;
-  (void)s;
+  [[maybe_unused]] rlbox_sandbox_libtest s;
   // This is a compile time test so no requires.
 }

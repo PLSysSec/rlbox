@@ -156,8 +156,8 @@ class tainted_fundamental_or_enum
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
 
@@ -185,8 +185,8 @@ class tainted_fundamental_or_enum
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed
    ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_sandboxed();
   }
 
@@ -217,7 +217,7 @@ class tainted_fundamental_or_enum
   }
 
   /**
-   * @brief Operator= for tainted values from a raw primitive value
+   * @brief Operator= for tainted values from a raw (unwrapped) primitive value
    * @tparam TOther is the type of the rhs value
    * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
    * criterion

@@ -85,8 +85,8 @@ class tainted_volatile_standard_pointer
    * @brief Construct a tainted value with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_volatile_standard_pointer(
-      [[maybe_unused]] const std::nullptr_t& aNull)
+  inline tainted_volatile_standard_pointer([
+      [maybe_unused]] const std::nullptr_t& aNull)
       : data(0) {}
 
  public:
@@ -95,8 +95,8 @@ class tainted_volatile_standard_pointer
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<T> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_unsandboxed_pointer(data);
   }
 
@@ -115,8 +115,8 @@ class tainted_volatile_standard_pointer
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
-      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed([
+      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_sandboxed();
   }
 
@@ -149,8 +149,8 @@ class tainted_volatile_standard_pointer
    * @brief Operator= for tainted values with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_volatile_standard_pointer<TUseAppRep, T, TSbx>& operator=(
-      [[maybe_unused]] const std::nullptr_t& aNull) {
+  inline tainted_volatile_standard_pointer<TUseAppRep, T, TSbx>& operator=([
+      [maybe_unused]] const std::nullptr_t& aNull) {
     data = 0;
     return *this;
   }
