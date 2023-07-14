@@ -164,9 +164,8 @@ class tainted_volatile_standard_pointer
    * returns this object
    */
   inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=(
-      tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
-      default;
+  operator=(tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&
+                aOther) noexcept = default;
 
   /**
    * @brief Operator= for tainted values from another tainted wrapper

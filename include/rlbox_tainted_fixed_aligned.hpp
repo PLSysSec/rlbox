@@ -182,8 +182,8 @@ class tainted_fixed_aligned_pointer
    * returns this object
    */
   inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
-      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
-      default;
+      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&
+          aOther) noexcept = default;
 
   /**
    * @brief Operator= for tainted values from another tainted wrapper

@@ -202,8 +202,8 @@ class tainted_fundamental_or_enum
    * this object
    */
   inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
-      tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>&&) noexcept =
-      default;
+      tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>&&
+          aOther) noexcept = default;
 
   /**
    * @brief Operator= for tainted values from another tainted wrapper
