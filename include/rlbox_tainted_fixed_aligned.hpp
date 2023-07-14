@@ -40,21 +40,21 @@ namespace rlbox {
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename T, typename TSbx>
-class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
+class tainted_fixed_aligned_pointer
+    : public tainted_any_base<true, TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
   static_assert(TUseAppRep, "Expected TUseAppRep to be true");
-  static_assert(std::is_pointer_v<T>, "Expected T to be a pointer");
+  static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  private:
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
+  using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
-  // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
-  detail::tainted_rep_t<T> data{0};
+  detail::tainted_rep_t<TAppRep> data{0};
 
   ////////////////////////////////
 
@@ -65,62 +65,89 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
    * @param aPtr is a pointer that is assumed to point to an object in sandbox
    * memory.
    */
-  static tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>
-  from_unchecked_raw_pointer(T aPtr) {
-    tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx> ret;
+  static tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>
+  from_unchecked_raw_pointer(TAppRep aPtr) {
+    tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx> ret;
     ret.data = aPtr;
     return ret;
   }
 
  public:
   /**
-   * @brief Construct a tainted pointer set to null
+   * @brief Construct a tainted_fixed_aligned_pointer set to null
    */
   inline tainted_fixed_aligned_pointer() = default;
+  /**
+   * @brief Copy constructor: Construct a new tainted_fixed_aligned_pointer
+   * object
+   */
+  inline tainted_fixed_aligned_pointer(
+      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&) =
+      default;
+  /**
+   * @brief Move constructor: Construct a new tainted_fixed_aligned_pointer
+   * object
+   */
+  inline tainted_fixed_aligned_pointer(
+      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
+      default;
+
+  /**
+   * @brief Construct a tainted_fixed_aligned_pointer with a nullptr
+   * @param aNull is a nullptr
+   */
+  inline tainted_fixed_aligned_pointer([
+      [maybe_unused]] const std::nullptr_t& aNull)
+      : data(0) {}
 
   /**
    * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
-   * @tparam TOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
-   * (2) meets the constructible criterion
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
+   * original class's copy/move constructor (2) is a tainted wrapper and (3)
+   * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
   template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TOther,
+            bool TUseAppRepOther, typename TAppRepOther,
             RLBOX_REQUIRE(
+                !std::is_same_v<
+                    tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>,
+                    tainted_fixed_aligned_pointer<TUseAppRepOther, TAppRepOther,
+                                                  TSbx>> &&
+
                 detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TOther, TSbx>, TSbx>&&
-                    std::is_constructible_v<detail::tainted_rep_t<T>, TOther>)>
+                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                        TAppRepOther>)>
   inline tainted_fixed_aligned_pointer(
-      const TWrap<TUseAppRepOther, TOther, TSbx>& aOther)
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
 
   /**
-   * @brief Construct a tainted value with a nullptr
-   * @param aNull is a nullptr
+   * @brief Destroy the tainted_fixed_aligned_pointer object
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>(
-      const std::nullptr_t& aNull)
-      : data(aNull) {}
+  inline ~tainted_fixed_aligned_pointer() = default;
 
   ////////////////////////////////
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::tainted_rep_t<T> is the raw data
+   * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified() const {
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
+      const {
     return data;
   }
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<T> is the raw data
+   * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified([
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified([
       [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
@@ -139,54 +166,81 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
   ////////////////////////////////
 
   /**
+   * @brief Copy assignment operator
+   * @param aOther is the rhs argument
+   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&
+   * returns this object
+   */
+  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& aOther) =
+      default;
+
+  /**
+   * @brief Move assignment operator
+   * @param aOther is the rhs argument
+   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&
+   * returns this object
+   */
+  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
+      default;
+
+  /**
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
-   * @tparam TOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
-   * (2) meets the assignable criterion
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
+   * original class's copy/move constructor (2) is a tainted wrapper and (3)
+   * meets the assignable criterion
    * @param aOther is the rhs being assigned
-   * @return tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>& is the
+   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& is the
    * reference to this value
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TOther,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TOther, TSbx>, TSbx>&&
-                    std::is_assignable_v<detail::tainted_rep_t<T>&, TOther>)>
-  inline tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>& operator=(
-      const TWrap<TUseAppRepOther, TOther, TSbx>& aOther) {
+  template <
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
+      RLBOX_REQUIRE(
+          !std::is_same_v<
+              tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>,
+              tainted_fixed_aligned_pointer<TUseAppRepOther, TAppRepOther,
+                                            TSbx>> &&
+          detail::is_tainted_any_wrapper_v<
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+          std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
+  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {
     data = aOther.raw_host_rep();
     return *this;
   }
 
-  /**
-   * @brief Operator= for tainted values from a raw primitive value
-   * @tparam TOther is the type of the rhs value being assigned
-   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
-   * criterion. This is allowed for primitive types only.
-   * @param aOther is the raw primitive
-   * @return tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>& is the
-   * reference to this value
-   */
-  template <
-      typename TOther,
-      RLBOX_REQUIRE(std::is_assignable_v<detail::tainted_rep_t<T>&, TOther>&&
-                        detail::is_fundamental_or_enum_v<T>)>
-  inline tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>& operator=(
-      const TOther& aOther) {
-    data = aOther;
-    return *this;
-  }
+  // /**
+  //  * @brief Operator= for tainted values from a raw primitive value
+  //  * @tparam TAppRepOther is the type of the rhs value being assigned
+  //  * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
+  //  * criterion. This is allowed for primitive types only.
+  //  * @param aOther is the raw primitive
+  //  * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& is the
+  //  * reference to this value
+  //  */
+  // template <typename TAppRepOther,
+  //           RLBOX_REQUIRE(
+  //               std::is_assignable_v<detail::tainted_rep_t<TAppRep>&,
+  //               TAppRepOther>&&
+  //                   detail::is_fundamental_or_enum_v<TAppRep>)>
+  // inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+  //     const TAppRepOther& aOther) {
+  //   data = aOther;
+  //   return *this;
+  // }
 
   /**
    * @brief Operator= for tainted values with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, T, TSbx>& operator=(
-      const std::nullptr_t& aNull) {
-    data = aNull;
+  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=([
+      [maybe_unused]] const std::nullptr_t& aNull) {
+    data = 0;
     return *this;
   }
 
@@ -199,7 +253,7 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
   /**
    * @brief Result type of operator*
    */
-  using TOpDeref = tainted_volatile<std::remove_pointer_t<T>>;
+  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>>;
 
  public:
   /**
@@ -232,14 +286,14 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<true, T, TSbx> {
  * for fundamental or enum types, @ref rlbox::tainted_fixed_aligned_pointer for
  * pointer types.
  *
- * @tparam T is the type of the data being wrapped.
+ * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
+template <typename TAppRep, typename TSbx>
 using tainted_fixed_aligned = std::conditional_t<
-    detail::is_fundamental_or_enum_v<T>,
-    tainted_fundamental_or_enum<true /* TUseAppRep */, T, TSbx>,
-    tainted_fixed_aligned_pointer<true /* TUseAppRep */, T, TSbx>>;
+    detail::is_fundamental_or_enum_v<TAppRep>,
+    tainted_fundamental_or_enum<true /* TUseAppRep */, TAppRep, TSbx>,
+    tainted_fixed_aligned_pointer<true /* TUseAppRep */, TAppRep, TSbx>>;
 
 }  // namespace rlbox

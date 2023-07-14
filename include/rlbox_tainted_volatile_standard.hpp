@@ -53,7 +53,6 @@ class tainted_volatile_standard_pointer
    */
   using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
-  // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
   detail::tainted_rep_t<TSbxRep> data{0};
 
  public:
@@ -89,8 +88,9 @@ class tainted_volatile_standard_pointer
    * @tparam TWrap is the other wrapper type
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
-   * (2) meets the constructible criterion
+   * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
+   * original class's copy/move constructor (2) is a tainted wrapper and (3)
+   * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
   template <
@@ -173,8 +173,9 @@ class tainted_volatile_standard_pointer
    * @tparam TWrap is the other wrapper type
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
-   * @tparam RLBOX_REQUIRE param checks to see if this is (1) a tainted wrapper,
-   * (2) meets the assignable criterion
+   * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
+   * original class's copy/move constructor (2) is a tainted wrapper and (3)
+   * meets the assignable criterion
    * @param aOther is the rhs being assigned
    * @return tainted_volatile_standard_pointer<TAppRep, TSbx>& is the reference
    * to this value
@@ -267,14 +268,14 @@ class tainted_volatile_standard_pointer
  * for fundamental or enum types, @ref rlbox::tainted_volatile_standard_pointer
  * for pointer types.
  *
- * @tparam T is the type of the data being wrapped.
+ * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
+template <typename TAppRep, typename TSbx>
 using tainted_volatile_standard = std::conditional_t<
-    detail::is_fundamental_or_enum_v<T>,
-    tainted_fundamental_or_enum<false /* TUseAppRep */, T, TSbx>,
-    tainted_volatile_standard_pointer<false /* TUseAppRep */, T, TSbx>>;
+    detail::is_fundamental_or_enum_v<TAppRep>,
+    tainted_fundamental_or_enum<false /* TUseAppRep */, TAppRep, TSbx>,
+    tainted_volatile_standard_pointer<false /* TUseAppRep */, TAppRep, TSbx>>;
 
 }  // namespace rlbox

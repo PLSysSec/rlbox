@@ -28,33 +28,33 @@ namespace rlbox {
  * be updated) plus an offset from the heap base.
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
  * representation (tainted) or the sandbox representation (tainted_volatile)
- * @tparam T is the type of the data being wrapped.
+ * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename T, typename TSbx>
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
 class tainted_relocatable_pointer
-    : public tainted_any_base<TUseAppRep, T, TSbx> {
+    : public tainted_any_base<TUseAppRep, TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
   static_assert(TUseAppRep, "Expected TUseAppRep to be true");
-  static_assert(std::is_pointer_v<T>, "Expected T to be a pointer");
+  static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  private:
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<T, TSbx>;
+  using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
-  // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
   detail::tainted_rep_t<TSbxRep> data{0};
 
  public:
   /**
    * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::tainted_rep_t<T> is the raw data
+   * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<T> UNSAFE_unverified() const {
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
+      const {
     return abort();
   }
 
@@ -76,14 +76,14 @@ class tainted_relocatable_pointer
  * for fundamental or enum types, @ref rlbox::tainted_relocatable_pointer for
  * pointer types.
  *
- * @tparam T is the type of the data being wrapped.
+ * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
+template <typename TAppRep, typename TSbx>
 using tainted_relocatable = std::conditional_t<
-    detail::is_fundamental_or_enum_v<T>,
-    tainted_fundamental_or_enum<true /* TUseAppRep */, T, TSbx>,
-    tainted_relocatable_pointer<true /* TUseAppRep */, T, TSbx>>;
+    detail::is_fundamental_or_enum_v<TAppRep>,
+    tainted_fundamental_or_enum<true /* TUseAppRep */, TAppRep, TSbx>,
+    tainted_relocatable_pointer<true /* TUseAppRep */, TAppRep, TSbx>>;
 
 }  // namespace rlbox

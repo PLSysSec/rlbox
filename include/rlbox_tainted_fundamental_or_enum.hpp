@@ -77,8 +77,9 @@ class tainted_fundamental_or_enum
    * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the TAppRep of the rhs value
-   * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
-   * see if this meets the constructible criterion
+   * @tparam RLBOX_REQUIRE checks if (1) this won't be handled the original
+   * class's copy/move constructor and (2) this meets the constructible
+   * criterion
    * @param aOther is the rhs being assigned
    */
   template <
@@ -104,9 +105,7 @@ class tainted_fundamental_or_enum
    * @brief Construct a new tainted object from a raw (unwrapped) primitive
    * value
    * @tparam TOther is the type of the rhs value
-   * @tparam RLBOX_REQUIRE enforces the public/private check and also checks to
-   * this is allowed for primitive types only and if this meets the
-   * constructible criterion
+   * @tparam RLBOX_REQUIRE checks if this meets the constructible criterio
    * @param aOther is the raw primitive
    */
   template <typename TOther,
@@ -210,7 +209,8 @@ class tainted_fundamental_or_enum
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the TAppRep of the rhs value
-   * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
+   * @tparam RLBOX_REQUIRE checks if (1) this won't be handled the original
+   * class's copy/move assignment and (2) this meets the assignable
    * criterion
    * @param aOther is the rhs being assigned
    * @return tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& is

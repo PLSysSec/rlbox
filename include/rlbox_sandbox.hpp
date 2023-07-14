@@ -182,7 +182,6 @@ class rlbox_sandbox : protected TSbx {
   [[nodiscard]] inline base_types_convertor_tsbx<T> get_sandboxed_pointer(
       T aPtr) const {
     if (!aPtr) {
-      // NOLINTNEXTLINE(hicpp-use-nullptr, modernize-use-nullptr)
       base_types_convertor_tsbx<T> ret{0};
       return ret;
     }

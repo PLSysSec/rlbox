@@ -8,10 +8,21 @@
  */
 #pragma once
 
+/**
+ * @brief Macro to be used in other macros to force users of the macros to add a
+ * semi colon.
+ */
 #define RLBOX_REQUIRE_SEMI_COLON static_assert(true)
 
+/**
+ * @brief Macro to be used in specialization of different classes
+ */
 #define RLBOX_SPECIALIZE(...) typename std::enable_if_t<__VA_ARGS__>
 
+/**
+ * @brief Macro to be used to specify argument restrictions as template
+ * condition
+ */
 #define RLBOX_REQUIRE(...) std::enable_if_t<__VA_ARGS__>* = nullptr
 
 /**
