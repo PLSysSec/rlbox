@@ -14,6 +14,7 @@
 #include "rlbox_noop_sandbox.hpp"  // IWYU pragma: keep
 
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
+#define libtest_sandbox_invoke noop_arena_sandbox_invoke
 
 TEST_CASE("Test include rlbox header", "[rlbox include]") {
   [[maybe_unused]] rlbox_sandbox_libtest s;

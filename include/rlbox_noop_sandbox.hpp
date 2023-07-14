@@ -52,4 +52,19 @@ class rlbox_noop_sandbox
   }
 };
 
+/**
+ * @brief Macro specifying how the noop sandbox should be called. This is
+ * usually defined when users are specifying how to sandbox a particular
+ * library, after the call to `RLBOX_DEFINE_BASE_TYPES_FOR` by end
+ * users.
+ * @details For example
+ * @code
+ * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
+ * #define libtest_sandbox_invoke noop_sandbox_invoke
+ * @endcode
+ */
+#define noop_sandbox_invoke(sandbox, func_name, ...)               \
+  sandbox_invoke_internal(sandbox, decltype(func_name), func_name, \
+                          reinterpret_cast<void*>(&func_name), ##__VA_ARGS__)
+
 }  // namespace rlbox

@@ -94,7 +94,7 @@ enum class rlbox_status_code {
 
 /**
  * @brief This macro specialized types @ref rlbox::rlbox_sandbox, the tainted
- * types, etc. for a particular sandbox type
+ * types, etc. for a particular sandbox type.
  * @details For example
  * @code
  * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
@@ -103,6 +103,11 @@ enum class rlbox_status_code {
  * The above code creates the types `rlbox_sandbox_libtest` (which is an alias
  * to `rlbox_sandbox<rlbox_noop_sandbox>`), rlbox_callback_libtest<T> (which is
  * an alias to `rlbox_callback<T, rlbox_noop_sandbox>`)
+ *
+ * This call will be followed by a define for the appropriate sandbox_invoke
+ * @code
+ * #define libtest_sandbox_invoke noop_sandbox_invoke
+ * @endcode
  */
 #define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)            \
   namespace rlbox {                                              \

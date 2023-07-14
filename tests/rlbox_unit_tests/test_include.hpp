@@ -9,8 +9,6 @@
 
 #pragma once
 
-#define RLBOX_USE_STATIC_CALLS(name) reinterpret_cast<void*>(&name)
-
 // IWYU pragma: begin_exports
 #include "catch2/catch.hpp"
 
@@ -192,6 +190,10 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
 class rlbox_noop_arena_sandbox
     : public rlbox_noop_arena_sandbox_base<rlbox_noop_arena_sandbox> {};
 
+#define noop_arena_sandbox_invoke(sandbox, func_name, ...)         \
+  sandbox_invoke_internal(sandbox, decltype(func_name), func_name, \
+                          reinterpret_cast<void*>(&func_name), ##__VA_ARGS__)
+
 /**
  * @brief Sandbox that has a larger abi than the host, that we will use for
  * rlbox testing
@@ -201,6 +203,8 @@ class rlbox_noop_arena_largerabi_sandbox
  public:
   using sbx_short = int32_t;
 };
+
+#define noop_arena_largerabi_sandbox_invoke noop_arena_sandbox_invoke
 
 /**
  * @brief Sandbox that has a smaller abi than the host, that we will use for
@@ -215,7 +219,17 @@ class rlbox_noop_arena_smallerabi_sandbox
 
 }  // namespace rlbox
 
+// Above is plugin code. Below we have the application code using different
+// plugins
+
+#define noop_arena_smallerabi_sandbox_invoke noop_arena_sandbox_invoke
+
 RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_noop_arena_sandbox);
+#define test_sandbox_invoke noop_arena_sandbox_invoke
+
 RLBOX_DEFINE_BASE_TYPES_FOR(test_largerabi, rlbox_noop_arena_largerabi_sandbox);
+#define test_largerabi_sandbox_invoke noop_arena_largerabi_sandbox_invoke
+
 RLBOX_DEFINE_BASE_TYPES_FOR(test_smallerabi,
                             rlbox_noop_arena_smallerabi_sandbox);
+#define test_smallerabi_sandbox_invoke noop_arena_smallerabi_sandbox_invoke

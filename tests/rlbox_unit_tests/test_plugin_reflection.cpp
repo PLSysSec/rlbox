@@ -59,10 +59,15 @@ class rlbox_custom_tainted_volatile_testsandbox
 
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_default_tainted,
                             rlbox_default_tainted_testsandbox);
+#define libtest_default_tainted_sandbox_invoke noop_arena_sandbox_invoke
+
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted,
                             rlbox_custom_tainted_testsandbox);
+#define libtest_custom_tainted_sandbox_invoke noop_arena_sandbox_invoke
+
 RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted_volatile,
                             rlbox_custom_tainted_volatile_testsandbox);
+#define libtest_custom_tainted_volatile_sandbox_invoke noop_arena_sandbox_invoke
 
 TEST_CASE("Test plugin tainted reflection", "[rlbox plugin reflection]") {
   // Check that by default, sandboxes assume that the plugin uses

@@ -22,7 +22,8 @@ TEST_CASE("sandbox_invoke operates correctly with simple tainted int values",
   sandbox.create_sandbox();
   tainted_test<int> val1 = 5;
   tainted_test<int> val2 = 7;
-  tainted_test<int> ret = sandbox_invoke(sandbox, test_add_int, val1, val2);
+  tainted_test<int> ret =
+      test_sandbox_invoke(sandbox, test_add_int, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }
@@ -33,7 +34,8 @@ TEST_CASE("sandbox_invoke operates correctly with simple tainted long values",
   sandbox.create_sandbox();
   tainted_test<long> val1 = 5;
   tainted_test<long> val2 = 7;
-  tainted_test<long> ret = sandbox_invoke(sandbox, test_add_long, val1, val2);
+  tainted_test<long> ret =
+      test_sandbox_invoke(sandbox, test_add_long, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }
@@ -44,7 +46,8 @@ TEST_CASE("sandbox_invoke operates correctly with simple tainted float values",
   sandbox.create_sandbox();
   tainted_test<float> val1 = 5;
   tainted_test<float> val2 = 7;
-  tainted_test<float> ret = sandbox_invoke(sandbox, test_add_float, val1, val2);
+  tainted_test<float> ret =
+      test_sandbox_invoke(sandbox, test_add_float, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }
@@ -56,29 +59,35 @@ TEST_CASE("sandbox_invoke operates correctly with simple tainted double values",
   tainted_test<double> val1 = 5;
   tainted_test<double> val2 = 7;
   tainted_test<double> ret =
-      sandbox_invoke(sandbox, test_add_double, val1, val2);
+      test_sandbox_invoke(sandbox, test_add_double, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }
 
-TEST_CASE("sandbox_invoke operates correctly with simple tainted and unwrapped int values",
-          "[sandbox_invoke]") {
+TEST_CASE(
+    "sandbox_invoke operates correctly with simple tainted and unwrapped int "
+    "values",
+    "[sandbox_invoke]") {
   rlbox_sandbox_test sandbox;
   sandbox.create_sandbox();
   tainted_test<int> val1 = 5;
   int val2 = 7;
-  tainted_test<int> ret = sandbox_invoke(sandbox, test_add_int, val1, val2);
+  tainted_test<int> ret =
+      test_sandbox_invoke(sandbox, test_add_int, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }
 
-TEST_CASE("sandbox_invoke operates correctly with simple unwrapped and tainted int values",
-          "[sandbox_invoke]") {
+TEST_CASE(
+    "sandbox_invoke operates correctly with simple unwrapped and tainted int "
+    "values",
+    "[sandbox_invoke]") {
   rlbox_sandbox_test sandbox;
   sandbox.create_sandbox();
   int val1 = 5;
   tainted_test<int> val2 = 7;
-  tainted_test<int> ret = sandbox_invoke(sandbox, test_add_int, val1, val2);
+  tainted_test<int> ret =
+      test_sandbox_invoke(sandbox, test_add_int, val1, val2);
   REQUIRE(ret.UNSAFE_unverified() == 12);
   sandbox.destroy_sandbox();
 }

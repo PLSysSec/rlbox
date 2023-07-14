@@ -78,3 +78,39 @@ class rlbox_sandbox_plugin_base {
 };
 
 }  // namespace rlbox
+
+/**
+ * @brief API used to invoke sandbox functions while also specifying the
+ * function type. The parameters are expected to be rlbox wrapper types like
+ * `tainted' types or `rlbox::rlbox_callback` types. This macro is used
+ * internally by the sandbox plugin to specify how function invocations work for
+ * this particular plugin. This macro allows
+ *
+ * The function type is usually just the decltype() of the function (which is
+ * the case in the noop sandbox). However, this could be different in certain
+ * cases described below.
+ *
+ * For plugins to sandboxes that change the ABI :  While these changes to the
+ * ABI are generally automatically accounted for, plugins must take care to
+ * handle standard sized types like uint32_t which are aliases to other types.
+ * These types must be converted to rlbox standard int types such as
+ * `rlbox_uint32_t`. Plugins such as the wasm2c sandbox plugin can identify the
+ * use of standard int types directly by analyzing the resulting ABI of compiled
+ * code. Plugins like NaCl sandbox may require the end user to specify these.
+ *
+ * Usage
+ * @code {.cpp} auto result = sandbox_invoke_internal(sandbox, int(int, int),
+ * lib_add, 3, 4);
+ * @endcode
+ *
+ * This can also be used with rlbox integer types to currently account for the
+ * ABI changes
+ * @code {.cpp} auto result = sandbox_invoke_internal(sandbox,
+ * rlbox_uint32_t(rlbox_uint32_t, rlbox_uint32_t), lib_add, 3, 4);
+ * @endcode
+ * @details This macro ultimately forwards the call to a method on @ref
+ * rlbox::rlbox_sandbox along with  a stringified version of the function name
+ */
+#define sandbox_invoke_internal(sandbox, func_type, func_name, func_ptr, ...) \
+  sandbox.invoke_sandbox_function<func_type>(#func_name, func_ptr,            \
+                                             ##__VA_ARGS__)
