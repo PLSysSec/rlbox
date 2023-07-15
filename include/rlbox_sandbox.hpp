@@ -19,11 +19,10 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_checked_arithmetic.hpp"
 #include "rlbox_error_handling.hpp"
+#include "rlbox_function_traits.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_types.hpp"
-// IWYU doesn't seem to recognize the call to impl_promote_integer_types_t so
-// force IWYU to keep the next include
-#include "rlbox_wrapper_traits.hpp"  // IWYU pragma: keep
+#include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
 
@@ -220,7 +219,7 @@ class rlbox_sandbox : protected TSbx {
  private:
   template <typename T>
   inline constexpr void check_invoke_param_type_is_ok() {
-    // TODO(shr):
+    // TODO(shr): check for right TSbx also
   }
 
   template <typename TArg>
@@ -229,36 +228,32 @@ class rlbox_sandbox : protected TSbx {
 
     using TNoRef = std::remove_reference_t<TArg>;
 
-    if constexpr (detail::is_tainted_any_wrapper_v<TNoRef, TSbx>) {
+    if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
       return aArg.UNSAFE_sandboxed(*this);
     } else {
       return std::forward<TArg>(aArg);
     }
   }
 
-  template <typename TFunc, typename... TArgs>
-  inline auto invoke_sandbox_function_helper(
-      [[maybe_unused]] const char* aFuncName, void* aFuncPtr,
-      TArgs&&... aArgs) {
-    return this->template impl_invoke_with_func_ptr<TFunc>(
-        reinterpret_cast<TFunc*>(aFuncPtr), invoke_process_param(aArgs)...);
-  }
+  template <typename T>
+  using get_param_type_t = detail::rlbox_stdint_to_stdint_t<
+      detail::rlbox_remove_wrapper_t<std::remove_reference_t<T>>>;
 
  public:
   template <typename TFunc, typename... TArgs>
-  inline auto invoke_sandbox_function(const char* aFuncName, void* aFuncPtr,
-                                      TArgs&&... aArgs) {
-    constexpr bool abi_unchanged = detail::rlbox_base_types_unchanged_v<TSbx>;
+  inline auto INTERNAL_invoke_sandbox_function(
+      [[maybe_unused]] const char* aFuncName, void* aFuncPtr,
+      TArgs&&... aArgs) {
+    static_assert(std::is_invocable_v<TFunc, get_param_type_t<TArgs>...>,
+                  "Mismatched arguments types for function");
 
-    if constexpr (abi_unchanged) {
-      using TPromoted =
-          typename TSbx::template impl_promote_integer_types_t<TFunc>;
-      return this->invoke_sandbox_function_helper<TPromoted>(
-          aFuncName, aFuncPtr, std::forward<TArgs...>(aArgs...));
-    } else {
-      return this->invoke_sandbox_function_helper<TFunc>(
-          aFuncName, aFuncPtr, std::forward<TArgs>(aArgs)...);
-    }
+    // Convert the function argument and return types to the sandbox equivalent
+    // types
+    using TFuncConv =
+        detail::func_type_converter_t<TFunc, base_types_convertor_tsbx>;
+
+    return this->template impl_invoke_with_func_ptr<TFuncConv>(
+        aFuncPtr, invoke_process_param(aArgs)...);
   }
 
  private:
@@ -407,9 +402,8 @@ class rlbox_sandbox : protected TSbx {
    */
   template <template <bool, typename, typename> typename TWrap, bool TUseAppRep,
             typename T,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<TWrap<TUseAppRep, T, TSbx>,
-                                                 TSbx>&& std::is_pointer_v<T>)>
+            RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                          TWrap<TUseAppRep, T, TSbx>>&& std::is_pointer_v<T>)>
   inline void free_in_sandbox(TWrap<TUseAppRep, T, TSbx> aPtr) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     detail::dynamic_check(sandbox_created.load() == create_status::CREATED,

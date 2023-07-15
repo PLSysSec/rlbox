@@ -55,7 +55,7 @@ class rlbox_noop_sandbox
 /**
  * @brief Macro specifying how the noop sandbox should be called. This is
  * usually defined when users are specifying how to sandbox a particular
- * library, after the call to `RLBOX_DEFINE_BASE_TYPES_FOR` by end
+ * library, after the call to @ref RLBOX_DEFINE_BASE_TYPES_FOR by end
  * users.
  * @details For example
  * @code

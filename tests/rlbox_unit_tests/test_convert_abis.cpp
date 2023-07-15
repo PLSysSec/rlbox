@@ -5,9 +5,12 @@
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief Check that ABI conversion works as expected.
  * @details This file tests the following things:
- * 1. The `copy_cvref_t` trait which is used by `convert_base_types_t`
- * 2. The `convert_base_types_t` used to convert non pointer types
- * 3. The `convert_base_types_t` used to convert pointer types when:
+ * 1. The @ref rlbox::detail::copy_cvref_t trait which is used by @ref
+ * rlbox::detail::convert_base_types_t
+ * 2. The @ref rlbox::detail::convert_base_types_t used to convert non pointer
+ * types
+ * 3. The @ref rlbox::detail::convert_base_types_t used to convert pointer types
+ * when:
  *      - The pointer types are converted to `void*`
  *      - The pointer types are converted to `int`
  *      - The pointer types are converted to `struct`

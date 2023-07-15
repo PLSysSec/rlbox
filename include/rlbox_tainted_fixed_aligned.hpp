@@ -119,7 +119,7 @@ class tainted_fixed_aligned_pointer
                                                   TSbx>> &&
 
                 detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
                 std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
                                         TAppRepOther>)>
   inline tainted_fixed_aligned_pointer(
@@ -206,7 +206,7 @@ class tainted_fixed_aligned_pointer
               tainted_fixed_aligned_pointer<TUseAppRepOther, TAppRepOther,
                                             TSbx>> &&
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>, TSbx> &&
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {

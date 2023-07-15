@@ -12,13 +12,19 @@
 namespace rlbox {
 
 /**
- * @brief Base class of all wrapper types. This is used to identify tainted
+ * @brief Base class of all wrapper types which is used to identify tainted
  * wrappers.
+ */
+class tainted_interface {};
+
+/**
+ * @brief Base class of all wrapper types which is used to identify tainted
+ * wrappers along with their sandbox type.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
 template <typename TSbx>
-class tainted_interface {};
+class tainted_interface_sbx : public tainted_interface {};
 
 /**
  * @brief Base class of all wrapper types with common template arguments. This
@@ -30,7 +36,7 @@ class tainted_interface {};
  * sandbox implementation.
  */
 template <bool TUseAppRep, typename T, typename TSbx>
-class tainted_any_base : public tainted_interface<TSbx> {
+class tainted_any_base : public tainted_interface_sbx<TSbx> {
   /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
 };
 

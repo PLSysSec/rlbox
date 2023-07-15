@@ -15,6 +15,8 @@
 #include "rlbox.hpp"
 // IWYU pragma: end_exports
 
+#include "rlbox_function_traits.hpp"
+
 #include <iostream>
 
 using namespace rlbox;
@@ -110,10 +112,11 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
  private:
   const size_t sandbox_mem_size = size_t(4) * 1024;
   aligned_alloc_t sandbox_memory_alloc{nullptr, 0, nullptr, 0};
-  char* sandbox_memory = nullptr;
   size_t bump_index = 16;
 
  public:
+  char* sandbox_memory = nullptr;
+
   using sbx_short = int8_t;
   using sbx_int = int16_t;
   using sbx_long = int16_t;
@@ -138,8 +141,9 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   }
 
   template <typename TFunc, typename... TArgs>
-  inline auto impl_invoke_with_func_ptr(TFunc* aFuncPtr, TArgs&&... aArgs) {
-    return (*aFuncPtr)(aArgs...);
+  inline auto impl_invoke_with_func_ptr(void* aFuncPtr, TArgs&&... aArgs) {
+    auto cast_func_ptr = reinterpret_cast<TFunc*>(aFuncPtr);
+    return (*cast_func_ptr)(aArgs...);
   }
 
   template <typename T>
@@ -185,7 +189,26 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
 };
 
 /**
- * @brief Sandbox we will use for rlbox testing
+ * @brief Sandbox we will use for rlbox testing for primtive values
+ */
+class rlbox_noop_ptr_arena_sandbox
+    : public rlbox_noop_arena_sandbox_base<rlbox_noop_ptr_arena_sandbox> {
+ public:
+  template <typename TFunc, typename... TArgs>
+  inline auto impl_invoke_with_func_ptr(void* aFuncPtr, TArgs&&... aArgs) {
+    using TFuncPrepend = detail::prepend_func_arg_t<TFunc, char*>;
+    auto cast_func_ptr = reinterpret_cast<TFuncPrepend*>(aFuncPtr);
+    return (*cast_func_ptr)(sandbox_memory, aArgs...);
+  }
+};
+
+#define noop_ptr_arena_sandbox_invoke(sandbox, func_name, ...)            \
+  sandbox_invoke_internal(sandbox, decltype(func_name), func_name,        \
+                          reinterpret_cast<void*>(&func_name##_internal), \
+                          ##__VA_ARGS__)
+/**
+ * @brief Sandbox we will use for rlbox testing for pointer values. This values
+ * passes the arena memory to the function as the first argument.
  */
 class rlbox_noop_arena_sandbox
     : public rlbox_noop_arena_sandbox_base<rlbox_noop_arena_sandbox> {};
@@ -219,13 +242,16 @@ class rlbox_noop_arena_smallerabi_sandbox
 
 }  // namespace rlbox
 
+#define noop_arena_smallerabi_sandbox_invoke noop_arena_sandbox_invoke
+
 // Above is plugin code. Below we have the application code using different
 // plugins
 
-#define noop_arena_smallerabi_sandbox_invoke noop_arena_sandbox_invoke
-
 RLBOX_DEFINE_BASE_TYPES_FOR(test, rlbox_noop_arena_sandbox);
 #define test_sandbox_invoke noop_arena_sandbox_invoke
+
+RLBOX_DEFINE_BASE_TYPES_FOR(test_ptr, rlbox_noop_ptr_arena_sandbox);
+#define test_ptr_sandbox_invoke noop_ptr_arena_sandbox_invoke
 
 RLBOX_DEFINE_BASE_TYPES_FOR(test_largerabi, rlbox_noop_arena_largerabi_sandbox);
 #define test_largerabi_sandbox_invoke noop_arena_largerabi_sandbox_invoke

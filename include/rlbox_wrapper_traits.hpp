@@ -20,28 +20,31 @@
 
 namespace rlbox::detail {
 
-/**
- * @brief This trait checks to see if the sandbox uses a different ABI from that
- * of the host application.
- * @tparam TSbx is the sandbox type for which we are checking the ABI.
- * @details The ABI is "different" if any of the base types are different from
- * the host and the sandbox code. Pointer are handled a little differently. The
- * ABI is considered "identical" if pointers are represented by an integer or
- * pointer type and has the same size as a pointer in the host.
- */
-template <typename TSbx>
-constexpr bool rlbox_base_types_unchanged_v =
-    std::is_same_v<typename TSbx::sbx_wchart, wchar_t>&&
-        std::is_same_v<typename TSbx::sbx_short, short>&&
-            std::is_same_v<typename TSbx::sbx_int, int>&&
-                std::is_same_v<typename TSbx::sbx_long, long>&&
-                    std::is_same_v<typename TSbx::sbx_longlong, long long>&&
-                        std::is_same_v<typename TSbx::sbx_sizet, size_t> &&
-    // Pointers could be represented with either integer or pointer type and
-    // have the same ABI
-    sizeof(typename TSbx::sbx_pointer) == sizeof(void*) &&
-    (std::is_integral_v<typename TSbx::sbx_pointer> ||
-     std::is_pointer_v<typename TSbx::sbx_pointer>);
+// /**
+//  * @brief This trait checks to see if the sandbox uses a different ABI from
+//  that
+//  * of the host application.
+//  * @tparam TSbx is the sandbox type for which we are checking the ABI.
+//  * @details The ABI is "different" if any of the base types are different
+//  from
+//  * the host and the sandbox code. Pointer are handled a little differently.
+//  The
+//  * ABI is considered "identical" if pointers are represented by an integer or
+//  * pointer type and has the same size as a pointer in the host.
+//  */
+// template <typename TSbx>
+// constexpr bool rlbox_base_types_unchanged_v =
+//     std::is_same_v<typename TSbx::sbx_wchart, wchar_t>&&
+//         std::is_same_v<typename TSbx::sbx_short, short>&&
+//             std::is_same_v<typename TSbx::sbx_int, int>&&
+//                 std::is_same_v<typename TSbx::sbx_long, long>&&
+//                     std::is_same_v<typename TSbx::sbx_longlong, long long>&&
+//                         std::is_same_v<typename TSbx::sbx_sizet, size_t> &&
+//     // Pointers could be represented with either integer or pointer type and
+//     // have the same ABI
+//     sizeof(typename TSbx::sbx_pointer) == sizeof(void*) &&
+//     (std::is_integral_v<typename TSbx::sbx_pointer> ||
+//      std::is_pointer_v<typename TSbx::sbx_pointer>);
 
 /**
  * @brief This trait checks to see if the sandbox uses an ABI not larger from
@@ -65,11 +68,10 @@ constexpr bool rlbox_base_types_not_larger_v =
  * rlbox::tainted_interface
  * @tparam TWrap is the generic type to check
  * @tparam T is the type of the data being wrapped over
- * @tparam TSbx is the sandbox type
  */
-template <typename TWrap, typename TSbx>
+template <typename TWrap>
 constexpr bool is_tainted_any_wrapper_v =
-    std::is_base_of_v<tainted_interface<TSbx>, TWrap>;
+    std::is_base_of_v<tainted_interface, TWrap>;
 
 /**
  * @brief This trait identifies if a given type is an RLBox stdint type (See
@@ -146,5 +148,28 @@ rlbox_detail_has_template_member(impl_malloc_in_sandbox);
  * @brief Create trait to check for member `TSbx::impl_free_in_sandbox<void*>`
  */
 rlbox_detail_has_template_member(impl_free_in_sandbox);
+
+namespace detail_rlbox_remove_wrapper {
+
+template <typename T, typename TDummy = void>
+struct helper;
+
+template <typename T>
+struct helper<T, RLBOX_SPECIALIZE(!is_tainted_any_wrapper_v<T>)> {
+  using type = T;
+};
+
+template <template <bool, typename, typename> typename TWrap, typename TAppRep,
+          typename TSbx, bool TUseAppRep>
+struct helper<TWrap<TUseAppRep, TAppRep, TSbx>,
+              RLBOX_SPECIALIZE(
+                  is_tainted_any_wrapper_v<TWrap<TUseAppRep, TAppRep, TSbx>>)> {
+  using type = TAppRep;
+};
+}  // namespace detail_rlbox_remove_wrapper
+
+template <typename T>
+using rlbox_remove_wrapper_t =
+    typename detail_rlbox_remove_wrapper::helper<T>::type;
 
 }  // namespace rlbox::detail

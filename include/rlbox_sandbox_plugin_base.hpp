@@ -94,9 +94,10 @@ class rlbox_sandbox_plugin_base {
  * ABI are generally automatically accounted for, plugins must take care to
  * handle standard sized types like uint32_t which are aliases to other types.
  * These types must be converted to rlbox standard int types such as
- * `rlbox_uint32_t`. Plugins such as the wasm2c sandbox plugin can identify the
- * use of standard int types directly by analyzing the resulting ABI of compiled
- * code. Plugins like NaCl sandbox may require the end user to specify these.
+ * @ref rlbox::rlbox_uint32_t. Plugins such as the wasm2c sandbox plugin can
+ * identify the use of standard int types directly by analyzing the resulting
+ * ABI of compiled code. Plugins like NaCl sandbox may require the end user to
+ * specify these.
  *
  * Usage
  * @code {.cpp} auto result = sandbox_invoke_internal(sandbox, int(int, int),
@@ -112,5 +113,5 @@ class rlbox_sandbox_plugin_base {
  * rlbox::rlbox_sandbox along with  a stringified version of the function name
  */
 #define sandbox_invoke_internal(sandbox, func_type, func_name, func_ptr, ...) \
-  sandbox.invoke_sandbox_function<func_type>(#func_name, func_ptr,            \
-                                             ##__VA_ARGS__)
+  sandbox.INTERNAL_invoke_sandbox_function<func_type>(#func_name, func_ptr,   \
+                                                      ##__VA_ARGS__)
