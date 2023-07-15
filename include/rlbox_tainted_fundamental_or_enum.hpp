@@ -37,7 +37,7 @@ class tainted_fundamental_or_enum
 
  protected:
   static_assert(
-      detail::is_fundamental_or_enum_v<TAppRep>,
+      detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
       "tainted_fundamental_or_enum only supports fundamental_or_enum");
 
   /**

@@ -292,7 +292,7 @@ class tainted_fixed_aligned_pointer
  */
 template <typename TAppRep, typename TSbx>
 using tainted_fixed_aligned = std::conditional_t<
-    detail::is_fundamental_or_enum_v<TAppRep>,
+    detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
     tainted_fundamental_or_enum<true /* TUseAppRep */, TAppRep, TSbx>,
     tainted_fixed_aligned_pointer<true /* TUseAppRep */, TAppRep, TSbx>>;
 

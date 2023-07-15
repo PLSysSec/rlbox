@@ -273,7 +273,7 @@ class tainted_volatile_standard_pointer
  */
 template <typename TAppRep, typename TSbx>
 using tainted_volatile_standard = std::conditional_t<
-    detail::is_fundamental_or_enum_v<TAppRep>,
+    detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
     tainted_fundamental_or_enum<false /* TUseAppRep */, TAppRep, TSbx>,
     tainted_volatile_standard_pointer<false /* TUseAppRep */, TAppRep, TSbx>>;
 

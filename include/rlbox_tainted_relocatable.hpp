@@ -82,7 +82,7 @@ class tainted_relocatable_pointer
  */
 template <typename TAppRep, typename TSbx>
 using tainted_relocatable = std::conditional_t<
-    detail::is_fundamental_or_enum_v<TAppRep>,
+    detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
     tainted_fundamental_or_enum<true /* TUseAppRep */, TAppRep, TSbx>,
     tainted_relocatable_pointer<true /* TUseAppRep */, TAppRep, TSbx>>;
 
