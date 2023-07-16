@@ -1,6 +1,6 @@
 /**
  * @file rlbox_tainted_fundamental_or_enum.hpp
- * @copyright Copyright (c) 2022 UCSD PLSysSec. This project is released under
+ * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
  * @brief This header implements the tainted_fundamental_or_enum class that adds
