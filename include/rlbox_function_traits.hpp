@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <type_traits>
-
 namespace rlbox::detail {
 
 // namespace convert_to_cfunc_detail {

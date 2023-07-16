@@ -6,15 +6,66 @@
  * @brief Check that tainted wrappers handle arrays correctly
  */
 
-// #include "test_include.hpp"
+#include "test_include.hpp"
 
-// static int test_array_arg(int* aArr, int aCount) {
+#include <string.h>
+
+/**
+ * @brief External "app" version test_array_arg - a function that adds
+ * elements of the array
+ */
+// static
+int test_array_arg(const int* aArr, int aCount);
+// {
 //   int sum = 0;
-//   for (int i = 0; i <= aCount; i++) {
+
+//   for (int i = 0; i < aCount; i++) {
 //     sum += aArr[i];
 //   }
 //   return sum;
 // }
+
+using TSbxInt = rlbox_sandbox_type_test_ptr::sbx_int;
+using TSbxPtr = rlbox_sandbox_type_test_ptr::sbx_pointer;
+
+/**
+ * @brief Internal "sandbox" version of test_array_arg - a function that adds
+ * elements of the array Function that adds elements of the array. This function
+ * has to be written in the sandbox ABI.
+ *
+ * @param aSandboxMemory is the pointer to the sandboxes' internal heap
+ * @param aArrIdx is the array ptr as an index into `aSandboxMemory`
+ * @param aCount is the number of elements in the array
+ * @return TSbxInt is the sum of the elements in the array
+ */
+static TSbxInt test_array_arg_internal(char* aSandboxMemory, TSbxPtr aArrIdx,
+                                       TSbxInt aCount) {
+  TSbxInt sum = 0;
+  char* arr = aSandboxMemory + aArrIdx;
+
+  for (TSbxInt i = 0; i < aCount; i++) {
+    char* val_ptr = arr + sizeof(int) * i;
+    int copy = 0;
+    memcpy(&copy, val_ptr, sizeof(int));
+    sum = TSbxInt(sum + copy);
+  }
+  return sum;
+}
+
+TEST_CASE("sandbox_invoke operates correctly with pointers",
+          "[sandbox_invoke]") {
+  rlbox_sandbox_test_ptr sandbox;
+  sandbox.create_sandbox();
+
+  tainted_test_ptr<int*> t_val = sandbox.malloc_in_sandbox<int>();
+  *t_val = 3;
+
+  tainted_test_ptr<int> ret =
+      test_ptr_sandbox_invoke(sandbox, test_array_arg, t_val, 1);
+  REQUIRE(ret.UNSAFE_unverified() == 3);
+
+  sandbox.destroy_sandbox();
+}
 
 // TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
 //   rlbox_sandbox_test sandbox;
