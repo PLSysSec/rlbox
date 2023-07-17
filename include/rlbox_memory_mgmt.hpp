@@ -125,7 +125,7 @@ class rlbox_unique_ptr {
 
   inline rlbox_unique_ptr(const rlbox_unique_ptr<T, TSbx>& aOther) = delete;
   /**
-   * @brief Implement the move constructor for rlbox_unique_ptr
+   * @brief Move constructor: Construct a new rlbox_unique_ptr object
    * @param aOther is the rhs argument
    */
   inline rlbox_unique_ptr(rlbox_unique_ptr<T, TSbx>&& aOther) noexcept

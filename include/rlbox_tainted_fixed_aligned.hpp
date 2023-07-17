@@ -246,12 +246,7 @@ class tainted_fixed_aligned_pointer
     /// \todo eliminate cast and replace with tainted_volatile constructor
     /// taking a reference
 
-    // Deliberately use a C style cast as we we want to get rid of any CV
-    // qualifers here. CV qualifiers are moved inside the wrapper type and thus
-    // continue to be tracked.
-
-    // NOLINTNEXTLINE(google-readability-casting)
-    auto data_tainted_volatile = (TOpDeref*)data;
+    auto data_tainted_volatile = reinterpret_cast<TOpDeref*>(data);
     // NOLINTNEXTLINE(clang-analyzer-core.uninitialized.UndefReturn)
     return *data_tainted_volatile;
   }
