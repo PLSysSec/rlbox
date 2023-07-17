@@ -54,7 +54,7 @@ struct copy_cvref {
 
 /**
  * @brief Copies the cvref qualifiers from `TSource` to `TDest`.
- * @code
+ * @code {.cpp}
  * static_assert(std::is_same_t<copy_cvref_t<const int&, short>, const short&>);
  * @endcode
  * @tparam TSource is the type from which we copy the cvref qualifiers
@@ -118,7 +118,7 @@ struct c_array_to_std_array<T[]> {
  * type for this, else T is returned. Dynamic sized arrays `int[]' are not
  * supported
  * @tparam T is the type to convert
- * @code
+ * @code {.cpp}
  * static_assert(std::is_same_t<c_array_to_std_array_t<int[3]>, std::array<int,
  * 3>>); static_assert(std::is_same_t<c_array_to_std_array_t<int>, int>);
  * @endcode

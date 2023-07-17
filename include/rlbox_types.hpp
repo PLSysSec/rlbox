@@ -80,7 +80,30 @@ class tainted_boolean_hint;  // IWYU pragma: keep
  */
 class tainted_int_hint;  // IWYU pragma: keep
 
+/**
+ * @brief A sandbox plugin implementation for a noop or "null" sandbox.
+ * @details In this sandbox, memory accesses are not bounds checked and there is
+ * no actual enforcement done. The only thing enforced by this sandbox is that
+ * sandboxed data is tainted and the application must apply security checks to
+ * this tainted data. The noop sandbox simply dispatches function calls as if
+ * they were simple static function calls within the host application.
+ */
 class rlbox_noop_sandbox;  // IWYU pragma: keep
+
+/**
+ * @brief A memory management class the implements unique_ptr for tainted types.
+ * @details Tainted types are not compatible with std::unique_ptr (as
+ * std::unique_ptr requires the managed type to be a pointer while RLBox tainted
+ * types manage pointers are structs). This class thus provides the an
+ * unique_ptr compatible with tainted types. The class interface tries to follow
+ * the std::unique_ptr as much as possible.
+ * @tparam T is the type of the pointer being managed. For example, to manage a
+ * `tainted<int*>`, developers would use a `rlbox_unique_ptr<int>`
+ * @tparam TSbx is the type of the sandbox plugin that represents the
+ * underlying sandbox implementation.
+ */
+template <typename T, typename TSbx>
+class rlbox_unique_ptr;  // IWYU pragma: keep
 
 /**
  * @brief A type representing the success/error code for various rlbox related
@@ -96,7 +119,7 @@ enum class rlbox_status_code {
  * @brief This macro specialized types @ref rlbox::rlbox_sandbox, the tainted
  * types, etc. for a particular sandbox type.
  * @details For example
- * @code
+ * @code {.cpp}
  * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
  * @endcode
  *
@@ -105,7 +128,7 @@ enum class rlbox_status_code {
  * an alias to `rlbox_callback<T, rlbox_noop_sandbox>`)
  *
  * This call will be followed by a define for the appropriate sandbox_invoke
- * @code
+ * @code {.cpp}
  * #define libtest_sandbox_invoke noop_sandbox_invoke
  * @endcode
  */
@@ -125,6 +148,10 @@ enum class rlbox_status_code {
   template <typename T>                                          \
   using tainted_volatile_##SBXNAME =                             \
       rlbox_sandbox_##SBXNAME::tainted_volatile<T>;              \
+                                                                 \
+  template <typename T>                                          \
+  using rlbox_unique_ptr_##SBXNAME =                             \
+      rlbox::rlbox_unique_ptr<T, rlbox_sandbox_type_##SBXNAME>;  \
                                                                  \
   RLBOX_REQUIRE_SEMI_COLON
 

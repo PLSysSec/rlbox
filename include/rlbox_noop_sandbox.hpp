@@ -58,7 +58,7 @@ class rlbox_noop_sandbox
  * library, after the call to @ref RLBOX_DEFINE_BASE_TYPES_FOR by end
  * users.
  * @details For example
- * @code
+ * @code {.cpp}
  * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
  * #define libtest_sandbox_invoke noop_sandbox_invoke
  * @endcode

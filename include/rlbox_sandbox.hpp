@@ -219,7 +219,7 @@ class rlbox_sandbox : protected TSbx {
  private:
   template <typename T>
   inline constexpr void check_invoke_param_type_is_ok() {
-    // TODO(shr): check for right TSbx also
+    /// \todo check for right TSbx also
   }
 
   template <typename TArg>

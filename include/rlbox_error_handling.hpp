@@ -45,13 +45,13 @@ namespace rlbox::detail {
  * @details
  * Usage of this function is as follows. This would abort if the check fails.
  *
- * @code
+ * @code {.cpp}
  * dynamic_check(value == 5, "Unexpected value calls 5");
  * @endcode
  *
  * You can customize RLBox to call a custom abort handler on failure as shown
  * below
- * @code
+ * @code {.cpp}
  * void custom_abort(const char* msg) {
  *   //...
  * }
@@ -60,7 +60,7 @@ namespace rlbox::detail {
  *
  * Alternately you can customize RLBox to throw an exception on failure as
  * shown below
- * @code
+ * @code {.cpp}
  * #define RLBOX_USE_EXCEPTIONS_ON_ERROR
  * @endcode
  * @param aCheckSucceeded is the result of a boolean runtime check

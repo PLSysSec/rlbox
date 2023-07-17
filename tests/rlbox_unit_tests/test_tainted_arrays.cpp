@@ -52,8 +52,8 @@ static TSbxInt test_array_arg_internal(char* aSandboxMemory, TSbxPtr aArrIdx,
   return sum;
 }
 
-TEST_CASE("sandbox_invoke operates correctly with pointers",
-          "[sandbox_invoke]") {
+TEST_CASE("sandbox_invoke operates correctly with pointer arrays",
+          "[tainted arrays]") {
   rlbox_sandbox_test_ptr sandbox;
   sandbox.create_sandbox();
 
@@ -64,8 +64,19 @@ TEST_CASE("sandbox_invoke operates correctly with pointers",
       test_ptr_sandbox_invoke(sandbox, test_array_arg, t_val, 1);
   REQUIRE(ret.UNSAFE_unverified() == 3);
 
+  sandbox.free_in_sandbox(t_val);
+
   sandbox.destroy_sandbox();
 }
+
+// TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
+//   rlbox_sandbox_test_ptr sandbox;
+//   sandbox.create_sandbox();
+
+//   tainted_test_ptr<int[3]> t_val = sandbox.malloc_in_sandbox<int[3]>();
+
+//   sandbox.destroy_sandbox();
+// }
 
 // TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
 //   rlbox_sandbox_test sandbox;

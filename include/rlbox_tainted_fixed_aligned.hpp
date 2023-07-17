@@ -214,32 +214,11 @@ class tainted_fixed_aligned_pointer
     return *this;
   }
 
-  // /**
-  //  * @brief Operator= for tainted values from a raw primitive value
-  //  * @tparam TAppRepOther is the type of the rhs value being assigned
-  //  * @tparam RLBOX_REQUIRE param checks to see if this meets the assignable
-  //  * criterion. This is allowed for primitive types only.
-  //  * @param aOther is the raw primitive
-  //  * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& is the
-  //  * reference to this value
-  //  */
-  // template <typename TAppRepOther,
-  //           RLBOX_REQUIRE(
-  //               std::is_assignable_v<detail::tainted_rep_t<TAppRep>&,
-  //               TAppRepOther>&&
-  //                   detail::is_fundamental_or_enum_v<TAppRep>)>
-  // inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
-  //     const TAppRepOther& aOther) {
-  //   data = aOther;
-  //   return *this;
-  // }
-
   /**
    * @brief Operator= for tainted values with a nullptr
-   * @param aNull is a nullptr
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=([
-      [maybe_unused]] const std::nullptr_t& aNull) {
+  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+      const std::nullptr_t& /* unused */) noexcept {
     data = 0;
     return *this;
   }
@@ -263,7 +242,7 @@ class tainted_fixed_aligned_pointer
    * @return TOpDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref& operator*() {
+  inline TOpDeref& operator*() const noexcept {
     /// \todo eliminate cast and replace with tainted_volatile constructor
     /// taking a reference
 
@@ -276,6 +255,59 @@ class tainted_fixed_aligned_pointer
     // NOLINTNEXTLINE(clang-analyzer-core.uninitialized.UndefReturn)
     return *data_tainted_volatile;
   }
+
+  /**
+   * @brief Operator== behaves as expected for tainted pointers and compares the
+   * pointer for equality.
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @param aOther is the rhs argument
+   * @return if the pointers refer to the same address
+   */
+  template <typename TAppRepOther>
+  inline bool operator==(
+      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRepOther, TSbx>&
+          aOther) const noexcept {
+    return data == aOther.data;
+  }
+  /**
+   * @brief Operator!= behaves as expected for tainted pointers and compares the
+   * pointer for inequality.
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @param aOther is the rhs argument
+   * @return if the pointers refer to different addresses
+   */
+  template <typename TAppRepOther>
+  inline bool operator!=(
+      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRepOther, TSbx>&
+          aOther) const noexcept {
+    return !((*this) == aOther);
+  }
+
+ private:
+  /**
+   * @brief Helper function that checks if this pointer refers to null
+   * @return true if the pointer is null
+   */
+  [[nodiscard]] inline bool is_null() const noexcept { return data == 0; }
+
+ public:
+  /**
+   * @brief Check if pointer is null
+   */
+  inline bool operator==(const std::nullptr_t& /* unused */) const noexcept {
+    return is_null();
+  }
+  /**
+   * @brief Check if pointer is not null
+   */
+  inline bool operator!=(const std::nullptr_t& /* unused */) const noexcept {
+    return !is_null();
+  }
+  /**
+   * @brief Convert the pointer to bool.
+   * @return true if the pointer is not null
+   */
+  explicit inline operator bool() const noexcept { return !is_null(); }
 };
 
 /**
