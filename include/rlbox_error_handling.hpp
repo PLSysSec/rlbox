@@ -35,38 +35,32 @@
 namespace rlbox::detail {
 
 /**
- * @brief An internal RLBox function that is used to perform runtime assertion
- * checks. This is used in the RLBox API to check a variety of RLBox invariants.
- * On success, this function does nothing.
- * If the check fails, then the function calls `abort`.
- * The check failure can be customized to call a custom abort handler or to
- * throw exceptions instead. See examples for details on how to customize.
+ * @brief An internal RLBox function that is called when a runtime error occurs.
+ * The function typically will call `abort`. The function can be customized
+ * to call a custom abort handler or to throw exceptions instead. See examples
+ * for details on how to customize.
  *
  * @details
  * Usage of this function is as follows. This would abort if the check fails.
  *
- * @code {.cpp}
- * dynamic_check(value == 5, "Unexpected value calls 5");
+ * @code {.cpp} error_occured("Unexpected error");
  * @endcode
  *
  * You can customize RLBox to call a custom abort handler on failure as shown
  * below
- * @code {.cpp}
- * void custom_abort(const char* msg) {
+ * @code {.cpp} void custom_abort(const char* msg) {
  *   //...
  * }
  * #define RLBOX_CUSTOM_ABORT(msg) custom_abort(msg)
  * @endcode
  *
- * Alternately you can customize RLBox to throw an exception on failure as
- * shown below
- * @code {.cpp}
- * #define RLBOX_USE_EXCEPTIONS_ON_ERROR
+ * Alternately you can customize RLBox to throw an exception on failure as shown
+ * below
+ * @code {.cpp} #define RLBOX_USE_EXCEPTIONS_ON_ERROR
  * @endcode
- * @param aCheckSucceeded is the result of a boolean runtime check
  * @param aMsg is the error message to display on error
  */
-inline void dynamic_check(bool aCheckSucceeded, const char* aMsg)
+[[noreturn]] inline void error_occured(const char* aMsg)
 #ifndef RLBOX_USE_EXCEPTIONS_ON_ERROR
     noexcept
 #endif
@@ -75,17 +69,43 @@ inline void dynamic_check(bool aCheckSucceeded, const char* aMsg)
 #  error \
       "You can define only one of the two macros RLBOX_USE_EXCEPTIONS_ON_ERROR and RLBOX_CUSTOM_ABORT"
 #endif
-  if (!aCheckSucceeded) {
 #if __cpp_exceptions && defined(RLBOX_USE_EXCEPTIONS_ON_ERROR)
-    throw std::runtime_error(aMsg);
+  throw std::runtime_error(aMsg);
 #else
 #  ifdef RLBOX_CUSTOM_ABORT
-    RLBOX_CUSTOM_ABORT(aMsg);
+  RLBOX_CUSTOM_ABORT(aMsg);
+  std::abort();
 #  else
-    std::cerr << aMsg << std::endl;
-    std::abort();
+  std::cerr << aMsg << std::endl;
+  std::abort();
 #  endif
 #endif
+}
+
+/**
+ * @brief An internal RLBox function that is used to perform runtime assertion
+ * checks. This is used in the RLBox API to check a variety of RLBox invariants.
+ * On success, this function does nothing.
+ * If the check fails, then the function calls @ref
+ * rlbox::detail::error_occured.
+ *
+ * @details
+ * Usage of this function is as follows. This would abort if the check fails.
+ *
+ * @code {.cpp}
+ * dynamic_check(value == 5, "Unexpected value calls 5");
+ * @endcode
+ *
+ * @param aCheckSucceeded is the result of a boolean runtime check
+ * @param aMsg is the error message to display on error
+ */
+inline void dynamic_check(bool aCheckSucceeded, const char* aMsg)
+#ifndef RLBOX_USE_EXCEPTIONS_ON_ERROR
+    noexcept
+#endif
+{
+  if (!aCheckSucceeded) {
+    error_occured(aMsg);
   }
 }
 

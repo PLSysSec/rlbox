@@ -29,8 +29,6 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 
   // NOLINTNEXTLINE (llvm-qualified-auto,readability-qualified-auto)
   [[maybe_unused]] auto addrof_taint_ptr = &ptr;
-  rlbox_test_helper_print_type<decltype(addrof_taint_ptr)>();
-  rlbox_test_helper_print_type<tainted_test<int*>*>();
   REQUIRE(std::is_same_v<decltype(addrof_taint_ptr), tainted_test<int*>*>);
 
   auto& deref_taint_ptr = *ptr;
@@ -56,11 +54,17 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
   auto& deref = *ptr2;
   REQUIRE(std::is_same_v<decltype(deref), tainted_volatile_test<int*>&>);
 
-  // REQUIRE(std::is_same_v<decltype(*deref), tainted_volatile_test<int>&>);
-  // REQUIRE(std::is_same_v<decltype(**ptr2), tainted_volatile_test<int>&>);
+  REQUIRE(std::is_same_v<decltype(*deref), tainted_volatile_test<int>&>);
+  REQUIRE(std::is_same_v<decltype(**ptr2), tainted_volatile_test<int>&>);
+
+  *ptr2 = ptr;
+  **ptr2 = 3;
+
+  REQUIRE(ptr->UNSAFE_unverified() == 3);
 
   ////////////
 
+  sandbox.free_in_sandbox(ptr2);
   sandbox.free_in_sandbox(ptr);
 
   sandbox.destroy_sandbox();

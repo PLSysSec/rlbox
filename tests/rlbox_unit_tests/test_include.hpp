@@ -47,20 +47,20 @@ struct aligned_alloc_t {
    * a pointer in the middle of this allocation can be considered an aligned
    * allocation.
    */
-  char* full_allocation;
+  char* full_allocation{0};
   /**
    * @brief The size of the padded allocation
    */
-  size_t full_size;
+  size_t full_size{0};
   /**
    * @brief The pointer to memory which is aligned and has at least as much size
    * as requested. This field is a pointer into the @ref full_allocation field.
    */
-  char* mem;
+  char* mem{0};
   /**
    * @brief The requested size of the aligned allocation
    */
-  size_t size;
+  size_t size{0};
 };
 
 /**
@@ -110,8 +110,8 @@ namespace rlbox {
 template <typename TSbx>
 class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
  private:
-  const size_t sandbox_mem_size = size_t(4) * 1024;
-  aligned_alloc_t sandbox_memory_alloc{nullptr, 0, nullptr, 0};
+  static const size_t sandbox_mem_size = size_t(4) * 1024;
+  aligned_alloc_t sandbox_memory_alloc;
   size_t bump_index = 16;
 
  public:
@@ -174,7 +174,20 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   }
 
   template <typename T>
-  [[nodiscard]] inline sbx_pointer impl_get_sandboxed_pointer(T aPtr) const {
+  inline bool impl_is_pointer_in_sandbox_memory(T ptr) const noexcept {
+    // Deliberately use a C style cast as we we want to get rid of any CV
+    // qualifers here.
+
+    // NOLINTNEXTLINE(google-readability-casting)
+    auto ptr_raw = (uintptr_t)ptr;
+    bool inside = ptr_raw >= reinterpret_cast<uintptr_t>(sandbox_memory) &&
+                  ptr_raw < reinterpret_cast<uintptr_t>(sandbox_memory +
+                                                        sandbox_mem_size);
+    return inside;
+  }
+
+  template <typename T>
+  inline sbx_pointer impl_get_sandboxed_pointer(T aPtr) const {
     auto ret = reinterpret_cast<uintptr_t>(aPtr) -
                reinterpret_cast<uintptr_t>(sandbox_memory);
     // NOLINTNEXTLINE(google-readability-casting)
@@ -182,9 +195,35 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   }
 
   template <typename T>
-  [[nodiscard]] inline T impl_get_unsandboxed_pointer(sbx_pointer aPtr) const {
+  inline T impl_get_unsandboxed_pointer(sbx_pointer aPtr) const {
     char* ret = sandbox_memory + aPtr;
     return reinterpret_cast<T>(ret);
+  }
+
+  template <typename T>
+  static inline T impl_get_unsandboxed_pointer_with_example(
+      sbx_pointer aPtr, const void* aEgUnsbxedPtr) {
+    // Because sandbox memory is aligned to its size the prefix of all pointers
+    // are the same
+
+    const uintptr_t suffix_mask = sandbox_mem_size - 1;
+    const uintptr_t prefix_mask = ~suffix_mask;
+    const uintptr_t sandbox_prefix =
+        reinterpret_cast<uintptr_t>(aEgUnsbxedPtr) & prefix_mask;
+    const uintptr_t unsandboxed_rep = sandbox_prefix | aPtr;
+    return reinterpret_cast<T>(unsandboxed_rep);
+  }
+
+  template <typename T>
+  static inline sbx_pointer impl_get_sandboxed_pointer_with_example(
+      T aPtr, [[maybe_unused]] const void* aEgUnsbxedPtr) {
+    // Because sandbox memory is aligned to its size, to convert a pointer to
+    // its sandbox representation, just drop the prefix
+
+    const uintptr_t suffix_mask = sandbox_mem_size - 1;
+    const uintptr_t sandboxed_rep =
+        suffix_mask & reinterpret_cast<uintptr_t>(aPtr);
+    return static_cast<sbx_pointer>(sandboxed_rep);
   }
 };
 

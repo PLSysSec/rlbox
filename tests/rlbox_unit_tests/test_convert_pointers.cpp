@@ -35,6 +35,12 @@ class sandbox_same_pointer_rep
     auto ret = reinterpret_cast<uintptr_t>(aPtr);
     return reinterpret_cast<T>(ret);
   }
+
+  template <typename T>
+  inline bool impl_is_pointer_in_sandbox_memory([
+      [maybe_unused]] T aPtr) const noexcept {
+    return true;
+  }
 };
 
 TEST_CASE("Test pointer conversions with same abi", "[pointer conversion]") {
@@ -75,6 +81,12 @@ class sandbox_different_pointer_rep
   inline T impl_get_unsandboxed_pointer(void* aPtr) const {
     uintptr_t ret = reinterpret_cast<uintptr_t>(aPtr) + 1;
     return reinterpret_cast<T>(ret);
+  }
+
+  template <typename T>
+  inline bool impl_is_pointer_in_sandbox_memory([
+      [maybe_unused]] T aPtr) const noexcept {
+    return true;
   }
 };
 

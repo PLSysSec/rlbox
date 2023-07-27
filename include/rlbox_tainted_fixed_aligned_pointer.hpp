@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <type_traits>
+#include <utility>
 
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
@@ -154,11 +155,27 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Unsafely remove the tainting and get the raw data converted to the
    * sandboxed ABI.
+   * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
+   */
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed() const {
+    /// We need to construct an example_unsandboxed_ptr in order to call @ref
+    /// rlbox::rlbox_sandbox::get_sandboxed_pointer_with_example. Since tainted
+    /// pointers are already checked to live within the sandbox, the current
+    /// pointer itself is a valid example pointer.
+    const void* example_unsandboxed_ptr = data;
+    auto ret = rlbox_sandbox<TSbx>::get_sandboxed_pointer_with_example(
+        data, example_unsandboxed_ptr);
+    return ret;
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data converted to the
+   * sandboxed ABI.
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
+      rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_sandboxed_pointer(data);
   }
 
@@ -236,8 +253,6 @@ class tainted_fixed_aligned_pointer
  public:
   /**
    * @brief Operator* which dereferences tainted and gives a tainted_volatile&
-   * @tparam TDummy is a dummy parameter to do our static type checks
-   * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
    * @return TOpDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
@@ -248,6 +263,17 @@ class tainted_fixed_aligned_pointer
     auto data_tainted_volatile = reinterpret_cast<TOpDeref*>(data);
     // NOLINTNEXTLINE(clang-analyzer-core.uninitialized.UndefReturn)
     return *data_tainted_volatile;
+  }
+
+  /**
+   * @brief Operator* which dereferences tainted and gives a tainted_volatile&
+   * @return TOpDeref* is the ptr to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  inline TOpDeref* operator->() const noexcept {
+    // call the deference operator * and then take the address of the result
+    // Use std::adress of so we don't call the operator overload of operator &
+    return std::addressof(**this);
   }
 
   /**

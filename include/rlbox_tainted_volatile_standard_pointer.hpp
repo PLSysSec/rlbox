@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <type_traits>
+#include <utility>
 
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
@@ -119,8 +120,29 @@ class tainted_volatile_standard_pointer
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
+      const {
+    /// We need to construct an example_unsandboxed_ptr in order to call @ref
+    /// rlbox::rlbox_sandbox::get_unsandboxed_pointer_with_example. We use a
+    /// cool trick to construct such an example. Since tainted_volatile is the
+    /// type of data in sandbox memory, the address of data (&data) itself
+    /// refers to a location in sandbox memory and can thus be the
+    /// example_unsandboxed_ptr. See Appendix A of
+    /// https://arxiv.org/pdf/2003.00572.pdf for more details.
+    const void* example_unsandboxed_ptr = &data;
+    auto raw_ptr =
+        rlbox_sandbox<TSbx>::template get_unsandboxed_pointer_with_example<
+            TAppRep>(data, example_unsandboxed_ptr);
+    return raw_ptr;
+  }
+
+  /**
+   * @brief Unsafely remove the tainting and get the raw data.
+   * @param aSandbox is the sandbox this tainted value belongs to
+   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   */
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
+      rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_unsandboxed_pointer(data);
   }
 
@@ -190,8 +212,8 @@ class tainted_volatile_standard_pointer
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {
-    data = aOther->raw_sandbox_rep();
+  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {
+    data = aOther.raw_sandbox_rep();
     return *this;
   }
 
@@ -213,20 +235,31 @@ class tainted_volatile_standard_pointer
 
   using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>>;
 
-  //  public:
-  //   /**
-  //    * @brief Operator* which dereferences tainted_volatile and gives another
-  //    * tainted_volatile&
-  //    * @tparam TDummy is a dummy parameter to do our static type checks
-  //    * @tparam RLBOX_REQUIRE ensures this is allowed for pointer types only.
-  //    * @return TOpDeref& is the reference to the sandbox memory that holds
-  //    this
-  //    * data, i.e., memory which is a tainted_volatile type
-  //    */
-  //   inline TOpDeref& operator*() const noexcept {
-  //   }
+ public:
+  /**
+   * @brief Operator* which dereferences tainted_volatile and gives another
+   * tainted_volatile&
+   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  inline TOpDeref& operator*() const {
+    auto raw_ptr = raw_host_rep();
+    auto raw_ptr_cast = reinterpret_cast<TOpDeref*>(raw_ptr);
+    return *raw_ptr_cast;
+  }
 
-  //  protected:
+  /**
+   * @brief Operator* which dereferences tainted and gives a tainted_volatile&
+   * @return TOpDeref* is the ptr to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  inline TOpDeref* operator->() const noexcept {
+    // call the deference operator * and then take the address of the result
+    // Use std::adress of so we don't call the operator overload of operator &
+    return std::addressof(**this);
+  }
+
+ protected:
   template <typename TSub>
   using tainted = typename TSbx::template tainted<TSub>;
 

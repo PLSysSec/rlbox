@@ -11,6 +11,8 @@
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
 #  include <atomic>
 #endif
+#include <set>
+#include <shared_mutex>
 #include <stddef.h>
 #include <stdint.h>
 #include <type_traits>
@@ -59,8 +61,29 @@ class rlbox_sandbox : protected TSbx {
   /**
    * @brief This variable tracks the creation status of the sandbox instance
    */
-  std::atomic<create_status> sandbox_created = create_status::NOT_CREATED;
+  std::atomic<create_status> mSandboxCreated = create_status::NOT_CREATED;
 #endif
+
+  /**
+   * @brief A list of live sandboxes of this type. This list is only maintained
+   * if necessary by internals of this class. See detailed comments below for
+   * more information.
+   *
+   * @details This list is maintained if @ref
+   * rlbox::rlbox_sandbox::get_unsandboxed_pointer_with_example or @ref
+   * rlbox::rlbox_sandbox::get_sandboxed_pointer_with_example requires the list
+   * of all active sandboxes for their operation. Those two function require
+   * this list if the underlying sandbox plugin `TSbx` does not implement
+   * `impl_get_unsandboxed_pointer_with_example' or
+   * `impl_get_sandboxed_pointer_with_example'
+   */
+  static inline std::set<rlbox_sandbox*> mSandboxes;
+
+  /**
+   * @brief A read-write mutex to guard access to @ref
+   * rlbox::rlbox_sandbox::mSandboxes
+   */
+  static inline std::shared_mutex mSandboxesMutex;
 
  public:
   /**
@@ -98,7 +121,7 @@ class rlbox_sandbox : protected TSbx {
   rlbox_status_code create_sandbox(TArgs... aArgs) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     auto expected = create_status::NOT_CREATED;
-    bool success = sandbox_created.compare_exchange_strong(
+    bool success = mSandboxCreated.compare_exchange_strong(
         expected, create_status::INITIALIZING /* desired */);
     detail::dynamic_check(
         success,
@@ -112,11 +135,20 @@ class rlbox_sandbox : protected TSbx {
 
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     if (ret == rlbox_status_code::SUCCESS) {
-      sandbox_created.store(create_status::CREATED);
+      mSandboxCreated.store(create_status::CREATED);
     } else {
-      sandbox_created.store(create_status::NOT_CREATED);
+      mSandboxCreated.store(create_status::NOT_CREATED);
     }
 #endif
+
+    if constexpr (
+        !detail::has_member_impl_get_unsandboxed_pointer_with_example_v<TSbx> ||
+        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx>) {
+      if (ret == rlbox_status_code::SUCCESS) {
+        std::unique_lock lock(mSandboxesMutex);
+        mSandboxes.insert(this);
+      }
+    }
 
     return ret;
   }
@@ -132,7 +164,7 @@ class rlbox_sandbox : protected TSbx {
   rlbox_status_code destroy_sandbox() {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     auto expected = create_status::CREATED;
-    bool success = sandbox_created.compare_exchange_strong(
+    bool success = mSandboxCreated.compare_exchange_strong(
         expected, create_status::DESTRUCTING /* desired */);
     detail::dynamic_check(
         success,
@@ -143,8 +175,22 @@ class rlbox_sandbox : protected TSbx {
     // specific to the plugin.
     rlbox_status_code ret = this->impl_destroy_sandbox();
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
-    sandbox_created.store(create_status::NOT_CREATED);
+    mSandboxCreated.store(create_status::NOT_CREATED);
 #endif
+
+    if constexpr (
+        !detail::has_member_impl_get_unsandboxed_pointer_with_example_v<TSbx> ||
+        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx>) {
+      std::unique_lock lock(mSandboxesMutex);
+      mSandboxes.erase(this);
+    }
+    return ret;
+  }
+
+  template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
+  [[nodiscard]] inline bool is_pointer_in_sandbox_memory(
+      T aPtr) const noexcept {
+    bool ret = this->template impl_is_pointer_in_sandbox_memory<T>(aPtr);
     return ret;
   }
 
@@ -191,19 +237,70 @@ class rlbox_sandbox : protected TSbx {
     return ret;
   }
 
-  // template<typename T>
-  // static inline T get_unsandboxed_pointer_no_ctx(
-  //   convert_to_sandbox_equivalent_nonclass_t<T> p,
-  //   const void* example_unsandboxed_ptr)
-  // {
-  //   static_assert(std::is_pointer_v<T>);
-  //   if (p == 0) {
-  //     return nullptr;
-  //   }
-  //   auto ret = T_Sbx::template impl_get_unsandboxed_pointer_no_ctx<T>(
-  //     p, example_unsandboxed_ptr, find_sandbox_from_example);
-  //   return reinterpret_cast<T>(ret);
-  // }
+  template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
+  [[nodiscard]] static inline T get_unsandboxed_pointer_with_example(
+      base_types_convertor_tsbx<T> aPtr, const void* aEgUnsbxedPtr) {
+    if (!aPtr) {
+      return nullptr;
+    }
+
+    detail::dynamic_check(aEgUnsbxedPtr != nullptr,
+                          "Internal error: received a null example "
+                          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+
+    if constexpr (detail::
+                      has_member_impl_get_unsandboxed_pointer_with_example_v<
+                          TSbx>) {
+      auto ret = TSbx::template impl_get_unsandboxed_pointer_with_example<T>(
+          aPtr, aEgUnsbxedPtr);
+      return ret;
+    } else {
+      std::shared_lock lock(mSandboxesMutex);
+
+      for (rlbox_sandbox* sandbox : mSandboxes) {
+        if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
+          return sandbox->get_unsandboxed_pointer<T>(aPtr);
+        }
+      }
+
+      // this function does not return
+      detail::error_occured(
+          "Internal error: could not find the sandbox belonging to a "
+          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+    }
+  }
+
+  template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
+  [[nodiscard]] static inline base_types_convertor_tsbx<T>
+  get_sandboxed_pointer_with_example(T aPtr, const void* aEgUnsbxedPtr) {
+    if (!aPtr) {
+      return 0;
+    }
+
+    detail::dynamic_check(aEgUnsbxedPtr != nullptr,
+                          "Internal error: received a null example "
+                          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+
+    if constexpr (detail::has_member_impl_get_sandboxed_pointer_with_example_v<
+                      TSbx>) {
+      auto ret = TSbx::template impl_get_sandboxed_pointer_with_example<T>(
+          aPtr, aEgUnsbxedPtr);
+      return ret;
+    } else {
+      std::shared_lock lock(mSandboxesMutex);
+
+      for (rlbox_sandbox* sandbox : mSandboxes) {
+        if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
+          return sandbox->get_sandboxed_pointer<T>(aPtr);
+        }
+      }
+
+      // this function does not return
+      detail::error_occured(
+          "Internal error: could not find the sandbox belonging to a "
+          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+    }
+  }
 
   // template<typename T>
   // static inline convert_to_sandbox_equivalent_nonclass_t<T>
@@ -211,7 +308,7 @@ class rlbox_sandbox : protected TSbx {
   //                              const void* example_unsandboxed_ptr)
   // {
   //   static_assert(std::is_pointer_v<T>);
-  //   if (p == nullptr) {
+  //   if (!p) {
   //     return 0;
   //   }
   //   return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(
@@ -366,7 +463,7 @@ class rlbox_sandbox : protected TSbx {
   template <typename T>
   inline tainted<T*> malloc_in_sandbox(tainted<size_t> aCount) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
-    detail::dynamic_check(sandbox_created.load() == create_status::CREATED,
+    detail::dynamic_check(mSandboxCreated.load() == create_status::CREATED,
                           "Sandbox not created");
 #endif
     size_t count_unwrapped = aCount.raw_host_rep();
@@ -408,7 +505,7 @@ class rlbox_sandbox : protected TSbx {
                           TWrap<TUseAppRep, T, TSbx>>&& std::is_pointer_v<T>)>
   inline void free_in_sandbox(TWrap<TUseAppRep, T, TSbx> aPtr) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
-    detail::dynamic_check(sandbox_created.load() == create_status::CREATED,
+    detail::dynamic_check(mSandboxCreated.load() == create_status::CREATED,
                           "Sandbox not created");
 #endif
 

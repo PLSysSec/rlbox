@@ -148,6 +148,16 @@ rlbox_detail_has_template_member(impl_malloc_in_sandbox);
  * @brief Create trait to check for member `TSbx::impl_free_in_sandbox<void*>`
  */
 rlbox_detail_has_template_member(impl_free_in_sandbox);
+/**
+ * @brief Create trait to check for member
+ * `TSbx::impl_get_unsandboxed_pointer_with_example<void*>`
+ */
+rlbox_detail_has_template_member(impl_get_unsandboxed_pointer_with_example);
+/**
+ * @brief Create trait to check for member
+ * `TSbx::impl_get_unsandboxed_pointer_with_example<void*>`
+ */
+rlbox_detail_has_template_member(impl_get_sandboxed_pointer_with_example);
 
 namespace detail_rlbox_remove_wrapper {
 

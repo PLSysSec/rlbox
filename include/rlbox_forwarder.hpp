@@ -90,7 +90,7 @@ class rlbox_forwarder : std::optional<int> {
   }
 
   template <typename TDummy = int>
-  inline auto& operator*() const noexcept {
+  inline auto& operator*() const {
     return *RLBOX_FORWARD_TARGET_EXPR;
   }
 
