@@ -12,16 +12,17 @@
 
 #if !defined(RLBOX_FORWARD_TARGET_CLASS) &&                                    \
     !defined(RLBOX_FORWARD_CURR_CLASS) && !defined(RLBOX_FORWARD_TO_OBJECT) && \
-    !defined(RLBOX_FORWARD_SUBCLASS)
+    !defined(RLBOX_FORWARD_TO_SUBCLASS)
 // If no parameters are defined, assume that the file is being parsed for
 // intellisense.
 #  define RLBOX_FORWARD_SIMULATE_FOR_INTELLISENSE
-#elif !(defined(RLBOX_FORWARD_TARGET_CLASS) && \
-        defined(RLBOX_FORWARD_CURR_CLASS) &&   \
-        (defined(RLBOX_FORWARD_TO_OBJECT) || defined(RLBOX_FORWARD_SUBCLASS)))
+#elif !(                                   \
+    defined(RLBOX_FORWARD_TARGET_CLASS) && \
+    defined(RLBOX_FORWARD_CURR_CLASS) &&   \
+    (defined(RLBOX_FORWARD_TO_OBJECT) || defined(RLBOX_FORWARD_TO_SUBCLASS)))
 // If only some parameters are not defined, report an error
 #  error \
-      "RLBOX_FORWARD: define RLBOX_FORWARD_TARGET_CLASS, RLBOX_FORWARD_CURR_CLASS, and one of RLBOX_FORWARD_TO_OBJECT and RLBOX_FORWARD_SUBCLASS"
+      "RLBOX_FORWARD: define RLBOX_FORWARD_TARGET_CLASS, RLBOX_FORWARD_CURR_CLASS, and one of RLBOX_FORWARD_TO_OBJECT and RLBOX_FORWARD_TO_SUBCLASS"
 #endif
 
 #ifdef RLBOX_FORWARD_SIMULATE_FOR_INTELLISENSE
@@ -38,14 +39,14 @@ class rlbox_forwarder;
 
 #  define RLBOX_FORWARD_CURR_CLASS rlbox_forwarder
 #  define RLBOX_FORWARD_TARGET_CLASS std::optional<int>
-#  define RLBOX_FORWARD_SUBCLASS
+#  define RLBOX_FORWARD_TO_SUBCLASS
 // no definition for RLBOX_FORWARD_TO_OBJECT
 
 class rlbox_forwarder : std::optional<int> {
  public:
 #endif
 
-#ifdef RLBOX_FORWARD_SUBCLASS
+#ifdef RLBOX_FORWARD_TO_SUBCLASS
 #  define RLBOX_FORWARD_CONSTRUCTOR_NAME RLBOX_FORWARD_TARGET_CLASS
 // Expression that casts this to its base class while accounting for any const
 // volatile qualifiers
@@ -112,4 +113,4 @@ class rlbox_forwarder : std::optional<int> {
 #undef RLBOX_FORWARD_TARGET_CLASS
 #undef RLBOX_FORWARD_CURR_CLASS
 #undef RLBOX_FORWARD_TO_OBJECT
-#undef RLBOX_FORWARD_SUBCLASS
+#undef RLBOX_FORWARD_TO_SUBCLASS

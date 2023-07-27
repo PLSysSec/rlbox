@@ -29,7 +29,7 @@ class tainted_fixed_aligned_impl
 #define RLBOX_FORWARD_TARGET_CLASS \
   tainted_fixed_aligned_base<TUseAppRep, TAppRep, TSbx>
 #define RLBOX_FORWARD_CURR_CLASS tainted_fixed_aligned_impl
-#define RLBOX_FORWARD_SUBCLASS
+#define RLBOX_FORWARD_TO_SUBCLASS
 
 #include "rlbox_forwarder.hpp"
 };
