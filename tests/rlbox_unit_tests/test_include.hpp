@@ -29,9 +29,9 @@ using namespace rlbox;
 template <typename... T>
 void rlbox_test_helper_print_type() {
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-  std::cout << "Func: " << __FUNCSIG__ << std::endl;
+  std::cout << __FUNCSIG__ << std::endl;
 #else
-  std::cout << "Func: " << __PRETTY_FUNCTION__ << std::endl;
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
 #endif
 }
 

@@ -192,8 +192,8 @@ class tainted_fundamental_or_enum
    * this object
    */
   inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
-      const tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& aOther) =
-      default;
+      const tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>&
+          aOther) noexcept = default;
 
   /**
    * @brief Move assignment operator
@@ -226,7 +226,7 @@ class tainted_fundamental_or_enum
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
       const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
-          aOther) {
+          aOther) noexcept {
     if constexpr (TUseAppRep) {
       data = aOther.raw_host_rep();
     } else {

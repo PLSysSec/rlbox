@@ -66,7 +66,11 @@ namespace rlbox::detail {
  * @param aCheckSucceeded is the result of a boolean runtime check
  * @param aMsg is the error message to display on error
  */
-inline void dynamic_check(bool aCheckSucceeded, const char* aMsg) {
+inline void dynamic_check(bool aCheckSucceeded, const char* aMsg)
+#ifndef RLBOX_USE_EXCEPTIONS_ON_ERROR
+    noexcept
+#endif
+{
 #if defined(RLBOX_USE_EXCEPTIONS_ON_ERROR) && defined(RLBOX_CUSTOM_ABORT)
 #  error \
       "You can define only one of the two macros RLBOX_USE_EXCEPTIONS_ON_ERROR and RLBOX_CUSTOM_ABORT"

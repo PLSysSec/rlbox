@@ -150,7 +150,8 @@ class rlbox_sandbox : protected TSbx {
 
   /**
    * @brief Convert the pointer that is in sandbox representation (ABI) to the
-   * host representation
+   * host representation. This function automatically will abort if the provided
+   * pointer is out of range of the sandbox.
    * @tparam T is the type of the of the object. `T` must be a pointer.
    * @tparam RLBOX_REQUIRE checks to see if `T` is a pointer
    * @param aPtr is the pointer in sandbox representation
@@ -170,7 +171,8 @@ class rlbox_sandbox : protected TSbx {
 
   /**
    * @brief Convert the pointer that is in host representation (ABI) to the
-   * sandbox representation
+   * sandbox representation. This function automatically will abort if the
+   * provided pointer is out of range of the sandbox.
    * @tparam T is the type of the of the object. `T` must be a pointer.
    * @tparam RLBOX_REQUIRE checks to see if `T` is a pointer
    * @param aPtr is the pointer in host representation

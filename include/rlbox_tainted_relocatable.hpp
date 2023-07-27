@@ -40,7 +40,7 @@ class tainted_relocatable_pointer
   static_assert(TUseAppRep, "Expected TUseAppRep to be true");
   static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
- private:
+ protected:
   /**
    * @brief The sandbox representation of data for this wrapper
    */
