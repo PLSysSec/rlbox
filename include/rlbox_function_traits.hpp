@@ -124,5 +124,37 @@ struct helper<TRet (TClass::*)(TArgs...) const, TConv> {
 template <typename TFunc, template <typename T> class TConv>
 using func_type_converter_t =
     typename func_type_converter_detail::helper<TFunc, TConv>::type;
+///////////////////////////////////////////////////////////////////////////////
+
+namespace return_type_detail {
+/**
+ * @brief This trait is the internal helper to implement return_type_t
+ * @tparam TFunc is the function type
+ */
+template <typename TFunc>
+struct helper;
+
+template <typename TRet, typename... TArgs>
+struct helper<TRet(TArgs...)> {
+  using type = TRet;
+};
+
+template <typename TRet, typename TClass, typename... TArgs>
+struct helper<TRet (TClass::*)(TArgs...)> {
+  using type = TRet;
+};
+
+template <typename TRet, typename TClass, typename... TArgs>
+struct helper<TRet (TClass::*)(TArgs...) const> {
+  using type = TRet;
+};
+}  // namespace return_type_detail
+
+/**
+ * @brief This trait gets the return type of the given function type
+ * @tparam TFunc is the function type
+ */
+template <typename TFunc>
+using return_type_t = typename return_type_detail::helper<TFunc>::type;
 
 }  // namespace rlbox::detail

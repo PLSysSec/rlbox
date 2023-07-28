@@ -13,9 +13,10 @@
 #include <type_traits>
 
 #include "rlbox_abi_conversion.hpp"
+#include "rlbox_data_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_tainted_base.hpp"
-#include "rlbox_type_conversion.hpp"
+#include "rlbox_type_traits.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -49,10 +50,10 @@ class tainted_fundamental_or_enum
   /**
    * @brief The internal representation of data for this wrapper
    */
-  using TIntRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
-                                     detail::tainted_rep_t<TSbxRep>>;
+  using TRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
+                                  detail::tainted_rep_t<TSbxRep>>;
 
-  TIntRep data{0};
+  TRep data{0};
 
   ////////////////////////////////
 
@@ -116,8 +117,9 @@ class tainted_fundamental_or_enum
           if constexpr (TUseAppRep) {
             return aOther;
           } else {
-            return detail::convert_type_fundamental<
-                detail::tainted_rep_t<TSbxRep>>(aOther);
+            detail::tainted_rep_t<detail::remove_cvref_t<TSbxRep>> ret;
+            return detail::convert_type_fundamental(&ret, aOther);
+            return ret;
           }
         }()) {}
 
@@ -137,9 +139,8 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return data;
     } else {
-      auto converted =
-          detail::convert_type_fundamental<detail::tainted_rep_t<TAppRep>>(
-              data);
+      detail::tainted_rep_t<detail::remove_cvref_t<TAppRep>> converted;
+      detail::convert_type_fundamental(&converted, data);
       return converted;
     }
   }
@@ -161,9 +162,8 @@ class tainted_fundamental_or_enum
    */
   [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed() const {
     if constexpr (TUseAppRep) {
-      auto converted =
-          detail::convert_type_fundamental<detail::tainted_rep_t<TSbxRep>>(
-              data);
+      detail::tainted_rep_t<detail::remove_cvref_t<TSbxRep>> converted;
+      detail::convert_type_fundamental(&converted, data);
       return converted;
     } else {
       return data;
@@ -252,10 +252,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       data = aOther;
     } else {
-      auto converted =
-          detail::convert_type_fundamental<detail::tainted_rep_t<TSbxRep>>(
-              aOther);
-      data = converted;
+      detail::convert_type_fundamental(&data, aOther);
     }
     return *this;
   }

@@ -167,6 +167,7 @@ struct helper;
 template <typename T>
 struct helper<T, RLBOX_SPECIALIZE(!is_tainted_any_wrapper_v<T>)> {
   using type = T;
+  using type_sbx = void;
 };
 
 template <template <bool, typename, typename> typename TWrap, typename TAppRep,
@@ -175,11 +176,16 @@ struct helper<TWrap<TUseAppRep, TAppRep, TSbx>,
               RLBOX_SPECIALIZE(
                   is_tainted_any_wrapper_v<TWrap<TUseAppRep, TAppRep, TSbx>>)> {
   using type = TAppRep;
+  using type_sbx = TSbx;
 };
 }  // namespace detail_rlbox_remove_wrapper
 
 template <typename T>
 using rlbox_remove_wrapper_t =
     typename detail_rlbox_remove_wrapper::helper<T>::type;
+
+template <typename T>
+using rlbox_get_wrapper_sandbox_t =
+    typename detail_rlbox_remove_wrapper::helper<T>::type_sbx;
 
 }  // namespace rlbox::detail

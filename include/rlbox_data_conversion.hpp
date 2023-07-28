@@ -1,5 +1,5 @@
 /**
- * @file rlbox_type_conversion.hpp
+ * @file rlbox_data_conversion.hpp
  * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
@@ -12,6 +12,7 @@
 
 #include "rlbox_error_handling.hpp"
 #include "rlbox_type_traits.hpp"
+#include <rlbox_types.hpp>
 
 namespace rlbox::detail {
 
@@ -21,21 +22,19 @@ namespace rlbox::detail {
  * @tparam TFrom is the source type
  * @tparam TTo is the target type
  * @param aFrom is the value to be converted
+ * @param aTo is pointer to the destination which will hold the converted value
  * @details This can be used to convert primitive values such as:
  * - converting between different sized unsigned integer types
  * - converting between different sized signed integer types
  * - converting between floating types
  * When converting between a bigger integer type to a smaller integer types, we
  * will add bounds checks
- * - `convert<uint64_t, uint32_t>(val)` is just a static cast
- * - `convert<uint32_t, uint64_t>(val)` introduces dynamic bounds checks
+ * - `convert<uint64_t, uint32_t>(&dest, val)` is just a static cast
+ * - `convert<uint32_t, uint64_t>(&dest, val)` introduces dynamic bounds checks
  */
 template <typename TTo, typename TFrom>
-inline constexpr std::remove_cv_t<TTo> convert_type_fundamental(
-    const TFrom& aFrom) {
+inline void convert_type_fundamental(TTo* aTo, const TFrom& aFrom) {
   using namespace std;
-
-  std::remove_cv_t<TTo> ret;
 
   rlbox_static_assert(is_fundamental_or_enum_v<TTo>,
                       "Conversion target should be fundamental or enum type");
@@ -43,18 +42,18 @@ inline constexpr std::remove_cv_t<TTo> convert_type_fundamental(
                       "Conversion source should be fundamental or enum type");
 
   if constexpr (is_same_v<remove_cvref_t<TTo>, remove_cvref_t<TFrom>>) {
-    ret = aFrom;
+    *aTo = aFrom;
   } else if constexpr (is_enum_v<remove_cvref_t<TTo>>) {
-    rlbox_static_assert(false_v<TTo>,
-                        "ABI convertor: Trying to assign enums of different "
-                        "types to each other");
+    rlbox_static_fail(TTo,
+                      "ABI convertor: Trying to assign enums of different "
+                      "types to each other");
   } else if constexpr (is_floating_point_v<remove_cvref_t<TTo>>) {
     rlbox_static_assert(is_floating_point_v<remove_cvref_t<TTo>> &&
                             is_floating_point_v<remove_cvref_t<TFrom>>,
                         "ABI convertor: Trying to convert across "
                         "floating/non-floating point types");
     // language already coerces different float types
-    ret = static_cast<TTo>(aFrom);
+    *aTo = static_cast<TTo>(aFrom);
   } else if constexpr (is_integral_v<remove_cvref_t<TTo>>) {
     rlbox_static_assert(
         is_integral_v<remove_cvref_t<TTo>> &&
@@ -79,15 +78,40 @@ inline constexpr std::remove_cv_t<TTo> convert_type_fundamental(
       dynamic_check(aFrom >= numeric_limits<TTo>::min(), err_msg);
       dynamic_check(aFrom <= numeric_limits<TTo>::max(), err_msg);
     } else {
-      rlbox_static_assert(false_v<TTo>, "Unhandled case");
+      rlbox_static_fail(TTo, "Unhandled case");
     }
-    ret = static_cast<TTo>(aFrom);
+    *aTo = static_cast<TTo>(aFrom);
   } else {
-    rlbox_static_assert(false_v<TTo>,
-                        "Unexpected case for convert_type_fundamental");
+    rlbox_static_fail(TTo, "Unexpected case for convert_type_fundamental");
   }
+}
 
-  return ret;
+enum class rlbox_convert_direction { TO_SANDBOX, TO_APPLICATION };
+
+enum class rlbox_convert_style { EXAMPLE, SANDBOX };
+
+template <typename TTo, typename TFrom, typename TSbx,
+          rlbox_convert_style TContext, rlbox_convert_direction TDirection>
+inline void convert_type_pointer(TTo* aTo, const TFrom& aFrom,
+                                 rlbox_sandbox<TSbx>* aSandbox,
+                                 const void* aExampleUnsandboxedPtr) {
+  if constexpr (TContext == rlbox_convert_style::SANDBOX) {
+    rlbox::detail::dynamic_check(aSandbox != nullptr,
+                                 "Conversion with a null sandbox ptr");
+    if constexpr (TDirection == rlbox_convert_direction::TO_SANDBOX) {
+      *aTo = aSandbox->get_sandboxed_pointer(aFrom);
+    } else {
+      *aTo = aSandbox->template get_unsandboxed_pointer<TTo>(aFrom);
+    }
+  } else {
+    if constexpr (TDirection == rlbox_convert_direction::TO_SANDBOX) {
+      *aTo = rlbox_sandbox<TSbx>::get_sandboxed_pointer_with_example(
+          aFrom, aExampleUnsandboxedPtr);
+    } else {
+      *aTo = rlbox_sandbox<TSbx>::template get_unsandboxed_pointer_with_example<
+          TTo>(aFrom, aExampleUnsandboxedPtr);
+    }
+  }
 }
 
 }  // namespace rlbox::detail

@@ -115,4 +115,22 @@ inline void dynamic_check(bool aCheckSucceeded, const char* aMsg)
 #  define rlbox_static_assert(...) static_assert(__VA_ARGS__)
 #endif
 
+namespace fail_detail {
+template <typename...>
+struct helper_struct {
+  static constexpr bool mVal = false;
+};
+
+struct dummy_struct {};
+
+template <>
+struct helper_struct<dummy_struct> {
+  static constexpr bool mVal = true;
+};
+
+}  // namespace fail_detail
+
+#define rlbox_static_fail(T, msg) \
+  rlbox_static_assert(rlbox::detail::fail_detail::helper_struct<T>::mVal, msg)
+
 }  // namespace rlbox::detail

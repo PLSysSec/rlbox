@@ -302,23 +302,31 @@ class rlbox_sandbox : protected TSbx {
     }
   }
 
-  // template<typename T>
-  // static inline convert_to_sandbox_equivalent_nonclass_t<T>
-  // get_sandboxed_pointer_no_ctx(const void* p,
-  //                              const void* example_unsandboxed_ptr)
-  // {
-  //   static_assert(std::is_pointer_v<T>);
-  //   if (!p) {
-  //     return 0;
-  //   }
-  //   return T_Sbx::template impl_get_sandboxed_pointer_no_ctx<T>(
-  //     p, example_unsandboxed_ptr, find_sandbox_from_example);
-  // }
-
  private:
   template <typename T>
   inline constexpr void check_invoke_param_type_is_ok() {
-    /// \todo check for right TSbx also
+    using TNoRef = std::remove_reference_t<T>;
+
+    if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
+      if constexpr (!std::is_same_v<
+                        TSbx, detail::rlbox_get_wrapper_sandbox_t<TNoRef>>) {
+        rlbox_static_fail(
+            T,
+            "Mixing tainted data from a different sandbox types. This could "
+            "happen when you are using 2 sandbox types, for example "
+            "'rlbox_noop_sandbox' and 'rlbox_wasm2c_sandbox', and are passing "
+            "tainted data from one sandbox as parameters into a function call "
+            "to the other sandbox. This is not allowed, unwrap the tainted "
+            "data with copy_and_verify or other unwrapping APIs first.\n");
+      }
+    }
+    // else if constexpr (!std::is_constructible_v<tainted<T>, TNoRef>) {
+    //   rlbox_static_fail(
+    //       T,
+    //       "Arguments to a sandbox function call should either be values
+    //       easily " "convertible to tainted like primitives integers and
+    //       nullptr, or " "wrapped types like tainted, callbacks etc.");
+    // }
   }
 
   template <typename TArg>
@@ -350,9 +358,16 @@ class rlbox_sandbox : protected TSbx {
     // types
     using TFuncConv =
         detail::func_type_converter_t<TFunc, base_types_convertor_tsbx>;
+    // using TRet = detail::return_type_t<TFunc>;
 
+    // if constexpr (std::is_void_v<TRet>) {
+    //   return this->template impl_invoke_with_func_ptr<TFuncConv>(
+    //       aFuncPtr, invoke_process_param(aArgs)...);
+    // } else {
+    /// \todo fix
     return this->template impl_invoke_with_func_ptr<TFuncConv>(
         aFuncPtr, invoke_process_param(aArgs)...);
+    // }
   }
 
  private:
@@ -430,7 +445,7 @@ class rlbox_sandbox : protected TSbx {
       } else {
         // Use rlbox_static_assert here instead of static_assert as there is a
         // testcase for this code
-        rlbox_static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+        rlbox_static_fail(T, RLBOX_NOT_IMPLEMENTED_MESSAGE);
         // Use a dummy non zero return
         return 1;
       }

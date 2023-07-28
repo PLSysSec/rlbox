@@ -19,13 +19,12 @@ namespace rlbox::detail {
 /**
  * @brief An expression that always evaluates to false. Useful for
  * static_assert(false) that is evaluated inside a constexpr.
- * @details See https://quuxplusone.github.io/blog/2018/04/02/false-v/ for more
- * details
  * @tparam T is a template parameter to ensure that the expression is evaluated
  * lazily
  */
 template <typename T>
-inline constexpr bool false_v = false;
+inline constexpr bool false_v =
+    rlbox::detail::fail_detail::helper_struct<T>::mVal;
 
 namespace copy_cvref_detail {
 /**
