@@ -320,14 +320,13 @@ class rlbox_sandbox : protected TSbx {
             "to the other sandbox. This is not allowed, unwrap the tainted "
             "data with copy_and_verify or other unwrapping APIs first.\n");
       }
+    } else if constexpr (!std::is_constructible_v<tainted<TNoRef>, TNoRef>) {
+      rlbox_static_fail(
+          T,
+          "Arguments to a sandbox function call should either be values easily "
+          "convertible to tainted like primitives integers and nullptr, or  "
+          "wrapped types like tainted, callbacks etc.");
     }
-    // else if constexpr (!std::is_constructible_v<tainted<T>, TNoRef>) {
-    //   rlbox_static_fail(
-    //       T,
-    //       "Arguments to a sandbox function call should either be values
-    //       easily " "convertible to tainted like primitives integers and
-    //       nullptr, or " "wrapped types like tainted, callbacks etc.");
-    // }
   }
 
   template <typename TArg>
@@ -339,7 +338,8 @@ class rlbox_sandbox : protected TSbx {
     if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
       return aArg.UNSAFE_sandboxed(*this);
     } else {
-      return std::forward<TArg>(aArg);
+      tainted<TNoRef> val(aArg);
+      return val.UNSAFE_sandboxed(*this);
     }
   }
 
