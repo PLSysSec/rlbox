@@ -80,10 +80,9 @@ class rlbox_unique_ptr {
    * @brief Internal function that calls free and suppresses any exceptions.
    */
   inline void free_ptr_noexcept() {
-    using is_free_ptr_no_except =
-        std::is_nothrow_invocable<decltype(
-                                      &rlbox_unique_ptr<T, TSbx>::free_ptr),
-                                  rlbox_unique_ptr<T, TSbx>*>;
+    using is_free_ptr_no_except = std::is_nothrow_invocable<
+        decltype(&rlbox_unique_ptr<T, TSbx>::free_ptr),
+        rlbox_unique_ptr<T, TSbx>*>;
 
     if constexpr (is_free_ptr_no_except::value) {
       free_ptr();

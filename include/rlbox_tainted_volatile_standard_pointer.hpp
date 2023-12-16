@@ -79,8 +79,8 @@ class tainted_volatile_standard_pointer
    * @brief Construct a tainted_volatile_standard_pointer with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_volatile_standard_pointer([
-      [maybe_unused]] const std::nullptr_t& aNull)
+  inline tainted_volatile_standard_pointer(
+      [[maybe_unused]] const std::nullptr_t& aNull)
       : data(0) {}
 
   /**
@@ -161,8 +161,8 @@ class tainted_volatile_standard_pointer
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_sandboxed();
   }
 

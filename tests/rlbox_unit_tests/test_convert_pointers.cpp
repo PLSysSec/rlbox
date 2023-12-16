@@ -37,8 +37,8 @@ class sandbox_same_pointer_rep
   }
 
   template <typename T>
-  inline bool impl_is_pointer_in_sandbox_memory([
-      [maybe_unused]] T aPtr) const noexcept {
+  inline bool impl_is_pointer_in_sandbox_memory(
+      [[maybe_unused]] T aPtr) const noexcept {
     return true;
   }
 };
@@ -84,8 +84,8 @@ class sandbox_different_pointer_rep
   }
 
   template <typename T>
-  inline bool impl_is_pointer_in_sandbox_memory([
-      [maybe_unused]] T aPtr) const noexcept {
+  inline bool impl_is_pointer_in_sandbox_memory(
+      [[maybe_unused]] T aPtr) const noexcept {
     return true;
   }
 };

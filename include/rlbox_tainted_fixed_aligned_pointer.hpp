@@ -96,8 +96,8 @@ class tainted_fixed_aligned_pointer
    * @brief Construct a tainted_fixed_aligned_pointer with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_fixed_aligned_pointer([
-      [maybe_unused]] const std::nullptr_t& aNull)
+  inline tainted_fixed_aligned_pointer(
+      [[maybe_unused]] const std::nullptr_t& aNull)
       : data(0) {}
 
   /**
@@ -147,8 +147,8 @@ class tainted_fixed_aligned_pointer
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return detail::tainted_rep_t<TAppRep> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified([
-      [maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
 

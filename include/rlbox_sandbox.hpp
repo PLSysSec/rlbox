@@ -11,6 +11,7 @@
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
 #  include <atomic>
 #endif
+#include <mutex>
 #include <set>
 #include <shared_mutex>
 #include <stddef.h>
@@ -50,8 +51,8 @@ class rlbox_sandbox : protected TSbx {
    * However, it is expensive to check in APIs such as sandbox_invoke or in the
    * callback_interceptor. In general, we leave it up to the user to ensure APIs
    * such as sandbox_invoke are never called prior to sandbox construction or
-   * after destruction. We only perform checks suring create_sandbox,
-   * detroy_sandbox and register_callback where they will not add too much
+   * after destruction. We only perform checks during create_sandbox,
+   * destroy_sandbox and register_callback where they will not add too much
    * overhead. Even this limited checking can be diabled through the macro
    * RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
    */
