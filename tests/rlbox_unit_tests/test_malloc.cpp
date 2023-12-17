@@ -24,32 +24,32 @@ TEST_CASE("test allocation operates correctly", "[allocation]") {
   {
     tainted_test<int*> a = sandbox.malloc_in_sandbox<int>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<int>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<int>() ==
             sizeof(typename rlbox_sandbox_type_test::sbx_int));
   }
   {
     tainted_test<int**> a = sandbox.malloc_in_sandbox<int*>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<int*>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<int*>() ==
             sizeof(typename rlbox_sandbox_type_test::sbx_pointer));
   }
   {
     tainted_test<const int*> a = sandbox.malloc_in_sandbox<const int>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<const int>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<const int>() ==
             sizeof(typename rlbox_sandbox_type_test::sbx_int));
   }
   {
     tainted_test<volatile int*> a = sandbox.malloc_in_sandbox<volatile int>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<volatile int>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<volatile int>() ==
             sizeof(typename rlbox_sandbox_type_test::sbx_int));
   }
   {
     tainted_test<std::add_pointer_t<int[3]>> a =
         sandbox.malloc_in_sandbox<int[3]>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<int[3]>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<int[3]>() ==
             3 * sizeof(typename rlbox_sandbox_type_test::sbx_int));
   }
   {
@@ -57,7 +57,7 @@ TEST_CASE("test allocation operates correctly", "[allocation]") {
     tainted_test<std::add_pointer_t<int_ptr[3]>> a =
         sandbox.malloc_in_sandbox<int_ptr[3]>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<int_ptr[3]>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<int_ptr[3]>() ==
             3 * sizeof(typename rlbox_sandbox_type_test::sbx_pointer));
   }
   {
@@ -70,28 +70,28 @@ TEST_CASE("test allocation operates correctly", "[allocation]") {
     const size_t padded_field_size =
         std::max(sizeof(typename rlbox_sandbox_type_test::sbx_int),
                  sizeof(typename rlbox_sandbox_type_test::sbx_long));
-    REQUIRE(sandbox.get_object_size_for_malloc<test_struct>() >=
+    REQUIRE(sandbox.get_object_size_upperbound<test_struct>() >=
             2 * padded_field_size);
   }
   {
     tainted_test<rlbox::rlbox_uint32_t*> a =
         sandbox.malloc_in_sandbox<rlbox::rlbox_uint32_t>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<rlbox::rlbox_uint32_t>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<rlbox::rlbox_uint32_t>() ==
             sizeof(uint32_t));
   }
   {
     tainted_test<rlbox::rlbox_uint64_t*> a =
         sandbox.malloc_in_sandbox<rlbox::rlbox_uint64_t>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<rlbox::rlbox_uint64_t>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<rlbox::rlbox_uint64_t>() ==
             sizeof(uint64_t));
   }
   {
     tainted_test<std::add_pointer_t<rlbox::rlbox_uint64_t[3]>> a =
         sandbox.malloc_in_sandbox<rlbox::rlbox_uint64_t[3]>();
     sandbox.free_in_sandbox(a);
-    REQUIRE(sandbox.get_object_size_for_malloc<rlbox::rlbox_uint64_t[3]>() ==
+    REQUIRE(sandbox.get_object_size_upperbound<rlbox::rlbox_uint64_t[3]>() ==
             3 * sizeof(uint64_t));
   }
 

@@ -63,7 +63,9 @@ class rlbox_forwarder : std::optional<int> {
   inline RLBOX_FORWARD_CURR_CLASS(const RLBOX_FORWARD_CURR_CLASS&) = default;
   inline RLBOX_FORWARD_CURR_CLASS(RLBOX_FORWARD_CURR_CLASS&&) noexcept =
       default;
-  template <typename... TArgs>
+  template <typename... TArgs,
+            RLBOX_REQUIRE(
+                std::is_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArgs...>)>
   inline RLBOX_FORWARD_CURR_CLASS(TArgs&&... aArgs)
       : RLBOX_FORWARD_CONSTRUCTOR_NAME(std::forward<TArgs>(aArgs)...) {}
 

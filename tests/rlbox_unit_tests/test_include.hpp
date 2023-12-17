@@ -147,9 +147,9 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   }
 
   template <typename T>
-  inline sbx_pointer impl_malloc_in_sandbox(size_t aCount) {
+  inline sbx_pointer impl_malloc_in_sandbox(size_t aSize) {
     sbx_pointer ret = bump_index;
-    bump_index += aCount;
+    bump_index += aSize;
 
     detail::dynamic_check(bump_index < sandbox_mem_size,
                           "Ran out of sandbox memory");

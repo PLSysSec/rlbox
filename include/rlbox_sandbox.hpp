@@ -109,6 +109,12 @@ class rlbox_sandbox : protected TSbx {
   using base_types_convertor_tsbx = detail::rlbox_base_types_convertor<T, TSbx>;
 
   /**
+   * @brief Get the inner sandbox implementation object
+   * @return TSbx* which is the instance of the inner object
+   */
+  TSbx* get_inner_sandbox_impl() { return this; }
+
+  /**
    * @brief API invoked to initialize a new sandbox. This function should be run
    * to completion before any functions are invoked in this sandbox.
    *
@@ -361,6 +367,15 @@ class rlbox_sandbox : protected TSbx {
       tainted<TRet> ret = this->template impl_invoke_with_func_ptr<TFuncConv>(
           aFuncPtr, invoke_process_param(aArgs)...);
       return ret;
+    } else if constexpr (std::is_pointer_v<TRet>) {
+      base_types_convertor_tsbx<TRet*> ptr_sbx_rep =
+          this->template impl_invoke_with_func_ptr<TFuncConv>(
+              aFuncPtr, invoke_process_param(aArgs)...);
+      TRet* ptr = get_unsandboxed_pointer<TRet*>(ptr_sbx_rep);
+
+      size_t object_size = get_object_size_upperbound<TRet>();
+      tainted<TRet*> ret = get_tainted_from_raw_ptr(ptr, object_size);
+      return ret;
     } else {
       static_assert(detail::false_v<TFunc>, "Not implemented");
     }
@@ -383,6 +398,9 @@ class rlbox_sandbox : protected TSbx {
     auto ptr_start = reinterpret_cast<uintptr_t>(aPtr);
     auto ptr_end = detail::checked_add<uintptr_t>(
         ptr_start, (aSize - 1), "Pointer end computation has overflowed");
+
+    /// \todo Fix. This assumes the memory is contiguous. Else, start may be
+    /// inside, end may be inside, but the middle may not be inside.
 
     bool start_in_bounds = this->impl_is_pointer_in_sandbox_memory(
         reinterpret_cast<void*>(ptr_start));
@@ -414,7 +432,7 @@ class rlbox_sandbox : protected TSbx {
    * @return size_t is the size of type T in the sandbox representation
    */
   template <typename T>
-  size_t get_object_size_for_malloc() {
+  size_t get_object_size_upperbound() {
     if constexpr (!std::is_class_v<T> || detail::is_rlbox_stdint_type_v<T>) {
       using TSbxRep = base_types_convertor_tsbx<T>;
       return sizeof(TSbxRep);
@@ -482,7 +500,7 @@ class rlbox_sandbox : protected TSbx {
     detail::dynamic_check(count_unwrapped != 0,
                           "Allocation of 0 bytes requested");
 
-    size_t object_size = get_object_size_for_malloc<T>();
+    size_t object_size = get_object_size_upperbound<T>();
     auto total_size = rlbox::detail::checked_multiply<size_t>(
         object_size, count_unwrapped,
         "Allocation size computation has overflowed");
