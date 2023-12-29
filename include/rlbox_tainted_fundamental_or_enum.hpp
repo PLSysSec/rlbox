@@ -53,6 +53,11 @@ class tainted_fundamental_or_enum
   using TRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
                                   detail::tainted_rep_t<TSbxRep>>;
 
+  /**
+   * @brief The current class's type
+   */
+  using this_t = tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>;
+
   TRep data{0};
 
   ////////////////////////////////
@@ -286,6 +291,46 @@ class tainted_fundamental_or_enum
       auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);
       return ret;
     }
+  }
+
+  ////////////////////////////////
+
+  /**
+   * @brief prefix increment operator for tainted fundamental
+   * @return the incremented value
+   */
+  this_t& operator++() {
+    data++;
+    return *this;
+  }
+
+  /**
+   * @brief postfix increment operator for tainted fundamental
+   * @return the value prior to increment
+   */
+  this_t operator++(int) {
+    this_t old = *this;
+    operator++();
+    return old;
+  }
+
+  /**
+   * @brief prefix decrement operator for tainted fundamental
+   * @return the decremented value
+   */
+  this_t& operator--() {
+    data--;
+    return *this;
+  }
+
+  /**
+   * @brief postfix decrement operator for tainted fundamental
+   * @return the value prior to decrement
+   */
+  this_t operator--(int) {
+    this_t old = *this;
+    operator--();
+    return old;
   }
 };
 

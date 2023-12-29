@@ -62,17 +62,20 @@ TEST_CASE("sandbox_invoke operates correctly when returning pointers",
   const int count = 10;
   const int val = 5;
 
-  // tainted_test_ptr<int*>
-  // auto ptr =
-  test_ptr_sandbox_invoke(sandbox, create_array_with_val, count, val);
+  tainted_test_ptr<int*> ptr =
+      test_ptr_sandbox_invoke(sandbox, create_array_with_val, count, val);
 
-  // rlbox_test_helper_print_type<decltype(ptr)>();
+  for (int i = 0; i < count; i++) {
+    bool r = ptr[i].UNSAFE_unverified() == val;
+    REQUIRE(r);
+  }
 
-  // for(int i = 0; i < count; i++) {
+  for (tainted_test_ptr<int> i = 0; i.UNSAFE_unverified() < count; i++) {
+    bool r = ptr[i].UNSAFE_unverified() == val;
+    REQUIRE(r);
+  }
 
-  // }
-
-  // sandbox.free_in_sandbox(ptr);
+  sandbox.free_in_sandbox(ptr);
 
   sandbox.destroy_sandbox();
 }

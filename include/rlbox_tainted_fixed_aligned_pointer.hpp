@@ -54,6 +54,23 @@ class tainted_fixed_aligned_pointer
    */
   using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
+  /**
+   * @brief The current class's type
+   */
+  using this_t = tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>;
+
+  /**
+   * @brief tainted type of the sandbox
+   */
+  template <typename T>
+  using tainted = typename TSbx::template tainted<T>;
+
+  /**
+   * @brief tainted_volatile type of the sandbox
+   */
+  template <typename T>
+  using tainted_volatile = typename TSbx::template tainted_volatile<T>;
+
   detail::tainted_rep_t<TAppRep> data{0};
 
   ////////////////////////////////
@@ -64,10 +81,10 @@ class tainted_fixed_aligned_pointer
    * is assumed to point to sandbox memory.
    * @param aPtr is a pointer that is assumed to point to an object in sandbox
    * memory.
+   * @return this_t is the tainted pointer of the given param
    */
-  static tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>
-  from_unchecked_raw_pointer(TAppRep aPtr) {
-    tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx> ret;
+  static this_t from_unchecked_raw_pointer(TAppRep aPtr) {
+    this_t ret;
     ret.data = aPtr;
     return ret;
   }
@@ -81,16 +98,12 @@ class tainted_fixed_aligned_pointer
    * @brief Copy constructor: Construct a new tainted_fixed_aligned_pointer
    * object
    */
-  inline tainted_fixed_aligned_pointer(
-      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&) =
-      default;
+  inline tainted_fixed_aligned_pointer(const this_t&) = default;
   /**
    * @brief Move constructor: Construct a new tainted_fixed_aligned_pointer
    * object
    */
-  inline tainted_fixed_aligned_pointer(
-      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
-      default;
+  inline tainted_fixed_aligned_pointer(this_t&&) noexcept = default;
 
   /**
    * @brief Construct a tainted_fixed_aligned_pointer with a nullptr
@@ -110,18 +123,17 @@ class tainted_fixed_aligned_pointer
    * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TAppRepOther,
-            RLBOX_REQUIRE(
-                !std::is_same_v<
-                    tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>,
-                    tainted_fixed_aligned_pointer<TUseAppRepOther, TAppRepOther,
-                                                  TSbx>> &&
+  template <
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
+      RLBOX_REQUIRE(
+          !std::is_same_v<this_t, tainted_fixed_aligned_pointer<
+                                      TUseAppRepOther, TAppRepOther, TSbx>> &&
 
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                        TAppRepOther>)>
+          detail::is_tainted_any_wrapper_v<
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                  TAppRepOther>)>
   inline tainted_fixed_aligned_pointer(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
@@ -184,22 +196,16 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Copy assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&
-   * returns this object
+   * @return this_t& returns this object
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
-      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&
-          aOther) noexcept = default;
+  inline this_t& operator=(const this_t& aOther) noexcept = default;
 
   /**
    * @brief Move assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&
-   * returns this object
+   * @return this_t& returns this object
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
-      tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>&&
-          aOther) noexcept = default;
+  inline this_t& operator=(this_t&& aOther) noexcept = default;
 
   /**
    * @brief Operator= for tainted values from another tainted wrapper
@@ -210,21 +216,18 @@ class tainted_fixed_aligned_pointer
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
    * meets the assignable criterion
    * @param aOther is the rhs being assigned
-   * @return tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& is the
-   * reference to this value
+   * @return this_t& is the reference to this value
    */
   template <
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<
-              tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>,
-              tainted_fixed_aligned_pointer<TUseAppRepOther, TAppRepOther,
-                                            TSbx>> &&
+          !std::is_same_v<this_t, tainted_fixed_aligned_pointer<
+                                      TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
-  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
+  inline this_t& operator=(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {
     data = aOther.raw_host_rep();
     return *this;
@@ -233,8 +236,7 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Operator= for tainted values with a nullptr
    */
-  inline tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>& operator=(
-      const std::nullptr_t& /* unused */) noexcept {
+  inline this_t& operator=(const std::nullptr_t& /* unused */) noexcept {
     data = 0;
     return *this;
   }
@@ -242,9 +244,6 @@ class tainted_fixed_aligned_pointer
   ////////////////////////////////
 
  protected:
-  template <typename TSub>
-  using tainted_volatile = typename TSbx::template tainted_volatile<TSub>;
-
   /**
    * @brief Result type of operator*
    */
@@ -275,6 +274,58 @@ class tainted_fixed_aligned_pointer
     // Use std::adress of so we don't call the operator overload of operator &
     return std::addressof(**this);
   }
+
+  /**
+   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * a tainted_volatile&
+   * @param idx is the index
+   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  inline TOpDeref& operator[](size_t idx) {
+    std::remove_pointer_t<decltype(this)> data_idx = *this + idx;
+    return *data_idx;
+  }
+
+  /**
+   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * a tainted_volatile&
+   * @param idx is the index
+   * @return const TOpDeref& is the const reference to the sandbox memory that
+   * holds this data, i.e., memory which is a tainted_volatile type
+   */
+  inline const TOpDeref& operator[](size_t idx) const {
+    std::remove_pointer_t<decltype(this)> data_idx = *this + idx;
+    return *data_idx;
+  }
+
+  /**
+   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * a tainted_volatile&
+   * @tparam T is the type of the tainted index
+   * @param idx is the tainted index
+   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * data, i.e., memory which is a tainted_volatile type
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline TOpDeref& operator[](tainted<T> idx) {
+    return (*this)[idx.raw_host_rep()];
+  }
+
+  /**
+   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * a tainted_volatile&
+   * @tparam T is the type of the tainted index
+   * @param idx is the tainted index
+   * @return const TOpDeref& is the const reference to the sandbox memory that
+   * holds this data, i.e., memory which is a tainted_volatile type
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline const TOpDeref& operator[](tainted<T> idx) const {
+    return (*this)[idx.raw_host_rep()];
+  }
+
+  ////////////////////////////////
 
   /**
    * @brief Operator== behaves as expected for tainted pointers and compares the
@@ -328,6 +379,120 @@ class tainted_fixed_aligned_pointer
    * @return true if the pointer is not null
    */
   explicit inline operator bool() const noexcept { return !is_null(); }
+
+  ////////////////////////////////
+
+  /**
+   * @brief Operator+ which increments a tainted pointer by inc
+   * @param inc is the increment amount
+   * @return this_t is the incremented tainted pointer
+   */
+  inline this_t operator+(size_t inc) const {
+    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
+    auto new_data_int =
+        reinterpret_cast<uintptr_t>(data) + sizeof(TOpDeref) * inc;
+    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
+    bool in_bounds =
+        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
+                                                                       data);
+    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
+
+    auto ret = tainted_fixed_aligned_pointer<
+        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
+    return ret;
+  }
+
+  /**
+   * @brief Operator+ which increments a tainted pointer by inc
+   * @tparam T is the type of the tainted index
+   * @param inc is the increment amount
+   * @return this_t is the incremented tainted pointer
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t operator+(tainted<T> inc) const {
+    return (*this) + inc.raw_host_rep();
+  }
+
+  /**
+   * @brief Operator+= which increments a tainted pointer by inc and sets the
+   * pointer
+   * @param inc is the increment amount
+   * @return this_t& returns this object after modification
+   */
+  inline this_t& operator+=(size_t inc) {
+    this_t new_ptr = *this + inc;
+    *this = new_ptr;
+    return *this;
+  }
+
+  /**
+   * @brief Operator+= which increments a tainted pointer by inc and sets the
+   * pointer
+   * @tparam T is the type of the tainted index
+   * @param inc is the increment amount
+   * @return this_t& returns this object after modification
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t& operator+=(tainted<T> inc) {
+    (*this) += inc.raw_host_rep();
+    return *this;
+  }
+
+  /**
+   * @brief Operator- which decrements a tainted pointer by inc
+   * @param inc is the decrement amount
+   * @return this_t is the decremented tainted pointer
+   */
+  inline this_t operator-(size_t inc) const {
+    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
+    auto new_data_int =
+        reinterpret_cast<uintptr_t>(data) - sizeof(TOpDeref) * inc;
+    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
+    bool in_bounds =
+        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
+                                                                       data);
+    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
+
+    auto ret = tainted_fixed_aligned_pointer<
+        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
+    return ret;
+  }
+
+  /**
+   * @brief Operator- which decrements a tainted pointer by inc
+   * @tparam T is the type of the tainted index
+   * @param inc is the decrement amount
+   * @return this_t is the decremented tainted pointer
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t operator-(tainted<T> inc) const {
+    return (*this) - inc.raw_host_rep();
+  }
+
+  /**
+   * @brief Operator-= which decrements a tainted pointer by inc and sets the
+   * pointer
+   * @param inc is the decrement amount
+   * @return this_t& returns this object after modification
+   */
+  inline this_t& operator-=(size_t inc) {
+    this_t new_ptr = *this - inc;
+    *this = new_ptr;
+    return *this;
+  }
+
+  /**
+   * @brief Operator-= which decrements a tainted pointer by inc and sets the
+   * pointer
+   * @tparam T is the type of the tainted index
+   * @param inc is the decrement amount
+   * @return this_t& returns this object after modification
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t& operator-=(tainted<T> inc) {
+    (*this) -= inc.raw_host_rep();
+    return *this;
+  }
 };
 
 }  // namespace rlbox

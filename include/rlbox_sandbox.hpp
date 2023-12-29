@@ -150,7 +150,9 @@ class rlbox_sandbox : protected TSbx {
 
     if constexpr (
         !detail::has_member_impl_get_unsandboxed_pointer_with_example_v<TSbx> ||
-        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx>) {
+        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx> ||
+        !detail::has_member_impl_is_pointer_in_sandbox_memory_with_example_v<
+            TSbx>) {
       if (ret == rlbox_status_code::SUCCESS) {
         std::unique_lock lock(mSandboxesMutex);
         mSandboxes.insert(this);
@@ -187,7 +189,9 @@ class rlbox_sandbox : protected TSbx {
 
     if constexpr (
         !detail::has_member_impl_get_unsandboxed_pointer_with_example_v<TSbx> ||
-        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx>) {
+        !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx> ||
+        !detail::has_member_impl_is_pointer_in_sandbox_memory_with_example_v<
+            TSbx>) {
       std::unique_lock lock(mSandboxesMutex);
       mSandboxes.erase(this);
     }
@@ -197,8 +201,44 @@ class rlbox_sandbox : protected TSbx {
   template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
   [[nodiscard]] inline bool is_pointer_in_sandbox_memory(
       T aPtr) const noexcept {
+    if (!aPtr) {
+      return true;
+    }
     bool ret = this->template impl_is_pointer_in_sandbox_memory<T>(aPtr);
     return ret;
+  }
+
+  template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
+  [[nodiscard]] static inline bool is_pointer_in_sandbox_memory_with_example(
+      T aPtr, const void* aEgUnsbxedPtr) {
+    if (!aPtr) {
+      return true;
+    }
+    detail::dynamic_check(aEgUnsbxedPtr != nullptr,
+                          "Internal error: received a null example "
+                          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+
+    if constexpr (
+        detail::has_member_impl_is_pointer_in_sandbox_memory_with_example_v<
+            TSbx>) {
+      auto ret =
+          TSbx::template impl_is_pointer_in_sandbox_memory_with_example<T>(
+              aPtr, aEgUnsbxedPtr);
+      return ret;
+    } else {
+      std::shared_lock lock(mSandboxesMutex);
+
+      for (rlbox_sandbox* sandbox : mSandboxes) {
+        if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
+          return sandbox->template impl_is_pointer_in_sandbox_memory<T>(aPtr);
+        }
+      }
+
+      // this function does not return
+      detail::error_occured(
+          "Internal error: could not find the sandbox belonging to a "
+          "pointer. " RLBOX_FILE_BUG_MESSAGE);
+    }
   }
 
   /**
@@ -266,7 +306,7 @@ class rlbox_sandbox : protected TSbx {
 
       for (rlbox_sandbox* sandbox : mSandboxes) {
         if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
-          return sandbox->get_unsandboxed_pointer<T>(aPtr);
+          return sandbox->template get_unsandboxed_pointer<T>(aPtr);
         }
       }
 
@@ -298,7 +338,7 @@ class rlbox_sandbox : protected TSbx {
 
       for (rlbox_sandbox* sandbox : mSandboxes) {
         if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
-          return sandbox->get_sandboxed_pointer<T>(aPtr);
+          return sandbox->template get_sandboxed_pointer<T>(aPtr);
         }
       }
 
@@ -368,13 +408,13 @@ class rlbox_sandbox : protected TSbx {
           aFuncPtr, invoke_process_param(aArgs)...);
       return ret;
     } else if constexpr (std::is_pointer_v<TRet>) {
-      base_types_convertor_tsbx<TRet*> ptr_sbx_rep =
+      base_types_convertor_tsbx<TRet> ptr_sbx_rep =
           this->template impl_invoke_with_func_ptr<TFuncConv>(
               aFuncPtr, invoke_process_param(aArgs)...);
-      TRet* ptr = get_unsandboxed_pointer<TRet*>(ptr_sbx_rep);
+      TRet ptr = get_unsandboxed_pointer<TRet>(ptr_sbx_rep);
 
       size_t object_size = get_object_size_upperbound<TRet>();
-      tainted<TRet*> ret = get_tainted_from_raw_ptr(ptr, object_size);
+      tainted<TRet> ret = get_tainted_from_raw_ptr(ptr, object_size);
       return ret;
     } else {
       static_assert(detail::false_v<TFunc>, "Not implemented");

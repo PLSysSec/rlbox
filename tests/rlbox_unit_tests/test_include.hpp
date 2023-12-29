@@ -167,12 +167,6 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   template <typename T>
   inline void impl_free_in_sandbox([[maybe_unused]] sbx_pointer aPtr) {}
 
-  inline bool impl_is_pointer_in_sandbox_memory(const void* aPtr) const {
-    bool ret =
-        aPtr >= sandbox_memory && aPtr < (sandbox_memory + sandbox_mem_size);
-    return ret;
-  }
-
   template <typename T>
   inline bool impl_is_pointer_in_sandbox_memory(T ptr) const noexcept {
     // Deliberately use a C style cast as we we want to get rid of any CV

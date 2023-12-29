@@ -155,9 +155,15 @@ rlbox_detail_has_template_member(impl_free_in_sandbox);
 rlbox_detail_has_template_member(impl_get_unsandboxed_pointer_with_example);
 /**
  * @brief Create trait to check for member
- * `TSbx::impl_get_unsandboxed_pointer_with_example<void*>`
+ * `TSbx::impl_get_sandboxed_pointer_with_example<void*>`
  */
 rlbox_detail_has_template_member(impl_get_sandboxed_pointer_with_example);
+/**
+ * @brief Create trait to check for member
+ * `TSbx::impl_is_pointer_in_sandbox_memory_with_example<void*>`
+ */
+rlbox_detail_has_template_member(
+    impl_is_pointer_in_sandbox_memory_with_example);
 
 namespace detail_rlbox_remove_wrapper {
 

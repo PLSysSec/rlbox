@@ -110,7 +110,7 @@ class rlbox_sandbox_plugin_base {
  * rlbox_uint32_t(rlbox_uint32_t, rlbox_uint32_t), lib_add, 3, 4);
  * @endcode
  * @details This macro ultimately forwards the call to a method on @ref
- * rlbox::rlbox_sandbox along with  a stringified version of the function name
+ * rlbox::rlbox_sandbox along with a stringified version of the function name
  */
 #define sandbox_invoke_internal(sandbox, func_type, func_name, func_ptr, ...) \
   sandbox.INTERNAL_invoke_sandbox_function<func_type>(#func_name, func_ptr,   \
