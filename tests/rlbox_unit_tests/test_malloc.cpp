@@ -6,16 +6,22 @@
  * @brief Check that allocations in the sandbox work as expected
  */
 
+#include <algorithm>
+#include <stddef.h>
+#include <stdint.h>
 #include <type_traits>
 
 #include "test_include.hpp"
 
 #include "rlbox.hpp"
+#include "rlbox_stdint_types.hpp"
 
 struct test_struct {
   int a;
   long b;
 };
+
+// NOLINTBEGIN(misc-const-correctness)
 
 TEST_CASE("test allocation operates correctly", "[allocation]") {
   rlbox_sandbox_test sandbox;
@@ -107,3 +113,5 @@ TEST_CASE("test class allocation for larger ABI fails without definition",
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTEND(misc-const-correctness)

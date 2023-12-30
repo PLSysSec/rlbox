@@ -15,9 +15,10 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_data_conversion.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_tainted_hint.hpp"
 #include "rlbox_type_traits.hpp"
-#include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
@@ -123,7 +124,7 @@ class tainted_fundamental_or_enum
             return aOther;
           } else {
             detail::tainted_rep_t<detail::remove_cvref_t<TSbxRep>> ret;
-            return detail::convert_type_fundamental(&ret, aOther);
+            detail::convert_type_fundamental(&ret, aOther);
             return ret;
           }
         }()) {}
@@ -262,6 +263,66 @@ class tainted_fundamental_or_enum
     return *this;
   }
 
+  ////////////////////////////////
+
+ protected:
+  using TCompareRet =
+      std::conditional_t<TUseAppRep, bool, tainted_boolean_hint<TSbx>>;
+
+ public:
+  template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
+                                         std::remove_reference_t<TArg>>)>
+  friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
+    const bool ret = aThis.UNSAFE_unverified() == aArg;
+    if constexpr (TUseAppRep) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
+                                         std::remove_reference_t<TArg>>)>
+  friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
+    const bool ret = aThis.UNSAFE_unverified() != aArg;
+    if constexpr (TUseAppRep) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                                         std::remove_reference_t<TArg>>)>
+  friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
+    const bool ret = aThis.UNSAFE_unverified() == aArg.UNSAFE_unverified();
+    if constexpr (TUseAppRep) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                                         std::remove_reference_t<TArg>>)>
+  friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
+    const bool ret = aThis.UNSAFE_unverified() != aArg.UNSAFE_unverified();
+    if constexpr (TUseAppRep) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  explicit inline operator TCompareRet() const {
+    const bool ret = data != 0;
+    if constexpr (TUseAppRep) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
  protected:
   template <typename T>
   using tainted = typename TSbx::template tainted<T>;
@@ -300,7 +361,7 @@ class tainted_fundamental_or_enum
    * @return the incremented value
    */
   this_t& operator++() {
-    data++;
+    ++data;
     return *this;
   }
 
@@ -319,7 +380,7 @@ class tainted_fundamental_or_enum
    * @return the decremented value
    */
   this_t& operator--() {
-    data--;
+    --data;
     return *this;
   }
 

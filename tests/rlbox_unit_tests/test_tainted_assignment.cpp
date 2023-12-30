@@ -6,8 +6,6 @@
  * @brief Check that the various tainted wrappers can be assigned values.
  */
 
-#include <type_traits>
-
 #include "test_include.hpp"
 
 #include "rlbox_tainted_fixed_aligned.hpp"
@@ -16,6 +14,8 @@
 using rlbox::tainted_fixed_aligned;
 using rlbox::tainted_relocatable;
 // using rlbox::tainted_volatile;
+
+// NOLINTBEGIN(misc-const-correctness)
 
 template <template <typename, typename...> class TWrap>
 static void test_tainted_helper() {
@@ -177,3 +177,5 @@ TEST_CASE("tainted pointers assignment operates correctly",
   sandbox.free_in_sandbox(pp_int_taint_vol);
   sandbox.destroy_sandbox();
 }
+
+// NOLINTEND(misc-const-correctness)

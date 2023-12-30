@@ -10,6 +10,10 @@
 
 #include "test_include.hpp"
 
+#include "rlbox_tainted_base.hpp"
+
+// NOLINTBEGIN(misc-const-correctness)
+
 TEST_CASE("tainted tainted_volatile conversion operates correctly",
           "[tainted tainted_volatile conversion]") {
   rlbox_sandbox_test sandbox;
@@ -43,7 +47,7 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
   ////////////
 
   [[maybe_unused]] auto addrof_deref_taint_ptr =
-      tainted_test<int*>(&deref_taint_ptr);
+      static_cast<tainted_test<int*>>(&deref_taint_ptr);
   REQUIRE(std::is_same_v<decltype(addrof_deref_taint_ptr), tainted_test<int*>>);
   REQUIRE(
       std::is_same_v<decltype(tainted_test<int*>(&*ptr)), tainted_test<int*>>);
@@ -69,3 +73,5 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 
   sandbox.destroy_sandbox();
 }
+
+// NOLINTEND(misc-const-correctness)

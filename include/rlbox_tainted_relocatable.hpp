@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <stdlib.h>
+#include <cstdlib>
 // IWYU incorrectly reports this as unnecessary as the use of type_traits is in
 // a templated class
 #include <type_traits>  // IWYU pragma: keep
@@ -55,7 +55,7 @@ class tainted_relocatable_pointer
    */
   [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
       const {
-    return abort();
+    return std::abort();
   }
 
   /**
@@ -64,7 +64,7 @@ class tainted_relocatable_pointer
    * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
    */
   [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed() const {
-    return abort();
+    return std::abort();
   }
 };
 

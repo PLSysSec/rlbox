@@ -6,9 +6,9 @@
  * @brief Check that conversion between different types works as expected.
  */
 
-#include <array>
+// #include <array>
 #include <cstdint>
-#include <cstring>
+// #include <cstring>
 #include <limits>
 
 #include "test_include.hpp"
@@ -45,9 +45,9 @@ TEST_CASE("convert_type_fundamental for numerics operates correctly",
 TEST_CASE(
     "convert_type_fundamental dynamic checks for numerics operate correctly",
     "[convert]") {
-  uint64_t u32_max = std::numeric_limits<uint32_t>::max();
-  int64_t i32_max = std::numeric_limits<int32_t>::max();
-  int64_t i32_min = std::numeric_limits<int32_t>::min();
+  const uint64_t u32_max = std::numeric_limits<uint32_t>::max();
+  const int64_t i32_max = std::numeric_limits<int32_t>::max();
+  const int64_t i32_min = std::numeric_limits<int32_t>::min();
 
   {
     uint32_t dest{0};

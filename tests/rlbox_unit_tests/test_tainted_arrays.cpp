@@ -10,6 +10,8 @@
 
 #include <string.h>
 
+// NOLINTBEGIN(misc-const-correctness)
+
 /**
  * @brief External "app" version test_array_arg - a function that adds
  * elements of the array
@@ -47,7 +49,7 @@ static TSbxInt test_array_arg_internal(char* aSandboxMemory, TSbxPtr aArrIdx,
     char* val_ptr = arr + sizeof(int) * i;
     int copy = 0;
     memcpy(&copy, val_ptr, sizeof(int));
-    sum = TSbxInt(sum + copy);
+    sum = static_cast<TSbxInt>(sum + copy);
   }
   return sum;
 }
@@ -92,3 +94,5 @@ TEST_CASE("sandbox_invoke operates correctly with pointer arrays",
 
 //   sandbox.destroy_sandbox();
 // }
+
+// NOLINTEND(misc-const-correctness)

@@ -28,7 +28,7 @@ int* create_array_with_val(int aCount, int aVal);
 using TSbxInt = rlbox_sandbox_type_test_ptr::sbx_int;
 using TSbxPtr = rlbox_sandbox_type_test_ptr::sbx_pointer;
 
-rlbox_sandbox_test_ptr sandbox;
+static rlbox_sandbox_test_ptr gSandbox;
 
 /**
  * @brief Internal "sandbox" version of create_array_with_val -  a function that
@@ -43,39 +43,39 @@ rlbox_sandbox_test_ptr sandbox;
 static TSbxPtr create_array_with_val_internal(char* aSandboxMemory,
                                               TSbxInt aCount, TSbxInt aVal) {
   /// \todo Move the function call ABI to pass inner sandbox
-  auto sandbox_inner = sandbox.get_inner_sandbox_impl();
-  TSbxPtr arrIdx =
+  auto* sandbox_inner = gSandbox.get_inner_sandbox_impl();
+  const TSbxPtr arr_idx =
       sandbox_inner->impl_malloc_in_sandbox<TSbxInt>(sizeof(TSbxInt) * aCount);
-  char* arr = aSandboxMemory + arrIdx;
+  char* arr = aSandboxMemory + arr_idx;
 
   for (TSbxInt i = 0; i < aCount; i++) {
     char* val_ptr = arr + sizeof(TSbxInt) * i;
     memcpy(val_ptr, &aVal, sizeof(TSbxInt));
   }
 
-  return arrIdx;
+  return arr_idx;
 }
 
 TEST_CASE("sandbox_invoke operates correctly when returning pointers",
           "[tainted pointers]") {
-  sandbox.create_sandbox();
+  gSandbox.create_sandbox();
   const int count = 10;
   const int val = 5;
 
   tainted_test_ptr<int*> ptr =
-      test_ptr_sandbox_invoke(sandbox, create_array_with_val, count, val);
+      test_ptr_sandbox_invoke(gSandbox, create_array_with_val, count, val);
 
   for (int i = 0; i < count; i++) {
-    bool r = ptr[i].UNSAFE_unverified() == val;
+    const bool r = ptr[i].UNSAFE_unverified() == val;
     REQUIRE(r);
   }
 
   for (tainted_test_ptr<int> i = 0; i.UNSAFE_unverified() < count; i++) {
-    bool r = ptr[i].UNSAFE_unverified() == val;
+    const bool r = ptr[i].UNSAFE_unverified() == val;
     REQUIRE(r);
   }
 
-  sandbox.free_in_sandbox(ptr);
+  gSandbox.free_in_sandbox(ptr);
 
-  sandbox.destroy_sandbox();
+  gSandbox.destroy_sandbox();
 }

@@ -37,13 +37,13 @@ struct copy_cvref {
   // Implementation adapted from https://stackoverflow.com/a/31173086
  private:
   using R = std::remove_reference_t<TSource>;
-  using U1 = std::conditional_t<std::is_const<R>::value,
-                                std::add_const_t<TDest>, TDest>;
-  using U2 = std::conditional_t<std::is_volatile<R>::value,
-                                std::add_volatile_t<U1>, U1>;
-  using U3 = std::conditional_t<std::is_lvalue_reference<TSource>::value,
+  using U1 =
+      std::conditional_t<std::is_const_v<R>, std::add_const_t<TDest>, TDest>;
+  using U2 =
+      std::conditional_t<std::is_volatile_v<R>, std::add_volatile_t<U1>, U1>;
+  using U3 = std::conditional_t<std::is_lvalue_reference_v<TSource>,
                                 std::add_lvalue_reference_t<U2>, U2>;
-  using U4 = std::conditional_t<std::is_rvalue_reference<TSource>::value,
+  using U4 = std::conditional_t<std::is_rvalue_reference_v<TSource>,
                                 std::add_rvalue_reference_t<U3>, U3>;
 
  public:

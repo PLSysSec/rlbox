@@ -249,7 +249,9 @@ using test_pointer_int = int;
 template <typename T>
 using test_convertor_int_ptr = test_convertor_except_ptr<T, test_pointer_int>;
 
-using test_pointer_struct = struct { int a; };
+using test_pointer_struct = struct {
+  int a;
+};
 
 template <typename T>
 using test_convertor_struct_ptr =

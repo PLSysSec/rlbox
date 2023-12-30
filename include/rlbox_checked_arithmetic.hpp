@@ -29,7 +29,7 @@ T checked_add(T aLhs, T aRhs, const char* aErrorMsg) {
   static_assert(std::is_unsigned_v<T>, "Expected unsigned type");
 
   T ret = aLhs + aRhs;
-  bool has_overflow = ret < aLhs;
+  const bool has_overflow = ret < aLhs;
   dynamic_check(!has_overflow, aErrorMsg);
 
   return ret;
@@ -49,7 +49,7 @@ T checked_multiply(T aLhs, T aRhs, const char* aErrorMsg) {
   static_assert(std::is_unsigned_v<T>, "Expected unsigned type");
 
   T ret = aLhs * aRhs;
-  bool has_overflow = (aLhs != 0) && ((ret / aLhs) != aRhs);
+  const bool has_overflow = (aLhs != 0) && ((ret / aLhs) != aRhs);
   dynamic_check(!has_overflow, aErrorMsg);
 
   return ret;

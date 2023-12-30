@@ -9,7 +9,12 @@
 
 #include "test_include.hpp"
 
-#include <limits.h>
+#include "rlbox_stdint_types.hpp"
+
+#include <limits>
+#include <stdint.h>
+
+// NOLINTBEGIN(misc-const-correctness)
 
 static int test_add_int(int aVal1, int aVal2) { return aVal1 + aVal2; }
 static long test_add_long(long aVal1, long aVal2) { return aVal1 + aVal2; }
@@ -144,3 +149,5 @@ TEST_CASE("sandbox_invoke operates correctly with u64s", "[sandbox_invoke]") {
   REQUIRE(ret.UNSAFE_unverified() == expected);
   sandbox.destroy_sandbox();
 }
+
+// NOLINTEND(misc-const-correctness)

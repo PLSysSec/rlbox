@@ -31,6 +31,7 @@
 #  include <utility>
 #  include <optional>
 
+#  include "rlbox_helpers.hpp"
 #  include "rlbox_type_traits.hpp"
 
 namespace rlbox {
@@ -82,12 +83,16 @@ class rlbox_forwarder : std::optional<int> {
   }
 
   template <typename TArg>
-  inline auto operator==(TArg&& aArg) const noexcept {
+  inline auto operator==(TArg&& aArg) const
+      noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR ==
+                        std::forward<TArg>(aArg))) {
     return RLBOX_FORWARD_TARGET_EXPR == std::forward<TArg>(aArg);
   }
 
   template <typename TArg>
-  inline auto operator!=(TArg&& aArg) const noexcept {
+  inline auto operator!=(TArg&& aArg) const
+      noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR !=
+                        std::forward<TArg>(aArg))) {
     return RLBOX_FORWARD_TARGET_EXPR != std::forward<TArg>(aArg);
   }
 
@@ -97,7 +102,8 @@ class rlbox_forwarder : std::optional<int> {
   }
 
   template <typename TDummy = int>
-  explicit inline operator bool() const noexcept {
+  explicit inline operator bool() const
+      noexcept(noexcept(static_cast<bool>(RLBOX_FORWARD_TARGET_EXPR))) {
     return static_cast<bool>(RLBOX_FORWARD_TARGET_EXPR);
   }
 

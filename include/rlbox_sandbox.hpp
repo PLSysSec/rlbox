@@ -128,7 +128,7 @@ class rlbox_sandbox : protected TSbx {
   rlbox_status_code create_sandbox(TArgs... aArgs) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     auto expected = create_status::NOT_CREATED;
-    bool success = mSandboxCreated.compare_exchange_strong(
+    const bool success = mSandboxCreated.compare_exchange_strong(
         expected, create_status::INITIALIZING /* desired */);
     detail::dynamic_check(
         success,
@@ -137,7 +137,7 @@ class rlbox_sandbox : protected TSbx {
 #endif
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
-    rlbox_status_code ret =
+    const rlbox_status_code ret =
         this->impl_create_sandbox(std::forward<TArgs>(aArgs)...);
 
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
@@ -154,7 +154,7 @@ class rlbox_sandbox : protected TSbx {
         !detail::has_member_impl_is_pointer_in_sandbox_memory_with_example_v<
             TSbx>) {
       if (ret == rlbox_status_code::SUCCESS) {
-        std::unique_lock lock(mSandboxesMutex);
+        const std::unique_lock lock(mSandboxesMutex);
         mSandboxes.insert(this);
       }
     }
@@ -173,7 +173,7 @@ class rlbox_sandbox : protected TSbx {
   rlbox_status_code destroy_sandbox() {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     auto expected = create_status::CREATED;
-    bool success = mSandboxCreated.compare_exchange_strong(
+    const bool success = mSandboxCreated.compare_exchange_strong(
         expected, create_status::DESTRUCTING /* desired */);
     detail::dynamic_check(
         success,
@@ -182,7 +182,7 @@ class rlbox_sandbox : protected TSbx {
 #endif
     // Simply pass on the call to the underlying plugin as this operation is
     // specific to the plugin.
-    rlbox_status_code ret = this->impl_destroy_sandbox();
+    const rlbox_status_code ret = this->impl_destroy_sandbox();
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     mSandboxCreated.store(create_status::NOT_CREATED);
 #endif
@@ -192,7 +192,7 @@ class rlbox_sandbox : protected TSbx {
         !detail::has_member_impl_get_sandboxed_pointer_with_example_v<TSbx> ||
         !detail::has_member_impl_is_pointer_in_sandbox_memory_with_example_v<
             TSbx>) {
-      std::unique_lock lock(mSandboxesMutex);
+      const std::unique_lock lock(mSandboxesMutex);
       mSandboxes.erase(this);
     }
     return ret;
@@ -204,7 +204,7 @@ class rlbox_sandbox : protected TSbx {
     if (!aPtr) {
       return true;
     }
-    bool ret = this->template impl_is_pointer_in_sandbox_memory<T>(aPtr);
+    const bool ret = this->template impl_is_pointer_in_sandbox_memory<T>(aPtr);
     return ret;
   }
 
@@ -226,7 +226,7 @@ class rlbox_sandbox : protected TSbx {
               aPtr, aEgUnsbxedPtr);
       return ret;
     } else {
-      std::shared_lock lock(mSandboxesMutex);
+      const std::shared_lock lock(mSandboxesMutex);
 
       for (rlbox_sandbox* sandbox : mSandboxes) {
         if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
@@ -276,7 +276,7 @@ class rlbox_sandbox : protected TSbx {
   [[nodiscard]] inline base_types_convertor_tsbx<T> get_sandboxed_pointer(
       T aPtr) const {
     if (!aPtr) {
-      base_types_convertor_tsbx<T> ret{0};
+      const base_types_convertor_tsbx<T> ret{0};
       return ret;
     }
 
@@ -302,7 +302,7 @@ class rlbox_sandbox : protected TSbx {
           aPtr, aEgUnsbxedPtr);
       return ret;
     } else {
-      std::shared_lock lock(mSandboxesMutex);
+      const std::shared_lock lock(mSandboxesMutex);
 
       for (rlbox_sandbox* sandbox : mSandboxes) {
         if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
@@ -334,7 +334,7 @@ class rlbox_sandbox : protected TSbx {
           aPtr, aEgUnsbxedPtr);
       return ret;
     } else {
-      std::shared_lock lock(mSandboxesMutex);
+      const std::shared_lock lock(mSandboxesMutex);
 
       for (rlbox_sandbox* sandbox : mSandboxes) {
         if (sandbox->is_pointer_in_sandbox_memory(aEgUnsbxedPtr)) {
@@ -377,7 +377,7 @@ class rlbox_sandbox : protected TSbx {
     if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
       return aArg.UNSAFE_sandboxed(*this);
     } else {
-      tainted<TNoRef> val(aArg);
+      const tainted<TNoRef> val(aArg);
       return val.UNSAFE_sandboxed(*this);
     }
   }
@@ -408,12 +408,12 @@ class rlbox_sandbox : protected TSbx {
           aFuncPtr, invoke_process_param(aArgs)...);
       return ret;
     } else if constexpr (std::is_pointer_v<TRet>) {
-      base_types_convertor_tsbx<TRet> ptr_sbx_rep =
+      const base_types_convertor_tsbx<TRet> ptr_sbx_rep =
           this->template impl_invoke_with_func_ptr<TFuncConv>(
               aFuncPtr, invoke_process_param(aArgs)...);
       TRet ptr = get_unsandboxed_pointer<TRet>(ptr_sbx_rep);
 
-      size_t object_size = get_object_size_upperbound<TRet>();
+      const size_t object_size = get_object_size_upperbound<TRet>();
       tainted<TRet> ret = get_tainted_from_raw_ptr(ptr, object_size);
       return ret;
     } else {
@@ -442,9 +442,9 @@ class rlbox_sandbox : protected TSbx {
     /// \todo Fix. This assumes the memory is contiguous. Else, start may be
     /// inside, end may be inside, but the middle may not be inside.
 
-    bool start_in_bounds = this->impl_is_pointer_in_sandbox_memory(
+    const bool start_in_bounds = this->impl_is_pointer_in_sandbox_memory(
         reinterpret_cast<void*>(ptr_start));
-    bool end_in_bounds = this->impl_is_pointer_in_sandbox_memory(
+    const bool end_in_bounds = this->impl_is_pointer_in_sandbox_memory(
         reinterpret_cast<void*>(ptr_end));
 
     detail::dynamic_check(start_in_bounds && end_in_bounds,
@@ -516,7 +516,7 @@ class rlbox_sandbox : protected TSbx {
    */
   template <typename T>
   inline tainted<T*> malloc_in_sandbox() {
-    tainted<size_t> default_count(1);
+    const tainted<size_t> default_count(1);
     return malloc_in_sandbox<T>(default_count);
   }
 
@@ -535,18 +535,18 @@ class rlbox_sandbox : protected TSbx {
     detail::dynamic_check(mSandboxCreated.load() == create_status::CREATED,
                           "Sandbox not created");
 #endif
-    size_t count_unwrapped = aCount.raw_host_rep();
+    const size_t count_unwrapped = aCount.raw_host_rep();
 
     detail::dynamic_check(count_unwrapped != 0,
                           "Allocation of 0 bytes requested");
 
-    size_t object_size = get_object_size_upperbound<T>();
+    const size_t object_size = get_object_size_upperbound<T>();
     auto total_size = rlbox::detail::checked_multiply<size_t>(
         object_size, count_unwrapped,
         "Allocation size computation has overflowed");
 
     if constexpr (detail::has_member_impl_malloc_in_sandbox_v<TSbx>) {
-      base_types_convertor_tsbx<T*> ptr_sbx_rep =
+      const base_types_convertor_tsbx<T*> ptr_sbx_rep =
           this->template impl_malloc_in_sandbox<T>(total_size);
       T* ptr = get_unsandboxed_pointer<T*>(ptr_sbx_rep);
 

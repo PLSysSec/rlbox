@@ -13,8 +13,12 @@
 #define TestType rlbox_noop_sandbox
 #define CreateSandbox(sandbox) sandbox.create_sandbox()
 
+// NOLINTBEGIN(misc-include-cleaner)
+
 // Include the header that has the plugin to be tested
 #include "rlbox_noop_sandbox.hpp"
 
 // Include the tests from rlbox_plugin_tests folder
 #include "rlbox_plugin_tests/test_all.cpp"
+
+// NOLINTEND(misc-include-cleaner)

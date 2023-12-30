@@ -12,8 +12,8 @@
 
 #pragma once
 
+#include <cstdlib>
 #include <stdint.h>
-#include <stdlib.h>
 
 namespace rlbox {
 

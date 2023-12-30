@@ -7,10 +7,14 @@
  */
 
 #include <memory>
+#include <stdint.h>
 
 #include "test_include.hpp"
 
-#include "rlbox_wrapper_traits.hpp"
+#include "rlbox_sandbox.hpp"
+#include "rlbox_sandbox_plugin_base.hpp"
+#include "rlbox_tainted_relocatable.hpp"
+#include "rlbox_tainted_volatile_standard.hpp"
 
 class sandbox_same_pointer_rep
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_same_pointer_rep> {
@@ -44,7 +48,7 @@ class sandbox_same_pointer_rep
 };
 
 TEST_CASE("Test pointer conversions with same abi", "[pointer conversion]") {
-  rlbox::rlbox_sandbox<sandbox_same_pointer_rep> s;
+  const rlbox::rlbox_sandbox<sandbox_same_pointer_rep> s;
 
   auto ptr_own = std::make_unique<char>();
   char* ptr = ptr_own.get();
@@ -73,13 +77,13 @@ class sandbox_different_pointer_rep
 
   template <typename T>
   inline void* impl_get_sandboxed_pointer(T aPtr) const {
-    uintptr_t ret = reinterpret_cast<uintptr_t>(aPtr) - 1;
+    const uintptr_t ret = reinterpret_cast<uintptr_t>(aPtr) - 1;
     return reinterpret_cast<void*>(ret);
   }
 
   template <typename T>
   inline T impl_get_unsandboxed_pointer(void* aPtr) const {
-    uintptr_t ret = reinterpret_cast<uintptr_t>(aPtr) + 1;
+    const uintptr_t ret = reinterpret_cast<uintptr_t>(aPtr) + 1;
     return reinterpret_cast<T>(ret);
   }
 
@@ -92,7 +96,7 @@ class sandbox_different_pointer_rep
 
 TEST_CASE("Test pointer conversions with different abi",
           "[pointer conversion]") {
-  rlbox::rlbox_sandbox<sandbox_different_pointer_rep> s;
+  const rlbox::rlbox_sandbox<sandbox_different_pointer_rep> s;
 
   auto ptr_own = std::make_unique<char>();
   char* ptr = ptr_own.get();

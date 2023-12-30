@@ -18,18 +18,19 @@
 
 TEST_CASE("Test tainted_fixed_aligned specialization",
           "[rlbox tainted specialization]") {
-  [[maybe_unused]] tainted_fixed_aligned<int, rlbox_noop_sandbox> a{};
-  [[maybe_unused]] tainted_fixed_aligned<int*, rlbox_noop_sandbox> b{};
-  // [[maybe_unused]] tainted_fixed_aligned<int[3], rlbox_noop_sandbox> c{};
+  [[maybe_unused]] const tainted_fixed_aligned<int, rlbox_noop_sandbox> a{};
+  [[maybe_unused]] const tainted_fixed_aligned<int*, rlbox_noop_sandbox> b{};
+  // [[maybe_unused]] const tainted_fixed_aligned<int[3], rlbox_noop_sandbox>
+  // c{};
 
   // This is a compile time test so no requires.
 }
 
 TEST_CASE("Test tainted_relocatable specialization",
           "[rlbox tainted specialization]") {
-  [[maybe_unused]] tainted_relocatable<int, rlbox_noop_sandbox> a{};
-  [[maybe_unused]] tainted_relocatable<int*, rlbox_noop_sandbox> b{};
-  // [[maybe_unused]] tainted_relocatable<int[3], rlbox_noop_sandbox> c{};
+  [[maybe_unused]] const tainted_relocatable<int, rlbox_noop_sandbox> a{};
+  [[maybe_unused]] const tainted_relocatable<int*, rlbox_noop_sandbox> b{};
+  // [[maybe_unused]] const tainted_relocatable<int[3], rlbox_noop_sandbox> c{};
 
   // This is a compile time test so no requires.
 }

@@ -67,6 +67,7 @@ class rlbox_app_pointer;  // IWYU pragma: keep
  * compromised sandbox can modify tainted_volatile data at any time meaning the
  * hint could potentially be incorrect.
  */
+template <typename TSbx>
 class tainted_boolean_hint;  // IWYU pragma: keep
 
 /**
@@ -78,6 +79,7 @@ class tainted_boolean_hint;  // IWYU pragma: keep
  * tainted_volatile data at any time meaning the hint could potentially be
  * incorrect.
  */
+template <typename TSbx>
 class tainted_int_hint;  // IWYU pragma: keep
 
 /**

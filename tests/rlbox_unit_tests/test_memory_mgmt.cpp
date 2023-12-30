@@ -8,6 +8,8 @@
 
 #include "test_include.hpp"
 
+#include "rlbox_memory_mgmt.hpp"
+
 TEST_CASE("Test functionality of rlbox_unique_ptr", "[sandbox_invoke]") {
   rlbox_sandbox_test sandbox;
   sandbox.create_sandbox();

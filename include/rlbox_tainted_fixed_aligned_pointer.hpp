@@ -9,10 +9,12 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 #include <type_traits>
 #include <utility>
 
 #include "rlbox_abi_conversion.hpp"
+#include "rlbox_error_handling.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
@@ -278,24 +280,24 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Operator[] which dereferences a tainted pointer at in idx and gives
    * a tainted_volatile&
-   * @param idx is the index
+   * @param aIdx is the index
    * @return TOpDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref& operator[](size_t idx) {
-    std::remove_pointer_t<decltype(this)> data_idx = *this + idx;
+  inline TOpDeref& operator[](size_t aIdx) {
+    const std::remove_pointer_t<decltype(this)> data_idx = *this + aIdx;
     return *data_idx;
   }
 
   /**
    * @brief Operator[] which dereferences a tainted pointer at in idx and gives
    * a tainted_volatile&
-   * @param idx is the index
+   * @param aIdx is the index
    * @return const TOpDeref& is the const reference to the sandbox memory that
    * holds this data, i.e., memory which is a tainted_volatile type
    */
-  inline const TOpDeref& operator[](size_t idx) const {
-    std::remove_pointer_t<decltype(this)> data_idx = *this + idx;
+  inline const TOpDeref& operator[](size_t aIdx) const {
+    std::remove_pointer_t<decltype(this)> data_idx = *this + aIdx;
     return *data_idx;
   }
 
@@ -303,26 +305,26 @@ class tainted_fixed_aligned_pointer
    * @brief Operator[] which dereferences a tainted pointer at in idx and gives
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
-   * @param idx is the tainted index
+   * @param aIdx is the tainted index
    * @return TOpDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline TOpDeref& operator[](tainted<T> idx) {
-    return (*this)[idx.raw_host_rep()];
+  inline TOpDeref& operator[](tainted<T> aIdx) {
+    return (*this)[aIdx.raw_host_rep()];
   }
 
   /**
    * @brief Operator[] which dereferences a tainted pointer at in idx and gives
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
-   * @param idx is the tainted index
+   * @param aIdx is the tainted index
    * @return const TOpDeref& is the const reference to the sandbox memory that
    * holds this data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline const TOpDeref& operator[](tainted<T> idx) const {
-    return (*this)[idx.raw_host_rep()];
+  inline const TOpDeref& operator[](tainted<T> aIdx) const {
+    return (*this)[aIdx.raw_host_rep()];
   }
 
   ////////////////////////////////
@@ -383,14 +385,70 @@ class tainted_fixed_aligned_pointer
   ////////////////////////////////
 
   /**
-   * @brief Operator+ which increments a tainted pointer by inc
-   * @param inc is the increment amount
+   * @brief Operator+ which increments a tainted pointer by aInc
+   * @param aInc is the increment amount
    * @return this_t is the incremented tainted pointer
    */
-  inline this_t operator+(size_t inc) const {
+  inline this_t operator+(size_t aInc) const {
     detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
     auto new_data_int =
-        reinterpret_cast<uintptr_t>(data) + sizeof(TOpDeref) * inc;
+        reinterpret_cast<uintptr_t>(data) + sizeof(TOpDeref) * aInc;
+    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
+    const bool in_bounds =
+        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
+                                                                       data);
+    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
+
+    auto ret = tainted_fixed_aligned_pointer<
+        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
+    return ret;
+  }
+
+  /**
+   * @brief Operator+ which increments a tainted pointer by aInc
+   * @tparam T is the type of the tainted index
+   * @param aInc is the increment amount
+   * @return this_t is the incremented tainted pointer
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t operator+(tainted<T> aInc) const {
+    return (*this) + aInc.raw_host_rep();
+  }
+
+  /**
+   * @brief Operator+= which increments a tainted pointer by aInc and sets the
+   * pointer
+   * @param aInc is the increment amount
+   * @return this_t& returns this object after modification
+   */
+  inline this_t& operator+=(size_t aInc) {
+    this_t new_ptr = *this + aInc;
+    *this = new_ptr;
+    return *this;
+  }
+
+  /**
+   * @brief Operator+= which increments a tainted pointer by aInc and sets the
+   * pointer
+   * @tparam T is the type of the tainted index
+   * @param aInc is the increment amount
+   * @return this_t& returns this object after modification
+   */
+  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
+  inline this_t& operator+=(tainted<T> aInc) {
+    (*this) += aInc.raw_host_rep();
+    return *this;
+  }
+
+  /**
+   * @brief Operator- which decrements a tainted pointer by aInc
+   * @param aInc is the decrement amount
+   * @return this_t is the decremented tainted pointer
+   */
+  inline this_t operator-(size_t aInc) const {
+    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
+    auto new_data_int =
+        reinterpret_cast<uintptr_t>(data) - sizeof(TOpDeref) * aInc;
     auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
     bool in_bounds =
         rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
@@ -403,94 +461,38 @@ class tainted_fixed_aligned_pointer
   }
 
   /**
-   * @brief Operator+ which increments a tainted pointer by inc
+   * @brief Operator- which decrements a tainted pointer by aInc
    * @tparam T is the type of the tainted index
-   * @param inc is the increment amount
-   * @return this_t is the incremented tainted pointer
+   * @param aInc is the decrement amount
+   * @return this_t is the decremented tainted pointer
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator+(tainted<T> inc) const {
-    return (*this) + inc.raw_host_rep();
+  inline this_t operator-(tainted<T> aInc) const {
+    return (*this) - aInc.raw_host_rep();
   }
 
   /**
-   * @brief Operator+= which increments a tainted pointer by inc and sets the
+   * @brief Operator-= which decrements a tainted pointer by aInc and sets the
    * pointer
-   * @param inc is the increment amount
+   * @param aInc is the decrement amount
    * @return this_t& returns this object after modification
    */
-  inline this_t& operator+=(size_t inc) {
-    this_t new_ptr = *this + inc;
+  inline this_t& operator-=(size_t aInc) {
+    this_t new_ptr = *this - aInc;
     *this = new_ptr;
     return *this;
   }
 
   /**
-   * @brief Operator+= which increments a tainted pointer by inc and sets the
+   * @brief Operator-= which decrements a tainted pointer by aInc and sets the
    * pointer
    * @tparam T is the type of the tainted index
-   * @param inc is the increment amount
+   * @param aInc is the decrement amount
    * @return this_t& returns this object after modification
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator+=(tainted<T> inc) {
-    (*this) += inc.raw_host_rep();
-    return *this;
-  }
-
-  /**
-   * @brief Operator- which decrements a tainted pointer by inc
-   * @param inc is the decrement amount
-   * @return this_t is the decremented tainted pointer
-   */
-  inline this_t operator-(size_t inc) const {
-    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
-    auto new_data_int =
-        reinterpret_cast<uintptr_t>(data) - sizeof(TOpDeref) * inc;
-    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
-    bool in_bounds =
-        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
-                                                                       data);
-    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
-
-    auto ret = tainted_fixed_aligned_pointer<
-        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
-    return ret;
-  }
-
-  /**
-   * @brief Operator- which decrements a tainted pointer by inc
-   * @tparam T is the type of the tainted index
-   * @param inc is the decrement amount
-   * @return this_t is the decremented tainted pointer
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator-(tainted<T> inc) const {
-    return (*this) - inc.raw_host_rep();
-  }
-
-  /**
-   * @brief Operator-= which decrements a tainted pointer by inc and sets the
-   * pointer
-   * @param inc is the decrement amount
-   * @return this_t& returns this object after modification
-   */
-  inline this_t& operator-=(size_t inc) {
-    this_t new_ptr = *this - inc;
-    *this = new_ptr;
-    return *this;
-  }
-
-  /**
-   * @brief Operator-= which decrements a tainted pointer by inc and sets the
-   * pointer
-   * @tparam T is the type of the tainted index
-   * @param inc is the decrement amount
-   * @return this_t& returns this object after modification
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator-=(tainted<T> inc) {
-    (*this) -= inc.raw_host_rep();
+  inline this_t& operator-=(tainted<T> aInc) {
+    (*this) -= aInc.raw_host_rep();
     return *this;
   }
 };
