@@ -150,6 +150,12 @@ using:
    sudo apt install doxygen graphviz
    ```
 
+   On Arch Linux:
+
+   ```bash
+   sudo pacman -S doxygen graphviz
+   ```
+
 2. Build the docs using the docs target
 
    ```bash

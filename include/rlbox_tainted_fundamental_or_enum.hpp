@@ -270,6 +270,16 @@ class tainted_fundamental_or_enum
       std::conditional_t<TUseAppRep, bool, tainted_boolean_hint<TSbx>>;
 
  public:
+  /**
+   * @brief Operator== compares a primtive value against this tainted value
+   * @tparam TArg is the type of the rhs value
+   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
+   * @param aThis is the lhs argument whose type is this class
+   * @param aArg is the rhs argument
+   * @return `bool` if the value wrapped is a `tainted` value, and a @ref
+   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
+   * value
+   */
   template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
                                          std::remove_reference_t<TArg>>)>
   friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
@@ -281,6 +291,16 @@ class tainted_fundamental_or_enum
     }
   }
 
+  /**
+   * @brief Operator!= compares a primtive value against this tainted value
+   * @tparam TArg is the type of the rhs value
+   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
+   * @param aThis is the lhs argument whose type is this class
+   * @param aArg is the rhs argument
+   * @return `bool` if the value wrapped is a `tainted` value, and a @ref
+   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
+   * value
+   */
   template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
                                          std::remove_reference_t<TArg>>)>
   friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
@@ -292,6 +312,16 @@ class tainted_fundamental_or_enum
     }
   }
 
+  /**
+   * @brief Operator== compares a tainted value against this tainted value
+   * @tparam TArg is the type of the rhs tainted value
+   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
+   * @param aThis is the lhs argument whose type is this class
+   * @param aArg is the rhs argument which is a tainted value
+   * @return `bool` if this class is a `tainted` value, and a @ref
+   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
+   * value
+   */
   template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
                                          std::remove_reference_t<TArg>>)>
   friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
@@ -303,6 +333,16 @@ class tainted_fundamental_or_enum
     }
   }
 
+  /**
+   * @brief Operator!= compares a tainted value against this tainted value
+   * @tparam TArg is the type of the rhs tainted value
+   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
+   * @param aThis is the lhs argument whose type is this class
+   * @param aArg is the rhs argument which is a tainted value
+   * @return `bool` if this class is a `tainted` value, and a @ref
+   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
+   * value
+   */
   template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
                                          std::remove_reference_t<TArg>>)>
   friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
@@ -314,6 +354,13 @@ class tainted_fundamental_or_enum
     }
   }
 
+  /**
+   * @brief This conversion operator allows conversion of this tainted value to
+   * a `bool` if this class is a `tainted` value, and a @ref
+   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
+   * value
+   * @return The converted value
+   */
   explicit inline operator TCompareRet() const {
     const bool ret = data != 0;
     if constexpr (TUseAppRep) {
