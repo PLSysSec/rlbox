@@ -93,17 +93,16 @@ class tainted_volatile_standard_pointer
    * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <
-      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
-      typename TAppRepOther,
-      RLBOX_REQUIRE(!std::is_same_v<tainted_volatile_standard_pointer<
-                                        TUseAppRep, TAppRep, TSbx>,
-                                    tainted_volatile_standard_pointer<
-                                        TUseAppRepOther, TAppRepOther, TSbx>> &&
-                    detail::is_tainted_any_wrapper_v<
-                        TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-                    std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                            TAppRepOther>)>
+  template <template <bool, typename, typename> typename TWrap,
+            bool TUseAppRepOther, typename TAppRepOther,
+            RLBOX_REQUIRE(
+                !std::is_same_v<tainted_volatile_standard_pointer<
+                                    TUseAppRep, TAppRep, TSbx>,
+                                TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+                detail::is_tainted_any_wrapper_v<
+                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                        TAppRepOther>)>
   inline tainted_volatile_standard_pointer(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
@@ -206,8 +205,7 @@ class tainted_volatile_standard_pointer
       RLBOX_REQUIRE(
           !std::is_same_v<
               tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>,
-              tainted_volatile_standard_pointer<TUseAppRepOther, TAppRepOther,
-                                                TSbx>> &&
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>

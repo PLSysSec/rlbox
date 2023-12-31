@@ -55,6 +55,11 @@ class tainted_fundamental_or_enum
                                   detail::tainted_rep_t<TSbxRep>>;
 
   /**
+   * @brief The tainted_boolean_hint type specialized for this sandbox.
+   */
+  using tainted_boolean_hint_t = rlbox::tainted_boolean_hint<true, bool, TSbx>;
+
+  /**
    * @brief The current class's type
    */
   using this_t = tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>;
@@ -90,16 +95,15 @@ class tainted_fundamental_or_enum
    * @param aOther is the rhs being assigned
    */
   template <
-      bool TUseAppRepOther, typename TAppRepOther,
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
       RLBOX_REQUIRE(!std::is_same_v<
                         tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>,
-                        tainted_fundamental_or_enum<TUseAppRepOther,
-                                                    TAppRepOther, TSbx>> &&
+                        TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
                     std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
                                             TAppRepOther>)>
   inline tainted_fundamental_or_enum(
-      const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
-          aOther)
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
       : data([&] {
           if constexpr (TUseAppRep) {
             return aOther.raw_host_rep();
@@ -223,16 +227,17 @@ class tainted_fundamental_or_enum
    * the reference to this value
    */
   template <
-      bool TUseAppRepOther, typename TAppRepOther,
+      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
+      typename TAppRepOther,
       RLBOX_REQUIRE(
           !std::is_same_v<
               tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>,
-              tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther,
-                                          TSbx>> &&
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+          detail::is_tainted_any_wrapper_v<
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
-      const tainted_fundamental_or_enum<TUseAppRepOther, TAppRepOther, TSbx>&
-          aOther) noexcept {
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {
     if constexpr (TUseAppRep) {
       data = aOther.raw_host_rep();
     } else {
@@ -267,7 +272,7 @@ class tainted_fundamental_or_enum
 
  protected:
   using TCompareRet =
-      std::conditional_t<TUseAppRep, bool, tainted_boolean_hint<TSbx>>;
+      std::conditional_t<TUseAppRep, bool, tainted_boolean_hint_t>;
 
  public:
   /**
@@ -287,7 +292,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint<TSbx>(ret);
+      return tainted_boolean_hint_t(ret);
     }
   }
 
@@ -308,7 +313,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint<TSbx>(ret);
+      return tainted_boolean_hint_t(ret);
     }
   }
 
@@ -329,7 +334,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint<TSbx>(ret);
+      return tainted_boolean_hint_t(ret);
     }
   }
 
@@ -350,7 +355,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint<TSbx>(ret);
+      return tainted_boolean_hint_t(ret);
     }
   }
 
@@ -366,7 +371,7 @@ class tainted_fundamental_or_enum
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint<TSbx>(ret);
+      return tainted_boolean_hint_t(ret);
     }
   }
 

@@ -129,8 +129,7 @@ class tainted_fixed_aligned_pointer
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<this_t, tainted_fixed_aligned_pointer<
-                                      TUseAppRepOther, TAppRepOther, TSbx>> &&
+          !std::is_same_v<this_t, TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
 
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
@@ -224,8 +223,7 @@ class tainted_fixed_aligned_pointer
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<this_t, tainted_fixed_aligned_pointer<
-                                      TUseAppRepOther, TAppRepOther, TSbx>> &&
+          !std::is_same_v<this_t, TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>

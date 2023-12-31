@@ -41,18 +41,14 @@ TEST_CASE("tainted volatile equalities operates correctly",
   tainted_test<int*> a = sandbox.malloc_in_sandbox<int>();
   *a = 34;
 
-  REQUIRE(std::is_same_v<decltype(*a == 34),
-                         tainted_boolean_hint<rlbox_sandbox_type_test>>);
+  REQUIRE(std::is_same_v<decltype(*a == 34), tainted_boolean_hint_test>);
   REQUIRE((*a == 34).UNSAFE_unverified());
-  REQUIRE(std::is_same_v<decltype(*a != 0),
-                         tainted_boolean_hint<rlbox_sandbox_type_test>>);
+  REQUIRE(std::is_same_v<decltype(*a != 0), tainted_boolean_hint_test>);
   REQUIRE((*a != 0).UNSAFE_unverified());
 
-  REQUIRE(std::is_same_v<decltype(34 == *a),
-                         tainted_boolean_hint<rlbox_sandbox_type_test>>);
+  REQUIRE(std::is_same_v<decltype(34 == *a), tainted_boolean_hint_test>);
   REQUIRE((34 == *a).UNSAFE_unverified());
-  REQUIRE(std::is_same_v<decltype(0 != *a),
-                         tainted_boolean_hint<rlbox_sandbox_type_test>>);
+  REQUIRE(std::is_same_v<decltype(0 != *a), tainted_boolean_hint_test>);
   REQUIRE((0 != *a).UNSAFE_unverified());
 
   sandbox.free_in_sandbox(a);

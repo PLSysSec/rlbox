@@ -10,6 +10,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include "rlbox_error_handling.hpp"
 #include "rlbox_sandbox.hpp"
@@ -23,17 +24,24 @@ namespace rlbox {
  * `tainted<bool>` values because a compromised sandbox can modify
  * tainted_volatile data at any time.
  */
-template <typename TSbx>
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
 class tainted_boolean_hint
-    : public tainted_any_base<true /* TUseAppRep */, bool /* TAppRep */, TSbx> {
+    : public tainted_any_base<TUseAppRep, TAppRep, TSbx> {
  protected:
-  bool val;
+  static_assert(TUseAppRep && std::is_same_v<TAppRep, bool>);
+
+  /**
+   * @brief The current class's type
+   */
+  using this_t = rlbox::tainted_boolean_hint<TUseAppRep, TAppRep, TSbx>;
+
+  bool val{false};
 
  public:
   /**
    * @brief Construct a new tainted_boolean_hint object
    */
-  inline tainted_boolean_hint() : val(false) {}
+  inline tainted_boolean_hint() = default;
 
   /**
    * @brief Construct a new tainted_boolean_hint object with an initial value
@@ -43,12 +51,12 @@ class tainted_boolean_hint
   /**
    * @brief Copy constructor: Construct a new tainted_boolean_hint object
    */
-  inline tainted_boolean_hint(const tainted_boolean_hint<TSbx>&) = default;
+  inline tainted_boolean_hint(const this_t&) = default;
 
   /**
    * @brief Move constructor: Construct a new tainted_boolean_hint object
    */
-  inline tainted_boolean_hint(tainted_boolean_hint<TSbx>&&) noexcept = default;
+  inline tainted_boolean_hint(this_t&&) noexcept = default;
 
   /**
    * @brief Destroy the tainted_boolean_hint object
@@ -58,20 +66,18 @@ class tainted_boolean_hint
   /**
    * @brief Copy assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_boolean_hint<TSbx>& returns
+   * @return this_t& returns
    * this object
    */
-  inline tainted_boolean_hint<TSbx>& operator=(
-      const tainted_boolean_hint<TSbx>& aOther) noexcept = default;
+  inline this_t& operator=(const this_t& aOther) noexcept = default;
 
   /**
    * @brief Move assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_boolean_hint<TSbx>& returns
+   * @return this_t& returns
    * this object
    */
-  inline tainted_boolean_hint<TSbx>& operator=(
-      tainted_boolean_hint<TSbx>&& aOther) noexcept = default;
+  inline this_t& operator=(this_t&& aOther) noexcept = default;
 
   /**
    * @brief Operator= for boolean values
@@ -127,6 +133,32 @@ class tainted_boolean_hint
   [[nodiscard]] inline bool UNSAFE_unverified(
       [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const noexcept {
     return UNSAFE_unverified();
+  }
+
+  /**
+   * @brief Return the hint converted to a sandboxed boolean in the form of an
+   * int. This is unsafe as the application is not checking if this conversion
+   * is safe to perform. Use of unsafe operations may lead to confused deputy
+   * attacks.
+   * @return uint8_t which is the hint converted to a sandboxed boolean in the
+   * form of an int
+   */
+  [[nodiscard]] inline uint8_t UNSAFE_sandboxed() const noexcept {
+    return val ? 1 : 0;
+  }
+
+  /**
+   * @brief Return the hint converted to a sandboxed boolean in the form of an
+   * int. This is the same as the function without the sandbox parameter. This
+   * overload exists only for consistency with other tainted wrappers. This is
+   * unsafe as the application is not checking if this conversion is safe to
+   * perform. Use of unsafe operations may lead to confused deputy attacks.
+   * @return uint8_t which is the hint converted to a sandboxed boolean in the
+   * form of an int
+   */
+  [[nodiscard]] inline uint8_t UNSAFE_sandboxed(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const noexcept {
+    return UNSAFE_sandboxed();
   }
 
   /**

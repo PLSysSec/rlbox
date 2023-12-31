@@ -12,10 +12,38 @@
 
 #include "rlbox_tainted_base.hpp"
 
+/**
+ * @brief External "app" version test_bool_params - a function that checks
+ * parameters passed in are both true or both false
+ */
+// static
+int test_bool_params(int aArg1, int aArg2);
+
+using TSbxInt = rlbox_sandbox_type_test_ptr::sbx_int;
+using TSbxPtr = rlbox_sandbox_type_test_ptr::sbx_pointer;
+
+/**
+ * @brief Internal "sandbox" version of test_bool_params -a function that checks
+ * parameters passed in are are both true or both false. This function has to be
+ * written in the sandbox ABI.
+ *
+ * @param aSandboxMemory is the pointer to the sandboxes' internal heap
+ * @param aArg1 is a boolean arg
+ * @param aArg2 is a boolean arg
+ * @return 1 if the arguments are equal, 0 otherwise
+ */
+static TSbxInt test_bool_params_internal([[maybe_unused]] char* aSandboxMemory,
+                                         TSbxInt aArg1, TSbxInt aArg2) {
+  if ((aArg1 == 0 && aArg2 == 0) || (aArg1 > 0 && aArg2 > 0)) {
+    return 1;
+  }
+  return 0;
+}
+
 // NOLINTBEGIN(misc-const-correctness)
 
 TEST_CASE("tainted tainted_volatile conversion operates correctly",
-          "[tainted tainted_volatile conversion]") {
+          "[tainted conversions]") {
   rlbox_sandbox_test sandbox;
   sandbox.create_sandbox();
 
@@ -70,6 +98,21 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
 
   sandbox.free_in_sandbox(ptr2);
   sandbox.free_in_sandbox(ptr);
+
+  sandbox.destroy_sandbox();
+}
+
+TEST_CASE("tainted tainted_boolean_hint conversion operates correctly",
+          "[tainted conversions]") {
+  rlbox_sandbox_test_ptr sandbox;
+  sandbox.create_sandbox();
+
+  tainted_boolean_hint_test_ptr arg1 = true;
+  tainted_test_ptr<bool> arg2 = arg1;
+
+  tainted_test_ptr<int> ret =
+      test_ptr_sandbox_invoke(sandbox, test_bool_params, arg1, arg2);
+  REQUIRE(ret.UNSAFE_unverified() == 1);
 
   sandbox.destroy_sandbox();
 }
