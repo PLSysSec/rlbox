@@ -25,18 +25,14 @@ namespace rlbox {
  * the movement of the sandbox heap after creation.
  * @details The pointer value is stored as a pointer to the heap base (which can
  * be updated) plus an offset from the heap base.
- * @tparam TUseAppRep indicates whether this wrapper stores data in the app
- * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_relocatable_pointer
-    : public tainted_any_base<TUseAppRep, TAppRep, TSbx> {
+template <typename TAppRep, typename TSbx>
+class tainted_relocatable_pointer : public tainted_any_base<TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
-  static_assert(TUseAppRep, "Expected TUseAppRep to be true");
   static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  protected:

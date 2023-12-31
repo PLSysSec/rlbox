@@ -11,6 +11,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <type_traits>
 
 #include "rlbox_error_handling.hpp"
 #include "rlbox_sandbox.hpp"
@@ -24,16 +25,15 @@ namespace rlbox {
  * `tainted<bool>` values because a compromised sandbox can modify
  * tainted_volatile data at any time.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_boolean_hint
-    : public tainted_any_base<TUseAppRep, TAppRep, TSbx> {
+template <typename TAppRep, typename TSbx>
+class tainted_boolean_hint : public tainted_any_base<TAppRep, TSbx> {
  protected:
-  static_assert(TUseAppRep && std::is_same_v<TAppRep, bool>);
+  static_assert(std::is_same_v<TAppRep, bool>);
 
   /**
    * @brief The current class's type
    */
-  using this_t = rlbox::tainted_boolean_hint<TUseAppRep, TAppRep, TSbx>;
+  using this_t = rlbox::tainted_boolean_hint<TAppRep, TSbx>;
 
   bool val{false};
 
@@ -167,13 +167,13 @@ class tainted_boolean_hint
    * there is no sensible way to verify a boolean hint. The caller must instead
    * use `unverified_safe_because` and modify the application code to be safe
    * even if the hint is incorrect.
-   * @note Template parameter exists to make sure the assert only fires when
+   * @tparam TDummy parameter exists to make sure the assert only fires when
    * called
    */
-  template <typename T = void>
+  template <typename TDummy = void>
   inline bool copy_and_verify(...) const {
     rlbox_static_fail(
-        T,
+        TAppRep,
         "You can't call copy_and_verify on this value, as this is a result of "
         "a comparison with memory accessible by the sandbox. \n"
         "The sandbox could unexpectedly change the value leading to "

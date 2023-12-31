@@ -16,23 +16,11 @@
 
 namespace rlbox {
 
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <typename TAppRep, typename TSbx>
 using tainted_fixed_aligned_base = std::conditional_t<
     detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
-    tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>,
-    tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>>;
-
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_fixed_aligned_impl
-    : public tainted_fixed_aligned_base<TUseAppRep, TAppRep, TSbx> {
- public:
-#define RLBOX_FORWARD_TARGET_CLASS \
-  tainted_fixed_aligned_base<TUseAppRep, TAppRep, TSbx>
-#define RLBOX_FORWARD_CURR_CLASS tainted_fixed_aligned_impl
-#define RLBOX_FORWARD_TO_SUBCLASS
-
-#include "rlbox_forwarder.hpp"
-};
+    tainted_fundamental_or_enum<TAppRep, TSbx>,
+    tainted_fixed_aligned_pointer<TAppRep, TSbx>>;
 
 /**
  * @brief Implementation of a tainted data wrapper that assumes a fixed sandbox
@@ -47,7 +35,15 @@ class tainted_fixed_aligned_impl
  * sandbox implementation.
  */
 template <typename TAppRep, typename TSbx>
-using tainted_fixed_aligned =
-    tainted_fixed_aligned_impl<true /* TUseAppRep */, TAppRep, TSbx>;
+class tainted_fixed_aligned : public tainted_fixed_aligned_base<TAppRep, TSbx> {
+  KEEP_RLBOX_CLASSES_FRIENDLY;
+
+ public:
+#define RLBOX_FORWARD_TARGET_CLASS tainted_fixed_aligned_base<TAppRep, TSbx>
+#define RLBOX_FORWARD_CURR_CLASS tainted_fixed_aligned
+#define RLBOX_FORWARD_TO_SUBCLASS
+
+#include "rlbox_forwarder.hpp"
+};
 
 }  // namespace rlbox

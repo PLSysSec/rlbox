@@ -33,18 +33,15 @@ namespace rlbox {
  * copy of tainted_volatile_standard_pointer data into the application memory
  * (tainted data) or call copy_and_verify to make a sanitized copy of this data.
  *
- * @tparam TUseAppRep indicates whether this wrapper stores data in the app
- * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <typename TAppRep, typename TSbx>
 class tainted_volatile_standard_pointer
-    : public tainted_any_base<false, TAppRep, TSbx> {
+    : public tainted_any_base<TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
-  static_assert(!TUseAppRep, "Expected TUseAppRep to be false");
   static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  protected:
@@ -56,7 +53,7 @@ class tainted_volatile_standard_pointer
   /**
    * @brief The current class's type
    */
-  using this_t = tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>;
+  using this_t = tainted_volatile_standard_pointer<TAppRep, TSbx>;
 
   detail::tainted_rep_t<TSbxRep> data{0};
 
@@ -69,16 +66,12 @@ class tainted_volatile_standard_pointer
    * @brief Copy constructor: Construct a new tainted_volatile_standard_pointer
    * object
    */
-  inline tainted_volatile_standard_pointer(
-      const tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&) =
-      default;
+  inline tainted_volatile_standard_pointer(const this_t&) = default;
   /**
    * @brief Move constructor: Construct a new tainted_volatile_standard_pointer
    * object
    */
-  inline tainted_volatile_standard_pointer(
-      tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&) noexcept =
-      default;
+  inline tainted_volatile_standard_pointer(this_t&&) noexcept = default;
 
   /**
    * @brief Construct a tainted_volatile_standard_pointer with a nullptr
@@ -91,24 +84,21 @@ class tainted_volatile_standard_pointer
   /**
    * @brief Construct a new tainted object from another tainted wrapper
    * @tparam TWrap is the other wrapper type
-   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
    * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TAppRepOther,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-                !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther,
-                                                TAppRepOther, TSbx, this_t> &&
-                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                        TAppRepOther>)>
+  template <
+      template <typename, typename> typename TWrap, typename TAppRepOther,
+      RLBOX_REQUIRE(
+          detail::is_tainted_any_wrapper_v<TWrap<TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TAppRepOther, TSbx, this_t> &&
+          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                  TAppRepOther>)>
   inline tainted_volatile_standard_pointer(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
+      const TWrap<TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
 
   /**
@@ -174,46 +164,37 @@ class tainted_volatile_standard_pointer
   /**
    * @brief Copy assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+   * @return this_t&
    * returns this object
    */
-  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=(const tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-                aOther) noexcept = default;
+  inline this_t& operator=(const this_t& aOther) noexcept = default;
 
   /**
    * @brief Move assignment operator
    * @param aOther is the rhs argument
-   * @return tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
+   * @return this_t&
    * returns this object
    */
-  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=(tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&&
-                aOther) noexcept = default;
+  inline this_t& operator=(this_t&& aOther) noexcept = default;
 
   /**
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the other wrapper type
-   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
    * meets the assignable criterion
    * @param aOther is the rhs being assigned
-   * @return tainted_volatile_standard_pointer<TAppRep, TSbx>& is the reference
+   * @return this_t& is the reference
    * to this value
    */
   template <
-      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
-      typename TAppRepOther,
+      template <typename, typename> typename TWrap, typename TAppRepOther,
       RLBOX_REQUIRE(
-          detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-          !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther, TAppRepOther,
-                                          TSbx, this_t> &&
+          detail::is_tainted_any_wrapper_v<TWrap<TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TAppRepOther, TSbx, this_t> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
-  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {
+  inline this_t& operator=(const TWrap<TAppRepOther, TSbx>& aOther) {
     data = aOther.raw_sandbox_rep();
     return *this;
   }
@@ -222,8 +203,8 @@ class tainted_volatile_standard_pointer
    * @brief Operator= for tainted values with a nullptr
    * @param aNull is a nullptr
    */
-  inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
-  operator=([[maybe_unused]] const std::nullptr_t& aNull) noexcept {
+  inline this_t& operator=(
+      [[maybe_unused]] const std::nullptr_t& aNull) noexcept {
     data = 0;
     return *this;
   }

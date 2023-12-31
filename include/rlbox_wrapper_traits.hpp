@@ -176,11 +176,11 @@ struct helper<T, RLBOX_SPECIALIZE(!is_tainted_any_wrapper_v<T>)> {
   using type_sbx = void;
 };
 
-template <template <bool, typename, typename> typename TWrap, typename TAppRep,
-          typename TSbx, bool TUseAppRep>
-struct helper<TWrap<TUseAppRep, TAppRep, TSbx>,
+template <template <typename, typename> typename TWrap, typename TAppRep,
+          typename TSbx>
+struct helper<TWrap<TAppRep, TSbx>,
               RLBOX_SPECIALIZE(
-                  is_tainted_any_wrapper_v<TWrap<TUseAppRep, TAppRep, TSbx>>)> {
+                  is_tainted_any_wrapper_v<TWrap<TAppRep, TSbx>>)> {
   using type = TAppRep;
   using type_sbx = TSbx;
 };
@@ -194,9 +194,9 @@ template <typename T>
 using rlbox_get_wrapper_sandbox_t =
     typename detail_rlbox_remove_wrapper::helper<T>::type_sbx;
 
-template <template <bool, typename, typename> typename TWrap, bool TUseAppRep,
-          typename TAppRep, typename TSbx, typename TRhs>
+template <template <typename, typename> typename TWrap, typename TAppRep,
+          typename TSbx, typename TRhs>
 constexpr bool is_same_wrapper_type_v =
-    std::is_same_v<TWrap<TUseAppRep, TAppRep, TSbx>, TRhs>;
+    std::is_same_v<TWrap<TAppRep, TSbx>, TRhs>;
 
 }  // namespace rlbox::detail

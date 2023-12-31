@@ -67,7 +67,7 @@ class rlbox_app_pointer;  // IWYU pragma: keep
  * compromised sandbox can modify tainted_volatile data at any time meaning the
  * hint could potentially be incorrect.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <typename T, typename TSbx>
 class tainted_boolean_hint;  // IWYU pragma: keep
 
 /**
@@ -79,7 +79,7 @@ class tainted_boolean_hint;  // IWYU pragma: keep
  * tainted_volatile data at any time meaning the hint could potentially be
  * incorrect.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <typename T, typename TSbx>
 class tainted_int_hint;  // IWYU pragma: keep
 
 /**
@@ -134,30 +134,30 @@ enum class rlbox_status_code {
  * #define libtest_sandbox_invoke noop_sandbox_invoke
  * @endcode
  */
-#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)                        \
-  namespace rlbox {                                                          \
-  class SBXTYPE;                                                             \
-  }                                                                          \
-                                                                             \
-  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;                       \
-                                                                             \
-  using rlbox_sandbox_##SBXNAME =                                            \
-      rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;                    \
-                                                                             \
-  template <typename T>                                                      \
-  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;             \
-                                                                             \
-  template <typename T>                                                      \
-  using tainted_volatile_##SBXNAME =                                         \
-      rlbox_sandbox_##SBXNAME::tainted_volatile<T>;                          \
-                                                                             \
-  template <typename T>                                                      \
-  using rlbox_unique_ptr_##SBXNAME =                                         \
-      rlbox::rlbox_unique_ptr<T, rlbox_sandbox_type_##SBXNAME>;              \
-                                                                             \
-  using tainted_boolean_hint_##SBXNAME =                                     \
-      rlbox::tainted_boolean_hint<true, bool, rlbox_sandbox_type_##SBXNAME>; \
-                                                                             \
+#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)                  \
+  namespace rlbox {                                                    \
+  class SBXTYPE;                                                       \
+  }                                                                    \
+                                                                       \
+  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;                 \
+                                                                       \
+  using rlbox_sandbox_##SBXNAME =                                      \
+      rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;              \
+                                                                       \
+  template <typename T>                                                \
+  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;       \
+                                                                       \
+  template <typename T>                                                \
+  using tainted_volatile_##SBXNAME =                                   \
+      rlbox_sandbox_##SBXNAME::tainted_volatile<T>;                    \
+                                                                       \
+  template <typename T>                                                \
+  using rlbox_unique_ptr_##SBXNAME =                                   \
+      rlbox::rlbox_unique_ptr<T, rlbox_sandbox_type_##SBXNAME>;        \
+                                                                       \
+  using tainted_boolean_hint_##SBXNAME =                               \
+      rlbox::tainted_boolean_hint<bool, rlbox_sandbox_type_##SBXNAME>; \
+                                                                       \
   RLBOX_REQUIRE_SEMI_COLON
 
 // In the future the following will also be added

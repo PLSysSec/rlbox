@@ -36,18 +36,14 @@ namespace rlbox {
  * Due to these assumptions, the pointer value can be stored as a global
  * pointer.
  *
- * @tparam TUseAppRep indicates whether this wrapper stores data in the app
- * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam T is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_fixed_aligned_pointer
-    : public tainted_any_base<true, TAppRep, TSbx> {
+template <typename TAppRep, typename TSbx>
+class tainted_fixed_aligned_pointer : public tainted_any_base<TAppRep, TSbx> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
-  static_assert(TUseAppRep, "Expected TUseAppRep to be true");
   static_assert(std::is_pointer_v<TAppRep>, "Expected TAppRep to be a pointer");
 
  protected:
@@ -59,7 +55,7 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief The current class's type
    */
-  using this_t = tainted_fixed_aligned_pointer<TUseAppRep, TAppRep, TSbx>;
+  using this_t = tainted_fixed_aligned_pointer<TAppRep, TSbx>;
 
   /**
    * @brief tainted type of the sandbox
@@ -118,24 +114,20 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TWrap is the rhs wrapper type
-   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
    * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <template <bool, typename, typename> typename TWrap,
-            bool TUseAppRepOther, typename TAppRepOther,
-            RLBOX_REQUIRE(
-                detail::is_tainted_any_wrapper_v<
-                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-                !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther,
-                                                TAppRepOther, TSbx, this_t> &&
-                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                        TAppRepOther>)>
-  inline tainted_fixed_aligned_pointer(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
+  template <
+      template <typename, typename> typename TWrap, typename TAppRepOther,
+      RLBOX_REQUIRE(
+          detail::is_tainted_any_wrapper_v<TWrap<TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TAppRepOther, TSbx, this_t> &&
+          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                  TAppRepOther>)>
+  inline tainted_fixed_aligned_pointer(const TWrap<TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
 
   /**
@@ -210,7 +202,6 @@ class tainted_fixed_aligned_pointer
   /**
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
-   * @tparam TUseAppRepOther is the TUseAppRep of the rhs value
    * @tparam TAppRepOther is the type of the rhs value being wrapped
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
@@ -219,16 +210,12 @@ class tainted_fixed_aligned_pointer
    * @return this_t& is the reference to this value
    */
   template <
-      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
-      typename TAppRepOther,
+      template <typename, typename> typename TWrap, typename TAppRepOther,
       RLBOX_REQUIRE(
-          detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-          !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther, TAppRepOther,
-                                          TSbx, this_t> &&
+          detail::is_tainted_any_wrapper_v<TWrap<TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TAppRepOther, TSbx, this_t> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
-  inline this_t& operator=(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {
+  inline this_t& operator=(const TWrap<TAppRepOther, TSbx>& aOther) noexcept {
     data = aOther.raw_host_rep();
     return *this;
   }
@@ -335,9 +322,7 @@ class tainted_fixed_aligned_pointer
    * @return if the pointers refer to the same address
    */
   template <typename TAppRepOther>
-  inline bool operator==(
-      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRepOther, TSbx>&
-          aOther) const noexcept {
+  inline bool operator==(const this_t& aOther) const noexcept {
     return data == aOther.data;
   }
   /**
@@ -348,9 +333,7 @@ class tainted_fixed_aligned_pointer
    * @return if the pointers refer to different addresses
    */
   template <typename TAppRepOther>
-  inline bool operator!=(
-      const tainted_fixed_aligned_pointer<TUseAppRep, TAppRepOther, TSbx>&
-          aOther) const noexcept {
+  inline bool operator!=(const this_t& aOther) const noexcept {
     return !((*this) == aOther);
   }
 
@@ -397,8 +380,7 @@ class tainted_fixed_aligned_pointer
                                                                        data);
     detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
 
-    auto ret = tainted_fixed_aligned_pointer<
-        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
+    auto ret = this_t::from_unchecked_raw_pointer(new_data);
     return ret;
   }
 
@@ -453,8 +435,7 @@ class tainted_fixed_aligned_pointer
                                                                        data);
     detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
 
-    auto ret = tainted_fixed_aligned_pointer<
-        TUseAppRep, TAppRep, TSbx>::from_unchecked_raw_pointer(new_data);
+    auto ret = this_t::from_unchecked_raw_pointer(new_data);
     return ret;
   }
 

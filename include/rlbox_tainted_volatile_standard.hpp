@@ -16,39 +16,36 @@
 
 namespace rlbox {
 
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <typename TAppRep, typename TSbx>
 using tainted_volatile_standard_base = std::conditional_t<
     detail::is_fundamental_or_enum_v<detail::tainted_rep_t<TAppRep>>,
-    tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>,
-    tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>>;
-
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_volatile_standard_impl
-    : public tainted_volatile_standard_base<TUseAppRep, TAppRep, TSbx> {
- public:
-#define RLBOX_FORWARD_TARGET_CLASS \
-  tainted_volatile_standard_base<TUseAppRep, TAppRep, TSbx>
-#define RLBOX_FORWARD_CURR_CLASS tainted_volatile_standard_impl
-#define RLBOX_FORWARD_TO_SUBCLASS
-
-#include "rlbox_forwarder.hpp"
-};
+    tainted_volatile_fundamental_or_enum<TAppRep, TSbx>,
+    tainted_volatile_standard_pointer<TAppRep, TSbx>>;
 
 /**
  * @brief Implementation of tainted_volatile data wrapper for pointer data. This
  * wrapper indicates that this data is located in memory that can be modified by
  * the sandbox.
  *
- * @details This is implemented using @ref rlbox::tainted_fundamental_or_enum
- * for fundamental or enum types, @ref rlbox::tainted_volatile_standard_pointer
- * for pointer types.
+ * @details This is implemented using @ref
+ * rlbox::tainted_volatile_fundamental_or_enum for fundamental or enum types,
+ * @ref rlbox::tainted_volatile_standard_pointer for pointer types.
  *
  * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
 template <typename TAppRep, typename TSbx>
-using tainted_volatile_standard =
-    tainted_volatile_standard_impl<false /* TUseAppRep */, TAppRep, TSbx>;
+class tainted_volatile_standard
+    : public tainted_volatile_standard_base<TAppRep, TSbx> {
+  KEEP_RLBOX_CLASSES_FRIENDLY;
+
+ public:
+#define RLBOX_FORWARD_TARGET_CLASS tainted_volatile_standard_base<TAppRep, TSbx>
+#define RLBOX_FORWARD_CURR_CLASS tainted_volatile_standard
+#define RLBOX_FORWARD_TO_SUBCLASS
+
+#include "rlbox_forwarder.hpp"
+};
 
 }  // namespace rlbox
