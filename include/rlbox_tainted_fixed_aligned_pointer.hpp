@@ -125,16 +125,15 @@ class tainted_fixed_aligned_pointer
    * meets the constructible criterion
    * @param aOther is the rhs being assigned
    */
-  template <
-      template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
-      typename TAppRepOther,
-      RLBOX_REQUIRE(
-          !std::is_same_v<this_t, TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-
-          detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
-          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                  TAppRepOther>)>
+  template <template <bool, typename, typename> typename TWrap,
+            bool TUseAppRepOther, typename TAppRepOther,
+            RLBOX_REQUIRE(
+                detail::is_tainted_any_wrapper_v<
+                    TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+                !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther,
+                                                TAppRepOther, TSbx, this_t> &&
+                std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                        TAppRepOther>)>
   inline tainted_fixed_aligned_pointer(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther)
       : data(aOther.raw_host_rep()) {}
@@ -223,9 +222,10 @@ class tainted_fixed_aligned_pointer
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<this_t, TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther, TAppRepOther,
+                                          TSbx, this_t> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline this_t& operator=(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {

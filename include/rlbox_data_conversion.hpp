@@ -8,6 +8,7 @@
 #pragma once
 
 #include <limits>
+#include <type_traits>
 
 #include "rlbox_error_handling.hpp"
 #include "rlbox_type_traits.hpp"

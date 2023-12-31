@@ -53,6 +53,11 @@ class tainted_volatile_standard_pointer
    */
   using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
 
+  /**
+   * @brief The current class's type
+   */
+  using this_t = tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>;
+
   detail::tainted_rep_t<TSbxRep> data{0};
 
  public:
@@ -96,11 +101,10 @@ class tainted_volatile_standard_pointer
   template <template <bool, typename, typename> typename TWrap,
             bool TUseAppRepOther, typename TAppRepOther,
             RLBOX_REQUIRE(
-                !std::is_same_v<tainted_volatile_standard_pointer<
-                                    TUseAppRep, TAppRep, TSbx>,
-                                TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
                 detail::is_tainted_any_wrapper_v<
                     TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+                !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther,
+                                                TAppRepOther, TSbx, this_t> &&
                 std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
                                         TAppRepOther>)>
   inline tainted_volatile_standard_pointer(
@@ -203,11 +207,10 @@ class tainted_volatile_standard_pointer
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<
-              tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>,
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther, TAppRepOther,
+                                          TSbx, this_t> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_volatile_standard_pointer<TUseAppRep, TAppRep, TSbx>&
   operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) {

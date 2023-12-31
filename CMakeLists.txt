@@ -94,6 +94,7 @@ if(DEV)
     add_compile_options(/W4) # warnings
   else()
     add_compile_options(-Wall -Wextra -pedantic) # warnings
+    add_compile_options(-Wno-gnu-zero-variadic-macro-arguments) # Disable token pasting warning
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
     add_compile_options(-fsanitize=undefined)
@@ -151,19 +152,18 @@ if(DEV)
       COMMAND clang-format -style=file --dry-run --ferror-limit=5 --Werror ${ALL_CXX_SOURCE_FILES})
   endif()
 
-#  Disable cppcheck as it is running into syntax parsing errors
-#  find_program(CPPCHECK "cppcheck")
-#  if(CPPCHECK)
-#    message("Found ${CPPCHECK}")
-#    # Just check the rlbox header files
-#    # Note we configure cppcheck to assume no custom abort handler
-#    add_custom_target(cppcheck ALL
-#      COMMAND cppcheck
-#        --enable=warning,performance,portability,information,missingInclude -URLBOX_CUSTOM_ABORT
-#        --suppress=missingIncludeSystem
-#        --std=c++17 -I ${CMAKE_SOURCE_DIR}/include --error-exitcode=1 --quiet
-#        ${RLBOX_SOURCE_FILES})
-#  endif()
+ find_program(CPPCHECK "cppcheck")
+ if(CPPCHECK)
+   message("Found ${CPPCHECK}")
+   # Just check the rlbox header files
+   # Note we configure cppcheck to assume no custom abort handler
+   add_custom_target(cppcheck ALL
+     COMMAND cppcheck
+       --enable=warning,performance,portability,information,missingInclude -URLBOX_CUSTOM_ABORT
+       --suppress=missingIncludeSystem
+       --std=c++17 -I ${CMAKE_SOURCE_DIR}/include --error-exitcode=1 --quiet
+       ${RLBOX_SOURCE_FILES})
+ endif()
 
 endif()
 

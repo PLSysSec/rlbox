@@ -230,11 +230,10 @@ class tainted_fundamental_or_enum
       template <bool, typename, typename> typename TWrap, bool TUseAppRepOther,
       typename TAppRepOther,
       RLBOX_REQUIRE(
-          !std::is_same_v<
-              tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>,
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx>> &&
+          !detail::is_same_wrapper_type_v<TWrap, TUseAppRepOther, TAppRepOther,
+                                          TSbx, this_t> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline tainted_fundamental_or_enum<TUseAppRep, TAppRep, TSbx>& operator=(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx>& aOther) noexcept {
