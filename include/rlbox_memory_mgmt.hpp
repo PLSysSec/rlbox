@@ -11,8 +11,8 @@
 
 #include "rlbox_sandbox.hpp"
 
+#include <cstddef>
 #include <cstdlib>
-#include <stddef.h>
 #include <type_traits>
 
 namespace rlbox {

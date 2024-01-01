@@ -34,8 +34,8 @@ namespace rlbox::detail {
  */
 template <typename TTo, typename TFrom>
 inline void convert_type_fundamental(TTo* aTo, const TFrom& aFrom) {
-  /// \todo Replace with specific imports and fix iwyu file
-  using namespace std;
+  using std::is_same_v, std::is_integral_v, std::is_floating_point_v,
+      std::is_enum_v, std::is_unsigned_v, std::is_signed_v, std::numeric_limits;
 
   rlbox_static_assert(is_fundamental_or_enum_v<TTo>,
                       "Conversion target should be fundamental or enum type");

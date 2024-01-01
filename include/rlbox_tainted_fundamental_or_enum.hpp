@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "rlbox_helpers.hpp"
 #include "rlbox_tainted_fundamental_or_enum_base.hpp"
 
 namespace rlbox {

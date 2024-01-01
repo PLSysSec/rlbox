@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include <stdint.h>
 #include <type_traits>
 #include <utility>

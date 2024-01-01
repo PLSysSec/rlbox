@@ -10,6 +10,7 @@
 
 #include <type_traits>
 
+#include "rlbox_helpers.hpp"
 #include "rlbox_tainted_fundamental_or_enum.hpp"
 #include "rlbox_tainted_relocatable_pointer.hpp"
 #include "rlbox_wrapper_traits.hpp"

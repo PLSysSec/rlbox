@@ -16,7 +16,7 @@
  *      - The pointer types are converted to `struct`
  */
 
-#include <stddef.h>
+#include <cstddef>
 #include <stdint.h>
 #include <type_traits>
 

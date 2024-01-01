@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include <type_traits>
 
 #include "rlbox_stdint_types.hpp"

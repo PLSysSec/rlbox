@@ -25,6 +25,8 @@
  */
 #define RLBOX_REQUIRE(...) std::enable_if_t<__VA_ARGS__>* = nullptr
 
+///\todo  eliminate friendly macro
+
 /**
  * @brief For internal use only. Make sure RLBox's various tainted classes can
  * access the private members of other tainted classes.

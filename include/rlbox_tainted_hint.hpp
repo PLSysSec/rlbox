@@ -9,9 +9,11 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include <stdint.h>
-#include <type_traits>
+// IWYU doesn't seem to recognize the call to std::is_same_v so force IWYU to
+// keep the next include
+#include <type_traits>  // IWYU pragma: keep
 
 #include "rlbox_error_handling.hpp"
 #include "rlbox_sandbox.hpp"

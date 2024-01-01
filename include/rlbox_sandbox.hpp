@@ -11,10 +11,10 @@
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
 #  include <atomic>
 #endif
+#include <cstddef>
 #include <mutex>
 #include <set>
 #include <shared_mutex>
-#include <stddef.h>
 #include <stdint.h>
 #include <type_traits>
 #include <utility>

@@ -1,4 +1,2 @@
 [
-  { symbol: [ "std::nullptr_t", private, "<stddef.h>", public ] },
-  { symbol: [ "std", private, "<type_traits>", public ] },
 ]

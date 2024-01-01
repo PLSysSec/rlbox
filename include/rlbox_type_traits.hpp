@@ -9,7 +9,7 @@
 #pragma once
 
 #include <array>
-#include <stddef.h>
+#include <cstddef>
 #include <type_traits>
 
 #include "rlbox_error_handling.hpp"
