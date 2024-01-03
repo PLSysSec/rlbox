@@ -6,8 +6,9 @@
  * @brief This header implements a header-macro (a header that can be included
  * multiple times, has parameters that can be set prior to being included.
  * Header-macros are easier to debug in gdb than standard macros) that forwards
- * all C++ operators to an underlying object. This header itself is formatted
- * such that it parses as a valid C++ file to ensure editor intellisense works.
+ * all C++ operators to a specified base class or a member function. This header
+ * itself is formatted such that it parses as a valid C++ file to ensure editor
+ * intellisense works.
  */
 
 #if !defined(RLBOX_FORWARD_TARGET_CLASS) &&                                    \
@@ -82,6 +83,14 @@ class rlbox_forwarder : std::optional<int> {
     return *this;
   }
 
+#ifdef RLBOX_FORWARD_TO_SUBCLASS
+  /**
+   * @brief Operator== forwarding
+   *
+   * @tparam TArg is the type of the rhs
+   * @param aArg is the rhs of the equals check
+   * @return the result of operator==
+   */
   template <typename TArg>
   inline auto operator==(TArg&& aArg) const
       noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR ==
@@ -89,12 +98,108 @@ class rlbox_forwarder : std::optional<int> {
     return RLBOX_FORWARD_TARGET_EXPR == std::forward<TArg>(aArg);
   }
 
+  /**
+   * @brief Operator== specialization for the target class. This is necessary as
+   * the above general version would result in an ambigous overload set if the
+   * target class also implements equals with a generic equals operator.
+   *
+   * @param aArg Object of type RLBOX_FORWARD_TARGET_CLASS
+   * @return result of equals comparison
+   */
+  // template <typename TDummy = int>
+  inline auto operator==(const RLBOX_FORWARD_TARGET_CLASS& aArg) const
+      noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR == aArg)) {
+    return RLBOX_FORWARD_TARGET_EXPR == aArg;
+  }
+#else
+
+/**
+ * @brief Operator== forwarding when this wrapper is rhs
+ *
+ * @param aArg is the rhs of the equals check
+ * @return the result of operator==
+ */
+inline auto operator==(const RLBOX_FORWARD_CURR_CLASS& aArg) const
+    noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR ==
+                      aArg.RLBOX_FORWARD_TO_OBJECT)) {
+  return RLBOX_FORWARD_TARGET_EXPR == aArg.RLBOX_FORWARD_TO_OBJECT;
+}
+
+/**
+ * @brief Operator== forwarding when the wrapped class is lhs
+ *
+ * @param aLhs is the lhs of the equals check of the wrapped type
+ * @param aRhs is the rhs of the equals check of the wrapper type
+ * @return the result of operator==
+ */
+friend inline bool operator==(const RLBOX_FORWARD_TARGET_CLASS& aLhs,
+                              const RLBOX_FORWARD_CURR_CLASS& aRhs)
+    // can't apply noexcept to an rhs object since the class hasn't finished its
+    // definition
+    noexcept(noexcept(aLhs == std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
+  return aLhs == aRhs.RLBOX_FORWARD_TO_OBJECT;
+}
+
+#endif
+
+#ifdef RLBOX_FORWARD_TO_SUBCLASS
+  /**
+   * @brief Operator!= forwarding
+   *
+   * @tparam TArg is the type of the rhs
+   * @param aArg is the rhs of the not-equals check
+   * @return the result of operator!=
+   */
   template <typename TArg>
   inline auto operator!=(TArg&& aArg) const
       noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR !=
                         std::forward<TArg>(aArg))) {
     return RLBOX_FORWARD_TARGET_EXPR != std::forward<TArg>(aArg);
   }
+
+  /**
+   * @brief Operator!= specialization for the target class. This is necessary as
+   * the above general version would result in an ambigous overload set if the
+   * target class also implements not-equals with a generic not-equals operator.
+   *
+   * @param aArg Object of type RLBOX_FORWARD_TARGET_CLASS
+   * @return result of not-equals comparison
+   */
+  // template <typename TDummy = int>
+  inline auto operator!=(const RLBOX_FORWARD_TARGET_CLASS& aArg) const
+      noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR != aArg)) {
+    return RLBOX_FORWARD_TARGET_EXPR != aArg;
+  }
+#else
+
+/**
+ * @brief Operator!= forwarding when this wrapper is rhs
+ *
+ * @param aArg is the rhs of the not-equals check
+ * @return the result of operator!=
+ */
+inline auto operator!=(const RLBOX_FORWARD_CURR_CLASS& aArg) const
+    noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR !=
+                      aArg.RLBOX_FORWARD_TO_OBJECT)) {
+  return RLBOX_FORWARD_TARGET_EXPR != aArg.RLBOX_FORWARD_TO_OBJECT;
+}
+
+/**
+ * @brief Operator!= forwarding when the wrapped class is lhs
+ *
+ * @param aLhs is the lhs of the not-equals check of the wrapped type
+ * @param aRhs is the rhs of the not-equals check of the wrapper type
+ * @return the result of operator!=
+ */
+friend inline bool operator!=(const RLBOX_FORWARD_TARGET_CLASS& aLhs,
+                              const RLBOX_FORWARD_CURR_CLASS& aRhs)
+    // can't apply noexcept to an rhs object since the class hasn't finished its
+    // definition
+    noexcept(noexcept(aLhs != std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
+  return aLhs != aRhs.RLBOX_FORWARD_TO_OBJECT;
+}
+
+#endif
 
   template <typename TDummy = int>
   inline auto& operator*() const {
