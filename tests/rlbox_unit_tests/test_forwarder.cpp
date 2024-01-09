@@ -7,13 +7,16 @@
  */
 
 #include <optional>
+// NOLINTBEGIN(misc-include-cleaner)
+// Needed by rlbox_forwarder.hpp
 #include <type_traits>
 #include <utility>
 
-#include "catch2/catch.hpp"
-
 #include "rlbox_helpers.hpp"
 #include "rlbox_type_traits.hpp"
+// NOLINTEND(misc-include-cleaner)
+
+#include "catch2/catch.hpp"
 
 class optional_test_subclass : public std::optional<int> {
  public:
@@ -39,6 +42,8 @@ TEMPLATE_TEST_CASE("rlbox_forwarder constructor works correctly",
                    optional_test_member) {
   [[maybe_unused]] TestType t;
 }
+
+// NOLINTBEGIN(misc-const-correctness)
 
 TEMPLATE_TEST_CASE("rlbox_forwarder operater (not) equals works correctly",
                    "[rlbox_forwarder]", optional_test_subclass,
@@ -69,3 +74,5 @@ TEMPLATE_TEST_CASE("rlbox_forwarder operater (not) equals works correctly",
   REQUIRE(a1 != f2);
   REQUIRE(i1 != f2);
 }
+
+// NOLINTEND(misc-const-correctness)

@@ -76,23 +76,14 @@ if(DEV)
   endif()
 endif()
 
-# Clang format ###################
-
-find_program(CLANG_FORMAT "clang-format")
-if(CLANG_FORMAT)
-  message("Found ${CLANG_FORMAT}")
-  # Config in .clang-format
-  # When runs, this actually formats the files
-  add_custom_target(format-source
-    COMMAND clang-format -i -style=file ${ALL_CXX_SOURCE_FILES})
-endif()
-
 # Dev Tools ###################
 
 if(DEV)
   if(MSVC)
+    message("Enabling warnings")
     add_compile_options(/W4) # warnings
   else()
+    message("Enabling sanitizers and warnings")
     add_compile_options(-Wall -Wextra -pedantic) # warnings
     add_compile_options(-Wno-gnu-zero-variadic-macro-arguments) # Disable token pasting warning
     add_compile_options(-fsanitize=address)
@@ -101,16 +92,25 @@ if(DEV)
     add_link_options(-fsanitize=undefined)
   endif()
 
+  find_program(CLANG_FORMAT "clang-format")
+  if(CLANG_FORMAT)
+    message("Enabling ${CLANG_FORMAT} check")
+    # Config in .clang-format
+    # When runs, this actually formats the files
+    add_custom_target(format-source
+      COMMAND clang-format -i -style=file ${ALL_CXX_SOURCE_FILES})
+  endif()
+
   find_program(CLANG_TIDY "clang-tidy")
   if(CLANG_TIDY)
-    message("Found ${CLANG_TIDY}")
+    message("Enabling ${CLANG_TIDY} check")
     # Config in .clang-tidy
     set(CMAKE_CXX_CLANG_TIDY clang-tidy)
   endif()
 
   find_program(IWYU "iwyu")
   if(IWYU)
-    message("Found ${IWYU}")
+    message("Enabling ${IWYU} check")
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE
         python3 ${iwyu_wrapper_SOURCE_DIR}/iwyu_wrapper.py
         -Xiwyu --mapping_file="${CMAKE_SOURCE_DIR}/iwyu.imp"
@@ -154,7 +154,7 @@ if(DEV)
 
  find_program(CPPCHECK "cppcheck")
  if(CPPCHECK)
-   message("Found ${CPPCHECK}")
+   message("Enabling ${CPPCHECK} check")
    # Just check the rlbox header files
    # Note we configure cppcheck to assume no custom abort handler
    add_custom_target(cppcheck ALL
