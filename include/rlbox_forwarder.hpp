@@ -61,37 +61,20 @@ class rlbox_forwarder : std::optional<int> {
 #  define RLBOX_FORWARD_TARGET_EXPR RLBOX_FORWARD_TO_OBJECT
 #endif
 
-  inline RLBOX_FORWARD_CURR_CLASS() = default;
-  inline RLBOX_FORWARD_CURR_CLASS(const RLBOX_FORWARD_CURR_CLASS&) = default;
+  inline RLBOX_FORWARD_CURR_CLASS() noexcept(
+      std::is_nothrow_constructible_v<RLBOX_FORWARD_TARGET_CLASS>) = default;
+  inline RLBOX_FORWARD_CURR_CLASS(const RLBOX_FORWARD_CURR_CLASS&) noexcept(
+      std::is_nothrow_copy_constructible_v<RLBOX_FORWARD_TARGET_CLASS>) =
+      default;
   inline RLBOX_FORWARD_CURR_CLASS(RLBOX_FORWARD_CURR_CLASS&&) noexcept(
       std::is_nothrow_move_constructible_v<RLBOX_FORWARD_TARGET_CLASS>) =
       default;
 
-  // Single parameter constructors need to handle explicit We could use
-  // explicit(bool), i.e., explicit(std::is_convertible_v<TArg,
-  // RLBOX_FORWARD_TARGET_CLASS>) in C++ 20, but need to do this manually in
-  // C++17
-
-  template <typename TArg,
-            RLBOX_REQUIRE(
-                std::is_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArg>&&
-                    std::is_convertible_v<TArg, RLBOX_FORWARD_TARGET_CLASS>)>
-  inline RLBOX_FORWARD_CURR_CLASS(TArg&& aArg)
-      : RLBOX_FORWARD_CONSTRUCTOR_NAME(std::forward<TArg>(aArg)) {}
-
-  template <
-      typename TArg,
-      RLBOX_REQUIRE(std::is_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArg> &&
-                    !std::is_convertible_v<TArg, RLBOX_FORWARD_TARGET_CLASS>)>
-  explicit inline RLBOX_FORWARD_CURR_CLASS(TArg&& aArg)
-      : RLBOX_FORWARD_CONSTRUCTOR_NAME(std::forward<TArg>(aArg)) {}
-
-  // Multi parameter constructors are not explicit by default
   template <typename... TArgs,
             RLBOX_REQUIRE(
-                std::is_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArgs...> &&
-                (sizeof...(TArgs) > 1))>
-  inline RLBOX_FORWARD_CURR_CLASS(TArgs&&... aArgs)
+                std::is_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArgs...>)>
+  inline RLBOX_FORWARD_CURR_CLASS(TArgs&&... aArgs) noexcept(
+      std::is_nothrow_constructible_v<RLBOX_FORWARD_TARGET_CLASS, TArgs...>)
       : RLBOX_FORWARD_CONSTRUCTOR_NAME(std::forward<TArgs>(aArgs)...) {}
 
   inline ~RLBOX_FORWARD_CURR_CLASS() = default;
@@ -143,8 +126,8 @@ class rlbox_forwarder : std::optional<int> {
  * @return the result of operator==
  */
 inline auto operator==(const RLBOX_FORWARD_CURR_CLASS& aArg) const
-    noexcept(noexcept(RLBOX_FORWARD_TARGET_EXPR ==
-                      aArg.RLBOX_FORWARD_TO_OBJECT)) {
+    noexcept(noexcept(std::declval<RLBOX_FORWARD_TARGET_CLASS>() ==
+                      std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
   return RLBOX_FORWARD_TARGET_EXPR == aArg.RLBOX_FORWARD_TO_OBJECT;
 }
 
@@ -159,7 +142,7 @@ friend inline bool operator==(const RLBOX_FORWARD_TARGET_CLASS& aLhs,
                               const RLBOX_FORWARD_CURR_CLASS& aRhs)
     // can't apply noexcept to an rhs object since the class hasn't finished its
     // definition
-    noexcept(noexcept(aLhs == std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
+    noexcept(noexcept(std::declval<RLBOX_FORWARD_TARGET_CLASS>() == std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
   return aLhs == aRhs.RLBOX_FORWARD_TO_OBJECT;
 }
 
