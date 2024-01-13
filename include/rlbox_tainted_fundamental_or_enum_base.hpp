@@ -350,7 +350,7 @@ class tainted_fundamental_or_enum_base
    * value
    * @return The converted value
    */
-  explicit inline operator TCompareRet() const {
+  inline operator TCompareRet() const {
     const bool ret = data != 0;
     if constexpr (TUseAppRep) {
       return ret;

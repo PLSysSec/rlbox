@@ -119,6 +119,9 @@ class rlbox_forwarder : std::optional<int> {
   }
 #else
 
+// Redundant looking comparison used in the noexcept below. Ignore this.
+// NOLINTBEGIN (misc-redundant-expression)
+
 /**
  * @brief Operator== forwarding when this wrapper is rhs
  *
@@ -142,9 +145,12 @@ friend inline bool operator==(const RLBOX_FORWARD_TARGET_CLASS& aLhs,
                               const RLBOX_FORWARD_CURR_CLASS& aRhs)
     // can't apply noexcept to an rhs object since the class hasn't finished its
     // definition
-    noexcept(noexcept(std::declval<RLBOX_FORWARD_TARGET_CLASS>() == std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
+    noexcept(noexcept(std::declval<RLBOX_FORWARD_TARGET_CLASS>() ==
+                      std::declval<RLBOX_FORWARD_TARGET_CLASS>())) {
   return aLhs == aRhs.RLBOX_FORWARD_TO_OBJECT;
 }
+
+// NOLINTEND (misc-redundant-expression)
 
 #endif
 
@@ -213,7 +219,7 @@ friend inline bool operator!=(const RLBOX_FORWARD_TARGET_CLASS& aLhs,
   }
 
   template <typename TDummy = int>
-  explicit inline operator bool() const
+  inline operator bool() const
       noexcept(noexcept(static_cast<bool>(RLBOX_FORWARD_TARGET_EXPR))) {
     return static_cast<bool>(RLBOX_FORWARD_TARGET_EXPR);
   }

@@ -322,9 +322,13 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<TAppRep, TSbx> {
    * @return if the pointers refer to the same address
    */
   template <typename TAppRepOther>
-  inline bool operator==(const this_t& aOther) const noexcept {
-    return data == aOther.data;
+  friend inline bool operator==(
+      const tainted_fixed_aligned_pointer<TAppRep, TSbx>& aThis,
+      const tainted_fixed_aligned_pointer<TAppRepOther, TSbx>&
+          aOther) noexcept {
+    return aThis.data == aOther.data;
   }
+
   /**
    * @brief Operator!= behaves as expected for tainted pointers and compares the
    * pointer for inequality.
@@ -333,8 +337,11 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<TAppRep, TSbx> {
    * @return if the pointers refer to different addresses
    */
   template <typename TAppRepOther>
-  inline bool operator!=(const this_t& aOther) const noexcept {
-    return !((*this) == aOther);
+  friend inline bool operator!=(
+      const tainted_fixed_aligned_pointer<TAppRep, TSbx>& aThis,
+      const tainted_fixed_aligned_pointer<TAppRepOther, TSbx>&
+          aOther) noexcept {
+    return aThis.data != aOther.data;
   }
 
  protected:
@@ -361,7 +368,7 @@ class tainted_fixed_aligned_pointer : public tainted_any_base<TAppRep, TSbx> {
    * @brief Convert the pointer to bool.
    * @return true if the pointer is not null
    */
-  explicit inline operator bool() const noexcept { return !is_null(); }
+  inline operator bool() const noexcept { return !is_null(); }
 
   ////////////////////////////////
 
