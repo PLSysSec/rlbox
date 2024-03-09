@@ -14,9 +14,9 @@
 
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
-#include "rlbox_sandbox.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {

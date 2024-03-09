@@ -9,8 +9,7 @@
 #pragma once
 
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_relocatable.hpp"
-#include "rlbox_tainted_volatile_standard.hpp"
+#include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox {

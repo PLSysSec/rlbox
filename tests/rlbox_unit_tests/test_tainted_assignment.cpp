@@ -8,8 +8,7 @@
 
 #include "test_include.hpp"
 
-#include "rlbox_tainted_fixed_aligned.hpp"
-#include "rlbox_tainted_relocatable.hpp"
+#include "rlbox_tainted_impl.hpp"
 
 // NOLINTBEGIN(misc-const-correctness)
 
@@ -64,7 +63,7 @@ static void test_tainted_helper() {
     tainted_impl<true, short, rlbox_noop_arena_smallerabi_sandbox> a =
         overflow_val_1;
     // Converting to the sandbox repr should cause an error due to overflow
-    REQUIRE_THROWS(a.UNSAFE_sandboxed() == overflow_val_1);
+    REQUIRE_THROWS(a.UNSAFE_sandboxed() == overflow_val_1);  // NOLINT
   }
 
   // Check floating point values

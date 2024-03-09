@@ -13,8 +13,7 @@
 
 #include "rlbox_sandbox.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_relocatable.hpp"
-#include "rlbox_tainted_volatile_standard.hpp"
+#include "rlbox_tainted_impl.hpp"
 
 class sandbox_same_pointer_rep
     : public rlbox::rlbox_sandbox_plugin_base<sandbox_same_pointer_rep> {

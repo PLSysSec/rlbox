@@ -16,8 +16,8 @@
 #include <type_traits>  // IWYU pragma: keep
 
 #include "rlbox_error_handling.hpp"
-#include "rlbox_sandbox.hpp"
 #include "rlbox_tainted_base.hpp"
+#include "rlbox_types.hpp"
 
 namespace rlbox {
 

@@ -11,8 +11,7 @@
 
 #include "test_include.hpp"
 
-#include "rlbox_tainted_fixed_aligned.hpp"
-#include "rlbox_tainted_relocatable.hpp"
+#include "rlbox_tainted_impl.hpp"
 
 #include "rlbox_noop_sandbox.hpp"
 

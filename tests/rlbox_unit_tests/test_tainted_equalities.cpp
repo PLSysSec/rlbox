@@ -10,8 +10,6 @@
 
 #include "test_include.hpp"
 
-#include "rlbox_tainted_hint.hpp"
-
 // NOLINTBEGIN(misc-const-correctness)
 
 TEST_CASE("tainted equalities operates correctly", "[tainted equality]") {

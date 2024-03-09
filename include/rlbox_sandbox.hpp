@@ -24,6 +24,7 @@
 #include "rlbox_error_handling.hpp"
 #include "rlbox_function_traits.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
