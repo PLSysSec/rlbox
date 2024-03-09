@@ -161,6 +161,7 @@ if(DEV)
      COMMAND cppcheck
        --enable=warning,performance,portability,information,missingInclude -URLBOX_CUSTOM_ABORT
        --suppress=missingIncludeSystem
+       --check-level=exhaustive
        --std=c++17 -I ${CMAKE_SOURCE_DIR}/include --error-exitcode=1 --quiet
        ${RLBOX_SOURCE_FILES})
  endif()
