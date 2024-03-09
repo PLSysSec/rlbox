@@ -27,10 +27,10 @@ class rlbox_noop_sandbox
     : public rlbox_sandbox_plugin_base<rlbox_noop_sandbox> {
  public:
   template <typename T>
-  using tainted = tainted_relocatable<T, rlbox_noop_sandbox>;
+  using tainted = tainted_impl<true, T, rlbox_noop_sandbox>;
 
   template <typename T>
-  using tainted_volatile = tainted_volatile_standard<T, rlbox_noop_sandbox>;
+  using tainted_volatile = tainted_impl<false, T, rlbox_noop_sandbox>;
 
   /**
    * @brief Implementation of the RLBox create_sandbox API. For the

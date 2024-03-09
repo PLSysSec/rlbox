@@ -38,4 +38,13 @@ class tainted_any_base : public tainted_interface_sbx<TSbx> {
   /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
 };
 
+template <bool TUseAppRep, typename T, typename TSbx>
+class tainted_base : public tainted_interface_sbx<TSbx> {
+  /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
+};
+
+template <bool TUseAppRep, typename TAppRep, typename TSbx,
+          typename TEnable = void>
+class tainted_impl;  // IWYU pragma: keep
+
 }  // namespace rlbox

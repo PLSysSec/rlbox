@@ -184,6 +184,15 @@ struct helper<TWrap<TAppRep, TSbx>,
   using type = TAppRep;
   using type_sbx = TSbx;
 };
+
+template <template <bool, typename, typename, typename...> typename TWrap,
+          bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
+struct helper<TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>,
+              RLBOX_SPECIALIZE(is_tainted_any_wrapper_v<
+                               TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>>)> {
+  using type = TAppRep;
+  using type_sbx = TSbx;
+};
 }  // namespace detail_rlbox_remove_wrapper
 
 template <typename T>
@@ -198,5 +207,11 @@ template <template <typename, typename> typename TWrap, typename TAppRep,
           typename TSbx, typename TRhs>
 constexpr bool is_same_wrapper_type_v =
     std::is_same_v<TWrap<TAppRep, TSbx>, TRhs>;
+
+template <typename TCompare,
+          template <bool, typename, typename, typename...> typename TWrap,
+          bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
+constexpr bool is_same_wrapper_type_new_v =
+    std::is_same_v<TCompare, TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>>;
 
 }  // namespace rlbox::detail

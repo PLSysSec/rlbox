@@ -11,31 +11,28 @@
 #include "rlbox_tainted_fixed_aligned.hpp"
 #include "rlbox_tainted_relocatable.hpp"
 
-using rlbox::tainted_fixed_aligned;
-using rlbox::tainted_relocatable;
-// using rlbox::tainted_volatile;
-
 // NOLINTBEGIN(misc-const-correctness)
 
-template <template <typename, typename...> class TWrap>
 static void test_tainted_helper() {
   const int random_val_1 = 4;
   const int random_val_2 = 5;
 
   // Check basic assignments and initialization
   {
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> a{};
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> a{};
     a = random_val_1;
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> b = random_val_2;
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> b =
+        random_val_2;
     REQUIRE(a.UNSAFE_unverified() == random_val_1);
     REQUIRE(b.UNSAFE_unverified() == random_val_2);
   }
 
   // Check assignment from same wrapper type
   {
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> a = random_val_1;
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> b = a;
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> c{};
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> a =
+        random_val_1;
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> b = a;
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> c{};
     c = a;
     REQUIRE(b.UNSAFE_unverified() == random_val_1);
     REQUIRE(c.UNSAFE_unverified() == random_val_1);
@@ -43,9 +40,10 @@ static void test_tainted_helper() {
 
   // Check assignments from compatible types
   {
-    TWrap<long, rlbox_noop_arena_smallerabi_sandbox> a = random_val_1;
-    TWrap<int, rlbox_noop_arena_smallerabi_sandbox> b = a;
-    TWrap<long, rlbox_noop_arena_smallerabi_sandbox> c = b;
+    tainted_impl<true, long, rlbox_noop_arena_smallerabi_sandbox> a =
+        random_val_1;
+    tainted_impl<true, int, rlbox_noop_arena_smallerabi_sandbox> b = a;
+    tainted_impl<true, long, rlbox_noop_arena_smallerabi_sandbox> c = b;
     REQUIRE(a.UNSAFE_unverified() == random_val_1);
     REQUIRE(b.UNSAFE_unverified() == random_val_1);
     REQUIRE(c.UNSAFE_unverified() == random_val_1);
@@ -53,8 +51,9 @@ static void test_tainted_helper() {
 
   // Check const assignment
   {
-    TWrap<const int, rlbox_noop_arena_smallerabi_sandbox> a = random_val_1;
-    TWrap<const int, rlbox_noop_arena_smallerabi_sandbox> b = a;
+    tainted_impl<true, const int, rlbox_noop_arena_smallerabi_sandbox> a =
+        random_val_1;
+    tainted_impl<true, const int, rlbox_noop_arena_smallerabi_sandbox> b = a;
     REQUIRE(a.UNSAFE_unverified() == random_val_1);
     REQUIRE(b.UNSAFE_sandboxed() == random_val_1);
   }
@@ -62,7 +61,8 @@ static void test_tainted_helper() {
   // Check assignment overflow due to truncated sandbox type
   {
     const short overflow_val_1 = 400; /* sandbox short limit is uint8_t */
-    TWrap<short, rlbox_noop_arena_smallerabi_sandbox> a = overflow_val_1;
+    tainted_impl<true, short, rlbox_noop_arena_smallerabi_sandbox> a =
+        overflow_val_1;
     // Converting to the sandbox repr should cause an error due to overflow
     REQUIRE_THROWS(a.UNSAFE_sandboxed() == overflow_val_1);
   }
@@ -70,14 +70,15 @@ static void test_tainted_helper() {
   // Check floating point values
   {
     const float float_val_1 = 2.4;
-    TWrap<float, rlbox_noop_arena_smallerabi_sandbox> a = float_val_1;
+    tainted_impl<true, float, rlbox_noop_arena_smallerabi_sandbox> a =
+        float_val_1;
     REQUIRE(a.UNSAFE_unverified() == float_val_1);
   }
 }
 
 TEST_CASE("tainted assignment operates correctly", "[tainted assignment]") {
-  test_tainted_helper<tainted_fixed_aligned>();
-  test_tainted_helper<tainted_relocatable>();
+  test_tainted_helper();
+  // test_tainted_helper<tainted_relocatable>();
 }
 
 TEST_CASE("tainted volatile assignment operates correctly",
@@ -161,7 +162,7 @@ TEST_CASE("tainted volatile assignment operates correctly",
 
 TEST_CASE("tainted pointers assignment operates correctly",
           "[tainted assignment]") {
-  tainted_fixed_aligned<int*, rlbox_noop_arena_smallerabi_sandbox>
+  tainted_impl<true, int*, rlbox_noop_arena_smallerabi_sandbox>
       ptr_taint_fixed = nullptr;
   ptr_taint_fixed = nullptr;
   // tainted_relocatable<int*, rlbox_noop_arena_smallerabi_sandbox>

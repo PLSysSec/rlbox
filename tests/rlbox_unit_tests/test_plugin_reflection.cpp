@@ -26,36 +26,33 @@ class rlbox_default_tainted_testsandbox
     : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {
  public:
   template <typename T>
-  using tainted = tainted_relocatable<T, rlbox_default_tainted_testsandbox>;
-
-  template <typename T>
   using tainted_volatile =
-      tainted_volatile_standard<T, rlbox_default_tainted_testsandbox>;
+      tainted_impl<false, T, rlbox_default_tainted_testsandbox>;
 };
 
 class rlbox_custom_tainted_testsandbox
     : public rlbox_sandbox_plugin_base<rlbox_custom_tainted_testsandbox> {
  public:
+  static const constexpr tainted_pointer_t mTaintedPointerChoice =
+      tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED;
+
   template <typename T>
-  using tainted = tainted_fixed_aligned<T, rlbox_custom_tainted_testsandbox>;
+  using tainted = tainted_impl<true, T, rlbox_custom_tainted_testsandbox>;
 
   template <typename T>
   using tainted_volatile =
-      tainted_volatile_standard<T, rlbox_custom_tainted_testsandbox>;
+      tainted_impl<false, T, rlbox_custom_tainted_testsandbox>;
 };
 
 class rlbox_custom_tainted_volatile_testsandbox
     : public rlbox_sandbox_plugin_base<
           rlbox_custom_tainted_volatile_testsandbox> {
  public:
-  template <typename T>
-  using tainted =
-      tainted_relocatable<T, rlbox_custom_tainted_volatile_testsandbox>;
-
+  static const constexpr tainted_pointer_t mTaintedPointerChoice =
+      tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED;
   template <typename T>
   using tainted_volatile =
-      rlbox::tainted_fixed_aligned<T,
-                                   rlbox_custom_tainted_volatile_testsandbox>;
+      tainted_impl<false, T, rlbox_custom_tainted_volatile_testsandbox>;
 };
 }  // namespace rlbox
 
@@ -76,25 +73,24 @@ TEST_CASE("Test plugin tainted reflection", "[rlbox plugin reflection]") {
   // tainted_relocatable and tainted_volatile_standard.
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_default_tainted::tainted<int>,
-          tainted_relocatable<int, rlbox_default_tainted_testsandbox>>);
+          tainted_impl<true, int, rlbox_default_tainted_testsandbox>>);
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_default_tainted::tainted_volatile<int>,
-          tainted_volatile_standard<int, rlbox_default_tainted_testsandbox>>);
+          tainted_impl<false, int, rlbox_default_tainted_testsandbox>>);
 
   // Check that plugin override of tainted uses the specified value
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_custom_tainted::tainted<int>,
-          tainted_fixed_aligned<int, rlbox_custom_tainted_testsandbox>>);
+          tainted_impl<true, int, rlbox_custom_tainted_testsandbox>>);
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_custom_tainted::tainted_volatile<int>,
-          tainted_volatile_standard<int, rlbox_custom_tainted_testsandbox>>);
+          tainted_impl<false, int, rlbox_custom_tainted_testsandbox>>);
 
   // Check that plugin override of tainted_volatile uses the specified value
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_custom_tainted_volatile::tainted<int>,
-          tainted_relocatable<int, rlbox_custom_tainted_volatile_testsandbox>>);
+          tainted_impl<true, int, rlbox_custom_tainted_volatile_testsandbox>>);
   REQUIRE(std::is_same_v<
           rlbox_sandbox_libtest_custom_tainted_volatile::tainted_volatile<int>,
-          tainted_fixed_aligned<int,
-                                rlbox_custom_tainted_volatile_testsandbox>>);
+          tainted_impl<false, int, rlbox_custom_tainted_volatile_testsandbox>>);
 }

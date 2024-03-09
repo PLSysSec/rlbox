@@ -123,11 +123,14 @@ class rlbox_noop_arena_sandbox_base : public rlbox_sandbox_plugin_base<TSbx> {
   using sbx_longlong = int32_t;
   using sbx_pointer = uint32_t;
 
-  template <typename T>
-  using tainted = tainted_fixed_aligned<T, TSbx>;
+  static const constexpr tainted_pointer_t mTaintedPointerChoice =
+      tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED;
 
   template <typename T>
-  using tainted_volatile = tainted_volatile_standard<T, TSbx>;
+  using tainted = tainted_impl<true, T, TSbx>;
+
+  template <typename T>
+  using tainted_volatile = tainted_impl<false, T, TSbx>;
 
   inline rlbox_status_code impl_create_sandbox() {
     sandbox_memory_alloc = rlbox_aligned_malloc(sandbox_mem_size);

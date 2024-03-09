@@ -94,7 +94,7 @@ class rlbox_sandbox : protected TSbx {
    * underlying sandbox implementation.
    */
   template <typename T>
-  using tainted = typename TSbx::template tainted<T>;
+  using tainted = tainted_impl<true, T, TSbx>;
 
   /**
    * @brief The tainted_volatile type used by the underlying TSbx specification.
@@ -103,7 +103,7 @@ class rlbox_sandbox : protected TSbx {
    * underlying sandbox implementation.
    */
   template <typename T>
-  using tainted_volatile = typename TSbx::template tainted_volatile<T>;
+  using tainted_volatile = tainted_impl<false, T, TSbx>;
 
   template <typename T>
   using base_types_convertor_tsbx = detail::rlbox_base_types_convertor<T, TSbx>;
@@ -567,10 +567,12 @@ class rlbox_sandbox : protected TSbx {
    * @tparam T is the type of the pointer you want to free.
    * @param aPtr is the pointer to sandbox memory to free.
    */
-  template <template <typename, typename> typename TWrap, typename T,
-            RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<T, TSbx>>&&
+  template <template <bool, typename, typename, typename...> typename TWrap,
+            bool TUseAppRep, typename T, typename... TExtra,
+            RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                          TWrap<TUseAppRep, T, TSbx, TExtra...>>&&
                               std::is_pointer_v<T>)>
-  inline void free_in_sandbox(TWrap<T, TSbx> aPtr) {
+  inline void free_in_sandbox(TWrap<TUseAppRep, T, TSbx, TExtra...> aPtr) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     detail::dynamic_check(mSandboxCreated.load() == create_status::CREATED,
                           "Sandbox not created");

@@ -14,6 +14,15 @@
 
 namespace rlbox {
 
+enum class tainted_pointer_t {
+  TAINTED_POINTER_FIXED_ALIGNED,
+  TAINTED_POINTER_RELOCATABLE,
+};
+
+enum class tainted_volatile_pointer_t {
+  TAINTED_VOLATILE_POINTER_STANDARD,
+};
+
 /**
  * @brief The base class for rlbox_sandbox plugins. This plugin contains
  * defaults for various plugin configurations such as which tainted type to use
@@ -75,6 +84,13 @@ class rlbox_sandbox_plugin_base {
    * `sbx_pointer_is_different_rep` field must be `true`
    */
   using sbx_pointer_is_different_rep = std::false_type;
+
+  static const constexpr tainted_pointer_t mTaintedPointerChoice =
+      tainted_pointer_t::TAINTED_POINTER_RELOCATABLE;
+
+  static const constexpr tainted_volatile_pointer_t
+      mTaintedVolatilePointerChoice =
+          tainted_volatile_pointer_t::TAINTED_VOLATILE_POINTER_STANDARD;
 };
 
 }  // namespace rlbox

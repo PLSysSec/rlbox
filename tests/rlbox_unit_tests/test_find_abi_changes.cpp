@@ -11,8 +11,6 @@
 // class sandbox_same_abi
 //     : public rlbox::rlbox_sandbox_plugin_base<sandbox_same_abi> {
 //  public:
-//   template <typename T>
-//   using tainted = tainted_relocatable<T, sandbox_same_abi>;
 
 //   template <typename T>
 //   using tainted_volatile = tainted_volatile_standard<T, sandbox_same_abi>;
@@ -21,8 +19,6 @@
 // class sandbox_different_int
 //     : public rlbox::rlbox_sandbox_plugin_base<sandbox_different_int> {
 //  public:
-//   template <typename T>
-//   using tainted = tainted_relocatable<T, sandbox_different_int>;
 
 //   template <typename T>
 //   using tainted_volatile = tainted_volatile_standard<T,
@@ -34,8 +30,6 @@
 // class sandbox_intptr : public
 // rlbox::rlbox_sandbox_plugin_base<sandbox_intptr> {
 //  public:
-//   template <typename T>
-//   using tainted = tainted_relocatable<T, sandbox_intptr>;
 
 //   template <typename T>
 //   using tainted_volatile = tainted_volatile_standard<T, sandbox_intptr>;

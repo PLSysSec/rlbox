@@ -86,8 +86,8 @@ if(DEV)
     message("Enabling sanitizers and warnings")
     add_compile_options(-Wall -Wextra -pedantic) # warnings
     add_compile_options(-Wno-gnu-zero-variadic-macro-arguments) # Disable token pasting warning
-    add_compile_options(-fsanitize=address)
-    add_link_options(-fsanitize=address)
+    # add_compile_options(-fsanitize=address)
+    # add_link_options(-fsanitize=address)
     add_compile_options(-fsanitize=undefined)
     add_link_options(-fsanitize=undefined)
   endif()

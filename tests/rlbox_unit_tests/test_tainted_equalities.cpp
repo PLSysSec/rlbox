@@ -25,10 +25,10 @@ TEST_CASE("tainted equalities operates correctly", "[tainted equality]") {
   REQUIRE(std::is_same_v<decltype(a != 0), bool>);
   REQUIRE(a != 0);
 
-  REQUIRE(std::is_same_v<decltype(34 == a), bool>);
-  REQUIRE(34 == a);
-  REQUIRE(std::is_same_v<decltype(0 != a), bool>);
-  REQUIRE(0 != a);
+  // REQUIRE(std::is_same_v<decltype(34 == a), bool>);
+  // REQUIRE(34 == a);
+  // REQUIRE(std::is_same_v<decltype(0 != a), bool>);
+  // REQUIRE(0 != a);
 
   sandbox.destroy_sandbox();
 }

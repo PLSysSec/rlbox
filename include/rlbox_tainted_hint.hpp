@@ -27,15 +27,15 @@ namespace rlbox {
  * `tainted<bool>` values because a compromised sandbox can modify
  * tainted_volatile data at any time.
  */
-template <typename TAppRep, typename TSbx>
-class tainted_boolean_hint : public tainted_any_base<TAppRep, TSbx> {
+template <bool TUseAppRep, typename TAppRep, typename TSbx>
+class tainted_boolean_hint : public tainted_base<TUseAppRep, TAppRep, TSbx> {
  protected:
   static_assert(std::is_same_v<TAppRep, bool>);
 
   /**
    * @brief The current class's type
    */
-  using this_t = rlbox::tainted_boolean_hint<TAppRep, TSbx>;
+  using this_t = rlbox::tainted_boolean_hint<TUseAppRep, TAppRep, TSbx>;
 
   bool val{false};
 
