@@ -12,8 +12,7 @@
 #include <type_traits>
 
 #include "rlbox_helpers.hpp"
-#include "rlbox_stdint_types.hpp"
-#include "rlbox_tainted_base.hpp"
+#include "rlbox_types.hpp"
 // IWYU incorrectly reports this as unnecessary as the use of rlbox_type_traits
 // is in a templated class
 #include "rlbox_type_traits.hpp"  // IWYU pragma: keep

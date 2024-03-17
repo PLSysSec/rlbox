@@ -3,8 +3,8 @@
  * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
- * @brief This header implements the tainted_boolean_hint class which is a type
- * that serves as a "hint" and not a definite answer.
+ * @brief This header implements the tainted_boolean_hint_impl class which is a
+ * type that serves as a "hint" and not a definite answer.
  */
 
 #pragma once
@@ -16,7 +16,6 @@
 #include <type_traits>  // IWYU pragma: keep
 
 #include "rlbox_error_handling.hpp"
-#include "rlbox_tainted_base.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox {
@@ -28,42 +27,44 @@ namespace rlbox {
  * tainted_volatile data at any time.
  */
 template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_boolean_hint : public tainted_base<TUseAppRep, TAppRep, TSbx> {
+class tainted_boolean_hint_impl
+    : public tainted_base<TUseAppRep, TAppRep, TSbx> {
  protected:
   static_assert(std::is_same_v<TAppRep, bool>);
 
   /**
    * @brief The current class's type
    */
-  using this_t = rlbox::tainted_boolean_hint<TUseAppRep, TAppRep, TSbx>;
+  using this_t = rlbox::tainted_boolean_hint_impl<TUseAppRep, TAppRep, TSbx>;
 
   bool val{false};
 
  public:
   /**
-   * @brief Construct a new tainted_boolean_hint object
+   * @brief Construct a new tainted_boolean_hint_impl object
    */
-  inline tainted_boolean_hint() = default;
+  inline tainted_boolean_hint_impl() = default;
 
   /**
-   * @brief Construct a new tainted_boolean_hint object with an initial value
+   * @brief Construct a new tainted_boolean_hint_impl object with an initial
+   * value
    */
-  inline tainted_boolean_hint(bool aVal) : val(aVal) {}
+  inline tainted_boolean_hint_impl(bool aVal) : val(aVal) {}
 
   /**
-   * @brief Copy constructor: Construct a new tainted_boolean_hint object
+   * @brief Copy constructor: Construct a new tainted_boolean_hint_impl object
    */
-  inline tainted_boolean_hint(const this_t&) = default;
+  inline tainted_boolean_hint_impl(const this_t&) = default;
 
   /**
-   * @brief Move constructor: Construct a new tainted_boolean_hint object
+   * @brief Move constructor: Construct a new tainted_boolean_hint_impl object
    */
-  inline tainted_boolean_hint(this_t&&) noexcept = default;
+  inline tainted_boolean_hint_impl(this_t&&) noexcept = default;
 
   /**
-   * @brief Destroy the tainted_boolean_hint object
+   * @brief Destroy the tainted_boolean_hint_impl object
    */
-  inline ~tainted_boolean_hint() = default;
+  inline ~tainted_boolean_hint_impl() = default;
 
   /**
    * @brief Copy assignment operator
@@ -84,19 +85,19 @@ class tainted_boolean_hint : public tainted_base<TUseAppRep, TAppRep, TSbx> {
   /**
    * @brief Operator= for boolean values
    * @param aOther is the rhs being assigned
-   * @return tainted_boolean_hint& is the reference to this value
+   * @return tainted_boolean_hint_impl& is the reference to this value
    */
-  inline tainted_boolean_hint& operator=(bool aOther) noexcept {
+  inline tainted_boolean_hint_impl& operator=(bool aOther) noexcept {
     val = aOther;
     return *this;
   }
 
   /**
    * @brief Operator! that negates the current hint
-   * @return tainted_boolean_hint with the negation of this value
+   * @return tainted_boolean_hint_impl with the negation of this value
    */
-  inline tainted_boolean_hint operator!() const noexcept {
-    return tainted_boolean_hint(!val);
+  inline tainted_boolean_hint_impl operator!() const noexcept {
+    return tainted_boolean_hint_impl(!val);
   }
 
   /**

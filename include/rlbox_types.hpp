@@ -24,26 +24,70 @@ template <typename TSbx>
 class rlbox_sandbox;  // IWYU pragma: keep
 
 /**
- * @brief A wrapper type used to mark any function pointers to application code
- * that is passed to the sandbox. This type indicates that the application has
- * explicitly allowed this function to be called by the sandbox.
- *
- * @tparam T is the type of the data that is wrapped.
+ * @brief Base class of all wrapper types which is used to identify tainted
+ * wrappers.
+ */
+class tainted_interface {};
+
+/**
+ * @brief Base class of all wrapper types which is used to identify tainted
+ * wrappers along with their sandbox type.
+ * @tparam TSbx is the type of the sandbox plugin that represents the underlying
+ * sandbox implementation.
+ */
+template <typename TSbx>
+class tainted_interface_sbx : public tainted_interface {};
+
+/**
+ * @brief Base class of all wrapper types with common template arguments. This
+ * is used to identify tainted wrappers.
+ * @tparam T is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
 template <typename T, typename TSbx>
+class tainted_any_base : public tainted_interface_sbx<TSbx> {
+  /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
+};
+
+template <bool TUseAppRep, typename T, typename TSbx>
+class tainted_base : public tainted_interface_sbx<TSbx> {
+  /// \todo add UNSAFE_sandboxed and UNSAFE_unverified
+};
+
+template <bool TUseAppRep, typename TAppRep, typename TSbx,
+          typename TEnable = void>
+class tainted_impl;  // IWYU pragma: keep
+
+template <typename T, typename TSbx>
+using tainted = tainted_impl<true, T, TSbx>;
+
+template <typename T, typename TSbx>
+using tainted_volatile = tainted_impl<false, T, TSbx>;
+
+/**
+ * @brief A wrapper type used to mark any function pointers to application code
+ * that is passed to the sandbox. This type indicates that the application has
+ * explicitly allowed this function to be called by the sandbox.
+ * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+ * representation (tainted) or the sandbox representation (tainted_volatile)
+ * @tparam T is the type of the data that is wrapped.
+ * @tparam TSbx is the type of the sandbox plugin that represents the underlying
+ * sandbox implementation.
+ */
+template <bool TUseAppRep, typename T, typename TSbx>
 class rlbox_callback;  // IWYU pragma: keep
 
 /**
  * @brief A wrapper type used to mark any function pointers to sandbox code that
  * is passed to the sandbox.
- *
+ * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+ * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam T is the type of the data that is wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
+template <bool TUseAppRep, typename T, typename TSbx>
 class rlbox_sandboxed_function;  // IWYU pragma: keep
 
 /**
@@ -53,11 +97,13 @@ class rlbox_sandboxed_function;  // IWYU pragma: keep
  * ensure there is no pointer leaked to sandboxed code When the sandbox returns
  * this integer, it can be looked up in a map to recover the original data
  * structure pointer.
+ * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+ * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam T is the type of the data that is wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <typename T, typename TSbx>
+template <bool TUseAppRep, typename T, typename TSbx>
 class rlbox_app_pointer;  // IWYU pragma: keep
 
 /**
@@ -68,7 +114,10 @@ class rlbox_app_pointer;  // IWYU pragma: keep
  * hint could potentially be incorrect.
  */
 template <bool TUseAppRep, typename T, typename TSbx>
-class tainted_boolean_hint;  // IWYU pragma: keep
+class tainted_boolean_hint_impl;  // IWYU pragma: keep
+
+template <typename TSbx>
+using tainted_boolean_hint = tainted_boolean_hint_impl<true, bool, TSbx>;
 
 /**
  * @brief Tainted int that serves as a "hint" and not a definite answer
@@ -79,7 +128,7 @@ class tainted_boolean_hint;  // IWYU pragma: keep
  * tainted_volatile data at any time meaning the hint could potentially be
  * incorrect.
  */
-template <typename T, typename TSbx>
+template <bool TUseAppRep, typename T, typename TSbx>
 class tainted_int_hint;  // IWYU pragma: keep
 
 /**
@@ -99,13 +148,18 @@ class rlbox_noop_sandbox;  // IWYU pragma: keep
  * types manage pointers are structs). This class thus provides the an
  * unique_ptr compatible with tainted types. The class interface tries to follow
  * the std::unique_ptr as much as possible.
+ * @tparam TUseAppRep indicates whether this wrapper stores data in the app
+ * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam T is the type of the pointer being managed. For example, to manage a
  * `tainted<int*>`, developers would use a `rlbox_unique_ptr<int>`
  * @tparam TSbx is the type of the sandbox plugin that represents the
  * underlying sandbox implementation.
  */
+template <bool TUseAppRep, typename T, typename TSbx>
+class rlbox_unique_ptr_impl;  // IWYU pragma: keep
+
 template <typename T, typename TSbx>
-class rlbox_unique_ptr;  // IWYU pragma: keep
+using rlbox_unique_ptr = rlbox_unique_ptr_impl<true, T, TSbx>;
 
 /**
  * @brief A type representing the success/error code for various rlbox related
@@ -134,30 +188,31 @@ enum class rlbox_status_code {
  * #define libtest_sandbox_invoke noop_sandbox_invoke
  * @endcode
  */
-#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)                        \
-  namespace rlbox {                                                          \
-  class SBXTYPE;                                                             \
-  }                                                                          \
-                                                                             \
-  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;                       \
-                                                                             \
-  using rlbox_sandbox_##SBXNAME =                                            \
-      rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;                    \
-                                                                             \
-  template <typename T>                                                      \
-  using tainted_##SBXNAME = rlbox_sandbox_##SBXNAME::tainted<T>;             \
-                                                                             \
-  template <typename T>                                                      \
-  using tainted_volatile_##SBXNAME =                                         \
-      rlbox_sandbox_##SBXNAME::tainted_volatile<T>;                          \
-                                                                             \
-  template <typename T>                                                      \
-  using rlbox_unique_ptr_##SBXNAME =                                         \
-      rlbox::rlbox_unique_ptr<T, rlbox_sandbox_type_##SBXNAME>;              \
-                                                                             \
-  using tainted_boolean_hint_##SBXNAME =                                     \
-      rlbox::tainted_boolean_hint<true, bool, rlbox_sandbox_type_##SBXNAME>; \
-                                                                             \
+#define RLBOX_DEFINE_BASE_TYPES_FOR(SBXNAME, SBXTYPE)              \
+  namespace rlbox {                                                \
+  class SBXTYPE;                                                   \
+  }                                                                \
+                                                                   \
+  using rlbox_sandbox_type_##SBXNAME = rlbox::SBXTYPE;             \
+                                                                   \
+  using rlbox_sandbox_##SBXNAME =                                  \
+      rlbox::rlbox_sandbox<rlbox_sandbox_type_##SBXNAME>;          \
+                                                                   \
+  template <typename T>                                            \
+  using tainted_##SBXNAME =                                        \
+      rlbox::tainted_impl<true, T, rlbox_sandbox_type_##SBXNAME>;  \
+                                                                   \
+  template <typename T>                                            \
+  using tainted_volatile_##SBXNAME =                               \
+      rlbox::tainted_impl<false, T, rlbox_sandbox_type_##SBXNAME>; \
+                                                                   \
+  template <typename T>                                            \
+  using rlbox_unique_ptr_##SBXNAME =                               \
+      rlbox::rlbox_unique_ptr<T, rlbox_sandbox_type_##SBXNAME>;    \
+                                                                   \
+  using tainted_boolean_hint_##SBXNAME =                           \
+      rlbox::tainted_boolean_hint<rlbox_sandbox_type_##SBXNAME>;   \
+                                                                   \
   RLBOX_REQUIRE_SEMI_COLON
 
 // In the future the following will also be added

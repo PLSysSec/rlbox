@@ -15,8 +15,7 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_data_conversion.hpp"
 #include "rlbox_helpers.hpp"
-#include "rlbox_tainted_base.hpp"
-#include "rlbox_tainted_hint.hpp"
+#include "rlbox_tainted_hint.hpp"  // IWYU pragma: keep
 #include "rlbox_type_traits.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
@@ -51,11 +50,6 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    */
   using TRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
                                   detail::tainted_rep_t<TSbxRep>>;
-
-  /**
-   * @brief The tainted_boolean_hint type specialized for this sandbox.
-   */
-  using tainted_boolean_hint_t = rlbox::tainted_boolean_hint<true, bool, TSbx>;
 
   /**
    * @brief The current class's type
@@ -273,7 +267,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
 
  protected:
   using TCompareRet =
-      std::conditional_t<TUseAppRep, bool, tainted_boolean_hint_t>;
+      std::conditional_t<TUseAppRep, bool, tainted_boolean_hint<TSbx>>;
 
  public:
   /**
@@ -293,7 +287,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint_t(ret);
+      return tainted_boolean_hint<TSbx>(ret);
     }
   }
 
@@ -314,7 +308,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint_t(ret);
+      return tainted_boolean_hint<TSbx>(ret);
     }
   }
 
@@ -335,7 +329,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint_t(ret);
+      return tainted_boolean_hint<TSbx>(ret);
     }
   }
 
@@ -356,7 +350,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint_t(ret);
+      return tainted_boolean_hint<TSbx>(ret);
     }
   }
 
@@ -372,19 +366,17 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return ret;
     } else {
-      return tainted_boolean_hint_t(ret);
+      return tainted_boolean_hint<TSbx>(ret);
     }
   }
 
  protected:
-  template <typename T>
-  using tainted = tainted_impl<true, T, TSbx>;
-
   /**
    * @brief Result type of operator&
    */
-  using TOpAddrOf = std::conditional_t<TUseAppRep, this_t*,
-                                       tainted<std::add_pointer_t<TAppRep>>>;
+  using TOpAddrOf =
+      std::conditional_t<TUseAppRep, this_t*,
+                         tainted<std::add_pointer_t<TAppRep>, TSbx>>;
 
  public:
   /**

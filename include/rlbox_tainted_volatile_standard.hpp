@@ -15,7 +15,6 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_base.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -235,9 +234,8 @@ class tainted_impl<
    * @brief tainted_volatile type of the sandbox
    */
   template <typename TSub>
-  using tainted_volatile =
-      // tainted_impl<false, TSub, TSbx>;
-      typename TSbx::template tainted_volatile<TSub>;
+  using tainted_volatile = tainted_impl<false, TSub, TSbx>;
+
   /**
    * @brief Result type of operator*
    */
@@ -268,10 +266,7 @@ class tainted_impl<
   }
 
  protected:
-  template <typename TSub>
-  using tainted = typename TSbx::template tainted<TSub>;
-
-  using TOpAddrOf = tainted<std::add_pointer_t<TAppRep>>;
+  using TOpAddrOf = tainted<std::add_pointer_t<TAppRep>, TSbx>;
 
  public:
   /**

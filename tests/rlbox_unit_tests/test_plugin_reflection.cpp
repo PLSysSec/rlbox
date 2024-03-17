@@ -13,7 +13,6 @@
 #include "test_include.hpp"
 
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 
 #include <type_traits>
@@ -21,74 +20,38 @@
 namespace rlbox {
 
 class rlbox_default_tainted_testsandbox
-    : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {
- public:
-  template <typename T>
-  using tainted_volatile =
-      tainted_impl<false, T, rlbox_default_tainted_testsandbox>;
-};
+    : public rlbox_sandbox_plugin_base<rlbox_default_tainted_testsandbox> {};
 
 class rlbox_custom_tainted_testsandbox
     : public rlbox_sandbox_plugin_base<rlbox_custom_tainted_testsandbox> {
  public:
   static const constexpr tainted_pointer_t mTaintedPointerChoice =
       tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED;
-
-  template <typename T>
-  using tainted = tainted_impl<true, T, rlbox_custom_tainted_testsandbox>;
-
-  template <typename T>
-  using tainted_volatile =
-      tainted_impl<false, T, rlbox_custom_tainted_testsandbox>;
 };
 
-class rlbox_custom_tainted_volatile_testsandbox
-    : public rlbox_sandbox_plugin_base<
-          rlbox_custom_tainted_volatile_testsandbox> {
- public:
-  static const constexpr tainted_pointer_t mTaintedPointerChoice =
-      tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED;
-  template <typename T>
-  using tainted_volatile =
-      tainted_impl<false, T, rlbox_custom_tainted_volatile_testsandbox>;
-};
 }  // namespace rlbox
 
-RLBOX_DEFINE_BASE_TYPES_FOR(libtest_default_tainted,
-                            rlbox_default_tainted_testsandbox);
-#define libtest_default_tainted_sandbox_invoke noop_arena_sandbox_invoke
+RLBOX_DEFINE_BASE_TYPES_FOR(libtest_default, rlbox_default_tainted_testsandbox);
+#define libtest_default_sandbox_invoke noop_arena_sandbox_invoke
 
-RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted,
-                            rlbox_custom_tainted_testsandbox);
-#define libtest_custom_tainted_sandbox_invoke noop_arena_sandbox_invoke
-
-RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom_tainted_volatile,
-                            rlbox_custom_tainted_volatile_testsandbox);
-#define libtest_custom_tainted_volatile_sandbox_invoke noop_arena_sandbox_invoke
+RLBOX_DEFINE_BASE_TYPES_FOR(libtest_custom, rlbox_custom_tainted_testsandbox);
+#define libtest_custom_sandbox_invoke noop_arena_sandbox_invoke
 
 TEST_CASE("Test plugin tainted reflection", "[rlbox plugin reflection]") {
   // Check that by default, sandboxes assume that the plugin uses
   // tainted_relocatable and tainted_volatile_standard.
   REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_default_tainted::tainted<int>,
+          tainted_libtest_default<int>,
           tainted_impl<true, int, rlbox_default_tainted_testsandbox>>);
   REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_default_tainted::tainted_volatile<int>,
+          tainted_volatile_libtest_default<int>,
           tainted_impl<false, int, rlbox_default_tainted_testsandbox>>);
 
   // Check that plugin override of tainted uses the specified value
   REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_custom_tainted::tainted<int>,
+          tainted_libtest_custom<int>,
           tainted_impl<true, int, rlbox_custom_tainted_testsandbox>>);
   REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_custom_tainted::tainted_volatile<int>,
+          tainted_volatile_libtest_custom<int>,
           tainted_impl<false, int, rlbox_custom_tainted_testsandbox>>);
-
-  // Check that plugin override of tainted_volatile uses the specified value
-  REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_custom_tainted_volatile::tainted<int>,
-          tainted_impl<true, int, rlbox_custom_tainted_volatile_testsandbox>>);
-  REQUIRE(std::is_same_v<
-          rlbox_sandbox_libtest_custom_tainted_volatile::tainted_volatile<int>,
-          tainted_impl<false, int, rlbox_custom_tainted_volatile_testsandbox>>);
 }

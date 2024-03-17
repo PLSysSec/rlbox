@@ -9,7 +9,6 @@
 #pragma once
 
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 
 namespace rlbox {
@@ -25,12 +24,6 @@ namespace rlbox {
 class rlbox_noop_sandbox
     : public rlbox_sandbox_plugin_base<rlbox_noop_sandbox> {
  public:
-  template <typename T>
-  using tainted = tainted_impl<true, T, rlbox_noop_sandbox>;
-
-  template <typename T>
-  using tainted_volatile = tainted_impl<false, T, rlbox_noop_sandbox>;
-
   /**
    * @brief Implementation of the RLBox create_sandbox API. For the
    * rlbox_noop_sandbox, this does nothing as all function calls or memory

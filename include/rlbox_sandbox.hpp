@@ -24,7 +24,6 @@
 #include "rlbox_error_handling.hpp"
 #include "rlbox_function_traits.hpp"
 #include "rlbox_helpers.hpp"
-#include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -88,24 +87,6 @@ class rlbox_sandbox : protected TSbx {
   static inline std::shared_mutex mSandboxesMutex;
 
  public:
-  /**
-   * @brief The tainted type used by the underlying TSbx specification.
-   * @tparam T is the type of the data that is wrapped.
-   * @tparam TSbx is the type of the sandbox plugin that represents the
-   * underlying sandbox implementation.
-   */
-  template <typename T>
-  using tainted = tainted_impl<true, T, TSbx>;
-
-  /**
-   * @brief The tainted_volatile type used by the underlying TSbx specification.
-   * @tparam T is the type of the data that is wrapped.
-   * @tparam TSbx is the type of the sandbox plugin that represents the
-   * underlying sandbox implementation.
-   */
-  template <typename T>
-  using tainted_volatile = tainted_impl<false, T, TSbx>;
-
   template <typename T>
   using base_types_convertor_tsbx = detail::rlbox_base_types_convertor<T, TSbx>;
 
@@ -367,7 +348,8 @@ class rlbox_sandbox : protected TSbx {
             "to the other sandbox. This is not allowed, unwrap the tainted "
             "data with copy_and_verify or other unwrapping APIs first.\n");
       }
-    } else if constexpr (!std::is_constructible_v<tainted<TNoRef>, TNoRef>) {
+    } else if constexpr (!std::is_constructible_v<tainted<TNoRef, TSbx>,
+                                                  TNoRef>) {
       rlbox_static_fail(
           TArg,
           "Arguments to a sandbox function call should either be values easily "
@@ -378,7 +360,7 @@ class rlbox_sandbox : protected TSbx {
     if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
       return aArg.UNSAFE_sandboxed(*this);
     } else {
-      const tainted<TNoRef> val(aArg);
+      const tainted<TNoRef, TSbx> val(aArg);
       return val.UNSAFE_sandboxed(*this);
     }
   }
@@ -404,9 +386,10 @@ class rlbox_sandbox : protected TSbx {
     if constexpr (std::is_void_v<TRet>) {
       return this->template impl_invoke_with_func_ptr<TFuncConv>(
           aFuncPtr, invoke_process_param(aArgs)...);
-    } else if constexpr (std::is_constructible_v<tainted<TRet>, TRet>) {
-      tainted<TRet> ret = this->template impl_invoke_with_func_ptr<TFuncConv>(
-          aFuncPtr, invoke_process_param(aArgs)...);
+    } else if constexpr (std::is_constructible_v<tainted<TRet, TSbx>, TRet>) {
+      tainted<TRet, TSbx> ret =
+          this->template impl_invoke_with_func_ptr<TFuncConv>(
+              aFuncPtr, invoke_process_param(aArgs)...);
       return ret;
     } else if constexpr (std::is_pointer_v<TRet>) {
       const base_types_convertor_tsbx<TRet> ptr_sbx_rep =
@@ -415,7 +398,7 @@ class rlbox_sandbox : protected TSbx {
       TRet ptr = get_unsandboxed_pointer<TRet>(ptr_sbx_rep);
 
       const size_t object_size = get_object_size_upperbound<TRet>();
-      tainted<TRet> ret = get_tainted_from_raw_ptr(ptr, object_size);
+      tainted<TRet, TSbx> ret = get_tainted_from_raw_ptr(ptr, object_size);
       return ret;
     } else {
       static_assert(detail::false_v<TFunc>, "Not implemented");
@@ -432,10 +415,10 @@ class rlbox_sandbox : protected TSbx {
    * @param aPtr is the raw pointer that should refer to an object in the
    * sandbox memory
    * @param aSize is the size of the object/objects that is being referred to
-   * @return tainted<T> is the given pointer as a tainted value
+   * @return tainted<T, TSbx> is the given pointer as a tainted value
    */
   template <typename T, RLBOX_REQUIRE(std::is_pointer_v<T>)>
-  tainted<T> get_tainted_from_raw_ptr(T aPtr, size_t aSize) {
+  tainted<T, TSbx> get_tainted_from_raw_ptr(T aPtr, size_t aSize) {
     auto ptr_start = reinterpret_cast<uintptr_t>(aPtr);
     auto ptr_end = detail::checked_add<uintptr_t>(
         ptr_start, (aSize - 1), "Pointer end computation has overflowed");
@@ -452,7 +435,7 @@ class rlbox_sandbox : protected TSbx {
                           "Trying to convert a raw pointer which is outside "
                           "the sandbox to a tainted pointer");
 
-    auto ret = tainted<T>::from_unchecked_raw_pointer(aPtr);
+    auto ret = tainted<T, TSbx>::from_unchecked_raw_pointer(aPtr);
     return ret;
   }
 
@@ -516,8 +499,8 @@ class rlbox_sandbox : protected TSbx {
    * sandbox.
    */
   template <typename T>
-  inline tainted<T*> malloc_in_sandbox() {
-    const tainted<size_t> default_count(1);
+  inline tainted<T*, TSbx> malloc_in_sandbox() {
+    const tainted<size_t, TSbx> default_count(1);
     return malloc_in_sandbox<T>(default_count);
   }
 
@@ -531,7 +514,7 @@ class rlbox_sandbox : protected TSbx {
    * and sandbox.
    */
   template <typename T>
-  inline tainted<T*> malloc_in_sandbox(tainted<size_t> aCount) {
+  inline tainted<T*, TSbx> malloc_in_sandbox(tainted<size_t, TSbx> aCount) {
 #ifndef RLBOX_DISABLE_SANDBOX_CREATED_CHECKS
     detail::dynamic_check(mSandboxCreated.load() == create_status::CREATED,
                           "Sandbox not created");
@@ -551,13 +534,13 @@ class rlbox_sandbox : protected TSbx {
           this->template impl_malloc_in_sandbox<T>(total_size);
       T* ptr = get_unsandboxed_pointer<T*>(ptr_sbx_rep);
 
-      tainted<T*> ret = get_tainted_from_raw_ptr(ptr, total_size);
+      tainted<T*, TSbx> ret = get_tainted_from_raw_ptr(ptr, total_size);
       return ret;
     } else {
       /// \todo Use sandbox_invoke call malloc in the sandbox code
       static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
       // Use dummy return
-      tainted<T*> ret(nullptr);
+      tainted<T*, TSbx> ret(nullptr);
       return ret;
     }
   }

@@ -10,7 +10,7 @@
 
 #include "test_include.hpp"
 
-#include "rlbox_tainted_base.hpp"
+#include "rlbox_types.hpp"
 
 /**
  * @brief External "app" version test_bool_params - a function that checks

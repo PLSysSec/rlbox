@@ -17,7 +17,6 @@
 #include "rlbox_error_handling.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
-#include "rlbox_tainted_base.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
@@ -65,12 +64,6 @@ class tainted_impl<
                        TUseAppRep&& std::is_pointer_v<TAppRep>&&
                            TSbx::mTaintedPointerChoice ==
                        tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED)>;
-
-  /**
-   * @brief tainted type of the sandbox
-   */
-  template <typename T>
-  using tainted = tainted_impl<true, T, TSbx>;
 
   detail::tainted_rep_t<TAppRep> data{0};
 
@@ -315,7 +308,7 @@ class tainted_impl<
    * data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline TOpDeref& operator[](tainted<T> aIdx) {
+  inline TOpDeref& operator[](tainted<T, TSbx> aIdx) {
     return (*this)[aIdx.raw_host_rep()];
   }
 
@@ -328,7 +321,7 @@ class tainted_impl<
    * holds this data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline const TOpDeref& operator[](tainted<T> aIdx) const {
+  inline const TOpDeref& operator[](tainted<T, TSbx> aIdx) const {
     return (*this)[aIdx.raw_host_rep()];
   }
 
@@ -416,7 +409,7 @@ class tainted_impl<
    * @return this_t is the incremented tainted pointer
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator+(tainted<T> aInc) const {
+  inline this_t operator+(tainted<T, TSbx> aInc) const {
     return (*this) + aInc.raw_host_rep();
   }
 
@@ -440,7 +433,7 @@ class tainted_impl<
    * @return this_t& returns this object after modification
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator+=(tainted<T> aInc) {
+  inline this_t& operator+=(tainted<T, TSbx> aInc) {
     (*this) += aInc.raw_host_rep();
     return *this;
   }
@@ -471,7 +464,7 @@ class tainted_impl<
    * @return this_t is the decremented tainted pointer
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator-(tainted<T> aInc) const {
+  inline this_t operator-(tainted<T, TSbx> aInc) const {
     return (*this) - aInc.raw_host_rep();
   }
 
@@ -495,7 +488,7 @@ class tainted_impl<
    * @return this_t& returns this object after modification
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator-=(tainted<T> aInc) {
+  inline this_t& operator-=(tainted<T, TSbx> aInc) {
     (*this) -= aInc.raw_host_rep();
     return *this;
   }
