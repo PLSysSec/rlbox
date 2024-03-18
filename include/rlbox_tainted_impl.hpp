@@ -13,6 +13,6 @@
 #include "rlbox_tainted_fixed_aligned.hpp"
 #include "rlbox_tainted_fundamental_or_enum.hpp"
 #include "rlbox_tainted_relocatable.hpp"
-#include "rlbox_tainted_volatile_standard.hpp"
+#include "rlbox_tainted_volatile.hpp"
 
 // IWYU pragma: end_exports

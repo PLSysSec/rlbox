@@ -1,5 +1,5 @@
 /**
- * @file rlbox_tainted_volatile_standard.hpp
+ * @file rlbox_tainted_volatile.hpp
  * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
