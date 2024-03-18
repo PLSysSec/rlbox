@@ -37,6 +37,11 @@ class tainted_boolean_hint_impl
    */
   using this_t = rlbox::tainted_boolean_hint_impl<TUseAppRep, TAppRep, TSbx>;
 
+  void dummy_check() {
+    static_assert(
+        std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
+  }
+
   bool val{false};
 
  public:

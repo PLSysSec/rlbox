@@ -60,6 +60,11 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
                        detail::is_fundamental_or_enum_v<
                            detail::rlbox_stdint_to_stdint_t<TAppRep>>)>;
 
+  void dummy_check() {
+    static_assert(
+        std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
+  }
+
   TRep data{0};
 
   ////////////////////////////////

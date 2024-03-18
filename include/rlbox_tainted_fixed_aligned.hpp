@@ -65,6 +65,11 @@ class tainted_impl<
                            TSbx::mTaintedPointerChoice ==
                        tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED)>;
 
+  void dummy_check() {
+    static_assert(
+        std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
+  }
+
   detail::tainted_rep_t<TAppRep> data{0};
 
   ////////////////////////////////
