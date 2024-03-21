@@ -243,15 +243,9 @@ class tainted_impl<
 
  protected:
   /**
-   * @brief tainted_volatile type of the sandbox
-   */
-  template <typename TSub>
-  using tainted_volatile = tainted_impl<false, TSub, TSbx>;
-
-  /**
    * @brief Result type of operator*
    */
-  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>>;
+  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>, TSbx>;
 
  public:
   /**
