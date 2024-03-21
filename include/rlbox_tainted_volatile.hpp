@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
- * @brief This header implements the tainted_volatile_standard pointer type.
+ * @brief This header implements the tainted_volatile pointer type.
  */
 
 #pragma once
@@ -24,14 +24,14 @@ namespace rlbox {
  * wrapper indicates that this data is located in memory that can be modified by
  * the sandbox.
  *
- * @details tainted_volatile_standard_pointer data in addition to being
- * untrusted (since it is memory written to be sandboxed code), should be
- * carefully checked for double-read or time-of-check-time-of-use style bugs,
- * i.e., if this data is read twice, the data could have been changed
- * asynchronously by a concurrent sandbox thread. To safely handle
- * tainted_volatile_standard_pointer data, the host application should make a
- * copy of tainted_volatile_standard_pointer data into the application memory
- * (tainted data) or call copy_and_verify to make a sanitized copy of this data.
+ * @details tainted_volatile_pointer data in addition to being untrusted (since
+ * it is memory written to be sandboxed code), should be carefully checked for
+ * double-read or time-of-check-time-of-use style bugs, i.e., if this data is
+ * read twice, the data could have been changed asynchronously by a concurrent
+ * sandbox thread. To safely handle tainted_volatile_pointer data, the host
+ * application should make a copy of tainted_volatile_pointer data into the
+ * application memory (tainted data) or call copy_and_verify to make a sanitized
+ * copy of this data.
  *
  * @tparam TAppRep is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
@@ -72,22 +72,20 @@ class tainted_impl<
 
  public:
   /**
-   * @brief Construct a new tainted volatile_standard_pointer set to null
+   * @brief Construct a new tainted volatile_pointer set to null
    */
   inline tainted_impl() = default;
   /**
-   * @brief Copy constructor: Construct a new tainted volatile_standard_pointer
-   * object
+   * @brief Copy constructor: Construct a new tainted volatile_pointer object
    */
   inline tainted_impl(const this_t&) = default;
   /**
-   * @brief Move constructor: Construct a new tainted volatile_standard_pointer
-   * object
+   * @brief Move constructor: Construct a new tainted volatile_pointer object
    */
   inline tainted_impl(this_t&&) noexcept = default;
 
   /**
-   * @brief Construct a new tainted volatile_standard_pointer with a nullptr
+   * @brief Construct a new tainted volatile_pointer with a nullptr
    * @param aNull is a nullptr
    */
   inline tainted_impl([[maybe_unused]] const std::nullptr_t& aNull) : data(0) {}
@@ -118,7 +116,7 @@ class tainted_impl<
       : data(aOther.raw_sandbox_rep()) {}
 
   /**
-   * @brief Destroy the tainted volatile_standard_pointer object
+   * @brief Destroy the tainted volatile_pointer object
    */
   inline ~tainted_impl() = default;
 
