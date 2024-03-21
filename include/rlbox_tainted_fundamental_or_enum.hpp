@@ -276,19 +276,61 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
 
  public:
   /**
-   * @brief Operator== compares a primtive value against this tainted value
-   * @tparam TArg is the type of the rhs value
-   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
-   * @param aThis is the lhs argument whose type is this class
-   * @param aArg is the rhs argument
-   * @return `bool` if the value wrapped is a `tainted` value, and a @ref
-   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
-   * value
+   * @brief Operator== compares this_t value against another tainted_* value
+   * @tparam TWrap is the rhs wrapper type
+   * @tparam TUseAppRepOther is the rhs AppRep
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TExtraOther... is the extra args of the rhs
+   * @tparam RLBOX_REQUIRE checks if the rhs is a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a this_t value
+   * @param aRhs is the rhs argument which is a tainted_* value
+   * @return a @ref rlbox::tainted_boolean_hint if either `aLhs` or `aRhs` is
+   * @ref rlbox::tainted_volatile wrapper, bool otherwise
    */
-  template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
-                                         std::remove_reference_t<TArg>>)>
-  friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
-    const bool ret = aThis.UNSAFE_unverified() == aArg;
+  template <
+      template <bool, typename, typename, typename...> typename TWrap,
+      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
+                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
+  friend inline constexpr auto operator==(
+      const this_t& aLhs,
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>&
+          aRhs) noexcept(noexcept(aLhs.raw_host_rep() == aRhs.raw_host_rep() &&
+                                  aLhs.raw_sandbox_rep() ==
+                                      aRhs.raw_sandbox_rep())) {
+    bool ret = false;
+
+    // If both the lhs and rhs are in the sandbox representation, directly
+    // compare those. Else convert both sides to app representation (this is a
+    // noop for each side that is already in the app representation)
+    if constexpr (!TUseAppRep && !TUseAppRepOther) {
+      ret = aLhs.raw_sandbox_rep() == aRhs.raw_sandbox_rep();
+    } else {
+      ret = aLhs.raw_host_rep() == aRhs.raw_host_rep();
+    }
+
+    if constexpr (TUseAppRep && TUseAppRepOther) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  /**
+   * @brief Operator== compares this_t value against a primitive value
+   * @tparam TArg is the rhs primitive type
+   * @tparam RLBOX_REQUIRE checks if the rhs is not a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a this_t value
+   * @param aRhs is the rhs argument which is a primitive value
+   * @return a @ref rlbox::tainted_boolean_hint if `aLhs` is @ref
+   * rlbox::tainted_volatile wrapper, bool otherwise
+   */
+  template <typename TArg,
+            RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<TArg>)>
+  friend inline constexpr auto operator==(
+      const this_t& aLhs,
+      const TArg& aRhs) noexcept(noexcept(aLhs.raw_host_rep() == aRhs)) {
+    const bool ret = aLhs.raw_host_rep() == aRhs;
     if constexpr (TUseAppRep) {
       return ret;
     } else {
@@ -297,19 +339,20 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator!= compares a primtive value against this tainted value
-   * @tparam TArg is the type of the rhs value
-   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
-   * @param aThis is the lhs argument whose type is this class
-   * @param aArg is the rhs argument
-   * @return `bool` if the value wrapped is a `tainted` value, and a @ref
-   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
-   * value
+   * @brief Operator== compares s primitive value against this_t value
+   * @tparam TArg is the lhs primitive type
+   * @tparam RLBOX_REQUIRE checks if the lhs is not a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a primitive value
+   * @param aRhs is the rhs argument which is a this_t value
+   * @return a @ref rlbox::tainted_boolean_hint if `aRhs` is @ref
+   * rlbox::tainted_volatile wrapper, bool otherwise
    */
-  template <typename TArg, RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<
-                                         std::remove_reference_t<TArg>>)>
-  friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
-    const bool ret = aThis.UNSAFE_unverified() != aArg;
+  template <typename TArg,
+            RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<TArg>)>
+  friend inline constexpr auto operator==(
+      const TArg& aLhs,
+      const this_t& aRhs) noexcept(noexcept(aLhs == aRhs.raw_host_rep())) {
+    const bool ret = aLhs == aRhs.raw_host_rep();
     if constexpr (TUseAppRep) {
       return ret;
     } else {
@@ -318,19 +361,61 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator== compares a tainted value against this tainted value
-   * @tparam TArg is the type of the rhs tainted value
-   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
-   * @param aThis is the lhs argument whose type is this class
-   * @param aArg is the rhs argument which is a tainted value
-   * @return `bool` if this class is a `tainted` value, and a @ref
-   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
-   * value
+   * @brief Operator!= compares this_t value against another tainted_* value
+   * @tparam TWrap is the rhs wrapper type
+   * @tparam TUseAppRepOther is the rhs AppRep
+   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TExtraOther... is the extra args of the rhs
+   * @tparam RLBOX_REQUIRE checks if the rhs is a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a this_t value
+   * @param aRhs is the rhs argument which is a tainted_* value
+   * @return a @ref rlbox::tainted_boolean_hint if either `aLhs` or `aRhs` is
+   * @ref rlbox::tainted_volatile wrapper, bool otherwise
    */
-  template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
-                                         std::remove_reference_t<TArg>>)>
-  friend inline TCompareRet operator==(const this_t& aThis, TArg&& aArg) {
-    const bool ret = aThis.UNSAFE_unverified() == aArg.UNSAFE_unverified();
+  template <
+      template <bool, typename, typename, typename...> typename TWrap,
+      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
+                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
+  friend inline constexpr auto operator!=(
+      const this_t& aLhs,
+      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>&
+          aRhs) noexcept(noexcept(aLhs.raw_host_rep() != aRhs.raw_host_rep() &&
+                                  aLhs.raw_sandbox_rep() !=
+                                      aRhs.raw_sandbox_rep())) {
+    bool ret = false;
+
+    // If both the lhs and rhs are in the sandbox representation, directly
+    // compare those. Else convert both sides to app representation (this is a
+    // noop for each side that is already in the app representation)
+    if constexpr (!TUseAppRep && !TUseAppRepOther) {
+      ret = aLhs.raw_sandbox_rep() != aRhs.raw_sandbox_rep();
+    } else {
+      ret = aLhs.raw_host_rep() != aRhs.raw_host_rep();
+    }
+
+    if constexpr (TUseAppRep && TUseAppRepOther) {
+      return ret;
+    } else {
+      return tainted_boolean_hint<TSbx>(ret);
+    }
+  }
+
+  /**
+   * @brief Operator!= compares this_t value against a primitive value
+   * @tparam TArg is the rhs primitive type
+   * @tparam RLBOX_REQUIRE checks if the rhs is not a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a this_t value
+   * @param aRhs is the rhs argument which is a primitive value
+   * @return a @ref rlbox::tainted_boolean_hint if `aLhs` is @ref
+   * rlbox::tainted_volatile wrapper, bool otherwise
+   */
+  template <typename TArg,
+            RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<TArg>)>
+  friend inline constexpr auto operator!=(
+      const this_t& aLhs,
+      const TArg& aRhs) noexcept(noexcept(aLhs.raw_host_rep() != aRhs)) {
+    const bool ret = aLhs.raw_host_rep() != aRhs;
     if constexpr (TUseAppRep) {
       return ret;
     } else {
@@ -339,19 +424,20 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator!= compares a tainted value against this tainted value
-   * @tparam TArg is the type of the rhs tainted value
-   * @tparam RLBOX_REQUIRE checks to see if the argument is not a tainted value
-   * @param aThis is the lhs argument whose type is this class
-   * @param aArg is the rhs argument which is a tainted value
-   * @return `bool` if this class is a `tainted` value, and a @ref
-   * rlbox::tainted_boolean_hint if the value wrapped is a `tainted_volatile`
-   * value
+   * @brief Operator!= compares s primitive value against this_t value
+   * @tparam TArg is the lhs primitive type
+   * @tparam RLBOX_REQUIRE checks if the lhs is not a tainted_* wrapper
+   * @param aLhs is the lhs argument which is a primitive value
+   * @param aRhs is the rhs argument which is a this_t value
+   * @return a @ref rlbox::tainted_boolean_hint if `aRhs` is @ref
+   * rlbox::tainted_volatile wrapper, bool otherwise
    */
-  template <typename TArg, RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
-                                         std::remove_reference_t<TArg>>)>
-  friend inline TCompareRet operator!=(const this_t& aThis, TArg&& aArg) {
-    const bool ret = aThis.UNSAFE_unverified() != aArg.UNSAFE_unverified();
+  template <typename TArg,
+            RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<TArg>)>
+  friend inline constexpr auto operator!=(
+      const TArg& aLhs,
+      const this_t& aRhs) noexcept(noexcept(aLhs != aRhs.raw_host_rep())) {
+    const bool ret = aLhs != aRhs.raw_host_rep();
     if constexpr (TUseAppRep) {
       return ret;
     } else {
