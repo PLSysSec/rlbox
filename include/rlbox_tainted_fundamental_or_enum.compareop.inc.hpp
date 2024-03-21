@@ -11,11 +11,11 @@
 
 #ifndef RLBOX_COMPARE_OP
 // if RLBOX_COMPARE_OP is not defined, we want this file to parse sensibly for
-// intellisense define a value for intellisense
-#  define RLBOX_PARSE_FOR_INTELLISENSE
+// when read on its own
+#  define RLBOX_PARSE_FOR_STANDALONE
 #endif
 
-#ifdef RLBOX_PARSE_FOR_INTELLISENSE
+#ifdef RLBOX_PARSE_FOR_STANDALONE
 #  define RLBOX_COMPARE_OP ==
 #  include "rlbox_helpers.hpp"
 #  include "rlbox_types.hpp"
@@ -116,10 +116,10 @@ class dummy {
     }
   }
 
-#ifdef RLBOX_PARSE_FOR_INTELLISENSE
+#ifdef RLBOX_PARSE_FOR_STANDALONE
 };
 }
 #endif
 
-#undef RLBOX_PARSE_FOR_INTELLISENSE
+#undef RLBOX_PARSE_FOR_STANDALONE
 #undef RLBOX_COMPARE_OP
