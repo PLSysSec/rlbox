@@ -275,7 +275,7 @@ class tainted_impl<
    */
   inline TOpDeref* operator->() const noexcept {
     // call the deference operator * and then take the address of the result
-    // Use std::adress of so we don't call the operator overload of operator &
+    // Use std::addressof so we don't call the operator overload of operator &
     return std::addressof(**this);
   }
 
