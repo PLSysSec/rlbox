@@ -78,6 +78,15 @@ endif()
 
 # Dev Tools ###################
 
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+  message("Enabling ${CLANG_FORMAT} check")
+  # Config in .clang-format
+  # When runs, this actually formats the files
+  add_custom_target(format-source
+    COMMAND clang-format -i -style=file ${ALL_CXX_SOURCE_FILES})
+endif()
+
 if(DEV)
   if(MSVC)
     message("Enabling warnings")
@@ -90,15 +99,6 @@ if(DEV)
     # add_link_options(-fsanitize=address)
     add_compile_options(-fsanitize=undefined)
     add_link_options(-fsanitize=undefined)
-  endif()
-
-  find_program(CLANG_FORMAT "clang-format")
-  if(CLANG_FORMAT)
-    message("Enabling ${CLANG_FORMAT} check")
-    # Config in .clang-format
-    # When runs, this actually formats the files
-    add_custom_target(format-source
-      COMMAND clang-format -i -style=file ${ALL_CXX_SOURCE_FILES})
   endif()
 
   find_program(CLANG_TIDY "clang-tidy")
