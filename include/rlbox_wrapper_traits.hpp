@@ -202,15 +202,10 @@ template <typename T>
 using rlbox_get_wrapper_sandbox_t =
     typename detail_rlbox_remove_wrapper::helper<T>::type_sbx;
 
-template <template <typename, typename> typename TWrap, typename TAppRep,
-          typename TSbx, typename TRhs>
-constexpr bool is_same_wrapper_type_v =
-    std::is_same_v<TWrap<TAppRep, TSbx>, TRhs>;
-
 template <typename TCompare,
           template <bool, typename, typename, typename...> typename TWrap,
           bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
-constexpr bool is_same_wrapper_type_new_v =
+constexpr bool is_same_wrapper_type_v =
     std::is_same_v<TCompare, TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>>;
 
 }  // namespace rlbox::detail

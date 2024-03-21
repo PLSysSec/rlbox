@@ -106,13 +106,13 @@ class tainted_impl<
   template <
       template <bool, typename, typename, typename...> typename TWrap,
       bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
-      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
-                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
-                    !detail::is_same_wrapper_type_new_v<
-                        this_t, TWrap, TUseAppRepOther, TAppRepOther, TSbx,
-                        TExtraOther...> &&
-                    std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                            TAppRepOther>)>
+      RLBOX_REQUIRE(
+          detail::is_tainted_any_wrapper_v<
+              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+          !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
+                                          TAppRepOther, TSbx, TExtraOther...> &&
+          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
+                                  TAppRepOther>)>
   inline tainted_impl(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
@@ -212,9 +212,8 @@ class tainted_impl<
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
-          !detail::is_same_wrapper_type_new_v<this_t, TWrap, TUseAppRepOther,
-                                              TAppRepOther, TSbx,
-                                              TExtraOther...> &&
+          !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
+                                          TAppRepOther, TSbx, TExtraOther...> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
   inline this_t& operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx,
                                        TExtraOther...>& aOther) {
