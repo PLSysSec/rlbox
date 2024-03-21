@@ -562,7 +562,12 @@ class rlbox_sandbox : protected TSbx {
                           "Sandbox not created");
 #endif
 
-    this->template impl_free_in_sandbox<T>(aPtr.raw_sandbox_rep(*this));
+    if constexpr (detail::has_member_impl_free_in_sandbox_v<TSbx>) {
+      this->template impl_free_in_sandbox<T>(aPtr.raw_sandbox_rep(*this));
+    } else {
+      /// \todo Use sandbox_invoke call free in the sandbox code
+      static_assert(detail::false_v<T>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+    }
   }
 };
 
