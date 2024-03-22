@@ -325,13 +325,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
     if constexpr (TUseAppRep) {
       return this;
     } else {
-      // Deliberately use a C style cast as we we want to get rid of any CV
-      // qualifers here. CV qualifiers are moved inside the wrapper type and
-      // thus continue to be tracked.
-
-      // NOLINTNEXTLINE(google-readability-casting)
-      auto* data_ptr = (std::add_pointer_t<TAppRep>)&data;
-      auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);
+      auto ret = TOpAddrOf::from_unchecked_raw_pointer(this);
       return ret;
     }
   }

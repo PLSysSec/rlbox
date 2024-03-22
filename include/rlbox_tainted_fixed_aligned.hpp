@@ -9,12 +9,14 @@
 #pragma once
 
 #include <cstddef>
-#include <stdint.h>
+// Needed by included file rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp
+#include <stdint.h>  // IWYU pragma: keep
 #include <type_traits>
 #include <utility>
 
 #include "rlbox_abi_conversion.hpp"
-#include "rlbox_error_handling.hpp"
+// Needed by included file rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp
+#include "rlbox_error_handling.hpp"  // IWYU pragma: keep
 #include "rlbox_helpers.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
 #include "rlbox_types.hpp"
@@ -70,22 +72,42 @@ class tainted_impl<
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
 
-  detail::tainted_rep_t<TAppRep> data{0};
+  /**
+   * @brief Result type of operator*
+   */
+  using TOpDeref =
+      tainted_volatile<std::remove_pointer_t<detail::tainted_rep_t<TAppRep>>,
+                       TSbx>;
+
+  TOpDeref* data{0};
 
   ////////////////////////////////
 
   /**
-   * @brief Construct a tainted value with a pointer to sandbox memory. This
-   * function is for internal use only, as the pointer passed is not checked and
-   * is assumed to point to sandbox memory.
+   * @brief Construct a tainted value with a pointer to sandbox memory. Use with
+   * care as the pointer passed is not checked and is assumed to point to
+   * sandbox memory.
    * @param aPtr is a pointer that is assumed to point to an object in sandbox
    * memory.
    * @return this_t is the tainted pointer of the given param
    */
-  static this_t from_unchecked_raw_pointer(TAppRep aPtr) {
+  static this_t from_unchecked_raw_pointer(TOpDeref* aPtr) {
     this_t ret;
     ret.data = aPtr;
     return ret;
+  }
+
+  /**
+   * @brief Construct a tainted value with a pointer to sandbox memory. Use with
+   * care as the pointer passed is not checked and is assumed to point to
+   * sandbox memory.
+   * @param aPtr is a pointer that is assumed to point to an object in sandbox
+   * memory.
+   * @return this_t is the tainted pointer of the given param
+   */
+  static this_t from_unchecked_raw_pointer(uintptr_t aPtr) {
+    // NOLINTNEXTLINE(google-readability-casting)
+    return from_unchecked_raw_pointer((TOpDeref*)aPtr);
   }
 
  public:
@@ -148,7 +170,8 @@ class tainted_impl<
    */
   [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
       const {
-    return data;
+    /// \todo eliminate cast
+    return reinterpret_cast<detail::tainted_rep_t<TAppRep>>(data);
   }
 
   /**
@@ -241,26 +264,12 @@ class tainted_impl<
 
   ////////////////////////////////
 
- protected:
-  /**
-   * @brief Result type of operator*
-   */
-  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>, TSbx>;
-
- public:
   /**
    * @brief Operator* which dereferences tainted and gives a tainted_volatile&
    * @return TOpDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref& operator*() const noexcept {
-    /// \todo eliminate cast and replace with tainted_volatile constructor
-    /// taking a reference
-
-    auto data_tainted_volatile = reinterpret_cast<TOpDeref*>(data);
-    // NOLINTNEXTLINE(clang-analyzer-core.uninitialized.UndefReturn)
-    return *data_tainted_volatile;
-  }
+  inline TOpDeref& operator*() const noexcept { return *data; }
 
   /**
    * @brief Operator* which dereferences tainted and gives a tainted_volatile&
@@ -381,115 +390,13 @@ class tainted_impl<
 
   ////////////////////////////////
 
-  /**
-   * @brief Operator+ which increments a tainted pointer by aInc
-   * @param aInc is the increment amount
-   * @return this_t is the incremented tainted pointer
-   */
-  inline this_t operator+(size_t aInc) const {
-    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
-    auto new_data_int =
-        reinterpret_cast<uintptr_t>(data) + sizeof(TOpDeref) * aInc;
-    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
-    const bool in_bounds =
-        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
-                                                                       data);
-    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
+#define RLBOX_ARITHMETIC_OP +
+#define RLBOX_ARITHMETIC_ASSIGN_OP +=
+#include "rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp"
 
-    auto ret = this_t::from_unchecked_raw_pointer(new_data);
-    return ret;
-  }
-
-  /**
-   * @brief Operator+ which increments a tainted pointer by aInc
-   * @tparam T is the type of the tainted index
-   * @param aInc is the increment amount
-   * @return this_t is the incremented tainted pointer
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator+(tainted<T, TSbx> aInc) const {
-    return (*this) + aInc.raw_host_rep();
-  }
-
-  /**
-   * @brief Operator+= which increments a tainted pointer by aInc and sets the
-   * pointer
-   * @param aInc is the increment amount
-   * @return this_t& returns this object after modification
-   */
-  inline this_t& operator+=(size_t aInc) {
-    this_t new_ptr = *this + aInc;
-    *this = new_ptr;
-    return *this;
-  }
-
-  /**
-   * @brief Operator+= which increments a tainted pointer by aInc and sets the
-   * pointer
-   * @tparam T is the type of the tainted index
-   * @param aInc is the increment amount
-   * @return this_t& returns this object after modification
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator+=(tainted<T, TSbx> aInc) {
-    (*this) += aInc.raw_host_rep();
-    return *this;
-  }
-
-  /**
-   * @brief Operator- which decrements a tainted pointer by aInc
-   * @param aInc is the decrement amount
-   * @return this_t is the decremented tainted pointer
-   */
-  inline this_t operator-(size_t aInc) const {
-    detail::dynamic_check(!is_null(), "Deferencing a tainted null pointer");
-    auto new_data_int =
-        reinterpret_cast<uintptr_t>(data) - sizeof(TOpDeref) * aInc;
-    auto new_data = reinterpret_cast<decltype(data)>(new_data_int);
-    bool in_bounds =
-        rlbox_sandbox<TSbx>::is_pointer_in_sandbox_memory_with_example(new_data,
-                                                                       data);
-    detail::dynamic_check(in_bounds, "Pointer offset not in sandbox");
-
-    auto ret = this_t::from_unchecked_raw_pointer(new_data);
-    return ret;
-  }
-
-  /**
-   * @brief Operator- which decrements a tainted pointer by aInc
-   * @tparam T is the type of the tainted index
-   * @param aInc is the decrement amount
-   * @return this_t is the decremented tainted pointer
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t operator-(tainted<T, TSbx> aInc) const {
-    return (*this) - aInc.raw_host_rep();
-  }
-
-  /**
-   * @brief Operator-= which decrements a tainted pointer by aInc and sets the
-   * pointer
-   * @param aInc is the decrement amount
-   * @return this_t& returns this object after modification
-   */
-  inline this_t& operator-=(size_t aInc) {
-    this_t new_ptr = *this - aInc;
-    *this = new_ptr;
-    return *this;
-  }
-
-  /**
-   * @brief Operator-= which decrements a tainted pointer by aInc and sets the
-   * pointer
-   * @tparam T is the type of the tainted index
-   * @param aInc is the decrement amount
-   * @return this_t& returns this object after modification
-   */
-  template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline this_t& operator-=(tainted<T, TSbx> aInc) {
-    (*this) -= aInc.raw_host_rep();
-    return *this;
-  }
+#define RLBOX_ARITHMETIC_OP -
+#define RLBOX_ARITHMETIC_ASSIGN_OP -=
+#include "rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp"
 };
 
 }  // namespace rlbox

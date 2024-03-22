@@ -435,7 +435,7 @@ class rlbox_sandbox : protected TSbx {
                           "Trying to convert a raw pointer which is outside "
                           "the sandbox to a tainted pointer");
 
-    auto ret = tainted<T, TSbx>::from_unchecked_raw_pointer(aPtr);
+    auto ret = tainted<T, TSbx>::from_unchecked_raw_pointer(ptr_start);
     return ret;
   }
 
@@ -532,6 +532,10 @@ class rlbox_sandbox : protected TSbx {
     if constexpr (detail::has_member_impl_malloc_in_sandbox_v<TSbx>) {
       const base_types_convertor_tsbx<T*> ptr_sbx_rep =
           this->template impl_malloc_in_sandbox<T>(total_size);
+
+      /// \todo Investigate: its not ideal to have this returned as T* given
+      /// that this eventually has be converted to a uintptr_t inside
+      /// get_tainted_from_raw_ptr
       T* ptr = get_unsandboxed_pointer<T*>(ptr_sbx_rep);
 
       tainted<T*, TSbx> ret = get_tainted_from_raw_ptr(ptr, total_size);
