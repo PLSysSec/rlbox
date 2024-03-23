@@ -68,6 +68,10 @@ class dummy {
     return (*this)RLBOX_ARITHMETIC_OP aInc.raw_host_rep();
   }
 
+#define RLBOX_CONCAT_HELPER2(a) a## =
+#define RLBOX_CONCAT_HELPER(a) RLBOX_CONCAT_HELPER2(a)
+#define RLBOX_ARITHMETIC_ASSIGN_OP RLBOX_CONCAT_HELPER(RLBOX_ARITHMETIC_OP)
+
   /**
    * @brief Operator which modifies a tainted pointer by aInc and sets the
    * pointer
@@ -98,6 +102,8 @@ class dummy {
 }
 #endif
 
+#undef RLBOX_CONCAT_HELPER2
+#undef RLBOX_CONCAT_HELPER
 #undef RLBOX_PARSE_FOR_STANDALONE
 #undef RLBOX_ARITHMETIC_ASSIGN_OP
 #undef RLBOX_ARITHMETIC_OP

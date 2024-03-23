@@ -32,6 +32,7 @@
 #include "rlbox_memory_mgmt.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
+#include "rlbox_stdint_types.hpp"
 #include "rlbox_tainted_impl.hpp"
 #include "rlbox_types.hpp"
 

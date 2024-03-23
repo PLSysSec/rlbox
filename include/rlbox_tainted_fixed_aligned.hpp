@@ -391,11 +391,9 @@ class tainted_impl<
   ////////////////////////////////
 
 #define RLBOX_ARITHMETIC_OP +
-#define RLBOX_ARITHMETIC_ASSIGN_OP +=
 #include "rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp"
 
 #define RLBOX_ARITHMETIC_OP -
-#define RLBOX_ARITHMETIC_ASSIGN_OP -=
 #include "rlbox_tainted_fixed_aligned.arithmeticop.inc.hpp"
 };
 

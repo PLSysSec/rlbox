@@ -274,6 +274,8 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
       std::conditional_t<TUseAppRep, bool, tainted_boolean_hint<TSbx>>;
 
  public:
+  ////////////////////////////////
+
 #define RLBOX_COMPARE_OP ==
 #include "rlbox_tainted_fundamental_or_enum.compareop.inc.hpp"
 
@@ -291,6 +293,103 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
 
 #define RLBOX_COMPARE_OP >
 #include "rlbox_tainted_fundamental_or_enum.compareop.inc.hpp"
+
+  ////////////////////////////////
+
+#define RLBOX_BINARY_OP +
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP -
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP *
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP /
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP %
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP ^
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP &
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP |
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP <<
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+#define RLBOX_BINARY_OP >>
+#include "rlbox_tainted_fundamental_or_enum.binaryop.inc.hpp"
+
+  ////////////////////////////////
+
+  /**
+   * @brief Operator + on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator+() const noexcept(noexcept(+raw_host_rep())) {
+    const auto result = +raw_host_rep();
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator - on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator-() const noexcept(noexcept(-raw_host_rep())) {
+    const auto result = -raw_host_rep();
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator ~ on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator~() const noexcept(noexcept(~raw_host_rep())) {
+    const auto result = ~raw_host_rep();
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator pre-increment on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator++() const
+      noexcept(noexcept(++raw_host_rep())) {
+    const auto result = ++raw_host_rep();
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator pre-decrement on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator--() const
+      noexcept(noexcept(--raw_host_rep())) {
+    const auto result = --raw_host_rep();
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator post-increment on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator++(int) const
+      noexcept(noexcept(raw_host_rep()++)) {
+    const auto result = raw_host_rep()++;
+    return tainted<decltype(result), TSbx>(result);
+  }
+  /**
+   * @brief Operator post-decrement on the current tainted value
+   * @return a tainted result
+   */
+  inline constexpr auto operator--(int) const
+      noexcept(noexcept(raw_host_rep()--)) {
+    const auto result = raw_host_rep()--;
+    return tainted<decltype(result), TSbx>(result);
+  }
+
+  ////////////////////////////////
 
   /**
    * @brief This conversion operator allows conversion of this tainted value to
