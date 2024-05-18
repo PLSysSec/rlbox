@@ -17,7 +17,6 @@
 
 #ifdef RLBOX_PARSE_FOR_STANDALONE
 #  define RLBOX_BINARY_OP +
-#  define RLBOX_BINARY_ASSIGN_OP +=
 #  include "rlbox_helpers.hpp"
 #  include "rlbox_types.hpp"
 // IWYU doesn't seem to recognize the call to RLBOX_REQUIRE so force IWYU to
@@ -28,6 +27,7 @@ namespace rlbox {
 template <bool TUseAppRep, typename TAppRep, typename TSbx>
 class dummy {
   using this_t = dummy<TUseAppRep, TAppRep, TSbx>;
+  TAppRep data{0};
 #endif
 
   /**
@@ -39,10 +39,9 @@ class dummy {
    * @return a tainted result
    */
   template <typename TArg>
-  friend inline constexpr auto operator RLBOX_BINARY_OP(
-      const this_t& aLhs,
-      const TArg& aRhs) noexcept(noexcept(aLhs.raw_host_rep() RLBOX_BINARY_OP
-                                          aLhs.raw_host_rep())) {
+  friend inline constexpr auto
+  operator RLBOX_BINARY_OP(const this_t& aLhs, const TArg& aRhs) noexcept(
+      noexcept(aLhs.raw_host_rep() RLBOX_BINARY_OP aLhs.raw_host_rep())) {
     detail::tainted_rep_t<TAppRep> result = 0;
     if constexpr (detail::is_tainted_any_wrapper_v<TArg>) {
       result = aLhs.raw_host_rep() RLBOX_BINARY_OP aRhs.raw_host_rep();
@@ -63,15 +62,15 @@ class dummy {
    */
   template <typename TArg,
             RLBOX_REQUIRE(!detail::is_tainted_any_wrapper_v<TArg>)>
-  friend inline constexpr auto operator RLBOX_BINARY_OP(
-      const TArg& aLhs,
-      const this_t& aRhs) noexcept(noexcept(aRhs.raw_host_rep() RLBOX_BINARY_OP
-                                            aRhs.raw_host_rep())) {
-    detail::tainted_rep_t<TAppRep> result = aLhs RLBOX_BINARY_OP aRhs.raw_host_rep();
+  friend inline constexpr auto
+  operator RLBOX_BINARY_OP(const TArg& aLhs, const this_t& aRhs) noexcept(
+      noexcept(aRhs.raw_host_rep() RLBOX_BINARY_OP aRhs.raw_host_rep())) {
+    detail::tainted_rep_t<TAppRep> result =
+        aLhs RLBOX_BINARY_OP aRhs.raw_host_rep();
     return tainted<TAppRep, TSbx>(result);
   }
 
-#define RLBOX_CONCAT_HELPER2(a) a##=
+#define RLBOX_CONCAT_HELPER2(a) a## =
 #define RLBOX_CONCAT_HELPER(a) RLBOX_CONCAT_HELPER2(a)
 #define RLBOX_BINARY_ASSIGN_OP RLBOX_CONCAT_HELPER(RLBOX_BINARY_OP)
 
@@ -83,8 +82,8 @@ class dummy {
    * @return a tainted result
    */
   template <typename TArg>
-  inline constexpr this_t& operator RLBOX_BINARY_ASSIGN_OP(const TArg& aRhs) noexcept(
-      noexcept(data RLBOX_BINARY_ASSIGN_OP data)) {
+  inline constexpr this_t& operator RLBOX_BINARY_ASSIGN_OP(
+      const TArg & aRhs) noexcept(noexcept(data RLBOX_BINARY_ASSIGN_OP data)) {
     if constexpr (detail::is_tainted_any_wrapper_v<TArg>) {
       data RLBOX_BINARY_ASSIGN_OP aRhs.raw_host_rep();
     } else {

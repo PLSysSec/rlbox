@@ -3,9 +3,9 @@
  * @copyright Copyright (c) 2023 Shravan Narayan. This project is released under
  * the MIT License. You can obtain a copy of the License at
  * https://raw.githubusercontent.com/PLSysSec/rlbox/master/LICENSE
- * @brief This header implements the tainted_fundamental_or_enum_base class that
- * adds tainted/tainted_volatile support for fundamental (int, float, etc.)
- * types and enum types.
+ * @brief This header implements the tainted_impl that adds
+ * tainted/tainted_volatile support for fundamental (int, float, etc.) types and
+ * enum types.
  */
 
 #pragma once

@@ -282,6 +282,8 @@ class tainted_impl<
     return std::addressof(**this);
   }
 
+  /// \todo Check the operator [] implementation
+
   /**
    * @brief Operator[] which dereferences a tainted pointer at in idx and gives
    * a tainted_volatile&
