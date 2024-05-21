@@ -79,14 +79,16 @@ inline constexpr bool is_cvref_t = !std::is_same_v<remove_cvref_t<T>, T>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace c_array_to_std_array_detail {
+namespace array_detail {
 /**
  * @brief This handles the case where T is not an array
  * @tparam T is the type to convert
  */
 template <typename T>
-struct c_array_to_std_array {
-  using type = T;
+struct array_detail_helper {
+  using c_array_to_std_array_t = T;
+  using std_array_to_c_array_t = T;
+  static constexpr bool mIsArray = false;
 };
 
 /**
@@ -94,37 +96,67 @@ struct c_array_to_std_array {
  * @tparam T is the type to convert
  */
 template <typename T, size_t TN>
-struct c_array_to_std_array<T[TN]> {
-  using type = std::array<T, TN>;
+struct array_detail_helper<T[TN]> {
+  using c_array_to_std_array_t = std::array<T, TN>;
+  using std_array_to_c_array_t = T[TN];
+  static constexpr bool mIsArray = true;
 };
 
 /**
- * @brief This handles the case for dynamic sized arrays (like `int[]') ewhich
+ * @brief This handles the case where the argument is a std::array of type T
+ * and size N
+ * @tparam T is the type to convert
+ */
+template <typename T, size_t TN>
+struct array_detail_helper<std::array<T, TN>> {
+  using c_array_to_std_array_t = std::array<T, TN>;
+  using std_array_to_c_array_t = T[TN];
+  static constexpr bool mIsArray = true;
+};
+
+/**
+ * @brief This handles the case for dynamic sized arrays (like `int[]') which
  * are not supported.
  * @tparam T is the type to convert
  */
 template <typename T>
-struct c_array_to_std_array<T[]> {
+struct array_detail_helper<T[]> {
   static_assert(
       false_v<T>,
       "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
+  using c_array_to_std_array_t = T[];
+  using std_array_to_c_array_t = T[];
+  static constexpr bool mIsArray = true;
 };
 
-}  // namespace c_array_to_std_array_detail
+}  // namespace array_detail
 
 /**
  * @brief If T is a `int[N]', this trait converts it to the `std::array<N>'
  * type for this, else T is returned. Dynamic sized arrays `int[]' are not
  * supported
  * @tparam T is the type to convert
- * @code {.cpp}
- * static_assert(std::is_same_t<c_array_to_std_array_t<int[3]>, std::array<int,
- * 3>>); static_assert(std::is_same_t<c_array_to_std_array_t<int>, int>);
- * @endcode
  */
 template <typename T>
 using c_array_to_std_array_t =
-    typename c_array_to_std_array_detail::c_array_to_std_array<T>::type;
+    typename array_detail::array_detail_helper<T>::c_array_to_std_array_t;
+
+/**
+ * @brief If T is a `std::array<N>', this trait converts it to the `int[N]'
+ * type for this, else T is returned. Dynamic sized arrays `int[]' are not
+ * supported
+ * @tparam T is the type to convert
+ */
+template <typename T>
+using std_array_to_c_array_t =
+    typename array_detail::array_detail_helper<T>::std_array_to_c_array_t;
+
+/**
+ * @brief If T is a `T[N]' or `std::array<T, N>'
+ * @tparam T is the type to check
+ */
+template <typename T>
+constexpr bool is_any_array_v = array_detail::array_detail_helper<T>::mIsArray;
 
 ///////////////////////////////////////////////////////////////////////////////
 

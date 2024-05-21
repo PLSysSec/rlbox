@@ -71,14 +71,20 @@ TEST_CASE("sandbox_invoke operates correctly with pointer arrays",
   sandbox.destroy_sandbox();
 }
 
-// TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
-//   rlbox_sandbox_test_ptr sandbox;
-//   sandbox.create_sandbox();
+TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
+  rlbox_sandbox_test_ptr sandbox;
+  sandbox.create_sandbox();
 
-//   tainted_test_ptr<int[3]> t_val = sandbox.malloc_in_sandbox<int[3]>();
+  [[maybe_unused]] tainted_test_ptr<int[3]> t_val;
+  /// \todo Make tainted_impl<array> have no base class
+  // [[maybe_unused]] tainted_test_ptr<int[3]> t_val_init = {0};
 
-//   sandbox.destroy_sandbox();
-// }
+  [[maybe_unused]] tainted_test_ptr<int(*)[3]> t_val_ptr;
+  [[maybe_unused]] tainted_test_ptr<int(*)[3]> t_vol_ptr_val =
+      sandbox.malloc_in_sandbox<int[3]>();
+
+  sandbox.destroy_sandbox();
+}
 
 // TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
 //   rlbox_sandbox_test sandbox;

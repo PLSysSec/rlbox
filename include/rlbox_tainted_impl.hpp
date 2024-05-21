@@ -10,6 +10,7 @@
 
 // IWYU pragma: begin_exports
 
+#include "rlbox_tainted_array.hpp"
 #include "rlbox_tainted_fixed_aligned.hpp"
 #include "rlbox_tainted_fundamental_or_enum.hpp"
 #include "rlbox_tainted_relocatable.hpp"

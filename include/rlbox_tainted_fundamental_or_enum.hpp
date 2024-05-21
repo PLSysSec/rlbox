@@ -119,7 +119,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    * @brief Construct a new tainted object from a raw (unwrapped) primitive
    * value
    * @tparam TOther is the type of the rhs value
-   * @tparam RLBOX_REQUIRE checks if this meets the constructible criterio
+   * @tparam RLBOX_REQUIRE checks if this meets the constructible criterion
    * @param aOther is the raw primitive
    */
   template <typename TOther,
