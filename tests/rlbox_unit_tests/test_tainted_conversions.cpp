@@ -48,8 +48,6 @@ TEST_CASE("tainted tainted_volatile conversion operates correctly",
   sandbox.create_sandbox();
 
   tainted_test<int*> ptr = sandbox.malloc_in_sandbox<int>();
-  REQUIRE(std::is_base_of_v<tainted_interface_sbx<rlbox_sandbox_type_test>,
-                            decltype(ptr)>);
   REQUIRE(ptr.UNSAFE_unverified() != nullptr);
 
   ////////////

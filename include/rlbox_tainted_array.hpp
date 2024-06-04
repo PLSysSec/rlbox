@@ -32,10 +32,10 @@ namespace rlbox {
  * @tparam TSbx is the type of sandbox
  */
 template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_impl<TUseAppRep, TAppRep, TSbx,
-                   RLBOX_SPECIALIZE(detail::is_any_array_v<
-                                    detail::rlbox_stdint_to_stdint_t<TAppRep>>)>
-    : tainted_base<TUseAppRep, TAppRep, TSbx> {
+class tainted_impl<
+    TUseAppRep, TAppRep, TSbx,
+    RLBOX_SPECIALIZE(
+        detail::is_any_array_v<detail::rlbox_stdint_to_stdint_t<TAppRep>>)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
@@ -79,25 +79,25 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
 
   using TRepEl = tainted_impl<TUseAppRep, std::remove_extent_t<TRep>, TSbx>;
 
+ public:
   /**
    * @brief Represent a tainted array as an array of tainted values
    */
   std::array<TRepEl, std::extent_v<TRep>> data{{0}};
 
- public:
-  /**
-   * @brief Construct a fundamental tainted_impl object
-   */
-  inline tainted_impl() = default;
-  /**
-   * @brief Copy constructor: Construct a fundamental tainted_impl
-   * object
-   */
-  inline tainted_impl(const this_t&) = default;
-  /**
-   * @brief Move constructor: Construct a fundamental tainted_impl object
-   */
-  inline tainted_impl(this_t&&) noexcept = default;
+  // /**
+  //  * @brief Construct a fundamental tainted_impl object
+  //  */
+  // inline tainted_impl() = default;
+  // /**
+  //  * @brief Copy constructor: Construct a fundamental tainted_impl
+  //  * object
+  //  */
+  // inline tainted_impl(const this_t&) = default;
+  // /**
+  //  * @brief Move constructor: Construct a fundamental tainted_impl object
+  //  */
+  // inline tainted_impl(this_t&&) noexcept = default;
 
   // /**
   //  * @brief Construct a new tainted object from another tainted wrapped
@@ -148,7 +148,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   /**
    * @brief Destroy the fundamental tainted_impl object
    */
-  inline ~tainted_impl() = default;
+  // inline ~tainted_impl() = default;
 
   ////////////////////////////////
 
@@ -197,8 +197,8 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   ///\todo Modify noexcept with simple macro on EXCEPTIONS_ENABLED
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives
-   * a tainted&
+   * @brief Operator[] which dereferences a tainted array at in idx and gives a
+   * tainted&
    * @param aIdx is the index
    * @return TRepEl& is the reference to the tainted element
    */
@@ -210,8 +210,8 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives
-   * a tainted&
+   * @brief Operator[] which dereferences a tainted array at in idx and gives a
+   * tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep
    * @tparam TAppRepOther is the type of the index value being wrapped
@@ -238,11 +238,10 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives a
-   * tainted&
+   * @brief Operator[] const which dereferences a tainted array at in idx and
+   * gives a tainted&
    * @param aIdx is the index
-   * @return const TRepEl& is the const reference to the the tainted
-   * element
+   * @return const TRepEl& is the const reference to the the tainted element
    */
   inline const TRepEl& operator[](size_t aIdx) const
       noexcept(noexcept(detail::dynamic_check(false, ""))) {
@@ -252,8 +251,8 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives
-   * a tainted&
+   * @brief Operator[] const which dereferences a tainted array at in idx and
+   * gives a tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep
    * @tparam TAppRepOther is the type of the index value being wrapped

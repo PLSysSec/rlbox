@@ -33,9 +33,9 @@ namespace rlbox {
  */
 template <bool TUseAppRep, typename TAppRep, typename TSbx>
 class tainted_impl<TUseAppRep, TAppRep, TSbx,
-                   RLBOX_SPECIALIZE(detail::is_fundamental_or_enum_v<
-                                    detail::rlbox_stdint_to_stdint_t<TAppRep>>)>
-    : tainted_base<TUseAppRep, TAppRep, TSbx> {
+                   RLBOX_SPECIALIZE(
+                       detail::is_fundamental_or_enum_v<
+                           detail::rlbox_stdint_to_stdint_t<TAppRep>>)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
@@ -398,7 +398,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    * value
    * @return The converted value
    */
-  inline operator TCompareRet() const {
+  explicit inline operator TCompareRet() const {
     const bool ret = data != 0;
     if constexpr (TUseAppRep) {
       return ret;

@@ -62,17 +62,6 @@ constexpr bool rlbox_base_types_not_larger_v =
     sizeof(typename TSbx::sbx_pointer) <= sizeof(void*);
 
 /**
- * @brief This trait identifies if a given generic types is a tainted wrapper.
- * It does this by checking if the generic wrapper derives from @ref
- * rlbox::tainted_interface
- * @tparam TWrap is the generic type to check
- * @tparam T is the type of the data being wrapped over
- */
-template <typename TWrap>
-constexpr bool is_tainted_any_wrapper_v =
-    std::is_base_of_v<tainted_interface, TWrap>;
-
-/**
  * @brief This trait identifies if a given type is an RLBox stdint type (See
  * @ref rlbox_stdint_types.hpp). It does this by checking if the type derives
  * from @ref rlbox::detail::rlbox_stdint_base_t
@@ -163,6 +152,25 @@ rlbox_detail_has_template_member(impl_get_sandboxed_pointer_with_example);
  */
 rlbox_detail_has_template_member(
     impl_is_pointer_in_sandbox_memory_with_example);
+namespace detail_is_tainted_any_wrapper {
+
+std::true_type helper(tainted_interface*);
+
+template <bool TUseAppRep, typename TAppRep, typename TSbx, typename TEnable>
+std::true_type helper(tainted_impl<TUseAppRep, TAppRep, TSbx, TEnable>*);
+
+std::false_type helper(...);
+};  // namespace detail_is_tainted_any_wrapper
+
+/**
+ * @brief This trait identifies if a given generic types is a tainted wrapper.
+ * It does this by checking if the generic wrapper derives from @ref
+ * rlbox::tainted_interface
+ * @tparam T is the type of the data
+ */
+template <typename T>
+constexpr bool is_tainted_any_wrapper_v =
+    decltype(detail_is_tainted_any_wrapper::helper(std::declval<T*>()))::value;
 
 namespace detail_rlbox_remove_wrapper {
 

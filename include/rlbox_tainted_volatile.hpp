@@ -43,8 +43,7 @@ class tainted_impl<
     RLBOX_SPECIALIZE(
         !TUseAppRep && std::is_pointer_v<TAppRep> &&
         TSbx::mTaintedVolatilePointerChoice ==
-            tainted_volatile_pointer_t::TAINTED_VOLATILE_POINTER_STANDARD)>
-    : public tainted_base<TUseAppRep, TAppRep, TSbx> {
+            tainted_volatile_pointer_t::TAINTED_VOLATILE_POINTER_STANDARD)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:

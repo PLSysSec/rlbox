@@ -35,8 +35,7 @@ class tainted_impl<
     TUseAppRep, TAppRep, TSbx,
     RLBOX_SPECIALIZE(
         TUseAppRep&& std::is_pointer_v<TAppRep>&& TSbx::mTaintedPointerChoice ==
-        tainted_pointer_t::TAINTED_POINTER_RELOCATABLE)>
-    : tainted_base<TUseAppRep, TAppRep, TSbx> {
+        tainted_pointer_t::TAINTED_POINTER_RELOCATABLE)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
