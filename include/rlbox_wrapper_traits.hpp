@@ -164,8 +164,9 @@ std::false_type helper(...);
 
 /**
  * @brief This trait identifies if a given generic types is a tainted wrapper.
- * It does this by checking if the generic wrapper derives from @ref
- * rlbox::tainted_interface
+ * It does this by checking if the generic wrapper is either the @ref
+ * rlbox::tainted_impl type or derives from @ref rlbox::tainted_interface (used
+ * by the other wrapper types rlbox uses)
  * @tparam T is the type of the data
  */
 template <typename T>
