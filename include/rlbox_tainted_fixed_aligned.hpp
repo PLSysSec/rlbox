@@ -284,7 +284,7 @@ class tainted_impl<
   /// \todo Check the operator [] implementation
 
   /**
-   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @param aIdx is the index
    * @return TOpDeref& is the reference to the sandbox memory that holds this
@@ -296,7 +296,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @param aIdx is the index
    * @return const TOpDeref& is the const reference to the sandbox memory that
@@ -308,7 +308,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
    * @param aIdx is the tainted index
@@ -321,7 +321,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted pointer at in idx and gives
+   * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
    * @param aIdx is the tainted index

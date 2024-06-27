@@ -85,10 +85,10 @@ TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
   REQUIRE_THROWS(t_val_init2[3].UNSAFE_unverified() == 0);
 
   tainted_test_ptr<int> zero = 0;
-  // REQUIRE(t_val_init2[zero + 0].UNSAFE_unverified() == 1);
-  // REQUIRE(t_val_init2[zero + 1].UNSAFE_unverified() == 2);
-  // REQUIRE(t_val_init2[zero + 2].UNSAFE_unverified() == 3);
-  // REQUIRE_THROWS(t_val_init2[zero + 3].UNSAFE_unverified() == 0);
+  REQUIRE(t_val_init2[zero + 0].UNSAFE_unverified() == 1);
+  REQUIRE(t_val_init2[zero + 1].UNSAFE_unverified() == 2);
+  REQUIRE(t_val_init2[zero + 2].UNSAFE_unverified() == 3);
+  REQUIRE_THROWS(t_val_init2[zero + 3].UNSAFE_unverified() == 0);
 
   [[maybe_unused]] tainted_test_ptr<int(*)[3]> t_val_ptr;
   tainted_test_ptr<int(*)[3]> t_vol_ptr_val =

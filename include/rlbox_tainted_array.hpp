@@ -197,7 +197,7 @@ class tainted_impl<
   ///\todo Modify noexcept with simple macro on EXCEPTIONS_ENABLED
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives a
+   * @brief Operator[] which dereferences a tainted array at an idx and gives a
    * tainted&
    * @param aIdx is the index
    * @return TRepEl& is the reference to the tainted element
@@ -210,7 +210,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] which dereferences a tainted array at in idx and gives a
+   * @brief Operator[] which dereferences a tainted array at an idx and gives a
    * tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep
@@ -225,7 +225,7 @@ class tainted_impl<
       RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
                         TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
   inline TRepEl& operator[](
-      TWrap<TUseAppRepOther, TAppRepOther, TExtraOther...>
+      TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>
           aIdx) noexcept(noexcept(detail::dynamic_check(false, ""))) {
     auto idx_untainted = aIdx.raw_host_rep();
     if constexpr (std::is_signed_v<decltype(idx_untainted)>) {
@@ -238,7 +238,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] const which dereferences a tainted array at in idx and
+   * @brief Operator[] const which dereferences a tainted array at an idx and
    * gives a tainted&
    * @param aIdx is the index
    * @return const TRepEl& is the const reference to the the tainted element
@@ -251,7 +251,7 @@ class tainted_impl<
   }
 
   /**
-   * @brief Operator[] const which dereferences a tainted array at in idx and
+   * @brief Operator[] const which dereferences a tainted array at an idx and
    * gives a tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep

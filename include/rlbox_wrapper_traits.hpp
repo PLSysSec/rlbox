@@ -156,8 +156,8 @@ namespace detail_is_tainted_any_wrapper {
 
 std::true_type helper(tainted_interface*);
 
-template <bool TUseAppRep, typename TAppRep, typename TSbx, typename TEnable>
-std::true_type helper(tainted_impl<TUseAppRep, TAppRep, TSbx, TEnable>*);
+template <bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
+std::true_type helper(tainted_impl<TUseAppRep, TAppRep, TSbx, TExtra...>*);
 
 std::false_type helper(...);
 };  // namespace detail_is_tainted_any_wrapper
