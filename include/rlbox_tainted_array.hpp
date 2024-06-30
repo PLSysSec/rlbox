@@ -61,19 +61,16 @@ class tainted_impl<
    */
   using TAppRepFixed = detail::std_array_to_c_array_t<TAppRep>;
 
-  /// \todo Separate TTaintedEl and TAppRepEl. Make sure this works with n
-  /// dimensional arrays
-  using TAppRepEl =
-      tainted_impl<TUseAppRep, std::remove_extent_t<TAppRepFixed>, TSbx>;
+  /// \todo Make sure this works with n dimensional arrays
+  using TAppRepEl = std::remove_extent_t<TAppRepFixed>;
 
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::tainted_rep_t<
-      detail::rlbox_base_types_convertor<TAppRepFixed, TSbx>>;
+  using TSbxRep = detail::std_array_to_c_array_t<detail::tainted_rep_t<
+      detail::rlbox_base_types_convertor<TAppRepFixed, TSbx>>>;
 
-  using TSbxRepEl =
-      tainted_impl<TUseAppRep, std::remove_extent_t<TSbxRep>, TSbx>;
+  using TSbxRepEl = std::remove_extent_t<TSbxRep>;
 
   /**
    * @brief The internal representation of data for this wrapper
@@ -164,16 +161,13 @@ class tainted_impl<
    */
   [[nodiscard]] inline std::array<TAppRepEl, std::extent_v<TRep>>
   UNSAFE_unverified(rlbox_sandbox<TSbx>& aSandbox) const {
-    if constexpr (TUseAppRep) {
-      return data;
-    } else {
-      std::array<TAppRepEl, std::extent_v<TRep>> converted;
-      for (size_t i = 0; i < std::extent_v<TRep>; i++) {
-        auto untainted_val = data[i].UNSAFE_unverified(aSandbox);
-        memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
-      }
-      return converted;
+    std::array<TAppRepEl, std::extent_v<TRep>> converted;
+    /// \todo Replace with rlbox::memcpy
+    for (size_t i = 0; i < std::extent_v<TRep>; i++) {
+      auto untainted_val = data[i].UNSAFE_unverified(aSandbox);
+      memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
     }
+    return converted;
   }
 
   /**
@@ -185,16 +179,13 @@ class tainted_impl<
    */
   [[nodiscard]] inline std::array<TSbxRepEl, std::extent_v<TRep>>
   UNSAFE_sandboxed(rlbox_sandbox<TSbx>& aSandbox) const {
-    if constexpr (TUseAppRep) {
-      std::array<TSbxRepEl, std::extent_v<TRep>> converted;
-      for (size_t i = 0; i < std::extent_v<TRep>; i++) {
-        auto untainted_val = data[i].UNSAFE_sandboxed(aSandbox);
-        memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
-      }
-      return converted;
-    } else {
-      return data;
+    std::array<TSbxRepEl, std::extent_v<TRep>> converted;
+    /// \todo Replace with rlbox::memcpy
+    for (size_t i = 0; i < std::extent_v<TRep>; i++) {
+      auto untainted_val = data[i].UNSAFE_sandboxed(aSandbox);
+      memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
     }
+    return converted;
   }
 
   ////////////////////////////////
@@ -297,10 +288,9 @@ class tainted_impl<
   }
 
  private:
-  using TAppRepArrEl = std::remove_all_extents_t<TAppRepFixed>;
   using TToPointerRet =
-      std::conditional_t<TUseAppRep, rlbox_unique_ptr<TAppRepArrEl, TSbx>,
-                         tainted<TAppRepArrEl*, TSbx>>;
+      std::conditional_t<TUseAppRep, rlbox_unique_ptr<TAppRepEl, TSbx>,
+                         tainted<TAppRepEl*, TSbx>>;
 
  public:
   inline TToPointerRet to_pointer(rlbox_sandbox<TSbx>& aSandbox) {
@@ -309,9 +299,9 @@ class tainted_impl<
       return TToPointerRet::from_unchecked_raw_pointer(data);
     }
 
-    constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepArrEl);
+    constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepEl);
     /// \todo Ensure this works without the tainted cast
-    TToPointerRet buff = make_unique_tainted_many<TAppRepArrEl>(
+    TToPointerRet buff = make_unique_tainted_many<TAppRepEl>(
         aSandbox, tainted<size_t, TSbx>(el_count));
     /// \todo Replace with rlbox::memcpy
     for (size_t i = 0; i < el_count; i++) {
