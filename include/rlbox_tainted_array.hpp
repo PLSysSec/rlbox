@@ -13,6 +13,7 @@
 #include "rlbox_error_handling.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_memory_mgmt.hpp"
+#include "rlbox_sandbox.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
@@ -236,7 +237,9 @@ class tainted_impl<
       detail::dynamic_check(idx_untainted >= 0,
                             "Out of bounds access to a tainted array");
     }
-    detail::dynamic_check(idx_untainted < std::extent_v<TAppRepFixed>,
+    using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
+    detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
+                              std::extent_v<TAppRepFixed>,
                           "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }
@@ -277,7 +280,9 @@ class tainted_impl<
       detail::dynamic_check(idx_untainted >= 0,
                             "Out of bounds access to a tainted array");
     }
-    detail::dynamic_check(idx_untainted < std::extent_v<TAppRepFixed>,
+    using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
+    detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
+                              std::extent_v<TAppRepFixed>,
                           "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }

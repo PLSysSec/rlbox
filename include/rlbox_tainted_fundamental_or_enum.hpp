@@ -236,8 +236,9 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
                                           TAppRepOther, TSbx, TExtraOther...> &&
           std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
-  inline this_t& operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx,
-                                       TExtraOther...>& aOther) noexcept {
+  inline this_t&
+  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther) noexcept(
+      noexcept(aOther.raw_host_rep()) && noexcept(aOther.raw_sandbox_rep())) {
     if constexpr (TUseAppRep) {
       data = aOther.raw_host_rep();
     } else {
@@ -258,7 +259,8 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   template <typename TOther,
             RLBOX_REQUIRE(
                 std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TOther>)>
-  inline this_t& operator=(const TOther& aOther) {
+  inline this_t& operator=(const TOther& aOther) noexcept(
+      noexcept(detail::convert_type_fundamental(&data, aOther))) {
     if constexpr (TUseAppRep) {
       data = aOther;
     } else {

@@ -40,7 +40,7 @@ namespace rlbox {
  */
 template <bool TUseAppRep, typename T, typename TSbx>
 class rlbox_unique_ptr_impl {
-  static_assert(TUseAppRep == true,
+  static_assert(TUseAppRep,
                 "rlbox_unique_ptr_impl only supports TUseAppRep = true");
 
   /**
@@ -257,7 +257,7 @@ class rlbox_unique_ptr_impl {
 template <typename T, typename TSbx>
 rlbox_unique_ptr_impl<true, T, TSbx> make_unique_tainted_many(
     rlbox_sandbox<TSbx>& aSandbox, tainted<size_t, TSbx> aCount) {
-  auto ptr = aSandbox.template malloc_in_sandbox<T>();
+  auto ptr = aSandbox.template malloc_in_sandbox<T>(aCount);
   rlbox_unique_ptr_impl<true, T, TSbx> ret(std::move(ptr), aSandbox);
   return ret;
 }
