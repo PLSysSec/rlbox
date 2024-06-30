@@ -12,12 +12,14 @@
 #include "rlbox_abi_conversion.hpp"
 #include "rlbox_error_handling.hpp"
 #include "rlbox_helpers.hpp"
+#include "rlbox_memory_mgmt.hpp"
 #include "rlbox_type_traits.hpp"
 #include "rlbox_types.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 #include <array>
 #include <stddef.h>
+#include <string.h>
 #include <type_traits>
 
 namespace rlbox {
@@ -58,6 +60,8 @@ class tainted_impl<
    */
   using TAppRepFixed = detail::std_array_to_c_array_t<TAppRep>;
 
+  /// \todo Separate TTaintedEl and TAppRepEl. Make sure this works with n
+  /// dimensional arrays
   using TAppRepEl =
       tainted_impl<TUseAppRep, std::remove_extent_t<TAppRepFixed>, TSbx>;
 
@@ -285,6 +289,30 @@ class tainted_impl<
    */
   inline TRepEl& operator*() const noexcept(noexcept(data[0])) {
     return data[0];
+  }
+
+ private:
+  using TAppRepArrEl = std::remove_all_extents_t<TAppRepFixed>;
+  using TToPointerRet =
+      std::conditional_t<TUseAppRep, rlbox_unique_ptr<TAppRepArrEl, TSbx>,
+                         tainted<TAppRepArrEl*, TSbx>>;
+
+ public:
+  inline TToPointerRet to_pointer(rlbox_sandbox<TSbx>& aSandbox) {
+    if constexpr (!TUseAppRep) {
+      // the array is already in the sandbox, simply return the address
+      return TToPointerRet::from_unchecked_raw_pointer(data);
+    }
+
+    constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepArrEl);
+    /// \todo Ensure this works without the tainted cast
+    TToPointerRet buff = make_unique_tainted_many<TAppRepArrEl>(
+        aSandbox, tainted<size_t, TSbx>(el_count));
+    /// \todo Replace with rlbox::memcpy
+    for (size_t i = 0; i < el_count; i++) {
+      buff[i] = data[i];
+    }
+    return buff;
   }
 };
 

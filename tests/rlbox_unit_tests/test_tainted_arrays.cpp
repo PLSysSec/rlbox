@@ -46,9 +46,9 @@ static TSbxInt test_array_arg_internal(char* aSandboxMemory, TSbxPtr aArrIdx,
   char* arr = aSandboxMemory + aArrIdx;
 
   for (TSbxInt i = 0; i < aCount; i++) {
-    char* val_ptr = arr + sizeof(int) * i;
-    int copy = 0;
-    memcpy(&copy, val_ptr, sizeof(int));
+    char* val_ptr = arr + sizeof(TSbxInt) * i;
+    TSbxInt copy = 0;
+    memcpy(&copy, val_ptr, sizeof(TSbxInt));
     sum = static_cast<TSbxInt>(sum + copy);
   }
   return sum;
@@ -95,22 +95,12 @@ TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
       sandbox.malloc_in_sandbox<int[3]>();
   sandbox.free_in_sandbox(t_vol_ptr_val);
 
+  tainted_test_ptr<int[3]> t_arr = {5, 7, 12};
+  tainted_test_ptr<int> ret =
+      test_ptr_sandbox_invoke(sandbox, test_array_arg, t_arr, 3);
+  REQUIRE(ret.UNSAFE_unverified() == 24);
+
   sandbox.destroy_sandbox();
 }
-
-// TEST_CASE("tainted array of ints operates correctly", "[tainted arrays]") {
-//   rlbox_sandbox_test sandbox;
-//   sandbox.create_sandbox();
-
-//   //   int val[3] = {5, 7, 12};
-//   //   const int expected = test_array_arg(val, 3);
-//   //   tainted_test<int[3]> t_val = val;
-//   tainted_test<int*> t_val = nullptr;
-//   tainted_test<int> ret =
-//       test_sandbox_invoke(sandbox, test_array_arg, t_val, 3);
-//   REQUIRE(ret.UNSAFE_unverified() == 12);
-
-//   sandbox.destroy_sandbox();
-// }
 
 // NOLINTEND(misc-const-correctness)

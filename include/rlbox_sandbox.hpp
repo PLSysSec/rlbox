@@ -358,10 +358,15 @@ class rlbox_sandbox : protected TSbx {
     }
 
     if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
-      return aArg.UNSAFE_sandboxed(*this);
+      if constexpr (detail::is_any_array_v<
+                        detail::rlbox_remove_wrapper_t<TNoRef>>) {
+        return aArg.to_pointer(*this);
+      } else {
+        return aArg;
+      }
     } else {
       const tainted<TNoRef, TSbx> val(aArg);
-      return val.UNSAFE_sandboxed(*this);
+      return val;
     }
   }
 
@@ -385,16 +390,16 @@ class rlbox_sandbox : protected TSbx {
 
     if constexpr (std::is_void_v<TRet>) {
       return this->template impl_invoke_with_func_ptr<TFuncConv>(
-          aFuncPtr, invoke_process_param(aArgs)...);
+          aFuncPtr, invoke_process_param(aArgs).UNSAFE_sandboxed(*this)...);
     } else if constexpr (std::is_constructible_v<tainted<TRet, TSbx>, TRet>) {
       tainted<TRet, TSbx> ret =
           this->template impl_invoke_with_func_ptr<TFuncConv>(
-              aFuncPtr, invoke_process_param(aArgs)...);
+              aFuncPtr, invoke_process_param(aArgs).UNSAFE_sandboxed(*this)...);
       return ret;
     } else if constexpr (std::is_pointer_v<TRet>) {
       const base_types_convertor_tsbx<TRet> ptr_sbx_rep =
           this->template impl_invoke_with_func_ptr<TFuncConv>(
-              aFuncPtr, invoke_process_param(aArgs)...);
+              aFuncPtr, invoke_process_param(aArgs).UNSAFE_sandboxed(*this)...);
       TRet ptr = get_unsandboxed_pointer<TRet>(ptr_sbx_rep);
 
       const size_t object_size = get_object_size_upperbound<TRet>();

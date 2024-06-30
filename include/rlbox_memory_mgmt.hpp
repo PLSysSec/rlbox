@@ -40,6 +40,9 @@ namespace rlbox {
  */
 template <bool TUseAppRep, typename T, typename TSbx>
 class rlbox_unique_ptr_impl {
+  static_assert(TUseAppRep == true,
+                "rlbox_unique_ptr_impl only supports TUseAppRep = true");
+
   /**
    * @brief Tainted pointer being managed by rlbox_unique_ptr_impl
    */
@@ -216,12 +219,52 @@ class rlbox_unique_ptr_impl {
   //     noexcept(noexcept(ptr.tainted<T*, TSbx>::operator->())) {
   //   return ptr.tainted<T*, TSbx>::operator->();
   // }
+
+  inline auto& operator[](size_t aIdx) { return ptr[aIdx]; }
+
+  inline const auto& operator[](size_t aIdx) const { return ptr[aIdx]; }
+
+  [[nodiscard]] inline auto UNSAFE_unverified() const {
+    return ptr.UNSAFE_unverified();
+  }
+
+  [[nodiscard]] inline auto UNSAFE_unverified(
+      [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
+    return ptr.UNSAFE_unverified(aSandbox);
+  }
+
+  [[nodiscard]] inline auto UNSAFE_sandboxed() const {
+    return ptr.UNSAFE_sandboxed();
+  }
+
+  [[nodiscard]] inline auto UNSAFE_sandboxed(
+      rlbox_sandbox<TSbx>& aSandbox) const {
+    return ptr.UNSAFE_sandboxed(aSandbox);
+  }
 };
 
 /**
+ * @brief Create an array of new pointer of type `tainted<t*, TSbx> and manage
+ * this pointer with @ref rlbox::rlbox_unique_ptr_impl
+ *
+ * @tparam T is the type of the pointer to be created
+ * @tparam TSbx is the type of the sandbox to which the pointer belongs
+ * @param aSandbox is the sandbox to which the pointer belongs
+ * @param aCount is the number of array elements to allocate
+ * @return rlbox_unique_ptr_impl<TUseAppRep,T, TSbx> is the managed unique
+ * pointer of type `tainted<T*, TSbx>`
+ */
+template <typename T, typename TSbx>
+rlbox_unique_ptr_impl<true, T, TSbx> make_unique_tainted_many(
+    rlbox_sandbox<TSbx>& aSandbox, tainted<size_t, TSbx> aCount) {
+  auto ptr = aSandbox.template malloc_in_sandbox<T>();
+  rlbox_unique_ptr_impl<true, T, TSbx> ret(std::move(ptr), aSandbox);
+  return ret;
+}
+
+/**
  * @brief Create a new pointer of type `tainted<t*, TSbx> and manage this
- * pointer with
- * @ref rlbox::rlbox_unique_ptr_impl
+ * pointer with @ref rlbox::rlbox_unique_ptr_impl
  *
  * @tparam T is the type of the pointer to be created
  * @tparam TSbx is the type of the sandbox to which the pointer belongs

@@ -184,15 +184,6 @@ struct helper<T, RLBOX_SPECIALIZE(!is_tainted_any_wrapper_v<T>)> {
   using type_sbx = void;
 };
 
-template <template <typename, typename> typename TWrap, typename TAppRep,
-          typename TSbx>
-struct helper<TWrap<TAppRep, TSbx>,
-              RLBOX_SPECIALIZE(
-                  is_tainted_any_wrapper_v<TWrap<TAppRep, TSbx>>)> {
-  using type = TAppRep;
-  using type_sbx = TSbx;
-};
-
 template <template <bool, typename, typename, typename...> typename TWrap,
           bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
 struct helper<TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>,
@@ -216,5 +207,19 @@ template <typename TCompare,
           bool TUseAppRep, typename TAppRep, typename TSbx, typename... TExtra>
 constexpr bool is_same_wrapper_type_v =
     std::is_same_v<TCompare, TWrap<TUseAppRep, TAppRep, TSbx, TExtra...>>;
+
+namespace detail_is_rlbox_unique_ptr {
+
+template <typename... TArgs>
+struct helper : std::false_type {};
+
+template <typename T, typename TSbx>
+struct helper<rlbox_unique_ptr<T, TSbx>> : std::true_type {};
+
+}  // namespace detail_is_rlbox_unique_ptr
+
+template <typename T>
+constexpr bool is_rlbox_unique_ptr_v =
+    detail_is_rlbox_unique_ptr::helper<T>::value;
 
 }  // namespace rlbox::detail
