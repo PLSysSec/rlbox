@@ -147,15 +147,15 @@ TEST_CASE("tainted volatile array of ints operates correctly",
     std::array<int, 3> expected = {5, 7, 12};
     auto result = (*t_testarr).UNSAFE_unverified(sandbox);
     REQUIRE(std::is_same_v<decltype(expected), decltype(result)>);
-    // REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
+    REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
   }
 
-  // {
-  //   std::array<TSbxInt, 3> expected = {5, 7, 12};
-  //   auto result = (*t_testarr).UNSAFE_sandboxed(sandbox);
-  //   REQUIRE(std::is_same_v<decltype(expected), decltype(result)>);
-  //   REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
-  // }
+  {
+    std::array<TSbxInt, 3> expected = {5, 7, 12};
+    auto result = (*t_testarr).UNSAFE_sandboxed(sandbox);
+    REQUIRE(std::is_same_v<decltype(expected), decltype(result)>);
+    REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
+  }
 
   // tainted_test_ptr<int> ret =
   //     test_ptr_sandbox_invoke(sandbox, test_array_arg, (*t_testarr), 3);

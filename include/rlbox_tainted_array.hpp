@@ -31,7 +31,6 @@ namespace rlbox {
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
  * representation (tainted) or the sandbox representation (tainted_volatile)
  * @tparam TAppRep is the app representation of data
- * @tparam TSbxRep is the sandbox representation of data
  * @tparam TSbx is the type of sandbox
  */
 template <bool TUseAppRep, typename TAppRep, typename TSbx>
@@ -55,37 +54,26 @@ class tainted_impl<
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
 
-  /**
-   * @brief The sandbox representation of data for this wrapper, with std::array
-   * converted to a regular array.
-   */
-  using TAppRepFixed = detail::std_array_to_c_array_t<TAppRep>;
-
   /// \todo Make sure this works with n dimensional arrays
-  using TAppRepEl = std::remove_extent_t<TAppRepFixed>;
+
+  using TArrEl = std::remove_extent_t<detail::std_array_to_c_array_t<TAppRep>>;
+
+  using TAppRepEl = detail::tainted_rep_t<TArrEl>;
 
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::std_array_to_c_array_t<detail::tainted_rep_t<
-      detail::rlbox_base_types_convertor<TAppRepFixed, TSbx>>>;
+  using TSbxRepEl = detail::tainted_rep_t<detail::rlbox_base_types_convertor<TArrEl, TSbx>>;
 
-  using TSbxRepEl = std::remove_extent_t<TSbxRep>;
+  using TRepEl = tainted_impl<TUseAppRep, TArrEl, TSbx>;
+  static constexpr size_t TRepElCount = std::extent_v<detail::std_array_to_c_array_t<TAppRep>>;
 
-  /**
-   * @brief The internal representation of data for this wrapper
-   */
-  using TRep = detail::std_array_to_c_array_t<
-      std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRepFixed>,
-                         detail::tainted_rep_t<TSbxRep>>>;
-
-  using TRepEl = tainted_impl<TUseAppRep, std::remove_extent_t<TRep>, TSbx>;
 
  public:
   /**
    * @brief Represent a tainted array as an array of tainted values
    */
-  std::array<TRepEl, std::extent_v<TRep>> data{{0}};
+  std::array<TRepEl, TRepElCount> data{{0}};
 
   // /**
   //  * @brief Construct a fundamental tainted_impl object
@@ -157,13 +145,13 @@ class tainted_impl<
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return std::array<TAppRepEl, std::extent_v<TRep>> is the raw data
+   * @return std::array<TAppRepEl, TRepElCount> is the raw data
    */
-  [[nodiscard]] inline std::array<TAppRepEl, std::extent_v<TRep>>
+  [[nodiscard]] inline std::array<TAppRepEl, TRepElCount>
   UNSAFE_unverified(rlbox_sandbox<TSbx>& aSandbox) const {
-    std::array<TAppRepEl, std::extent_v<TRep>> converted;
+    std::array<TAppRepEl, TRepElCount> converted;
     /// \todo Replace with rlbox::memcpy
-    for (size_t i = 0; i < std::extent_v<TRep>; i++) {
+    for (size_t i = 0; i < TRepElCount; i++) {
       auto untainted_val = data[i].UNSAFE_unverified(aSandbox);
       memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
     }
@@ -174,14 +162,14 @@ class tainted_impl<
    * @brief Unsafely remove the tainting and get the raw data converted to the
    * sandboxed ABI.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return std::array<TSbxRepEl, std::extent_v<TRep>> is the raw data in the
+   * @return std::array<TSbxRepEl, TRepElCount> is the raw data in the
    * sandboxed ABI
    */
-  [[nodiscard]] inline std::array<TSbxRepEl, std::extent_v<TRep>>
+  [[nodiscard]] inline std::array<TSbxRepEl, TRepElCount>
   UNSAFE_sandboxed(rlbox_sandbox<TSbx>& aSandbox) const {
-    std::array<TSbxRepEl, std::extent_v<TRep>> converted;
+    std::array<TSbxRepEl, TRepElCount> converted;
     /// \todo Replace with rlbox::memcpy
-    for (size_t i = 0; i < std::extent_v<TRep>; i++) {
+    for (size_t i = 0; i < TRepElCount; i++) {
       auto untainted_val = data[i].UNSAFE_sandboxed(aSandbox);
       memcpy(&(converted[i]), &untainted_val, sizeof(untainted_val));
     }
@@ -200,7 +188,7 @@ class tainted_impl<
    */
   inline TRepEl& operator[](size_t aIdx) noexcept(
       noexcept(detail::dynamic_check(false, ""))) {
-    detail::dynamic_check(aIdx < std::extent_v<TAppRepFixed>,
+    detail::dynamic_check(aIdx < TRepElCount,
                           "Out of bounds access to a tainted array");
     return data[aIdx];
   }
@@ -230,7 +218,7 @@ class tainted_impl<
     }
     using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
     detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
-                              std::extent_v<TAppRepFixed>,
+                              TRepElCount,
                           "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }
@@ -243,7 +231,7 @@ class tainted_impl<
    */
   inline const TRepEl& operator[](size_t aIdx) const
       noexcept(noexcept(detail::dynamic_check(false, ""))) {
-    detail::dynamic_check(aIdx < std::extent_v<TAppRepFixed>,
+    detail::dynamic_check(aIdx < TRepElCount,
                           "Out of bounds access to a tainted array");
     return data[aIdx];
   }
@@ -273,7 +261,7 @@ class tainted_impl<
     }
     using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
     detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
-                              std::extent_v<TAppRepFixed>,
+                              TRepElCount,
                           "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }
