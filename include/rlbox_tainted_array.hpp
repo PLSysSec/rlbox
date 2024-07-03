@@ -63,11 +63,12 @@ class tainted_impl<
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRepEl = detail::tainted_rep_t<detail::rlbox_base_types_convertor<TArrEl, TSbx>>;
+  using TSbxRepEl =
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TArrEl, TSbx>>;
 
   using TRepEl = tainted_impl<TUseAppRep, TArrEl, TSbx>;
-  static constexpr size_t TRepElCount = std::extent_v<detail::std_array_to_c_array_t<TAppRep>>;
-
+  static constexpr size_t TRepElCount =
+      std::extent_v<detail::std_array_to_c_array_t<TAppRep>>;
 
  public:
   /**
@@ -147,8 +148,8 @@ class tainted_impl<
    * @param aSandbox is the sandbox this tainted value belongs to
    * @return std::array<TAppRepEl, TRepElCount> is the raw data
    */
-  [[nodiscard]] inline std::array<TAppRepEl, TRepElCount>
-  UNSAFE_unverified(rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline std::array<TAppRepEl, TRepElCount> UNSAFE_unverified(
+      rlbox_sandbox<TSbx>& aSandbox) const {
     std::array<TAppRepEl, TRepElCount> converted;
     /// \todo Replace with rlbox::memcpy
     for (size_t i = 0; i < TRepElCount; i++) {
@@ -165,8 +166,8 @@ class tainted_impl<
    * @return std::array<TSbxRepEl, TRepElCount> is the raw data in the
    * sandboxed ABI
    */
-  [[nodiscard]] inline std::array<TSbxRepEl, TRepElCount>
-  UNSAFE_sandboxed(rlbox_sandbox<TSbx>& aSandbox) const {
+  [[nodiscard]] inline std::array<TSbxRepEl, TRepElCount> UNSAFE_sandboxed(
+      rlbox_sandbox<TSbx>& aSandbox) const {
     std::array<TSbxRepEl, TRepElCount> converted;
     /// \todo Replace with rlbox::memcpy
     for (size_t i = 0; i < TRepElCount; i++) {
@@ -217,9 +218,9 @@ class tainted_impl<
                             "Out of bounds access to a tainted array");
     }
     using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
-    detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
-                              TRepElCount,
-                          "Out of bounds access to a tainted array");
+    detail::dynamic_check(
+        static_cast<unsigned_index_t>(idx_untainted) < TRepElCount,
+        "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }
 
@@ -260,9 +261,9 @@ class tainted_impl<
                             "Out of bounds access to a tainted array");
     }
     using unsigned_index_t = std::make_unsigned_t<decltype(idx_untainted)>;
-    detail::dynamic_check(static_cast<unsigned_index_t>(idx_untainted) <
-                              TRepElCount,
-                          "Out of bounds access to a tainted array");
+    detail::dynamic_check(
+        static_cast<unsigned_index_t>(idx_untainted) < TRepElCount,
+        "Out of bounds access to a tainted array");
     return data[idx_untainted];
   }
 
@@ -284,18 +285,19 @@ class tainted_impl<
   inline TToPointerRet to_pointer(rlbox_sandbox<TSbx>& aSandbox) {
     if constexpr (!TUseAppRep) {
       // the array is already in the sandbox, simply return the address
-      return TToPointerRet::from_unchecked_raw_pointer(data);
+      TRepEl* arr_ptr = data.data();
+      return TToPointerRet::from_unchecked_raw_pointer(arr_ptr);
+    } else {
+      constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepEl);
+      /// \todo Ensure this works without the tainted cast
+      TToPointerRet buff = make_unique_tainted_many<TAppRepEl>(
+          aSandbox, tainted<size_t, TSbx>(el_count));
+      /// \todo Replace with rlbox::memcpy
+      for (size_t i = 0; i < el_count; i++) {
+        buff[i] = data[i];
+      }
+      return buff;
     }
-
-    constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepEl);
-    /// \todo Ensure this works without the tainted cast
-    TToPointerRet buff = make_unique_tainted_many<TAppRepEl>(
-        aSandbox, tainted<size_t, TSbx>(el_count));
-    /// \todo Replace with rlbox::memcpy
-    for (size_t i = 0; i < el_count; i++) {
-      buff[i] = data[i];
-    }
-    return buff;
   }
 };
 
