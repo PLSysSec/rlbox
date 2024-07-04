@@ -54,9 +54,11 @@ class tainted_impl<
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
 
-  /// \todo Make sure this works with n dimensional arrays
-
   using TArrEl = std::remove_extent_t<detail::std_array_to_c_array_t<TAppRep>>;
+
+  /// \todo Make this wrapper work with n dimensional arrays
+  static_assert(!detail::is_any_array_v<TArrEl>,
+                "Multidimentional arrays not yet supported in tainted");
 
   using TAppRepEl = detail::tainted_rep_t<TArrEl>;
 
@@ -75,71 +77,6 @@ class tainted_impl<
    * @brief Represent a tainted array as an array of tainted values
    */
   std::array<TRepEl, TRepElCount> data{{0}};
-
-  // /**
-  //  * @brief Construct a fundamental tainted_impl object
-  //  */
-  // inline tainted_impl() = default;
-  // /**
-  //  * @brief Copy constructor: Construct a fundamental tainted_impl
-  //  * object
-  //  */
-  // inline tainted_impl(const this_t&) = default;
-  // /**
-  //  * @brief Move constructor: Construct a fundamental tainted_impl object
-  //  */
-  // inline tainted_impl(this_t&&) noexcept = default;
-
-  // /**
-  //  * @brief Construct a new tainted object from another tainted wrapped
-  //  object
-  //  * @tparam TWrap is the rhs wrapper type
-  //  * @tparam TUseAppRepOther is the rhs AppRep
-  //  * @tparam TAppRepOther is the type of the rhs value being wrapped
-  //  * @tparam TExtraOther... is the extra args of the rhs
-  //  * @tparam RLBOX_REQUIRE checks if (1) this won't be handled the original
-  //  * class's copy/move constructor and (2) this meets the constructible
-  //  * criterion
-  //  * @param aOther is the rhs being assigned
-  //  */
-  // template <
-  //     template <bool, typename, typename, typename...> typename TWrap,
-  //     bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
-  //     RLBOX_REQUIRE(
-  //         detail::is_tainted_any_wrapper_v<
-  //             TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
-  //         !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-  //                                         TAppRepOther, TSbx, TExtraOther...>
-  //                                         &&
-  //         std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-  //                                 TAppRepOther>)>
-  // inline tainted_impl(
-  //     const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>&
-  //     aOther) : data([&] {
-  //         if constexpr (TUseAppRep) {
-  //           return aOther.raw_host_rep();
-  //         } else {
-  //           return aOther.raw_sandbox_rep();
-  //         }
-  //       }()) {}
-
-  // /**
-  //  * @brief Construct a new tainted object from a raw (unwrapped) primitive
-  //  * value
-  //  * @tparam TOther is the type of the rhs value
-  //  * @tparam RLBOX_REQUIRE checks if this meets the constructible criterion
-  //  * @param aOther is the raw primitive
-  //  */
-  // template <typename... TArgs,
-  //           RLBOX_REQUIRE(std::is_constructible_v<
-  //                         decltype(data), TArgs&&...>)>
-  // inline tainted_impl(TArgs&&... aArgs)
-  //     : data(std::forward<TArgs>(aArgs)...) {}
-
-  /**
-   * @brief Destroy the fundamental tainted_impl object
-   */
-  // inline ~tainted_impl() = default;
 
   ////////////////////////////////
 
