@@ -26,16 +26,15 @@ namespace rlbox {
  * `tainted<bool>` values because a compromised sandbox can modify
  * tainted_volatile data at any time.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_boolean_hint_impl
-    : public tainted_base<TUseAppRep, TAppRep, TSbx> {
+template <bool TUseAppRep, typename TData, typename TSbx>
+class tainted_boolean_hint_impl : public tainted_base<TUseAppRep, TData, TSbx> {
  protected:
-  static_assert(std::is_same_v<TAppRep, bool>);
+  static_assert(std::is_same_v<TData, bool>);
 
   /**
    * @brief The current class's type
    */
-  using this_t = rlbox::tainted_boolean_hint_impl<TUseAppRep, TAppRep, TSbx>;
+  using this_t = rlbox::tainted_boolean_hint_impl<TUseAppRep, TData, TSbx>;
 
   void dummy_check() {
     static_assert(
@@ -181,7 +180,7 @@ class tainted_boolean_hint_impl
   template <typename TDummy = void>
   inline bool copy_and_verify(...) const {
     rlbox_static_fail(
-        TAppRep,
+        TData,
         "You can't call copy_and_verify on this value, as this is a result of "
         "a comparison with memory accessible by the sandbox. \n"
         "The sandbox could unexpectedly change the value leading to "

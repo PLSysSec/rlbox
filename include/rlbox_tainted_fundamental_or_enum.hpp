@@ -27,43 +27,45 @@ namespace rlbox {
  * wrappers for fundamental (int, float, etc.) types and enum types
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
  * representation (tainted) or the sandbox representation (tainted_volatile)
- * @tparam TAppRep is the app representation of data
+ * @tparam TData is the app representation of data
  * @tparam TSbxRep is the sandbox representation of data
  * @tparam TSbx is the type of sandbox
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_impl<TUseAppRep, TAppRep, TSbx,
-                   RLBOX_SPECIALIZE(
-                       detail::is_fundamental_or_enum_v<
-                           detail::rlbox_stdint_to_stdint_t<TAppRep>>)> {
+template <bool TUseAppRep, typename TData, typename TSbx>
+class tainted_impl<TUseAppRep, TData, TSbx,
+                   RLBOX_SPECIALIZE(detail::is_fundamental_or_enum_v<
+                                    detail::rlbox_stdint_to_stdint_t<TData>>)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
   /**
+   * @brief The app representation of data for this wrapper
+   */
+  using TAppRep = detail::tainted_rep_t<TData>;
+
+  /**
    * @brief The sandbox representation of data for this wrapper
    */
   using TSbxRep =
-      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TAppRep, TSbx>>;
-
-  /**
-   * @brief The internal representation of data for this wrapper
-   */
-  using TRep = std::conditional_t<TUseAppRep, detail::tainted_rep_t<TAppRep>,
-                                  detail::tainted_rep_t<TSbxRep>>;
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TData, TSbx>>;
 
   /**
    * @brief The current class's type
    */
   using this_t =
-      tainted_impl<TUseAppRep, TAppRep, TSbx,
-                   RLBOX_SPECIALIZE(
-                       detail::is_fundamental_or_enum_v<
-                           detail::rlbox_stdint_to_stdint_t<TAppRep>>)>;
+      tainted_impl<TUseAppRep, TData, TSbx,
+                   RLBOX_SPECIALIZE(detail::is_fundamental_or_enum_v<
+                                    detail::rlbox_stdint_to_stdint_t<TData>>)>;
 
   void dummy_check() {
     static_assert(
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
+
+  /**
+   * @brief The internal representation of data for this wrapper
+   */
+  using TRep = std::conditional_t<TUseAppRep, TAppRep, TSbxRep>;
 
   TRep data{0};
 
@@ -103,8 +105,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
               TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
                                           TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                  TAppRepOther>)>
+          std::is_constructible_v<TAppRep, TAppRepOther>)>
   inline tainted_impl(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
       : data([&] {
@@ -123,8 +124,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    * @param aOther is the raw primitive
    */
   template <typename TOther,
-            RLBOX_REQUIRE(std::is_constructible_v<
-                          detail::tainted_rep_t<TAppRep>, TOther>)>
+            RLBOX_REQUIRE(std::is_constructible_v<TAppRep, TOther>)>
   inline tainted_impl(const TOther& aOther)
       : data([&] {
           if constexpr (TUseAppRep) {
@@ -145,14 +145,13 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
-      const {
+  [[nodiscard]] inline TAppRep UNSAFE_unverified() const {
     if constexpr (TUseAppRep) {
       return data;
     } else {
-      detail::tainted_rep_t<detail::remove_cvref_t<TAppRep>> converted;
+      detail::tainted_rep_t<detail::remove_cvref_t<TData>> converted;
       detail::convert_type_fundamental(&converted, data);
       return converted;
     }
@@ -161,9 +160,9 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
+  [[nodiscard]] inline TAppRep UNSAFE_unverified(
       [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
@@ -235,7 +234,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
               TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
                                           TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
+          std::is_assignable_v<TAppRep&, TAppRepOther>)>
   inline this_t&
   operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther) noexcept(
       noexcept(aOther.raw_host_rep()) && noexcept(aOther.raw_sandbox_rep())) {
@@ -257,8 +256,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    * the reference to this value
    */
   template <typename TOther,
-            RLBOX_REQUIRE(
-                std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TOther>)>
+            RLBOX_REQUIRE(std::is_assignable_v<TAppRep&, TOther>)>
   inline this_t& operator=(const TOther& aOther) noexcept(
       noexcept(detail::convert_type_fundamental(&data, aOther))) {
     if constexpr (TUseAppRep) {
@@ -415,7 +413,7 @@ class tainted_impl<TUseAppRep, TAppRep, TSbx,
    */
   using TOpAddrOf =
       std::conditional_t<TUseAppRep, this_t*,
-                         tainted<std::add_pointer_t<TAppRep>, TSbx>>;
+                         tainted<std::add_pointer_t<TData>, TSbx>>;
 
  public:
   /**

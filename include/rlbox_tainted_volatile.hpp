@@ -33,32 +33,38 @@ namespace rlbox {
  * application memory (tainted data) or call copy_and_verify to make a sanitized
  * copy of this data.
  *
- * @tparam TAppRep is the type of the data being wrapped.
+ * @tparam TData is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <bool TUseAppRep, typename TData, typename TSbx>
 class tainted_impl<
-    TUseAppRep, TAppRep, TSbx,
+    TUseAppRep, TData, TSbx,
     RLBOX_SPECIALIZE(
-        !TUseAppRep && std::is_pointer_v<TAppRep> &&
+        !TUseAppRep && std::is_pointer_v<TData> &&
         TSbx::mTaintedVolatilePointerChoice ==
             tainted_volatile_pointer_t::TAINTED_VOLATILE_POINTER_STANDARD)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
   /**
+   * @brief The app representation of data for this wrapper
+   */
+  using TAppRep = detail::tainted_rep_t<TData>;
+
+  /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
+  using TSbxRep =
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TData, TSbx>>;
 
   /**
    * @brief The current class's type
    */
   using this_t = tainted_impl<
-      TUseAppRep, TAppRep, TSbx,
+      TUseAppRep, TData, TSbx,
       RLBOX_SPECIALIZE(
-          !TUseAppRep && std::is_pointer_v<TAppRep> &&
+          !TUseAppRep && std::is_pointer_v<TData> &&
           TSbx::mTaintedVolatilePointerChoice ==
               tainted_volatile_pointer_t::TAINTED_VOLATILE_POINTER_STANDARD)>;
 
@@ -67,7 +73,12 @@ class tainted_impl<
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
 
-  detail::tainted_rep_t<TSbxRep> data{0};
+  /**
+   * @brief The internal representation of data for this wrapper
+   */
+  using TRep = TSbxRep;
+
+  TRep data{0};
 
  public:
   /**
@@ -93,7 +104,7 @@ class tainted_impl<
    * @brief Construct a new tainted object from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
@@ -102,16 +113,15 @@ class tainted_impl<
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                  TAppRepOther>)>
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_constructible_v<TAppRep, TDataOther>)>
   inline tainted_impl(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
+      const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>& aOther)
       : data(aOther.raw_sandbox_rep()) {}
 
   /**
@@ -124,14 +134,13 @@ class tainted_impl<
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
-      const {
+  [[nodiscard]] inline TAppRep UNSAFE_unverified() const {
     /// We need to construct an example_unsandboxed_ptr in order to call @ref
     /// rlbox::rlbox_sandbox::get_unsandboxed_pointer_with_example. We use a
-    /// cool trick to construct such an example. Since tainted_volatile is the
-    /// type of data in sandbox memory, the address of data (&data) itself
+    /// simple approach to construct such an example. Since tainted_volatile is
+    /// the type of data in sandbox memory, the address of data (&data) itself
     /// refers to a location in sandbox memory and can thus be the
     /// example_unsandboxed_ptr. See Appendix A of
     /// https://arxiv.org/pdf/2003.00572.pdf for more details.
@@ -145,9 +154,9 @@ class tainted_impl<
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
+  [[nodiscard]] inline TAppRep UNSAFE_unverified(
       rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_unsandboxed_pointer(data);
   }
@@ -194,7 +203,7 @@ class tainted_impl<
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
@@ -205,15 +214,15 @@ class tainted_impl<
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
-  inline this_t& operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx,
-                                       TExtraOther...>& aOther) {
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_assignable_v<TAppRep&, TDataOther>)>
+  inline this_t& operator=(
+      const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>& aOther) {
     data = aOther.raw_sandbox_rep();
     return *this;
   }
@@ -240,7 +249,8 @@ class tainted_impl<
   /**
    * @brief Result type of operator*
    */
-  using TOpDeref = tainted_volatile<std::remove_pointer_t<TAppRep>>;
+  using TOpDeref =
+      tainted_volatile<detail::tainted_rep_t<std::remove_pointer_t<TData>>>;
 
  public:
   /**
@@ -267,7 +277,8 @@ class tainted_impl<
   }
 
  protected:
-  using TOpAddrOf = tainted<std::add_pointer_t<TAppRep>, TSbx>;
+  using TOpAddrOf =
+      tainted<detail::tainted_rep_t<std::add_pointer_t<TData>>, TSbx>;
 
  public:
   /**
@@ -280,7 +291,7 @@ class tainted_impl<
     // continue to be tracked.
 
     // NOLINTNEXTLINE(google-readability-casting)
-    auto* data_ptr = (std::add_pointer_t<TAppRep>)&data;
+    auto* data_ptr = (detail::tainted_rep_t<std::add_pointer_t<TData>>)&data;
 
     /// \todo Should not be unchecked
     auto ret = TOpAddrOf::from_unchecked_raw_pointer(data_ptr);

@@ -24,9 +24,9 @@
 #  include "rlbox_wrapper_traits.hpp"  // IWYU pragma: keep
 
 namespace rlbox {
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <bool TUseAppRep, typename TData, typename TSbx>
 class dummy {
-  using this_t = dummy<TUseAppRep, TAppRep, TSbx>;
+  using this_t = dummy<TUseAppRep, TData, TSbx>;
 #endif
 
   /**

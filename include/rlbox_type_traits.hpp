@@ -13,6 +13,7 @@
 #include <type_traits>
 
 #include "rlbox_error_handling.hpp"
+#include "rlbox_helpers.hpp"
 
 namespace rlbox::detail {
 
@@ -188,5 +189,44 @@ constexpr bool is_fundamental_or_enum_v =
 template <typename T>
 constexpr bool is_fundamental_or_enum_or_pointer_v =
     std::is_fundamental_v<T> || std::is_enum_v<T> || std::is_pointer_v<T>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace get_equivalent_uint_detail {
+
+template <typename T, typename TDummy = void>
+struct helper {
+  static_assert(false_v<T>, "Unsupported pointer size");
+};
+
+template <typename T>
+struct helper<T, RLBOX_SPECIALIZE(sizeof(T) == 1)> {
+  using type = uint8_t;
+};
+
+template <typename T>
+struct helper<T, RLBOX_SPECIALIZE(sizeof(T) == 2)> {
+  using type = uint16_t;
+};
+
+template <typename T>
+struct helper<T, RLBOX_SPECIALIZE(sizeof(T) == 4)> {
+  using type = uint32_t;
+};
+
+template <typename T>
+struct helper<T, RLBOX_SPECIALIZE(sizeof(T) == 8)> {
+  using type = uint64_t;
+};
+
+};  // namespace get_equivalent_uint_detail
+
+/**
+ * @brief Get the integer size that corresponds to the size of argument
+ * @tparam T is the argument whose size is checked
+ */
+template <typename T>
+using get_equivalent_uint_t =
+    typename get_equivalent_uint_detail::helper<T>::type;
 
 }  // namespace rlbox::detail

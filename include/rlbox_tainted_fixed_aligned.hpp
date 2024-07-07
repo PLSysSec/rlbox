@@ -38,33 +38,37 @@ namespace rlbox {
  * Due to these assumptions, the pointer value can be stored as a global
  * pointer.
  *
- * @tparam T is the type of the data being wrapped.
+ * @tparam TData is the type of the data being wrapped.
  * @tparam TSbx is the type of the sandbox plugin that represents the underlying
  * sandbox implementation.
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <bool TUseAppRep, typename TData, typename TSbx>
 class tainted_impl<
-    TUseAppRep, TAppRep, TSbx,
+    TUseAppRep, TData, TSbx,
     RLBOX_SPECIALIZE(
-        TUseAppRep&& std::is_pointer_v<TAppRep>&& TSbx::mTaintedPointerChoice ==
+        TUseAppRep&& std::is_pointer_v<TData>&& TSbx::mTaintedPointerChoice ==
         tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
   /**
+   * @brief The app representation of data for this wrapper
+   */
+  using TAppRep = detail::tainted_rep_t<TData>;
+
+  /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<TAppRep, TSbx>;
+  using TSbxRep = detail::rlbox_base_types_convertor<TData, TSbx>;
 
   /**
    * @brief The current class's type
    */
-  using this_t =
-      tainted_impl<TUseAppRep, TAppRep, TSbx,
-                   RLBOX_SPECIALIZE(
-                       TUseAppRep&& std::is_pointer_v<TAppRep>&&
-                           TSbx::mTaintedPointerChoice ==
-                       tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED)>;
+  using this_t = tainted_impl<
+      TUseAppRep, TData, TSbx,
+      RLBOX_SPECIALIZE(
+          TUseAppRep&& std::is_pointer_v<TData>&& TSbx::mTaintedPointerChoice ==
+          tainted_pointer_t::TAINTED_POINTER_FIXED_ALIGNED)>;
 
   void dummy_check() {
     static_assert(
@@ -72,13 +76,13 @@ class tainted_impl<
   }
 
   /**
-   * @brief Result type of operator*
+   * @brief The deref'd representation of the data of this wrapper.
    */
-  using TOpDeref =
-      tainted_volatile<std::remove_pointer_t<detail::tainted_rep_t<TAppRep>>,
+  using TRepDeref =
+      tainted_volatile<std::remove_pointer_t<detail::tainted_rep_t<TData>>,
                        TSbx>;
 
-  TOpDeref* data{0};
+  TRepDeref* data{0};
 
   ////////////////////////////////
 
@@ -90,7 +94,7 @@ class tainted_impl<
    * memory.
    * @return this_t is the tainted pointer of the given param
    */
-  static this_t from_unchecked_raw_pointer(TOpDeref* aPtr) {
+  static this_t from_unchecked_raw_pointer(TRepDeref* aPtr) {
     this_t ret;
     ret.data = aPtr;
     return ret;
@@ -106,7 +110,7 @@ class tainted_impl<
    */
   static this_t from_unchecked_raw_pointer(uintptr_t aPtr) {
     // NOLINTNEXTLINE(google-readability-casting)
-    return from_unchecked_raw_pointer((TOpDeref*)aPtr);
+    return from_unchecked_raw_pointer((TRepDeref*)aPtr);
   }
 
  public:
@@ -150,8 +154,7 @@ class tainted_impl<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
                                           TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_constructible_v<detail::tainted_rep_t<TAppRep>,
-                                  TAppRepOther>)>
+          std::is_constructible_v<detail::tainted_rep_t<TData>, TAppRepOther>)>
   inline tainted_impl(
       const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
       : data(aOther.raw_host_rep()) {}
@@ -165,20 +168,19 @@ class tainted_impl<
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return detail::tainted_rep_t<TData> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified()
-      const {
+  [[nodiscard]] inline detail::tainted_rep_t<TData> UNSAFE_unverified() const {
     /// \todo eliminate cast
-    return reinterpret_cast<detail::tainted_rep_t<TAppRep>>(data);
+    return reinterpret_cast<detail::tainted_rep_t<TData>>(data);
   }
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TAppRep> is the raw data
+   * @return detail::tainted_rep_t<TData> is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TAppRep> UNSAFE_unverified(
+  [[nodiscard]] inline detail::tainted_rep_t<TData> UNSAFE_unverified(
       [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
@@ -246,7 +248,7 @@ class tainted_impl<
               TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
                                           TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_assignable_v<detail::tainted_rep_t<TAppRep>&, TAppRepOther>)>
+          std::is_assignable_v<detail::tainted_rep_t<TData>&, TAppRepOther>)>
   inline this_t& operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx,
                                        TExtraOther...>& aOther) noexcept {
     data = aOther.raw_host_rep();
@@ -265,17 +267,17 @@ class tainted_impl<
 
   /**
    * @brief Operator* which dereferences tainted and gives a tainted_volatile&
-   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * @return TRepDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref& operator*() const noexcept { return *data; }
+  inline TRepDeref& operator*() const noexcept { return *data; }
 
   /**
    * @brief Operator* which dereferences tainted and gives a tainted_volatile&
-   * @return TOpDeref* is the ptr to the sandbox memory that holds this
+   * @return TRepDeref* is the ptr to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref* operator->() const noexcept {
+  inline TRepDeref* operator->() const noexcept {
     // call the deference operator * and then take the address of the result
     // Use std::addressof so we don't call the operator overload of operator &
     return std::addressof(**this);
@@ -287,10 +289,10 @@ class tainted_impl<
    * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @param aIdx is the index
-   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * @return TRepDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
-  inline TOpDeref& operator[](size_t aIdx) {
+  inline TRepDeref& operator[](size_t aIdx) {
     const std::remove_pointer_t<decltype(this)> data_idx = *this + aIdx;
     return *data_idx;
   }
@@ -299,10 +301,10 @@ class tainted_impl<
    * @brief Operator[] which dereferences a tainted pointer at an idx and gives
    * a tainted_volatile&
    * @param aIdx is the index
-   * @return const TOpDeref& is the const reference to the sandbox memory that
+   * @return const TRepDeref& is the const reference to the sandbox memory that
    * holds this data, i.e., memory which is a tainted_volatile type
    */
-  inline const TOpDeref& operator[](size_t aIdx) const {
+  inline const TRepDeref& operator[](size_t aIdx) const {
     std::remove_pointer_t<decltype(this)> data_idx = *this + aIdx;
     return *data_idx;
   }
@@ -312,11 +314,11 @@ class tainted_impl<
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
    * @param aIdx is the tainted index
-   * @return TOpDeref& is the reference to the sandbox memory that holds this
+   * @return TRepDeref& is the reference to the sandbox memory that holds this
    * data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline TOpDeref& operator[](tainted<T, TSbx> aIdx) {
+  inline TRepDeref& operator[](tainted<T, TSbx> aIdx) {
     return (*this)[aIdx.raw_host_rep()];
   }
 
@@ -325,11 +327,11 @@ class tainted_impl<
    * a tainted_volatile&
    * @tparam T is the type of the tainted index
    * @param aIdx is the tainted index
-   * @return const TOpDeref& is the const reference to the sandbox memory that
+   * @return const TRepDeref& is the const reference to the sandbox memory that
    * holds this data, i.e., memory which is a tainted_volatile type
    */
   template <typename T, RLBOX_REQUIRE(std::is_assignable_v<size_t&, T>)>
-  inline const TOpDeref& operator[](tainted<T, TSbx> aIdx) const {
+  inline const TRepDeref& operator[](tainted<T, TSbx> aIdx) const {
     return (*this)[aIdx.raw_host_rep()];
   }
 

@@ -28,9 +28,9 @@
 #  include <stddef.h>
 
 namespace rlbox {
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <bool TUseAppRep, typename TData, typename TSbx>
 class dummy {
-  using this_t = dummy<TUseAppRep, TAppRep, TSbx>;
+  using this_t = dummy<TUseAppRep, TData, TSbx>;
   int* data{0};
   inline bool is_null() noexcept { return data == nullptr; }
   static this_t from_unchecked_raw_pointer(int* aPtr) {

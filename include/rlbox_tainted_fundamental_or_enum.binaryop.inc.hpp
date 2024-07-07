@@ -24,10 +24,10 @@
 #  include "rlbox_wrapper_traits.hpp"  // IWYU pragma: keep
 
 namespace rlbox {
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
+template <bool TUseAppRep, typename TData, typename TSbx>
 class dummy {
-  using this_t = dummy<TUseAppRep, TAppRep, TSbx>;
-  TAppRep data{0};
+  using this_t = dummy<TUseAppRep, TData, TSbx>;
+  TData data{0};
 #endif
 
   /**
@@ -42,14 +42,14 @@ class dummy {
   friend inline constexpr auto
   operator RLBOX_BINARY_OP(const this_t& aLhs, const TArg& aRhs) noexcept(
       noexcept(aLhs.raw_host_rep() RLBOX_BINARY_OP aLhs.raw_host_rep())) {
-    detail::tainted_rep_t<TAppRep> result = 0;
+    TAppRep result = 0;
     if constexpr (detail::is_tainted_any_wrapper_v<TArg>) {
       result = aLhs.raw_host_rep() RLBOX_BINARY_OP aRhs.raw_host_rep();
     } else {
       result = aLhs.raw_host_rep() RLBOX_BINARY_OP aRhs;
     }
 
-    return tainted<TAppRep, TSbx>(result);
+    return tainted<TData, TSbx>(result);
   }
 
   /**
@@ -65,9 +65,8 @@ class dummy {
   friend inline constexpr auto
   operator RLBOX_BINARY_OP(const TArg& aLhs, const this_t& aRhs) noexcept(
       noexcept(aRhs.raw_host_rep() RLBOX_BINARY_OP aRhs.raw_host_rep())) {
-    detail::tainted_rep_t<TAppRep> result =
-        aLhs RLBOX_BINARY_OP aRhs.raw_host_rep();
-    return tainted<TAppRep, TSbx>(result);
+    TAppRep result = aLhs RLBOX_BINARY_OP aRhs.raw_host_rep();
+    return tainted<TData, TSbx>(result);
   }
 
 #define RLBOX_CONCAT_HELPER2(a) a## =
