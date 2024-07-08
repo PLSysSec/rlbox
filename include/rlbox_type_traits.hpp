@@ -122,9 +122,6 @@ struct array_detail_helper<std::array<T, TN>> {
  */
 template <typename T>
 struct array_detail_helper<T[]> {
-  static_assert(
-      false_v<T>,
-      "Dynamic arrays are currently unsupported. " RLBOX_FILE_BUG_MESSAGE);
   using c_array_to_std_array_t = T[];
   using std_array_to_c_array_t = T[];
   static constexpr bool mIsArray = true;
@@ -228,5 +225,100 @@ struct helper<T, RLBOX_SPECIALIZE(sizeof(T) == 8)> {
 template <typename T>
 using get_equivalent_uint_t =
     typename get_equivalent_uint_detail::helper<T>::type;
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace apply_conv_to_base_types_detail {
+
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers, typename TEnable = void>
+struct helper;
+
+/**
+ * @brief This specialization converts `T*` when pointers are treated as
+ * compound types, i.e. we generate TConv<T>*
+ */
+template <typename T, template <typename> typename TConv>
+struct helper<T*, TConv, false, RLBOX_SPECIALIZE(!detail::is_cvref_t<T*>)> {
+  using ptr_type = typename helper<T, TConv, false>::type;
+  using type = std::add_pointer_t<ptr_type>;
+};
+
+/**
+ * @brief This specialization converts `T*` when pointers are treated as
+ * base types, i.e. we generate TConv<T*>
+ */
+template <typename T, template <typename> typename TConv>
+struct helper<T*, TConv, true, RLBOX_SPECIALIZE(!detail::is_cvref_t<T*>)> {
+  using type = TConv<T*>;
+};
+
+/**
+ * @brief This specialization converts `std::array<T, TN>`
+ */
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers, size_t TN>
+struct helper<std::array<T, TN>, TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(!detail::is_cvref_t<std::array<T, TN>>)> {
+  using array_element_type =
+      typename helper<T, TConv, TCallTConvOnPointers>::type;
+  using type = std::array<array_element_type, TN>;
+};
+
+/**
+ * @brief This specialization converts `T[N]`
+ */
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers, size_t TN>
+struct helper<T[TN], TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(!detail::is_cvref_t<T[TN]>)> {
+  using array_element_type =
+      typename helper<T, TConv, TCallTConvOnPointers>::type;
+  using type = array_element_type[TN];
+};
+
+/**
+ * @brief This specialization converts `T[]`
+ */
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers>
+struct helper<T[], TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(!detail::is_cvref_t<T[]>)> {
+  using array_element_type =
+      typename helper<T, TConv, TCallTConvOnPointers>::type;
+  using type = array_element_type[];
+};
+
+/**
+ * @brief This specialization converts structs, enums etc.
+ */
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers>
+struct helper<T, TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(!std::is_pointer_v<T> &&
+                               !detail::is_any_array_v<T> &&
+                               !detail::is_cvref_t<T>)> {
+  using type = TConv<T>;
+};
+
+/**
+ * @brief This specialization converts `T&`, `T&&`, `const T`, `volatile T`
+ */
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers>
+struct helper<T, TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(detail::is_cvref_t<T>)> {
+  using inner_type = typename helper<detail::remove_cvref_t<T>, TConv,
+                                     TCallTConvOnPointers>::type;
+  using type = detail::copy_cvref_t<T, inner_type>;
+};
+
+};  // namespace apply_conv_to_base_types_detail
+
+template <typename T, template <typename> typename TConv,
+          bool TCallTConvOnPointers = false>
+using apply_conv_to_base_types =
+    typename apply_conv_to_base_types_detail::helper<
+        T, TConv, TCallTConvOnPointers>::type;
 
 }  // namespace rlbox::detail
