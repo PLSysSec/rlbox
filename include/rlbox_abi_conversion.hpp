@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <type_traits>
 
+#include "rlbox_helpers.hpp"
 #include "rlbox_stdint_types.hpp"
 #include "rlbox_type_traits.hpp"
 // IWYU doesn't seem to recognize the call to is_rlbox_stdint_type_v so
@@ -93,7 +94,7 @@ namespace convert_base_types_detail {
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<
     T, abi_template_names,
-    std::enable_if_t<
+    RLBOX_SPECIALIZE(
         std::is_same_v<void, T> || std::is_same_v<std::nullptr_t, T> ||
         std::is_same_v<bool, T> || std::is_same_v<char, T> ||
         std::is_same_v<signed char, T> || std::is_same_v<char16_t, T> ||
@@ -102,7 +103,7 @@ struct convert_base_types_helper<
         std::is_same_v<char8_t, T> ||
 #endif
         std::is_floating_point_v<T> || std::is_enum_v<T> ||
-        (std::is_class_v<T> && !is_rlbox_stdint_type_v<T>)>> {
+        (std::is_class_v<T> && !is_rlbox_stdint_type_v<T>))> {
   using type = T;
 };
 
@@ -152,19 +153,22 @@ struct convert_base_types_helper<long long, abi_template_names> {
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<
     T, abi_template_names,
-    std::enable_if_t<
+    RLBOX_SPECIALIZE(
         // Don't check with `is_unsigned_t` as this will permit qualifier and
         // cause instantiation confusion with other overloads
         std::is_same_v<T, unsigned char> || std::is_same_v<T, unsigned short> ||
         std::is_same_v<T, unsigned int> || std::is_same_v<T, unsigned long> ||
-        std::is_same_v<T, unsigned long long>>> {
+        std::is_same_v<T, unsigned long long>)> {
   using type = std::make_unsigned_t<
       convert_base_types_t<std::make_signed_t<T>, abi_template_names>>;
 };
 
+/**
+ * @brief This specialization converts rlbox int types except `rlbox_size_t`
+ */
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<T, abi_template_names,
-                                 std::enable_if_t<is_rlbox_stdint_type_v<T>>> {
+                                 RLBOX_SPECIALIZE(is_rlbox_stdint_type_v<T>)> {
   using type = detail::rlbox_stdint_to_stdint_t<T>;
 };
 
@@ -181,7 +185,7 @@ struct convert_base_types_helper<rlbox_size_t, abi_template_names> {
  */
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<T, abi_template_names,
-                                 std::enable_if_t<detail::is_cvref_t<T>>> {
+                                 RLBOX_SPECIALIZE(detail::is_cvref_t<T>)> {
   using type = detail::copy_cvref_t<
       T, convert_base_types_t<detail::remove_cvref_t<T>, abi_template_names>>;
 };
@@ -191,15 +195,16 @@ struct convert_base_types_helper<T, abi_template_names,
  */
 template <typename T, abi_template_decls, size_t TN>
 struct convert_base_types_helper<T[TN], abi_template_names,
-                                 std::enable_if_t<!detail::is_cvref_t<T[TN]>>> {
+                                 RLBOX_SPECIALIZE(!detail::is_cvref_t<T[TN]>)> {
   using array_element_type = convert_base_types_t<T, abi_template_names>;
   using type = array_element_type[TN];
 };
 
 /**
- * @brief This specialization converts `T*` and is behaves differently if the
- * target type of conversion is a `void*` or other types
- * @details This implements the following algorithm
+ * @brief This specialization converts `T*` and it behaves differently if the
+ * target type of conversion is a `void*` or other types. Specifically, it
+ * implements the following algorithm
+ *
  * ```
  * if std::is_pointer_v<TPointerType>
  *   TResult = copy_cvref_t(T, remove_pointer_t<TPointerType>) *
@@ -207,8 +212,8 @@ struct convert_base_types_helper<T[TN], abi_template_names,
  *   TResult = TPointerType
  * ```
  *
- * This means that if we convert pointers to a type like void*, we want to
- * preserve cvref qualifiers of the pointer **basetype** during this
+ * @details This means that if we convert pointers to a type like void*, we want
+ * to preserve cvref qualifiers of the pointer **basetype** during this
  * conversion.
  *
  * Eg: `const short *` is converted to `const void *`
@@ -224,7 +229,7 @@ struct convert_base_types_helper<T[TN], abi_template_names,
  */
 template <typename T, abi_template_decls>
 struct convert_base_types_helper<T*, abi_template_names,
-                                 std::enable_if_t<!detail::is_cvref_t<T*>>> {
+                                 RLBOX_SPECIALIZE(!detail::is_cvref_t<T*>)> {
   using type = std::conditional_t<
       std::is_pointer_v<TPointerType>,
       detail::copy_cvref_t<T, std::remove_pointer_t<TPointerType>>*,
