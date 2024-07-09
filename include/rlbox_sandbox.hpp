@@ -25,6 +25,7 @@
 #include "rlbox_function_traits.hpp"
 #include "rlbox_helpers.hpp"
 #include "rlbox_types.hpp"
+#include "rlbox_type_traits.hpp"
 #include "rlbox_wrapper_traits.hpp"
 
 namespace rlbox {
@@ -371,8 +372,9 @@ class rlbox_sandbox : protected TSbx {
   }
 
   template <typename T>
-  using get_param_type_t = detail::rlbox_stdint_to_stdint_t<
-      detail::rlbox_remove_wrapper_t<std::remove_reference_t<T>>>;
+  using get_param_type_t = detail::apply_conv_to_base_types<
+      detail::rlbox_remove_wrapper_t<std::remove_reference_t<T>>,
+      detail::rlbox_stdint_to_stdint_t>;
 
  public:
   template <typename TFunc, typename... TArgs>

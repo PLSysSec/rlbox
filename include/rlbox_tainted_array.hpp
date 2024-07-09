@@ -30,47 +30,58 @@ namespace rlbox {
  * wrappers for array types
  * @tparam TUseAppRep indicates whether this wrapper stores data in the app
  * representation (tainted) or the sandbox representation (tainted_volatile)
- * @tparam TAppRep is the app representation of data
+ * @tparam TData is the app representation of data
  * @tparam TSbx is the type of sandbox
  */
-template <bool TUseAppRep, typename TAppRep, typename TSbx>
-class tainted_impl<
-    TUseAppRep, TAppRep, TSbx,
-    RLBOX_SPECIALIZE(
-        detail::is_any_array_v<detail::rlbox_stdint_to_stdint_t<TAppRep>>)> {
+template <bool TUseAppRep, typename TData, typename TSbx>
+class tainted_impl<TUseAppRep, TData, TSbx,
+                   RLBOX_SPECIALIZE(detail::is_any_array_v<
+                                    detail::rlbox_stdint_to_stdint_t<TData>>)> {
   KEEP_RLBOX_CLASSES_FRIENDLY;
 
  protected:
   /**
+   * @brief The app representation of data for this wrapper
+   */
+  using TAppRep = detail::tainted_rep_t<TData>;
+
+  /**
+   * @brief The sandbox representation of data for this wrapper
+   */
+  using TSbxRep =
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TData, TSbx>>;
+
+  /**
    * @brief The current class's type
    */
-  using this_t = tainted_impl<
-      TUseAppRep, TAppRep, TSbx,
-      RLBOX_SPECIALIZE(
-          detail::is_any_array_v<detail::rlbox_stdint_to_stdint_t<TAppRep>>)>;
+  using this_t =
+      tainted_impl<TUseAppRep, TData, TSbx,
+                   RLBOX_SPECIALIZE(detail::is_any_array_v<
+                                    detail::rlbox_stdint_to_stdint_t<TData>>)>;
 
   void dummy_check() {
     static_assert(
         std::is_same_v<this_t, std::remove_pointer_t<decltype(this)>>);
   }
 
-  using TArrEl = std::remove_extent_t<detail::std_array_to_c_array_t<TAppRep>>;
+  using TDataArrEl =
+      std::remove_extent_t<detail::std_array_to_c_array_t<TData>>;
 
   /// \todo Make this wrapper work with n dimensional arrays
-  static_assert(!detail::is_any_array_v<TArrEl>,
+  static_assert(!detail::is_any_array_v<TDataArrEl>,
                 "Multidimentional arrays not yet supported in tainted");
 
-  using TAppRepEl = detail::tainted_rep_t<TArrEl>;
+  using TAppRepEl = detail::tainted_rep_t<TDataArrEl>;
 
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRepEl =
-      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TArrEl, TSbx>>;
+  using TSbxRepEl = detail::tainted_rep_t<
+      detail::rlbox_base_types_convertor<TDataArrEl, TSbx>>;
 
-  using TRepEl = tainted_impl<TUseAppRep, TArrEl, TSbx>;
+  using TRepEl = tainted_impl<TUseAppRep, TDataArrEl, TSbx>;
   static constexpr size_t TRepElCount =
-      std::extent_v<detail::std_array_to_c_array_t<TAppRep>>;
+      std::extent_v<detail::std_array_to_c_array_t<TData>>;
 
  public:
   /**
@@ -136,18 +147,18 @@ class tainted_impl<
    * tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep
-   * @tparam TAppRepOther is the type of the index value being wrapped
+   * @tparam TDataOther is the type of the index value being wrapped
    * @tparam TExtraOther... is the extra args of the index
    * @param aIdx is the tainted index
    * @return TRepEl& is the reference to the tainted element
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
-      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
-                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                    TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>>)>
   inline TRepEl& operator[](
-      TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>
+      TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>
           aIdx) noexcept(noexcept(detail::dynamic_check(false, ""))) {
     auto idx_untainted = aIdx.raw_host_rep();
     if constexpr (std::is_signed_v<decltype(idx_untainted)>) {
@@ -179,18 +190,18 @@ class tainted_impl<
    * gives a tainted&
    * @tparam TWrap is the index wrapper type
    * @tparam TUseAppRepOther is the index AppRep
-   * @tparam TAppRepOther is the type of the index value being wrapped
+   * @tparam TDataOther is the type of the index value being wrapped
    * @tparam TExtraOther... is the extra args of the index
    * @param aIdx is the tainted index
    * @return TRepEl& is the reference to the tainted element
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
-      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
-                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                    TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>>)>
   inline const TRepEl& operator[](
-      TWrap<TUseAppRepOther, TAppRepOther, TExtraOther...> aIdx) const
+      TWrap<TUseAppRepOther, TDataOther, TExtraOther...> aIdx) const
       noexcept(noexcept(detail::dynamic_check(false, ""))) {
     auto idx_untainted = aIdx.raw_host_rep();
     if constexpr (std::is_signed_v<decltype(idx_untainted)>) {
@@ -215,8 +226,8 @@ class tainted_impl<
 
  private:
   using TToPointerRet =
-      std::conditional_t<TUseAppRep, rlbox_unique_ptr<TAppRepEl, TSbx>,
-                         tainted<TAppRepEl*, TSbx>>;
+      std::conditional_t<TUseAppRep, rlbox_unique_ptr<TDataArrEl, TSbx>,
+                         tainted<TDataArrEl*, TSbx>>;
 
  public:
   inline TToPointerRet to_pointer(rlbox_sandbox<TSbx>& aSandbox) {
@@ -227,7 +238,7 @@ class tainted_impl<
     } else {
       constexpr size_t el_count = sizeof(TAppRep) / sizeof(TAppRepEl);
       /// \todo Ensure this works without the tainted cast
-      TToPointerRet buff = make_unique_tainted_many<TAppRepEl>(
+      TToPointerRet buff = make_unique_tainted_many<TDataArrEl>(
           aSandbox, tainted<size_t, TSbx>(el_count));
       /// \todo Replace with rlbox::memcpy
       for (size_t i = 0; i < el_count; i++) {

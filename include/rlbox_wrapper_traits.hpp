@@ -96,6 +96,13 @@ template <typename T>
 using rlbox_stdint_to_stdint_t =
     typename rlbox_stdint_to_stdint_t_detail::helper<T>::type;
 
+////////////
+
+namespace tainted_rep_detail {
+template <typename T>
+using helper = value_type_t<rlbox_stdint_to_stdint_t<T>>;
+};  // namespace tainted_rep_detail
+
 /**
  * @brief This trait represents the storage type used by tainted classes. This
  * trait currently
@@ -106,7 +113,7 @@ using rlbox_stdint_to_stdint_t =
  * @tparam T is the type we are converting to the tainted storage representation
  */
 template <typename T>
-using tainted_rep_t = value_type_t<rlbox_stdint_to_stdint_t<T>>;
+using tainted_rep_t = apply_conv_to_base_types<T, tainted_rep_detail::helper>;
 
 /**
  * @brief Macro that generates a trait to check if member functions named

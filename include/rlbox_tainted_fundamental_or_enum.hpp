@@ -90,7 +90,7 @@ class tainted_impl<TUseAppRep, TData, TSbx,
    * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE checks if (1) this won't be handled the original
    * class's copy/move constructor and (2) this meets the constructible
@@ -99,15 +99,15 @@ class tainted_impl<TUseAppRep, TData, TSbx,
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_constructible_v<TAppRep, TAppRepOther>)>
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_constructible_v<TAppRep, detail::tainted_rep_t<TDataOther>>)>
   inline tainted_impl(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
+      const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>& aOther)
       : data([&] {
           if constexpr (TUseAppRep) {
             return aOther.raw_host_rep();
@@ -217,7 +217,7 @@ class tainted_impl<TUseAppRep, TData, TSbx,
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE checks if (1) this won't be handled the original
    * class's copy/move assignment and (2) this meets the assignable
@@ -228,15 +228,15 @@ class tainted_impl<TUseAppRep, TData, TSbx,
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_assignable_v<TAppRep&, TAppRepOther>)>
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_assignable_v<TAppRep&, detail::tainted_rep_t<TDataOther>>)>
   inline this_t&
-  operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther) noexcept(
+  operator=(const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>& aOther) noexcept(
       noexcept(aOther.raw_host_rep()) && noexcept(aOther.raw_sandbox_rep())) {
     if constexpr (TUseAppRep) {
       data = aOther.raw_host_rep();

@@ -219,9 +219,9 @@ TEST_CASE("tainted array of std ints operates correctly", "[tainted arrays]") {
     REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
   }
 
-  // tainted_test_ptr<int> ret =
-  //     test_ptr_sandbox_invoke(sandbox, test_array_arg_u32, t_testarr, 3);
-  // REQUIRE(ret.UNSAFE_unverified() == 24);
+  tainted_test_ptr<int> ret =
+      test_ptr_sandbox_invoke(sandbox, test_array_arg_u32, t_testarr, 3);
+  REQUIRE(ret.UNSAFE_unverified() == 24);
 
   sandbox.destroy_sandbox();
 }

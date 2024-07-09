@@ -78,9 +78,7 @@ class tainted_impl<
   /**
    * @brief The deref'd representation of the data of this wrapper.
    */
-  using TRepDeref =
-      tainted_volatile<std::remove_pointer_t<detail::tainted_rep_t<TData>>,
-                       TSbx>;
+  using TRepDeref = tainted_volatile<std::remove_pointer_t<TData>, TSbx>;
 
   TRepDeref* data{0};
 
@@ -139,7 +137,7 @@ class tainted_impl<
    * @brief Construct a new tainted object from another tainted wrapped object
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
@@ -148,15 +146,15 @@ class tainted_impl<
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_constructible_v<detail::tainted_rep_t<TData>, TAppRepOther>)>
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_constructible_v<TAppRep, detail::tainted_rep_t<TDataOther>>)>
   inline tainted_impl(
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>& aOther)
+      const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>& aOther)
       : data(aOther.raw_host_rep()) {}
 
   /**
@@ -168,19 +166,19 @@ class tainted_impl<
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
-   * @return detail::tainted_rep_t<TData> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TData> UNSAFE_unverified() const {
+  [[nodiscard]] inline TAppRep UNSAFE_unverified() const {
     /// \todo eliminate cast
-    return reinterpret_cast<detail::tainted_rep_t<TData>>(data);
+    return reinterpret_cast<TAppRep>(data);
   }
 
   /**
    * @brief Unsafely remove the tainting and get the raw data.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TData> is the raw data
+   * @return TAppRep is the raw data
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TData> UNSAFE_unverified(
+  [[nodiscard]] inline TAppRep UNSAFE_unverified(
       [[maybe_unused]] rlbox_sandbox<TSbx>& aSandbox) const {
     return UNSAFE_unverified();
   }
@@ -232,7 +230,7 @@ class tainted_impl<
    * @brief Operator= for tainted values from another tainted wrapper
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE param checks to see if this (1) won't be handled the
    * original class's copy/move constructor (2) is a tainted wrapper and (3)
@@ -242,14 +240,14 @@ class tainted_impl<
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
       RLBOX_REQUIRE(
           detail::is_tainted_any_wrapper_v<
-              TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>> &&
+              TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>> &&
           !detail::is_same_wrapper_type_v<this_t, TWrap, TUseAppRepOther,
-                                          TAppRepOther, TSbx, TExtraOther...> &&
-          std::is_assignable_v<detail::tainted_rep_t<TData>&, TAppRepOther>)>
-  inline this_t& operator=(const TWrap<TUseAppRepOther, TAppRepOther, TSbx,
+                                          TDataOther, TSbx, TExtraOther...> &&
+          std::is_assignable_v<TAppRep&, detail::tainted_rep_t<TDataOther>>)>
+  inline this_t& operator=(const TWrap<TUseAppRepOther, TDataOther, TSbx,
                                        TExtraOther...>& aOther) noexcept {
     data = aOther.raw_host_rep();
     return *this;
@@ -340,28 +338,28 @@ class tainted_impl<
   /**
    * @brief Operator== behaves as expected for tainted pointers and compares the
    * pointer for equality.
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @param aOther is the rhs argument
    * @return if the pointers refer to the same address
    */
-  template <typename TAppRepOther>
+  template <typename TDataOther>
   friend inline bool operator==(
       const this_t& aThis,
-      const tainted_impl<TUseAppRep, TAppRepOther, TSbx>& aOther) noexcept {
+      const tainted_impl<TUseAppRep, TDataOther, TSbx>& aOther) noexcept {
     return aThis.data == aOther.data;
   }
 
   /**
    * @brief Operator!= behaves as expected for tainted pointers and compares the
    * pointer for inequality.
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @param aOther is the rhs argument
    * @return if the pointers refer to different addresses
    */
-  template <typename TAppRepOther>
+  template <typename TDataOther>
   friend inline bool operator!=(
       const this_t& aThis,
-      const tainted_impl<TUseAppRep, TAppRepOther, TSbx>& aOther) noexcept {
+      const tainted_impl<TUseAppRep, TDataOther, TSbx>& aOther) noexcept {
     return aThis.data != aOther.data;
   }
 

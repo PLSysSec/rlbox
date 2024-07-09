@@ -33,7 +33,7 @@ class dummy {
    * @brief Operator compares this_t value against another tainted_* value
    * @tparam TWrap is the rhs wrapper type
    * @tparam TUseAppRepOther is the rhs AppRep
-   * @tparam TAppRepOther is the type of the rhs value being wrapped
+   * @tparam TDataOther is the type of the rhs value being wrapped
    * @tparam TExtraOther... is the extra args of the rhs
    * @tparam RLBOX_REQUIRE checks if the rhs is a tainted_* wrapper
    * @param aLhs is the lhs argument which is a this_t value
@@ -43,12 +43,12 @@ class dummy {
    */
   template <
       template <bool, typename, typename, typename...> typename TWrap,
-      bool TUseAppRepOther, typename TAppRepOther, typename... TExtraOther,
-      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<TWrap<
-                        TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>>)>
+      bool TUseAppRepOther, typename TDataOther, typename... TExtraOther,
+      RLBOX_REQUIRE(detail::is_tainted_any_wrapper_v<
+                    TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>>)>
   friend inline constexpr auto operator RLBOX_COMPARE_OP(
       const this_t& aLhs,
-      const TWrap<TUseAppRepOther, TAppRepOther, TSbx, TExtraOther...>&
+      const TWrap<TUseAppRepOther, TDataOther, TSbx, TExtraOther...>&
           aRhs) noexcept(noexcept(aLhs.raw_host_rep()
                                       RLBOX_COMPARE_OP aRhs.raw_host_rep() &&
                                   aLhs.raw_sandbox_rep() RLBOX_COMPARE_OP aRhs
