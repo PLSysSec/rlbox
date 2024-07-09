@@ -19,9 +19,12 @@ namespace rlbox {
 
 namespace detail {
 /**
- * @brief base type used for rlbox stdint types like `uint8_t`
+ * @brief base type used for rlbox stdint types like `uint8_t`. Classes that
+  inherit this type are never meant for direct use. Rather they are used as
+  marker types.
  */
 class rlbox_stdint_base_t {
+  // We delete constructor so no one actually constructs these marker types.
   rlbox_stdint_base_t() = delete;
 };
 }  // namespace detail
