@@ -59,7 +59,8 @@ class tainted_impl<
   /**
    * @brief The sandbox representation of data for this wrapper
    */
-  using TSbxRep = detail::rlbox_base_types_convertor<TData, TSbx>;
+  using TSbxRep =
+      detail::tainted_rep_t<detail::rlbox_base_types_convertor<TData, TSbx>>;
 
   /**
    * @brief The current class's type
@@ -186,9 +187,9 @@ class tainted_impl<
   /**
    * @brief Unsafely remove the tainting and get the raw data converted to the
    * sandboxed ABI.
-   * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
+   * @return TSbxRep is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed() const {
+  [[nodiscard]] inline TSbxRep UNSAFE_sandboxed() const {
     /// We need to construct an example_unsandboxed_ptr in order to call @ref
     /// rlbox::rlbox_sandbox::get_sandboxed_pointer_with_example. Since tainted
     /// pointers are already checked to live within the sandbox, the current
@@ -203,9 +204,9 @@ class tainted_impl<
    * @brief Unsafely remove the tainting and get the raw data converted to the
    * sandboxed ABI.
    * @param aSandbox is the sandbox this tainted value belongs to
-   * @return detail::tainted_rep_t<TSbxRep> is the raw data in the sandboxed ABI
+   * @return TSbxRep is the raw data in the sandboxed ABI
    */
-  [[nodiscard]] inline detail::tainted_rep_t<TSbxRep> UNSAFE_sandboxed(
+  [[nodiscard]] inline TSbxRep UNSAFE_sandboxed(
       rlbox_sandbox<TSbx>& aSandbox) const {
     return aSandbox.get_sandboxed_pointer(data);
   }
