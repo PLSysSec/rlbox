@@ -21,7 +21,9 @@ namespace detail {
 /**
  * @brief base type used for rlbox stdint types like `uint8_t`
  */
-class rlbox_stdint_base_t {};
+class rlbox_stdint_base_t {
+  rlbox_stdint_base_t() = delete;
+};
 }  // namespace detail
 
 /**
