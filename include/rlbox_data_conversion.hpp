@@ -24,8 +24,7 @@ namespace rlbox::detail {
  * @param aFrom is the value to be converted
  * @param aTo is pointer to the destination which will hold the converted value
  * @details This can be used to convert primitive values such as:
- * - converting between different sized unsigned integer types
- * - converting between different sized signed integer types
+ * - converting between differently sized, differentely signed integer types
  * - converting between floating types
  * When converting between a bigger integer type to a smaller integer types, we
  * will add bounds checks
@@ -61,26 +60,57 @@ inline void convert_type_fundamental(TTo* aTo, const TFrom& aFrom) {
             is_integral_v<remove_cvref_t<TFrom>>,
         "ABI convertor: Trying to convert across integer/non-integer types");
 
-    rlbox_static_assert(is_signed_v<TTo> == is_signed_v<TFrom>,
-                        "ABI convertor: Trying to convert across "
-                        "signed/unsigned integer types");
+    /* Algorithm for safety checks across signed and unsigned.
+
+    Note that comparisons across different sized ints are safe (due to integer
+    promotion) as long as the signs of the integers are the same.
+
+    if (TTo is unsigned) {
+      if (TFrom is unsigned) {
+        aFrom <= TTo.max();
+      } else if (TFrom is signed) {
+        aFrom >= 0
+        make_unsigned(aFrom) <= TTo.max();
+      }
+    } else if (TTo is signed) {
+      if (TFrom is unsigned) {
+        aFrom <= make_unsigned(TTo.max());
+      } else if (TFrom is signed) {
+        aFrom >= TTo.min();
+        aFrom <= TTo.max();
+      }
+    }
+    */
 
     // Some branches don't use the param
     [[maybe_unused]] const char* err_msg =
         "Over/Underflow when converting between integer types";
 
-    if constexpr (sizeof(TTo) >= sizeof(TFrom)) {
-      // Eg: int64_t aFrom int32_t, uint64_t aFrom uint32_t
-    } else if constexpr (is_unsigned_v<TTo>) {
-      // Eg: uint32_t aFrom uint64_t
-      dynamic_check(aFrom <= numeric_limits<TTo>::max(), err_msg);
-    } else if constexpr (is_signed_v<TTo>) {
-      // Eg: int32_t aFrom int64_t
-      dynamic_check(aFrom >= numeric_limits<TTo>::min(), err_msg);
-      dynamic_check(aFrom <= numeric_limits<TTo>::max(), err_msg);
+    if constexpr (std::is_unsigned_v<TTo>) {
+      if constexpr (std::is_unsigned_v<TFrom>) {
+        dynamic_check(aFrom <= numeric_limits<TTo>::max(), err_msg);
+      } else {
+        static_assert(std::is_signed_v<TFrom>);
+        dynamic_check(aFrom >= 0, err_msg);
+        using TFromUnsigned = std::make_unsigned_t<TFrom>;
+        dynamic_check(
+            static_cast<TFromUnsigned>(aFrom) <= numeric_limits<TTo>::max(),
+            err_msg);
+      }
     } else {
-      rlbox_static_fail(TTo, "Unhandled case");
+      static_assert(std::is_signed_v<TTo>);
+      if constexpr (std::is_unsigned_v<TFrom>) {
+        using TToUnsigned = std::make_unsigned_t<TTo>;
+        dynamic_check(
+            aFrom <= static_cast<TToUnsigned>(numeric_limits<TTo>::max()),
+            err_msg);
+      } else {
+        static_assert(std::is_signed_v<TFrom>);
+        dynamic_check(aFrom >= numeric_limits<TTo>::min(), err_msg);
+        dynamic_check(aFrom <= numeric_limits<TTo>::max(), err_msg);
+      }
     }
+
     *aTo = static_cast<TTo>(aFrom);
   } else {
     rlbox_static_fail(TTo, "Unexpected case for convert_type_fundamental");

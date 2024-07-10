@@ -226,4 +226,49 @@ TEST_CASE("tainted array of std ints operates correctly", "[tainted arrays]") {
   sandbox.destroy_sandbox();
 }
 
+TEST_CASE("tainted volatile array of std ints operates correctly",
+          "[tainted arrays]") {
+  rlbox_sandbox_test_ptr sandbox;
+  sandbox.create_sandbox();
+
+  tainted_test_ptr<rlbox_uint32_t(*)[3]> t_testarr =
+      sandbox.malloc_in_sandbox<rlbox_uint32_t[3]>();
+
+  (*t_testarr)[0] = 5;
+  (*t_testarr)[1] = 7;
+  (*t_testarr)[2] = 12;
+
+  REQUIRE((*t_testarr)[0].UNSAFE_unverified() == 5);
+  REQUIRE((*t_testarr)[1].UNSAFE_unverified() == 7);
+  REQUIRE((*t_testarr)[2].UNSAFE_unverified() == 12);
+  REQUIRE_THROWS((*t_testarr)[3].UNSAFE_unverified() == 0);
+
+  tainted_test_ptr<rlbox_uint32_t> zero = 0;
+  REQUIRE((*t_testarr)[zero + 0].UNSAFE_unverified() == 5);
+  REQUIRE((*t_testarr)[zero + 1].UNSAFE_unverified() == 7);
+  REQUIRE((*t_testarr)[zero + 2].UNSAFE_unverified() == 12);
+  REQUIRE_THROWS((*t_testarr)[zero + 3].UNSAFE_unverified() == 0);
+
+  {
+    std::array<uint32_t, 3> expected = {5, 7, 12};
+    auto result = (*t_testarr).UNSAFE_unverified(sandbox);
+    REQUIRE(std::is_same_v<decltype(expected), decltype(result)>);
+    REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
+  }
+
+  {
+    std::array<uint32_t, 3> expected = {5, 7, 12};
+    auto result = (*t_testarr).UNSAFE_sandboxed(sandbox);
+    REQUIRE(std::is_same_v<decltype(expected), decltype(result)>);
+    REQUIRE(memcmp(&(expected[0]), &(result[0]), sizeof(expected)) == 0);
+  }
+
+  tainted_test_ptr<rlbox_uint32_t> ret =
+      test_ptr_sandbox_invoke(sandbox, test_array_arg_u32, (*t_testarr), 3);
+  REQUIRE(ret.UNSAFE_unverified() == 24);
+
+  sandbox.free_in_sandbox(t_testarr);
+  sandbox.destroy_sandbox();
+}
+
 // NOLINTEND(misc-const-correctness)
