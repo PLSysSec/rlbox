@@ -290,14 +290,27 @@ struct helper<T[], TConv, TCallTConvOnPointers,
 };
 
 /**
+ * @brief This specialization converts `TRet(TArgs...)`
+ */
+template <template <typename> typename TConv, bool TCallTConvOnPointers,
+          typename TRet, typename... TArgs>
+struct helper<TRet(TArgs...), TConv, TCallTConvOnPointers,
+              RLBOX_SPECIALIZE(!detail::is_cvref_t<TRet(TArgs...)>)> {
+  template <typename T>
+  using conv = typename helper<T, TConv, TCallTConvOnPointers>::type;
+
+  using type = conv<TRet>(conv<TArgs>...);
+};
+
+/**
  * @brief This specialization converts structs, enums etc.
  */
 template <typename T, template <typename> typename TConv,
           bool TCallTConvOnPointers>
 struct helper<T, TConv, TCallTConvOnPointers,
-              RLBOX_SPECIALIZE(!std::is_pointer_v<T> &&
-                               !detail::is_any_array_v<T> &&
-                               !detail::is_cvref_t<T>)> {
+              RLBOX_SPECIALIZE(
+                  !std::is_pointer_v<T> && !detail::is_any_array_v<T> &&
+                  !std::is_function_v<T> && !detail::is_cvref_t<T>)> {
   using type = TConv<T>;
 };
 

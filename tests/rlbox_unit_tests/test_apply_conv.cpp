@@ -31,6 +31,8 @@ TEST_CASE("Test basic cases", "[base type conversion]") {
   REQUIRE_SAME(applyPtr<int*>, Wrap<int*>);
   REQUIRE_SAME(apply<int[]>, Wrap<int>[]);
   REQUIRE_SAME(apply<int[3]>, Wrap<int>[3]);
+  REQUIRE_SAME(apply<int(float)>, Wrap<int>(Wrap<float>));
+  REQUIRE_SAME(apply<int (*)(float)>, Wrap<int>(*)(Wrap<float>));
   REQUIRE_SAME(apply<std::array<int, 3>>, std::array<Wrap<int>, 3>);
 }
 

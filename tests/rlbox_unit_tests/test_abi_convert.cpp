@@ -104,8 +104,9 @@ TEST_CASE("Test ABI conversion of primitive changed unsigned types",
                          test_convertor<unsigned long long>>);
 }
 
-TEST_CASE("Test ABI conversion of array types", "[abi conversion]") {
+TEST_CASE("Test ABI conversion of compount types", "[abi conversion]") {
   REQUIRE(std::is_same_v<test_short[3], test_convertor<short[3]>>);
+  REQUIRE(std::is_same_v<test_short(test_int), test_convertor<short(int)>>);
 }
 
 // Next with qualifiers for each of the cases above

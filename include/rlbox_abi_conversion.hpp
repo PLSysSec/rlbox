@@ -201,6 +201,17 @@ struct convert_base_types_helper<T[TN], abi_template_names,
 };
 
 /**
+ * @brief This specialization converts `TRet(TArgs...)`
+ */
+template <abi_template_decls, typename TRet, typename... TArgs>
+struct convert_base_types_helper<TRet(TArgs...), abi_template_names,
+                                 RLBOX_SPECIALIZE(
+                                     !detail::is_cvref_t<TRet(TArgs...)>)> {
+  using type = convert_base_types_t<TRet, abi_template_names>(
+      convert_base_types_t<TArgs, abi_template_names>...);
+};
+
+/**
  * @brief This specialization converts `T*` and it behaves differently if the
  * target type of conversion is a `void*` or other types. Specifically, it
  * implements the following algorithm
