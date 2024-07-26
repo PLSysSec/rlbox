@@ -38,6 +38,9 @@
   template <bool TU1, typename TU2, typename TU3, typename TU4> \
   friend class tainted_impl;                                    \
                                                                 \
+  template <bool TU1, typename TU2, typename TU3>               \
+  friend class rlbox_callback_impl;                             \
+                                                                \
   RLBOX_REQUIRE_SEMI_COLON
 
 /**

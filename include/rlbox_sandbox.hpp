@@ -20,6 +20,7 @@
 #include <utility>
 
 #include "rlbox_abi_conversion.hpp"
+#include "rlbox_callback.hpp"
 #include "rlbox_checked_arithmetic.hpp"
 #include "rlbox_error_handling.hpp"
 #include "rlbox_function_traits.hpp"
@@ -332,6 +333,75 @@ class rlbox_sandbox : protected TSbx {
     }
   }
 
+  /**
+   * @brief Expose a callback function to the sandboxed code. Callbacks are
+   * functions in the application that can be called by the sandbox. The
+   * callback must be an extern "C" function whose parameters and returns should
+   * be marked as tainted. If the callback's return is `void`, the return need
+   * not be marked tainted. Finally, the first parameter of the callback should
+   * be TSbx&.
+   *
+   * @details For example, consider an application that passes a function
+   * pointer to a function `foo` to the library with the following signature
+   * `int foo(int a)`. For the same function to be invoked once the library has
+   * been sandboxed, `foo` has to be registered as a callback. For this
+   * `foo`'s signature should be modified to have tainted returns and
+   * parameters, as well as accept a sandbox ref as an argument (See example
+   * below). After this foo can be registered as a callback, and passed to the
+   * library (e.g., as an argument to a library function).
+   *
+   * @code {.cpp}
+   * //////// Library Code //////
+   *
+   * using func_ptr_t = int(*)(int);
+   *
+   * int call_func(func_ptr_t func, int arg) {
+   *  return func(arg);
+   * }
+   *
+   * //////// App Code //////
+   * // Original signature
+   * // int foo(int a) {...}
+   *
+   * // We are using the noop sandbox
+   * RLBOX_DEFINE_BASE_TYPES_FOR(libtest, rlbox_noop_sandbox);
+   *
+   * // Modified signature for foo
+   * tainted_libtest<int> foo(rlbox_sandbox_libtest& sandbox,
+   * tainted_libtest<int> a) {
+   *   // ...
+   * }
+   *
+   * int main() {
+   *   rlbox_sandbox_libtest sandbox;
+   *   sandbox.create_sandbox();
+   *
+   *   auto callback = sandbox.register_callback(foo);
+   *   tainted_libtest<int> ret = libtest_sandbox_invoke(sandbox, call_func,
+   * callback, 4);
+   * }
+   * @endcode
+   *
+   * Similarly a function `void bar(float a, char* b)` would have to modified to
+   * `void bar(rlbox_sandbox_libtest& sandbox, tainted_libtest<float> a,
+   * tainted_libtest<char*> b)`
+   *
+   * @param func_ptr The callback to expose that meets the conditions described.
+   *
+   * @tparam T_Ret  Return type of callback. Must be tainted or void.
+   * @tparam T_Args Types of callback arguments (excluding the mandatory first
+   * parameter of the sandbox reference). These types must be tainted.
+   *
+   * @return Wrapped callback function pointer that can be passed to the
+   * sandbox.
+   */
+  template <typename TRet, typename... TArgs>
+  void register_callback(TRet (*func_ptr)(TArgs...)) {
+    // rlbox_callback<TSbx>
+
+    static_assert(detail::false_v<TRet>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
+  }
+
  private:
   template <typename TArg>
   inline auto invoke_process_param(TArg&& aArg) {
@@ -408,7 +478,7 @@ class rlbox_sandbox : protected TSbx {
       tainted<TRet, TSbx> ret = get_tainted_from_raw_ptr(ptr, object_size);
       return ret;
     } else {
-      static_assert(detail::false_v<TFunc>, "Not implemented");
+      static_assert(detail::false_v<TFunc>, RLBOX_NOT_IMPLEMENTED_MESSAGE);
     }
   }
 

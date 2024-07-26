@@ -29,6 +29,7 @@
 
 // IWYU pragma: begin_exports
 
+#include "rlbox_callback.hpp"
 #include "rlbox_memory_mgmt.hpp"
 #include "rlbox_sandbox.hpp"
 #include "rlbox_sandbox_plugin_base.hpp"
