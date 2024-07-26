@@ -429,6 +429,8 @@ class rlbox_sandbox : protected TSbx {
     }
 
     if constexpr (detail::is_tainted_any_wrapper_v<TNoRef>) {
+      /// \todo fix: this won't work if the function is taking a non-temporary
+      /// reference to an array.
       if constexpr (detail::is_any_array_v<
                         detail::rlbox_remove_wrapper_t<TNoRef>>) {
         return aArg.to_pointer(*this);
