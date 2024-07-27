@@ -19,7 +19,8 @@ namespace rlbox {
 namespace callback_detail {
 
 template <typename T, typename TSbx>
-using tainted_or_void_t = std::conditional_t<std::is_void_v<T>, void, tainted<T, TSbx>>;
+using tainted_or_void_t =
+    std::conditional_t<std::is_void_v<T>, void, tainted<T, TSbx>>;
 
 /**
  * @brief This trait computes the expected type of a modified/tainted
@@ -31,8 +32,8 @@ using tainted_or_void_t = std::conditional_t<std::is_void_v<T>, void, tainted<T,
  * @tparam TArgs is the types of the function's arguments
  */
 template <typename TSbx, typename TRet, typename... TArgs>
-using external_callback_t =
-    tainted_or_void_t<TRet, TSbx> (*)(rlbox_sandbox<TSbx>&, tainted<TArgs, TSbx>...);
+using external_callback_t = tainted_or_void_t<TRet, TSbx> (*)(
+    rlbox_sandbox<TSbx>&, tainted<TArgs, TSbx>...);
 
 template <typename TSbx, typename TRet, typename... TArgs>
 external_callback_t<TSbx, TRet, TArgs...> external_callback_type_helper(
