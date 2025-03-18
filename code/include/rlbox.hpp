@@ -217,7 +217,7 @@ public:
   inline constexpr T_Wrap<T, T_Sbx> operator opSymbol##opSymbol(int)           \
   {                                                                            \
     tainted<T, T_Sbx> ret = impl();                                            \
-    operator++();                                                              \
+    operator opSymbol##opSymbol();                                                              \
     return ret;                                                                \
   }                                                                            \
   RLBOX_REQUIRE_SEMI_COLON
