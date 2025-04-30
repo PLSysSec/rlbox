@@ -154,6 +154,15 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
   SECTION("test simple function invocation") // NOLINT
   {
+    const long val1 = 20;
+    const long val2 = 22;
+    tainted<long, TestType> a = val1;
+    auto ret2 = sandbox.invoke_sandbox_function(simpleAddNoPrintTest, a, val2);
+    REQUIRE(ret2.UNSAFE_unverified() == (val1 + val2));
+  }
+
+  SECTION("test simple function invocation with print") // NOLINT
+  {
     const int val1 = 20;
     const int val2 = 22;
     tainted<int, TestType> a = val1;
