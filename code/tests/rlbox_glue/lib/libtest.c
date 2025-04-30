@@ -242,3 +242,7 @@ int isNonNullChar(unsigned char p)
     return 0;
   }
 }
+
+void callFree(void* p) {
+  free(p);
+}
