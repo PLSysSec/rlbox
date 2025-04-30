@@ -243,6 +243,10 @@ int isNonNullChar(unsigned char p)
   }
 }
 
-void callFree(void* p) {
+void* malloc_wrapper(size_t s) {
+  return malloc(s);
+}
+
+void free_wrapper(void* p){
   free(p);
 }
