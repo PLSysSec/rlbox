@@ -152,12 +152,6 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   const int test_iterations = 1000000;
 #endif
 
-  tainted<char*, TestType> sb_string =
-    sandbox.template malloc_in_sandbox<char>(upper_bound);
-  // strcpy is safe here
-  // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
-  std::strcpy(sb_string.UNSAFE_unverified(), "Hello");
-
   SECTION("test simple function invocation") // NOLINT
   {
     const int val1 = 20;
@@ -277,6 +271,12 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     REQUIRE(*result2 == val1);
     sandbox.free_in_sandbox(pa);
   }
+
+  tainted<char*, TestType> sb_string =
+    sandbox.template malloc_in_sandbox<char>(upper_bound);
+  // strcpy is safe here
+  // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
+  std::strcpy(sb_string.UNSAFE_unverified(), "Hello");
 
   SECTION("test callback 1 and re-entrancy") // NOLINT
   {
