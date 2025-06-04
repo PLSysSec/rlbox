@@ -980,9 +980,10 @@ public:
   template<typename T>
   app_pointer<T*, T_Sbx> get_app_pointer(T* ptr)
   {
-    auto max_ptr = (typename T_Sbx::T_PointerType)(get_total_memory() - 1);
+    // only allow app pointer indexes that go up to the first page
+    auto max_ptr = (typename T_Sbx::T_PointerType) std::min(get_total_memory() - 1, (size_t) 4096);
     auto idx = app_ptr_map.get_app_pointer_idx((void*)ptr, max_ptr);
-    auto idx_as_ptr = this->template impl_get_unsandboxed_pointer<T>(idx);
+    auto idx_as_ptr = ((char*) get_memory_location()) + (uintptr_t) idx;
     // Right now we simply assume that any integer can be converted to a valid
     // pointer in the sandbox This may not be true for some sandboxing mechanism
     // plugins in the future In this case, we will have to come up with
@@ -1007,7 +1008,10 @@ public:
   template<typename T>
   T* lookup_app_ptr(tainted<T*, T_Sbx> tainted_ptr)
   {
-    auto idx = tainted_ptr.get_raw_sandbox_value(*this);
+    auto idx_as_ptr = tainted_ptr.get_raw_value();
+    detail::dynamic_check(is_pointer_in_sandbox_memory(idx_as_ptr),
+                      "Got an app pointer that is not within range.");
+    auto idx = (typename T_Sbx::T_PointerType) (((char*) idx_as_ptr) - ((char*) get_memory_location()));
     void* ret = app_ptr_map.lookup_index(idx);
     return reinterpret_cast<T*>(ret);
   }
