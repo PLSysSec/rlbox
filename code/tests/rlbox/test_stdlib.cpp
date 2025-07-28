@@ -297,25 +297,32 @@ TEST_CASE("test memcmp", "[stdlib]")
   auto b1b2 = std::memcmp(buffer1, buffer2, strlen(buffer1));
   auto b2b1 = std::memcmp(buffer2, buffer1, strlen(buffer1));
 
+  printf("MEMCMP Debugging line 1\n");
   // NOLINTNEXTLINE
   auto tb1b1 = rlbox::memcmp(sandbox, buffer1_t, buffer1, strlen(buffer1))
                  .unverified_safe_because("test");
+  printf("MEMCMP Debugging line 2\n");
   // NOLINTNEXTLINE
   auto tb1b2 = rlbox::memcmp(sandbox, buffer1_t, buffer2, strlen(buffer1))
                  .unverified_safe_because("test");
+  printf("MEMCMP Debugging line 3\n");
   // NOLINTNEXTLINE
   auto tb2b1 = rlbox::memcmp(sandbox, buffer2_t, buffer1, strlen(buffer1))
                  .unverified_safe_because("test");
 
+  printf("MEMCMP Debugging line 4\n");
   // NOLINTNEXTLINE
   auto tb1tb1 = rlbox::memcmp(sandbox, buffer1_t, buffer1_t, strlen(buffer1))
                   .unverified_safe_because("test");
+  printf("MEMCMP Debugging line 5\n");
   // NOLINTNEXTLINE
   auto tb1tb2 = rlbox::memcmp(sandbox, buffer1_t, buffer2_t, strlen(buffer1))
                   .unverified_safe_because("test");
+  printf("MEMCMP Debugging line 6\n");
   // NOLINTNEXTLINE
   auto tb2tb1 = rlbox::memcmp(sandbox, buffer2_t, buffer1_t, strlen(buffer1))
                   .unverified_safe_because("test");
+  printf("MEMCMP Debugging line 7\n");
 
   b1b1 = normalize(b1b1);
   b1b2 = normalize(b1b2);
