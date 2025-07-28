@@ -24,8 +24,14 @@ inline void check_range_doesnt_cross_app_sbx_boundary(const void* ptr,
   auto ptr_start = reinterpret_cast<void*>(ptr_start_val);
   auto ptr_end = reinterpret_cast<void*>(ptr_end_val);
 
+  bool safe = rlbox_sandbox<T_Sbx>::is_in_same_sandbox(ptr_start, ptr_end);
+
+  if (!safe) {
+    printf("Unsafe range check: %p, %p\n", ptr_start, ptr_end);
+  }
+
   detail::dynamic_check(
-    rlbox_sandbox<T_Sbx>::is_in_same_sandbox(ptr_start, ptr_end),
+    safe,
     "range has overflowed sandbox bounds");
 }
 
