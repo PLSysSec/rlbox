@@ -131,22 +131,29 @@ TEST_CASE("test memcpy", "[stdlib]")
 
   const uint32_t max32Val = 0xFFFFFFFF;
 
-  auto dest = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
-  auto dest_fifth = dest + 4;
+  /////////////// Check with a tainted source
 
-  // tainted src
+  // Alloc and zero initialize 12 int dest buffer
+  auto dest = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
   for (int i = 0; i < 12; i++) { // NOLINT
     *(dest + i) = 0;
   }
+
+  // Alloc and max initialize 12 int src buffer
   auto src = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
-  auto src_fifth = src + 4;
   for (int i = 0; i < 12; i++) { // NOLINT
     *(src + i) = max32Val;
   }
+
+  auto dest_fifth = dest + 4;
+  auto src_fifth = src + 4;
+
   memcpy(sandbox,
          dest_fifth,
          src_fifth,
          sizeof(tainted<unsigned int, TestSandbox>) * 4);
+
+  // Check that destination looks as expected
   for (int i = 0; i < 4; i++) { // NOLINT
     REQUIRE(*((dest + i).UNSAFE_unverified()) == 0);
   }
@@ -157,16 +164,26 @@ TEST_CASE("test memcpy", "[stdlib]")
     REQUIRE(*((dest + i).UNSAFE_unverified()) == 0);
   }
 
-  // untainted src
+  /////////////// Check with a untainted source
+
+  // zero initialize 12 int dest buffer
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(dest + i) = 0;
+  }
+
+  // Alloc and max initialize 12 int untainted src buffer
   unsigned int* src2 = new unsigned int[12]; // NOLINT
-  auto src2_fifth = src2 + 4;                // NOLINT
   for (int i = 0; i < 12; i++) {             // NOLINT
     *(src2 + i) = max32Val;                  // NOLINT
   }
+
+  auto src2_fifth = src2 + 4;                // NOLINT
   memcpy(sandbox,
          dest_fifth,
          src2_fifth,
          sizeof(tainted<unsigned int, TestSandbox>) * 4);
+
+  // Check that destination looks as expected
   for (int i = 0; i < 4; i++) { // NOLINT
     REQUIRE(*((dest + i).UNSAFE_unverified()) == 0);
   }
@@ -176,6 +193,72 @@ TEST_CASE("test memcpy", "[stdlib]")
   for (int i = 8; i < 12; i++) { // NOLINT
     REQUIRE(*((dest + i).UNSAFE_unverified()) == 0);
   }
+
+  delete[] src2; // NOLINT
+  sandbox.free_in_sandbox(src);
+  sandbox.free_in_sandbox(dest);
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("test strncpy", "[stdlib]")
+{
+  rlbox::rlbox_sandbox<TestSandbox> sandbox;
+  sandbox.create_sandbox();
+
+  const uint32_t max32Val = 0xFFFFFFFF;
+
+  /////////////// Check with a tainted source
+
+  // Alloc and zero initialize dest string
+  auto dest = sandbox.malloc_in_sandbox<char>(12); // NOLINT
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(dest + i) = 0;
+  }
+
+  // Alloc and max initialize src string
+  auto src = sandbox.malloc_in_sandbox<char>(12); // NOLINT
+  memcpy(src.unverified_safe_pointer_because(12, "Known size"), "Hello", 6);
+
+  strncpy(sandbox,
+         dest,
+         src,
+         12);
+
+  // Check that destination looks as expected
+  REQUIRE(
+    strncmp(
+      dest.unverified_safe_pointer_because(12, "Known size"),
+      src.unverified_safe_pointer_because(12, "Known size"),
+      6
+    ) == 0
+  );
+
+  /////////////// Check with an untainted source
+
+  // zero initialize dest string
+  for (int i = 0; i < 12; i++) { // NOLINT
+    *(dest + i) = 0;
+  }
+
+  // Alloc and max initialize src string
+  auto src2 = new char[12]; // NOLINT
+  memcpy(src2, "Hello", 6);
+
+  strncpy(sandbox,
+         dest,
+         src,
+         12);
+
+  // Check that destination looks as expected
+  REQUIRE(
+    strncmp(
+      dest.unverified_safe_pointer_because(12, "Known size"),
+      src2,
+      6
+    ) == 0
+  );
 
   delete[] src2; // NOLINT
   sandbox.free_in_sandbox(src);
