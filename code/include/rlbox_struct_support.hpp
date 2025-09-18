@@ -138,7 +138,7 @@ struct markerStruct
       MaybeConst)                                                              \
                                                                                \
       inline tainted<MaybeConst T*, T_Sbx>                                     \
-      operator&() const noexcept                                               \
+      operator&() MaybeConst noexcept                                          \
     {                                                                          \
       auto ref_cast =                                                          \
         reinterpret_cast<MaybeConst T*>(&get_sandbox_value_ref());             \
