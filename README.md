@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml/badge.svg)](https://github.com/PLSysSec/rlbox_sandboxing_api/actions/workflows/cmake.yml)
 
-RLBox sandboxing framework. This code has been tested on 64-bit versions of Linux, Mac OSX, and Windows.
+RLBox sandboxing framework. This code has been tested on Linux, Mac OSX, and Windows.
 
 ## Reporting security bugs
 
