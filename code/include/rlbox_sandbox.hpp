@@ -11,12 +11,12 @@
 #include <limits>
 #include <map>
 #include <mutex>
+#include <string>
 #ifndef RLBOX_USE_CUSTOM_SHARED_LOCK
 #  include <shared_mutex>
 #endif
 #ifdef RLBOX_MEASURE_TRANSITION_TIMES
 #  include <sstream>
-#  include <string>
 #endif
 #include <stdint.h>
 #include <type_traits>
