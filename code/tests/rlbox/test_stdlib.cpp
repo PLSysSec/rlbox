@@ -135,13 +135,13 @@ TEST_CASE("test memcpy", "[stdlib]")
 
   // Alloc and zero initialize 12 int dest buffer
   auto dest = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
-  for (int i = 0; i < 12; i++) { // NOLINT
+  for (int i = 0; i < 12; i++) {                           // NOLINT
     *(dest + i) = 0;
   }
 
   // Alloc and max initialize 12 int src buffer
   auto src = sandbox.malloc_in_sandbox<unsigned int>(12); // NOLINT
-  for (int i = 0; i < 12; i++) { // NOLINT
+  for (int i = 0; i < 12; i++) {                          // NOLINT
     *(src + i) = max32Val;
   }
 
@@ -177,7 +177,7 @@ TEST_CASE("test memcpy", "[stdlib]")
     *(src2 + i) = max32Val;                  // NOLINT
   }
 
-  auto src2_fifth = src2 + 4;                // NOLINT
+  auto src2_fifth = src2 + 4; // NOLINT
   memcpy(sandbox,
          dest_fifth,
          src2_fifth,
@@ -213,7 +213,7 @@ TEST_CASE("test strncpy", "[stdlib]")
 
   // Alloc and zero initialize dest string
   auto dest = sandbox.malloc_in_sandbox<char>(12); // NOLINT
-  for (int i = 0; i < 12; i++) { // NOLINT
+  for (int i = 0; i < 12; i++) {                   // NOLINT
     *(dest + i) = 0;
   }
 
@@ -221,19 +221,12 @@ TEST_CASE("test strncpy", "[stdlib]")
   auto src = sandbox.malloc_in_sandbox<char>(12); // NOLINT
   memcpy(src.unverified_safe_pointer_because(12, "Known size"), "Hello", 6);
 
-  strncpy(sandbox,
-         dest,
-         src,
-         12);
+  strncpy(sandbox, dest, src, 12);
 
   // Check that destination looks as expected
-  REQUIRE(
-    strncmp(
-      dest.unverified_safe_pointer_because(12, "Known size"),
-      src.unverified_safe_pointer_because(12, "Known size"),
-      6
-    ) == 0
-  );
+  REQUIRE(strncmp(dest.unverified_safe_pointer_because(12, "Known size"),
+                  src.unverified_safe_pointer_because(12, "Known size"),
+                  6) == 0);
 
   /////////////// Check with an untainted source
 
@@ -246,19 +239,12 @@ TEST_CASE("test strncpy", "[stdlib]")
   auto src2 = new char[12]; // NOLINT
   memcpy(src2, "Hello", 6);
 
-  strncpy(sandbox,
-         dest,
-         src,
-         12);
+  strncpy(sandbox, dest, src, 12);
 
   // Check that destination looks as expected
-  REQUIRE(
-    strncmp(
-      dest.unverified_safe_pointer_because(12, "Known size"),
-      src2,
-      6
-    ) == 0
-  );
+  REQUIRE(strncmp(dest.unverified_safe_pointer_because(12, "Known size"),
+                  src2,
+                  6) == 0);
 
   delete[] src2; // NOLINT
   sandbox.free_in_sandbox(src);

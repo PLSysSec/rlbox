@@ -146,7 +146,10 @@ struct markerStruct
       return ret;                                                              \
     }                                                                          \
                                                                                \
-    inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_unverified() const                                      \
+    {                                                                          \
+      return get_raw_value();                                                  \
+    }                                                                          \
     inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox) const          \
     {                                                                          \
       return get_raw_sandbox_value(sandbox);                                   \
@@ -247,7 +250,10 @@ struct markerStruct
       return *reinterpret_cast<tainted_opaque<MaybeConst T, T_Sbx>*>(this);    \
     }                                                                          \
                                                                                \
-    inline auto UNSAFE_unverified() const { return get_raw_value(); }          \
+    inline auto UNSAFE_unverified() const                                      \
+    {                                                                          \
+      return get_raw_value();                                                  \
+    }                                                                          \
     inline auto UNSAFE_sandboxed(rlbox_sandbox<T_Sbx>& sandbox) const          \
     {                                                                          \
       return get_raw_sandbox_value(sandbox);                                   \

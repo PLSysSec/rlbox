@@ -113,7 +113,7 @@ protected:
 
   inline void impl_destroy_sandbox()
   {
-    delete[](reinterpret_cast<std::byte*>(UnalignedSandboxMemory));
+    delete[] (reinterpret_cast<std::byte*>(UnalignedSandboxMemory));
   }
 
   template<typename T>
@@ -258,6 +258,7 @@ protected:
 
   template<typename T_Ret, typename... T_Args>
   inline void impl_unregister_callback(void*)
-  {}
+  {
+  }
 };
 }

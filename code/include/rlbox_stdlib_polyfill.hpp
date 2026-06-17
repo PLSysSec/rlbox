@@ -34,7 +34,10 @@ template<class _Tp, class _Up>
 using _IsNotSame = _BoolConstant<!std::is_same<_Tp, _Up>::value>;
 
 #define INVOKE_RETURN(...)                                                     \
-  noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { return __VA_ARGS__; }
+  noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__)                       \
+  {                                                                            \
+    return __VA_ARGS__;                                                        \
+  }
 
 template<class _Fp, class... _Args>
 inline auto helper__invoke(_Fp&& __f, _Args&&... __args)

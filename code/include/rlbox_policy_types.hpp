@@ -48,8 +48,9 @@ private:
   // callback and the actual callback running. The interceptor is responsible
   // for wrapping and converting callback arguments, returns etc. to their
   // appropriate representations
-  using T_Interceptor = decltype(
-    callback_detail::interceptor_type_helper<T_Sbx>(std::declval<T>()));
+  using T_Interceptor =
+    decltype(callback_detail::interceptor_type_helper<T_Sbx>(
+      std::declval<T>()));
   T_Interceptor callback_interceptor;
 
   // The trampoline is the internal sandbox representation of the callback.
@@ -124,7 +125,8 @@ public:
     , callback_interceptor(nullptr)
     , callback_trampoline(0)
     , key(nullptr)
-  {}
+  {
+  }
 
   sandbox_callback(sandbox_callback&& other)
   {
@@ -208,14 +210,16 @@ private:
     : map(a_map)
     , idx(a_idx)
     , idx_unsandboxed(a_idx_unsandboxed)
-  {}
+  {
+  }
 
 public:
   app_pointer()
     : map(nullptr)
     , idx(0)
     , idx_unsandboxed(0)
-  {}
+  {
+  }
 
   ~app_pointer() { unregister(); }
 
@@ -285,7 +289,8 @@ private:
 public:
   tainted_boolean_hint(bool init)
     : val(init)
-  {}
+  {
+  }
   tainted_boolean_hint(const tainted_boolean_hint&) = default;
   inline tainted_boolean_hint& operator=(bool rhs)
   {
@@ -344,7 +349,8 @@ private:
 public:
   tainted_int_hint(int init)
     : val(init)
-  {}
+  {
+  }
   tainted_int_hint(const tainted_int_hint&) = default;
   inline tainted_int_hint& operator=(int rhs)
   {

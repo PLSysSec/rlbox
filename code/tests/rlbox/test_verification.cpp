@@ -107,4 +107,3 @@ TEST_CASE("RLBox test unverified value", "[verification]")
   REQUIRE(result2 == testVal);
   REQUIRE(result3 == testVal);
 }
-

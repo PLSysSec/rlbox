@@ -137,9 +137,12 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(rlbox_sandbox<T_Sbx>& sandbox,
 template<typename T>
 static constexpr bool can_type_be_memcopied =
   std::is_same_v<unsigned char, std::remove_cv_t<T>> ||
-  std::is_same_v<char, std::remove_cv_t<T>> || std::is_same_v<wchar_t, std::remove_cv_t<T>> ||
-  std::is_same_v<float, std::remove_cv_t<T>> || std::is_same_v<double, std::remove_cv_t<T>> ||
-  std::is_same_v<char16_t, std::remove_cv_t<T>> || std::is_same_v<short, std::remove_cv_t<T>>;
+  std::is_same_v<char, std::remove_cv_t<T>> ||
+  std::is_same_v<wchar_t, std::remove_cv_t<T>> ||
+  std::is_same_v<float, std::remove_cv_t<T>> ||
+  std::is_same_v<double, std::remove_cv_t<T>> ||
+  std::is_same_v<char16_t, std::remove_cv_t<T>> ||
+  std::is_same_v<short, std::remove_cv_t<T>>;
 
 /**
  * @brief Copy buffer to sandbox memory area. Note that memcpy is meant to be
@@ -178,7 +181,7 @@ inline T_Wrap<T_Rhs*, T_Sbx> memcpy(rlbox_sandbox<T_Sbx>& sandbox,
   const void* src_start = detail::unwrap_value(src);
 
   // if src is also a tainted/tainted-volatile pointer apply the same check
-  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+  if constexpr (detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
     detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
   }
 
@@ -202,9 +205,9 @@ template<typename T_Sbx,
          template<typename, typename>
          typename T_Wrap>
 inline T_Wrap<T_Rhs*, T_Sbx> strncpy(rlbox_sandbox<T_Sbx>& sandbox,
-                                    T_Wrap<T_Rhs*, T_Sbx> dest,
-                                    T_Lhs src,
-                                    T_Num num)
+                                     T_Wrap<T_Rhs*, T_Sbx> dest,
+                                     T_Lhs src,
+                                     T_Num num)
 {
 
   static_assert(detail::rlbox_is_tainted_or_vol_v<T_Wrap<T_Rhs, T_Sbx>>,
@@ -224,7 +227,7 @@ inline T_Wrap<T_Rhs*, T_Sbx> strncpy(rlbox_sandbox<T_Sbx>& sandbox,
   const char* src_start = detail::unwrap_value(src);
 
   // if src is also a tainted/tainted-volatile pointer apply the same check
-  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+  if constexpr (detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
     detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
   }
 
@@ -258,7 +261,7 @@ inline tainted_int_hint memcmp(rlbox_sandbox<T_Sbx>& sandbox,
   const void* src_start = detail::unwrap_value(src);
 
   // if src is also a tainted/tainted-volatile pointer apply the same check
-  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+  if constexpr (detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
     detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
   }
 

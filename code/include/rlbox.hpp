@@ -178,7 +178,7 @@ public:
 
 #define CompoundAssignmentOp(opSymbol)                                         \
   template<typename T_Rhs>                                                     \
-  inline constexpr T_Wrap<T, T_Sbx>& operator opSymbol##=(const T_Rhs& rhs)    \
+  inline constexpr T_Wrap<T, T_Sbx>& operator opSymbol##=(const T_Rhs & rhs)   \
   {                                                                            \
     auto& this_ref = impl();                                                   \
     this_ref = this_ref opSymbol rhs;                                          \
@@ -217,7 +217,7 @@ public:
   inline constexpr T_Wrap<T, T_Sbx> operator opSymbol##opSymbol(int)           \
   {                                                                            \
     tainted<T, T_Sbx> ret = impl();                                            \
-    operator opSymbol##opSymbol();                                                              \
+    operator opSymbol##opSymbol();                                             \
     return ret;                                                                \
   }                                                                            \
   RLBOX_REQUIRE_SEMI_COLON
@@ -1046,7 +1046,8 @@ public:
              detail::is_fundamental_or_enum_v<std::remove_reference_t<T_Arg>>)>
   tainted(T_Arg&& arg)
     : data(std::forward<T_Arg>(arg))
-  {}
+  {
+  }
 
   template<typename T_Rhs>
   void assign_raw_pointer(rlbox_sandbox<T_Sbx>& sandbox, T_Rhs val)

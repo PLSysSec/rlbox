@@ -1,4 +1,3 @@
-
 #pragma once
 // IWYU pragma: private, include "rlbox.hpp"
 // IWYU pragma: friend "rlbox_.*\.hpp"
@@ -15,9 +14,8 @@ inline void check_sandbox_pointer_range_is_contained(const void* ptr,
                                                      size_t size)
 {
   auto ptr_start_val = reinterpret_cast<uintptr_t>(ptr);
-  detail::dynamic_check(
-    ptr_start_val,
-    "Performing memory operation on a null pointer");
+  detail::dynamic_check(ptr_start_val,
+                        "Performing memory operation on a null pointer");
   auto ptr_end_val = ptr_start_val + size - 1;
 
   auto ptr_start = reinterpret_cast<void*>(ptr_start_val);
