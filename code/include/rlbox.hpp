@@ -90,8 +90,8 @@ public:
 
     auto ret = UNSAFE_unverified();
     if (ret != nullptr) {
-      size_t bytes = sizeof(T) * count;
-      detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(ret, bytes);
+      size_t bytes = sizeof(T_Pointed) * count;
+      detail::check_sandbox_pointer_range_is_contained<T_Sbx>(ret, bytes);
     }
     return ret;
   }
@@ -582,7 +582,7 @@ private:
       return nullptr;
     }
 
-    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(
       start, count * sizeof(T_CopyAndVerifyRangeEl));
 
     return start;

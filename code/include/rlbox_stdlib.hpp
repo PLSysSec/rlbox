@@ -123,7 +123,7 @@ inline T_Wrap<T_Rhs*, T_Sbx> memset(rlbox_sandbox<T_Sbx>& sandbox,
 
   tainted<T_Rhs*, T_Sbx> ptr_tainted = ptr;
   void* dest_start = ptr_tainted.INTERNAL_unverified_safe();
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
+  detail::check_sandbox_pointer_range_is_contained<T_Sbx>(dest_start, num_val);
 
   std::memset(dest_start, detail::unwrap_value(value), num_val);
   return ptr;
@@ -172,13 +172,15 @@ inline T_Wrap<T_Rhs*, T_Sbx> memcpy(rlbox_sandbox<T_Sbx>& sandbox,
 
   tainted<T_Rhs*, T_Sbx> dest_tainted = dest;
   void* dest_start = dest_tainted.INTERNAL_unverified_safe();
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
+  detail::check_sandbox_pointer_range_is_contained<T_Sbx>(dest_start, num_val);
 
-  // src also needs to be checked, as we don't want to allow a src rand to start
-  // inside the sandbox and end outside, and vice versa
   // src may or may not be a wrapper, so use unwrap_value
   const void* src_start = detail::unwrap_value(src);
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src_start, num_val);
+
+  // if src is also a tainted/tainted-volatile pointer apply the same check
+  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
+  }
 
   std::memcpy(dest_start, src_start, num_val);
 
@@ -216,13 +218,15 @@ inline T_Wrap<T_Rhs*, T_Sbx> strncpy(rlbox_sandbox<T_Sbx>& sandbox,
 
   tainted<T_Rhs*, T_Sbx> dest_tainted = dest;
   char* dest_start = dest_tainted.INTERNAL_unverified_safe();
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
+  detail::check_sandbox_pointer_range_is_contained<T_Sbx>(dest_start, num_val);
 
-  // src also needs to be checked, as we don't want to allow a src rand to start
-  // inside the sandbox and end outside, and vice versa
   // src may or may not be a wrapper, so use unwrap_value
   const char* src_start = detail::unwrap_value(src);
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src_start, num_val);
+
+  // if src is also a tainted/tainted-volatile pointer apply the same check
+  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
+  }
 
   std::strncpy(dest_start, src_start, num_val);
 
@@ -248,13 +252,15 @@ inline tainted_int_hint memcmp(rlbox_sandbox<T_Sbx>& sandbox,
                         "Called memcmp for memory larger than the sandbox");
 
   void* dest_start = dest.INTERNAL_unverified_safe();
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(dest_start, num_val);
+  detail::check_sandbox_pointer_range_is_contained<T_Sbx>(dest_start, num_val);
 
-  // src also needs to be checked, as we don't want to allow a src rand to start
-  // inside the sandbox and end outside, and vice versa
   // src may or may not be a wrapper, so use unwrap_value
   const void* src_start = detail::unwrap_value(src);
-  detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src_start, num_val);
+
+  // if src is also a tainted/tainted-volatile pointer apply the same check
+  if constexpr(detail::rlbox_is_tainted_or_vol_v<T_Lhs>) {
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src_start, num_val);
+  }
 
   int ret = std::memcmp(dest_start, src_start, num_val);
   tainted_int_hint converted_ret(ret);
@@ -288,13 +294,17 @@ tainted<T*, T_Sbx> copy_memory_or_grant_access(rlbox_sandbox<T_Sbx>& sandbox,
                 "copy_memory_or_grant_access not supported on this type as "
                 "there may be ABI differences");
 
+  static_assert(!detail::rlbox_is_tainted_or_vol_v<T>,
+                "copy_memory_or_grant_access called on tainted type. Tainted "
+                "data is already accessible to the sandbox. ");
+
   // overflow ok
   size_t source_size = num * sizeof(T);
 
   // sandbox can grant access if it includes the following line
   // using can_grant_deny_access = void;
   if constexpr (detail::has_member_using_can_grant_deny_access_v<T_Sbx>) {
-    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(src, source_size);
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(src, source_size);
 
     bool success;
     auto ret = sandbox.INTERNAL_grant_access(src, num, success);
@@ -359,7 +369,7 @@ T* copy_memory_or_deny_access(rlbox_sandbox<T_Sbx>& sandbox,
   // sandbox can grant access if it includes the following line
   // using can_grant_deny_access = void;
   if constexpr (detail::has_member_using_can_grant_deny_access_v<T_Sbx>) {
-    detail::check_range_doesnt_cross_app_sbx_boundary<T_Sbx>(
+    detail::check_sandbox_pointer_range_is_contained<T_Sbx>(
       src.INTERNAL_unverified_safe(), source_size);
 
     bool success;
