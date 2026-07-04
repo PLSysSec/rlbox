@@ -139,6 +139,12 @@ static unsigned long local_simpleCallbackLoop(unsigned long a,
   return ret;
 }
 
+#ifdef BENCHMARK_CUSTOM_ITERATIONS
+static const int TEST_ITERATIONS = BENCHMARK_CUSTOM_ITERATIONS;
+#else
+static const int TEST_ITERATIONS = 1000000;
+#endif
+
 // NOLINTNEXTLINE
 TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 {
@@ -146,11 +152,6 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   CreateSandbox(sandbox);
 
   const int upper_bound = 100;
-#ifdef BENCHMARK_CUSTOM_ITERATIONS
-  const int test_iterations = BENCHMARK_CUSTOM_ITERATIONS;
-#else
-  const int test_iterations = 1000000;
-#endif
 
   SECTION("test simple function invocation") // NOLINT
   {
@@ -316,103 +317,6 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
   // strcpy is safe here
   // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
   std::strcpy(sb_string.UNSAFE_unverified(), "Hello");
-
-  SECTION("test callback 1 and re-entrancy") // NOLINT
-  {
-    const unsigned cb_val_param = 4;
-
-    auto cb_callback_param = sandbox.register_callback(exampleCallback);
-
-    auto resultT = sandbox.invoke_sandbox_function(
-      simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
-
-    auto result = resultT.copy_and_verify(
-      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
-    REQUIRE(result == 10);
-  }
-
-  SECTION("test callback 2") // NOLINT
-  {
-    auto cb_callback_param = sandbox.register_callback(exampleCallback2);
-
-    auto resultT = sandbox.invoke_sandbox_function(
-      simpleCallbackTest2, 4, cb_callback_param);
-
-    auto result = resultT.copy_and_verify([](int val) { return val; });
-    REQUIRE(result == 11);
-  }
-
-  SECTION("test callback different returns") // NOLINT
-  {
-    {
-      auto cb_callback_param = sandbox.register_callback(cbFloat);
-      const float val = 1042.1;
-      auto resultT = sandbox.invoke_sandbox_function(
-        callbackTypeFloatTest, val, cb_callback_param);
-
-      auto result = resultT.copy_and_verify([](float val) { return val; });
-      REQUIRE(result == val);
-    }
-    {
-      auto cb_callback_param = sandbox.register_callback(cbDouble);
-      const double val = 1042.1;
-      auto resultT = sandbox.invoke_sandbox_function(
-        callbackTypeDoubleTest, val, cb_callback_param);
-
-      auto result = resultT.copy_and_verify([](double val) { return val; });
-      REQUIRE(result == val);
-    }
-    {
-      auto cb_callback_param = sandbox.register_callback(cbLongLong);
-      const long long val = -42;
-      auto resultT = sandbox.invoke_sandbox_function(
-        callbackTypeLongLongTest, val, cb_callback_param);
-
-      auto result = resultT.copy_and_verify([](long long val) { return val; });
-      REQUIRE(result == val);
-    }
-  }
-
-  SECTION("test callback to an internal function") // NOLINT
-  {
-    auto fnPtr = sandbox.get_sandbox_function_address(internalCallback);
-
-    tainted<testStruct*, TestType> pFoo =
-      sandbox.template malloc_in_sandbox<testStruct>();
-    pFoo->fieldFnPtr = fnPtr;
-
-    auto resultT = sandbox.invoke_sandbox_function(
-      simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
-
-    auto result = resultT.copy_and_verify(
-      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
-    REQUIRE(result == 10);
-
-    sandbox.free_in_sandbox(pFoo);
-  }
-
-  SECTION("test callback registration unregistration") // NOLINT
-  {
-    const uint32_t cb_iterations = 1024;
-    for (uint32_t i = 0; i < cb_iterations; i++) {
-      // NOLINTNEXTLINE
-      rlbox::sandbox_callback<int (*)(unsigned, const char*, unsigned*),
-                              TestType>
-        cb_callback_param1;
-      rlbox::sandbox_callback<int (*)(unsigned long,  // NOLINT
-                                      unsigned long,  // NOLINT
-                                      unsigned long,  // NOLINT
-                                      unsigned long,  // NOLINT
-                                      unsigned long,  // NOLINT
-                                      unsigned long), // NOLINT
-                              TestType>
-        cb_callback_param2;
-
-      cb_callback_param1 = sandbox.register_callback(exampleCallback);
-      cb_callback_param2 = sandbox.register_callback(exampleCallback2);
-      // destructor will unregister the cbs here
-    }
-  }
 
   SECTION("test echo and pointer locations") // NOLINT
   {
@@ -688,7 +592,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     uint64_t result1 = 0;
     {
       auto enter_time = high_resolution_clock::now();
-      for (int i = 0; i < test_iterations; i++) {
+      for (int i = 0; i < TEST_ITERATIONS; i++) {
         // to make sure the optimizer doesn't try to be too clever and eliminate
         // the call
         result1 += local_simpleAddNoPrintTest(val1, val2);
@@ -697,14 +601,14 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
       int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
       std::cout << "Unsandboxed function invocation time: "
-                << (ns / test_iterations) << "\n";
+                << (ns / TEST_ITERATIONS) << "\n";
     }
 
     // Sandbox
     uint64_t result2 = 0;
     {
       auto enter_time = high_resolution_clock::now();
-      for (int i = 0; i < test_iterations; i++) {
+      for (int i = 0; i < TEST_ITERATIONS; i++) {
         // to make sure the optimizer doesn't try to be too clever and eliminate
         // the call
         result2 +=
@@ -715,44 +619,7 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
 
       int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
       std::cout << "Sandboxed function invocation time: "
-                << (ns / test_iterations) << "\n";
-    }
-
-    REQUIRE(result1 == result2);
-  }
-
-  SECTION("Callback invocation measurements") // NOLINT
-  {
-    auto cb_callback_param = sandbox.register_callback(exampleCallback3);
-
-    const int val1 = 2;
-    const int val2 = 3;
-
-    // Baseline
-    uint64_t result1;
-    {
-      auto enter_time = high_resolution_clock::now();
-      result1 = local_simpleCallbackLoop(
-        val1, val2, test_iterations, local_simpleAddNoPrintTest);
-      auto exit_time = high_resolution_clock::now();
-      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
-      std::cout << "Unsandboxed callback invocation time: "
-                << (ns / test_iterations) << "\n";
-    }
-
-    // Sandbox
-    uint64_t result2;
-    {
-      auto enter_time = high_resolution_clock::now();
-      result2 =
-        sandbox
-          .invoke_sandbox_function(
-            simpleCallbackLoop, val1, val2, test_iterations, cb_callback_param)
-          .unverified_safe_because("test");
-      auto exit_time = high_resolution_clock::now();
-      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
-      std::cout << "Sandboxed callback invocation time: "
-                << (ns / test_iterations) << "\n";
+                << (ns / TEST_ITERATIONS) << "\n";
     }
 
     REQUIRE(result1 == result2);
@@ -786,6 +653,159 @@ TEST_CASE("sandbox glue tests " TestName, "[sandbox_glue_tests]")
     void* original_ptr = sandbox.lookup_app_ptr(app_ptr_tainted);
     REQUIRE(ptr == original_ptr);
     free(ptr);
+  }
+
+  sandbox.free_in_sandbox(sb_string);
+
+  sandbox.destroy_sandbox();
+}
+
+// NOLINTNEXTLINE
+TEST_CASE("sandbox glue tests callbacks " TestName, "[sandbox_glue_tests]")
+{
+  rlbox::rlbox_sandbox<TestType> sandbox;
+  CreateSandbox(sandbox);
+
+  const int upper_bound = 100;
+
+  tainted<char*, TestType> sb_string =
+    sandbox.template malloc_in_sandbox<char>(upper_bound);
+  // strcpy is safe here
+  // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.strcpy)
+  std::strcpy(sb_string.UNSAFE_unverified(), "Hello");
+
+  SECTION("test callback 1 and re-entrancy") // NOLINT
+  {
+    const unsigned cb_val_param = 4;
+
+    auto cb_callback_param = sandbox.register_callback(exampleCallback);
+
+    auto resultT = sandbox.invoke_sandbox_function(
+      simpleCallbackTest, cb_val_param, sb_string, cb_callback_param);
+
+    auto result = resultT.copy_and_verify(
+      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
+    REQUIRE(result == 10);
+  }
+
+  SECTION("test callback 2") // NOLINT
+  {
+    auto cb_callback_param = sandbox.register_callback(exampleCallback2);
+
+    auto resultT = sandbox.invoke_sandbox_function(
+      simpleCallbackTest2, 4, cb_callback_param);
+
+    auto result = resultT.copy_and_verify([](int val) { return val; });
+    REQUIRE(result == 11);
+  }
+
+  SECTION("test callback different returns") // NOLINT
+  {
+    {
+      auto cb_callback_param = sandbox.register_callback(cbFloat);
+      const float val = 1042.1;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeFloatTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](float val) { return val; });
+      REQUIRE(result == val);
+    }
+    {
+      auto cb_callback_param = sandbox.register_callback(cbDouble);
+      const double val = 1042.1;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeDoubleTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](double val) { return val; });
+      REQUIRE(result == val);
+    }
+    {
+      auto cb_callback_param = sandbox.register_callback(cbLongLong);
+      const long long val = -42;
+      auto resultT = sandbox.invoke_sandbox_function(
+        callbackTypeLongLongTest, val, cb_callback_param);
+
+      auto result = resultT.copy_and_verify([](long long val) { return val; });
+      REQUIRE(result == val);
+    }
+  }
+
+  SECTION("test callback to an internal function") // NOLINT
+  {
+    auto fnPtr = sandbox.get_sandbox_function_address(internalCallback);
+
+    tainted<testStruct*, TestType> pFoo =
+      sandbox.template malloc_in_sandbox<testStruct>();
+    pFoo->fieldFnPtr = fnPtr;
+
+    auto resultT = sandbox.invoke_sandbox_function(
+      simpleCallbackTest, static_cast<unsigned>(4), sb_string, fnPtr);
+
+    auto result = resultT.copy_and_verify(
+      [&](int val) { return val > 0 && val < upper_bound ? val : -1; });
+    REQUIRE(result == 10);
+
+    sandbox.free_in_sandbox(pFoo);
+  }
+
+  SECTION("test callback registration unregistration") // NOLINT
+  {
+    const uint32_t cb_iterations = 1024;
+    for (uint32_t i = 0; i < cb_iterations; i++) {
+      // NOLINTNEXTLINE
+      rlbox::sandbox_callback<int (*)(unsigned, const char*, unsigned*),
+                              TestType>
+        cb_callback_param1;
+      rlbox::sandbox_callback<int (*)(unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long,  // NOLINT
+                                      unsigned long), // NOLINT
+                              TestType>
+        cb_callback_param2;
+
+      cb_callback_param1 = sandbox.register_callback(exampleCallback);
+      cb_callback_param2 = sandbox.register_callback(exampleCallback2);
+      // destructor will unregister the cbs here
+    }
+  }
+
+  SECTION("Callback invocation measurements") // NOLINT
+  {
+    auto cb_callback_param = sandbox.register_callback(exampleCallback3);
+
+    const int val1 = 2;
+    const int val2 = 3;
+
+    // Baseline
+    uint64_t result1;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result1 = local_simpleCallbackLoop(
+        val1, val2, TEST_ITERATIONS, local_simpleAddNoPrintTest);
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Unsandboxed callback invocation time: "
+                << (ns / TEST_ITERATIONS) << "\n";
+    }
+
+    // Sandbox
+    uint64_t result2;
+    {
+      auto enter_time = high_resolution_clock::now();
+      result2 =
+        sandbox
+          .invoke_sandbox_function(
+            simpleCallbackLoop, val1, val2, TEST_ITERATIONS, cb_callback_param)
+          .unverified_safe_because("test");
+      auto exit_time = high_resolution_clock::now();
+      int64_t ns = duration_cast<nanoseconds>(exit_time - enter_time).count();
+      std::cout << "Sandboxed callback invocation time: "
+                << (ns / TEST_ITERATIONS) << "\n";
+    }
+
+    REQUIRE(result1 == result2);
   }
 
   sandbox.free_in_sandbox(sb_string);
